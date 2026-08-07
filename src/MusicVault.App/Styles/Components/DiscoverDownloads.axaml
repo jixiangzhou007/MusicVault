@@ -1,0 +1,618 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MusicVault.App.Controls">
+
+  <Style Selector="TextBlock.discover-recognize-status">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+
+  <Style Selector="Border.discover-search-band">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Padding" Value="0,4,0,8"/>
+  </Style>
+
+  <Style Selector="Border.discover-search-shell">
+    <Setter Property="Background" Value="{DynamicResource ControlFillDefaultBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeDefaultBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusLg}"/>
+    <Setter Property="Padding" Value="4,4,6,4"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Border.discover-search-hero">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="{DynamicResource PageHeaderMargin}"/>
+    <Setter Property="Padding" Value="4,4,6,4"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusLg}"/>
+  </Style>
+
+  <Style Selector="Border.discover-search-compact">
+    <Setter Property="Margin" Value="{DynamicResource PageHeaderMargin}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusLg}"/>
+  </Style>
+
+  <Style Selector="StackPanel.discover-browse-section">
+    <Setter Property="Spacing" Value="8"/>
+    <Setter Property="Margin" Value="{DynamicResource PageContentHorizontalMargin}"/>
+  </Style>
+
+  <Style Selector="TextBlock.discover-browse-section-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle3}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.discover-browse-card">
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusCard}"/>
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+
+  <Style Selector="ScrollViewer.discover-browse-hub">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+    <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+  </Style>
+
+  <Style Selector="TextBox.discover-search-input">
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLg}"/>
+    <Setter Property="Height" Value="{DynamicResource ControlHeightLg}"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="8,0"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.discover-search-leading-icon">
+    <Setter Property="Opacity" Value="0.65"/>
+    <Setter Property="Margin" Value="8,0,4,0"/>
+  </Style>
+
+  <Style Selector="ComboBox.discover-search-platform">
+    <Setter Property="MinWidth" Value="120"/>
+    <Setter Property="Width" Value="120"/>
+    <Setter Property="Height" Value="{DynamicResource ControlHeightLg}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLg}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ControlHeightLg}"/>
+    <Setter Property="Padding" Value="8,0,28,0"/>
+    <Setter Property="Margin" Value="4,0"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+  </Style>
+
+  <Style Selector="Button.discover-search-go">
+    <Setter Property="MinWidth" Value="72"/>
+    <Setter Property="Height" Value="{DynamicResource ControlHeightLg}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLg}"/>
+    <Setter Property="Padding" Value="12,0"/>
+    <Setter Property="Margin" Value="4,0"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.discover-search-icon-btn">
+    <Setter Property="Width" Value="32"/>
+    <Setter Property="Height" Value="32"/>
+    <Setter Property="Margin" Value="2,0"/>
+  </Style>
+
+  <Style Selector="Border.discover-cover-thumb">
+    <Setter Property="Width" Value="40"/>
+    <Setter Property="Height" Value="40"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+    <Setter Property="Background" Value="{DynamicResource PlayerCoverPlaceholderBrush}"/>
+  </Style>
+
+  <Style Selector="StackPanel.discover-track-title-stack">
+    <Setter Property="Margin" Value="8,0,8,0"/>
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.discover-track-row">
+    <Setter Property="MinHeight" Value="{DynamicResource DiscoverRowHeight}"/>
+  </Style>
+
+  <Style Selector="DockPanel.discover-results-pane">
+    <Setter Property="Background" Value="{DynamicResource PlayPaneBrush}"/>
+  </Style>
+
+  <Style Selector="Border.discover-cache-chip">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentMutedBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="10"/>
+    <Setter Property="Padding" Value="6,2"/>
+    <Setter Property="MinWidth" Value="36"/>
+  </Style>
+
+  <Style Selector="TextBlock.discover-cache-chip-text">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="DockPanel.discover-transfers-sidebar TextBlock.track-col-header">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+
+  <Style Selector="DockPanel.discover-transfers-sidebar TextBlock.download-queue-stats,
+                   DockPanel.discover-transfers-sidebar TextBlock.text-caption">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeMicro}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+
+  <Style Selector="DockPanel.discover-transfers-sidebar ListBox.download-queue-list">
+    <Setter Property="Opacity" Value="0.92"/>
+  </Style>
+
+  <Style Selector="DockPanel.downloads-panel">
+    <Setter Property="Background" Value="{DynamicResource LibraryPaneBrush}"/>
+  </Style>
+  <Style Selector="DockPanel.transfers-page">
+    <Setter Property="Background" Value="{DynamicResource PlayPaneBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="Border.transfers-toolbar-host">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Grid.transfers-toolbar-row">
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+  </Style>
+  <Style Selector="StackPanel.transfers-toolbar-actions">
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+  </Style>
+  <Style Selector="StackPanel.transfers-toolbar-flow">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Spacing" Value="8"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+  <Style Selector="Border.transfers-toolbar-group-sep">
+    <Setter Property="Width" Value="1"/>
+    <Setter Property="Height" Value="20"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="Margin" Value="2,0,4,0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.transfers-link-btn">
+    <Setter Property="MinHeight" Value="20"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Foreground" Value="{DynamicResource LinkBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.transfers-link-btn:pointerover">
+    <Setter Property="Opacity" Value="0.85"/>
+  </Style>
+  <Style Selector="TextBlock.transfers-stats-summary">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+  </Style>
+  <Style Selector="ToggleButton.transfers-preset-toggle">
+    <Setter Property="MinWidth" Value="78"/>
+    <Setter Property="Padding" Value="10,0"/>
+  </Style>
+  <Style Selector="ToggleButton.transfers-preset-toggle:checked">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+  </Style>
+  <Style Selector="Border.transfers-stat-chip">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="Padding" Value="8,4"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Border.transfers-stat-chip TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Border.transfers-stat-chip-warn">
+    <Setter Property="Background" Value="{DynamicResource WarningSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource WarningBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+  <Style Selector="Border.transfers-stat-chip-warn TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource WarningTextBrush}"/>
+  </Style>
+  <Style Selector="Border.transfers-stat-chip-active">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+  <Style Selector="Border.transfers-stat-chip-active TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+  </Style>
+  <Style Selector="Border.discover-compliance-banner">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.download-queue-stats">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+  </Style>
+  <Style Selector="Border.download-row-detail">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ListBox.transfers-table-list">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+    <Setter Property="MinHeight" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.transfers-table-list > ListBoxItem">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.transfers-table-list > ListBoxItem /template/ ContentPresenter">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="Border.dl-transfer-item-root">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Grid.download-row-content">
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Grid.dl-transfer-row">
+    <Setter Property="Height" Value="26"/>
+    <Setter Property="Margin" Value="{DynamicResource DownloadTransferRowMargin}"/>
+  </Style>
+  <Style Selector="Grid.dl-transfer-row-compact">
+    <Setter Property="Height" Value="26"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+  <Style Selector="controls|DownloadQueueTableHeader">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="Grid.transfers-table-header">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="TextBlock.download-row-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Medium"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+  <Style Selector="TextBlock.download-row-artist">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Opacity" Value="0.72"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+  <Style Selector="Border.download-quality-chip">
+    <Setter Property="MinWidth" Value="34"/>
+    <Setter Property="MinHeight" Value="18"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Border.track-status-chip">
+    <Setter Property="MinWidth" Value="44"/>
+    <Setter Property="MinHeight" Value="18"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Background" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="Border.track-status-chip.ant-tag-filled-success,
+                   Border.track-status-chip.ant-tag-filled-error">
+    <Setter Property="Background" Value="{x:Null}"/>
+  </Style>
+
+  <!-- 发现页操作列：与 download-quality-chip 同视觉（蓝底白字圆角） -->
+  <Style Selector="Button.discover-action-chip">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="3"/>
+    <Setter Property="Padding" Value="6,2"/>
+    <Setter Property="MinWidth" Value="34"/>
+    <Setter Property="MinHeight" Value="18"/>
+    <Setter Property="MaxHeight" Value="22"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeMicro}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.discover-action-chip:pointerover">
+    <Setter Property="Opacity" Value="0.92"/>
+  </Style>
+  <Style Selector="Button.discover-action-chip:disabled">
+    <Setter Property="Background" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+    <Setter Property="Opacity" Value="0.55"/>
+    <Setter Property="Cursor" Value="Arrow"/>
+  </Style>
+  <Style Selector="Button.discover-action-chip:pressed">
+    <Setter Property="Opacity" Value="0.85"/>
+  </Style>
+  <Style Selector="TextBlock.download-row-size">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Border.download-status-dot">
+    <Setter Property="Width" Value="5"/>
+    <Setter Property="Height" Value="5"/>
+    <Setter Property="MinWidth" Value="5"/>
+    <Setter Property="MinHeight" Value="5"/>
+    <Setter Property="CornerRadius" Value="2.5"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Border.download-status-dot-success">
+    <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
+  </Style>
+  <Style Selector="Border.download-status-dot-active">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="Border.download-status-dot-failed">
+    <Setter Property="Background" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+  <Style Selector="Grid.discover-transfers-header">
+    <Setter Property="MinHeight" Value="36"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Grid.discover-transfers-header > StackPanel">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+  <Style Selector="Grid.discover-transfers-header TextBlock.track-col-header">
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+  <Style Selector="Grid.discover-transfers-header Button">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Border.download-quality-chip-compact">
+    <Setter Property="Padding" Value="5,1"/>
+    <Setter Property="MinWidth" Value="34"/>
+    <Setter Property="MaxWidth" Value="38"/>
+    <Setter Property="MinHeight" Value="16"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+  </Style>
+  <Style Selector="TextBlock.download-row-inline-status">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeMicro}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Right"/>
+  </Style>
+  <Style Selector="controls|MarqueeTextBlock.download-row-marquee">
+    <Setter Property="MinHeight" Value="20"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="controls|MarqueeTextBlock.download-row-marquee-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Medium"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="controls|MarqueeTextBlock.download-row-marquee-artist">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Border.download-row-divider">
+    <Setter Property="Opacity" Value="0.85"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list ListBoxItem:selected Grid.download-row-content">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list ListBoxItem:selected Grid.download-row-content TextBlock.download-row-title">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list ListBoxItem:selected Grid.download-row-content TextBlock.download-row-artist">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list ListBoxItem:selected Grid.download-row-content TextBlock.text-caption">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list ListBoxItem:selected Grid.download-row-content TextBlock.download-row-size">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list ListBoxItem:selected Button.row-action-btn TextBlock.track-row-glyph">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list ListBoxItem:selected Border.download-quality-chip">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list ListBoxItem:selected Border.download-quality-chip TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+  </Style>
+  <!-- 下载行进度条样式见 Styles/Components/Progress.axaml（ant-progress-line*） -->
+  <Style Selector="Button.download-clear-btn">
+    <Setter Property="Margin" Value="12,8,12,12"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list ListBoxItem:pointerover:not(:selected) Grid.download-row-content">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+
+  <Style Selector="ListBox.discover-results-list.virtual-list TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list TextBlock.track-col-cell">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list TextBlock.track-title">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list TextBlock.discover-track-index">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list Grid.discover-track-row.previewing TextBlock.discover-track-index">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list Grid.discover-track-row.previewing controls|MarqueeTextBlock.discover-track-marquee-title">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:selected Grid.discover-track-row.previewing TextBlock.discover-track-index">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:selected Grid.discover-track-row.previewing controls|MarqueeTextBlock.discover-track-marquee-title">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:selected Grid.track-row-content TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:selected Grid.discover-track-row TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:selected Button.discover-action-chip">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:selected Button.discover-action-chip:pointerover">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+    <Setter Property="Opacity" Value="0.92"/>
+  </Style>
+  <Style Selector="controls|MarqueeTextBlock.discover-track-marquee">
+    <Setter Property="MinHeight" Value="20"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="controls|MarqueeTextBlock.discover-track-marquee-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Medium"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="controls|MarqueeTextBlock.discover-track-marquee-subtitle">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.track-table-scroll-list ListBoxItem:pointerover Grid.discover-track-cell controls|MarqueeTextBlock.discover-track-marquee,
+                   ListBox.track-table-scroll-list ListBoxItem:selected Grid.discover-track-cell controls|MarqueeTextBlock.discover-track-marquee">
+    <Setter Property="IsMarqueeActive" Value="True"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list ListBoxItem:selected controls|MarqueeTextBlock.discover-track-marquee-title,
+                   ListBox.discover-results-list ListBoxItem:selected controls|MarqueeTextBlock.discover-track-marquee-subtitle">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list ListBoxItem:pointerover:not(:selected) controls|MarqueeTextBlock.discover-track-marquee-title,
+                   ListBox.discover-results-list ListBoxItem:pointerover:not(:selected) controls|MarqueeTextBlock.discover-track-marquee-subtitle">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem">
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem /template/ ContentPresenter">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:selected Grid.track-row-content">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:pointerover:not(:selected) Grid.track-row-content">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list ListBoxItem:selected Grid.discover-track-row">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list ListBoxItem:pointerover:not(:selected) Grid.discover-track-row">
+    <Setter Property="Background" Value="{DynamicResource OverlayHoverSubtleBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:pointerover:not(:selected) Grid.track-row-content TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:pointerover:not(:selected) Grid.discover-track-row TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.discover-preview-cache-tag">
+    <Setter Property="FontSize" Value="11"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+  </Style>
+  <Style Selector="Button.track-favorite-btn TextBlock.track-row-glyph.online-favorite-heart-off,
+                   TextBlock.track-row-glyph.online-favorite-heart-off">
+    <Setter Property="Foreground" Value="{DynamicResource IconSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Button.track-favorite-btn TextBlock.track-row-glyph.online-favorite-heart-on,
+                   TextBlock.track-row-glyph.online-favorite-heart-on">
+    <Setter Property="Foreground" Value="{DynamicResource FavoriteBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:selected TextBlock.online-favorite-heart-off">
+    <Setter Property="Foreground" Value="{DynamicResource IconSecondaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:selected TextBlock.online-favorite-heart-on">
+    <Setter Property="Foreground" Value="{DynamicResource FavoriteBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.track-col-header">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="{DynamicResource TrackColHeaderMargin}"/>
+  </Style>
+  <Style Selector="TextBlock.track-col-header.track-col-header-last">
+    <Setter Property="Margin" Value="{DynamicResource TrackColHeaderLastMargin}"/>
+  </Style>
+  <Style Selector="TextBlock.track-col-header.track-col-header-muted">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.list-header.track-col-header-muted">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="Grid.discover-transfers-header Button.flat-btn.btn-toolbar">
+    <Setter Property="MinWidth" Value="72"/>
+    <Setter Property="Padding" Value="10,0"/>
+  </Style>
+  <Style Selector="Grid.discover-transfers-header Button.library-pane-toggle-btn">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.list-scroll-top-btn">
+    <Setter Property="Width" Value="40"/>
+    <Setter Property="Height" Value="40"/>
+    <Setter Property="MinWidth" Value="40"/>
+    <Setter Property="MinHeight" Value="40"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="FontSize" Value="18"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="20"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="ToolTip.Tip" Value="回到顶部"/>
+  </Style>
+  <Style Selector="Button.list-scroll-top-btn:pointerover">
+    <Setter Property="Opacity" Value="0.9"/>
+  </Style>
+  <Style Selector="TextBlock.discover-results-summary">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+</Styles>

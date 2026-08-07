@@ -1,0 +1,277 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Pages"
+             xmlns:controls="using:MusicVault.App.Controls"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="MusicVault.App.Views.Pages.DownloadsPageView"
+             x:Name="DownloadsRoot"
+             x:DataType="pvm:DownloadsPageViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             HorizontalContentAlignment="Stretch"
+             VerticalContentAlignment="Stretch">
+  <DockPanel Classes="pane-play transfers-page"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             LastChildFill="True">
+
+    <!-- 页头 Hero：文案 + 工具栏 + 通栏分割线 -->
+    <StackPanel DockPanel.Dock="Top" Classes="transfers-page-hero" Spacing="0">
+      <StackPanel Classes="page-hero-copy">
+        <TextBlock Text="{Binding PageTitle}" Classes="page-title"/>
+        <TextBlock Text="{Binding PageSubtitle}" Classes="page-intro" TextWrapping="Wrap"/>
+        <TextBlock Text="{Binding WorkflowHintText}" Classes="text-caption"
+                   Foreground="{DynamicResource TextTertiaryBrush}"
+                   TextWrapping="Wrap"
+                   IsVisible="{Binding IsEmpty}"/>
+      </StackPanel>
+
+      <StackPanel Spacing="10" IsVisible="{Binding HasAnyItems}" Classes="page-hero-toolbar">
+        <StackPanel Classes="transfers-toolbar-flow">
+          <controls:IntSegmentedBar VerticalAlignment="Center"
+                                    SegmentLabels="{Binding ViewPresetSegmentLabels}"
+                                    SelectedIndex="{Binding ViewPresetIndex}"
+                                    ToolTip.Tip="{Binding ViewPresetToolTip}"
+                                    automation:AutomationProperties.Name="{Binding ViewPresetToolTip}"/>
+          <TextBlock Classes="discover-results-summary transfers-stats-summary"
+                     Text="{Binding TransferStatsSummary}"
+                     VerticalAlignment="Center"
+                     Margin="{DynamicResource MarginLeadingSm}"
+                     TextTrimming="CharacterEllipsis"/>
+          <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center"
+                      IsVisible="{Binding HasMoreFilteredItems}">
+            <TextBlock Classes="text-caption"
+                       Foreground="{DynamicResource TextSecondaryBrush}"
+                       Text="{Binding FilteredListPagingHint}"/>
+            <Button Content="{Binding LoadMoreButtonText}" Classes="flat-btn btn-toolbar transfers-link-btn"
+                    Padding="0"
+                    Command="{Binding LoadMoreFilteredItemsCommand}"
+                    automation:AutomationProperties.Name="{Binding LoadMoreButtonText}"/>
+          </StackPanel>
+          <Border Classes="transfers-toolbar-group-sep"/>
+          <Button Content="{Binding RetryButtonText}" Classes="primary btn-toolbar"
+                  MinWidth="{DynamicResource ControlWidthToolbar}"
+                  Command="{Binding RetryFailedCommand}"
+                  IsEnabled="{Binding CanRetryFailed}"
+                  IsVisible="{Binding ShowFailedPresetRetryProminent}"
+                  ToolTip.Tip="{Binding RetryToolTip}"
+                  automation:AutomationProperties.Name="{Binding RetryToolTip}"/>
+          <Button Content="{Binding OpenDiscoverQuickText}" Classes="flat-btn btn-toolbar"
+                  Command="{Binding OpenDiscoverCommand}"
+                  ToolTip.Tip="{Binding OpenDiscoverToolTip}"
+                  automation:AutomationProperties.Name="{Binding OpenDiscoverToolTip}"
+                  IsVisible="{Binding !ShowFailedPresetRetryProminent}"/>
+          <Button Classes="icon-toolbar-btn"
+                  Command="{Binding OpenOnlineSourcesSettingsCommand}"
+                  ToolTip.Tip="{Binding OpenOnlineSettingsQuickText}"
+                  automation:AutomationProperties.Name="{Binding OpenOnlineSettingsQuickText}">
+            <TextBlock Text="&#xE713;" Classes="icon-xs"/>
+          </Button>
+        </StackPanel>
+
+        <StackPanel Classes="transfers-toolbar-flow">
+          <TextBox Width="{DynamicResource SearchFieldWidth}" MaxWidth="{DynamicResource SearchFieldWidth}"
+                   MinWidth="{DynamicResource ControlWidthLibraryPicker}"
+                   Classes="discover-field"
+                   Watermark="{Binding SearchWatermark}"
+                   Text="{Binding FilterInputText, UpdateSourceTrigger=PropertyChanged}"
+                   KeyDown="OnFilterSearchKeyDown"/>
+          <Button Content="{Binding SearchButtonText}" Classes="flat-btn btn-toolbar"
+                  MinWidth="{DynamicResource ControlWidthToolbarSecondary}"
+                  Command="{Binding ApplyFilterSearchCommand}"
+                  ToolTip.Tip="{Binding SearchEnterToolTip}"
+                  automation:AutomationProperties.Name="{Binding SearchEnterToolTip}"/>
+          <Button Content="{Binding ResetCurrentViewFiltersText}" Classes="flat-btn btn-toolbar"
+                  Command="{Binding ResetCurrentViewFiltersCommand}"
+                  IsEnabled="{Binding HasActiveViewFilters}"
+                  ToolTip.Tip="{Binding ResetCurrentViewFiltersToolTip}"
+                  automation:AutomationProperties.Name="{Binding ResetCurrentViewFiltersToolTip}"/>
+          <Border Classes="transfers-toolbar-group-sep"/>
+          <ComboBox ItemsSource="{Binding PlatformFilterLabels}"
+                    SelectedIndex="{Binding PlatformFilterIndex}"
+                    IsVisible="{Binding ShowPlatformFilter}"
+                    MinWidth="{DynamicResource ControlWidthFilterMin}" MaxWidth="{DynamicResource ControlWidthFilterMax}"
+                    Classes="field-select batch-toolbar-field batch-toolbar-select-filter"
+                    ToolTip.Tip="{Binding PlatformFilterToolTip}"
+                    automation:AutomationProperties.Name="{Binding PlatformFilterToolTip}"/>
+          <ComboBox ItemsSource="{Binding SortLabels}"
+                    SelectedIndex="{Binding SortIndex}"
+                    MinWidth="{DynamicResource ControlWidthFilterMin}" MaxWidth="{DynamicResource ControlWidthFilterSortMax}"
+                    Classes="field-select batch-toolbar-field batch-toolbar-select-filter"
+                    ToolTip.Tip="{Binding SortToolTip}"
+                    automation:AutomationProperties.Name="{Binding SortToolTip}"/>
+          <ComboBox ItemsSource="{Binding BulkSelectLabels}"
+                    SelectedIndex="{Binding BulkSelectIndex}"
+                    IsEnabled="{Binding HasFilteredItems}"
+                    MinWidth="{DynamicResource ControlWidthToolbar}" MaxWidth="{DynamicResource ControlWidthFilterCompact}"
+                    Classes="field-select batch-toolbar-field batch-toolbar-select-filter"
+                    ToolTip.Tip="{Binding BulkSelectToolTip}"
+                    automation:AutomationProperties.Name="{Binding BulkSelectToolTip}"/>
+          <Button Content="{Binding TasksButtonText}" Classes="flat-btn btn-toolbar"
+                  IsVisible="{Binding ShowQueueControlMenu}"
+                  ToolTip.Tip="{Binding TasksToolTip}"
+                  automation:AutomationProperties.Name="{Binding TasksToolTip}">
+            <Button.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="{Binding MenuPauseAll}" Classes="app-compact-menu-item"
+                          Command="{Binding PauseCommand}"
+                          IsVisible="{Binding HasRunning}"/>
+                <MenuItem Header="{Binding MenuResumeAll}" Classes="app-compact-menu-item"
+                          Command="{Binding ResumeCommand}"
+                          IsVisible="{Binding HasPaused}"/>
+                <MenuItem Header="{Binding MenuCancelActive}" Classes="app-compact-menu-item"
+                          Click="OnCancelActiveMenuClick"
+                          IsVisible="{Binding HasActive}"/>
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+          <controls:PopconfirmHost Title="{Binding ClearSelectedPopconfirmTitle}"
+                                   Description="{Binding ClearSelectedPopconfirmDescription}"
+                                   ConfirmText="{Binding ClearSelectedConfirmText}"
+                                   AlternateConfirmText="{Binding ClearSelectedDeleteFilesText}"
+                                   ShowAlternateConfirm="{Binding AnySelectedHasDeletableFile}"
+                                   ConfirmedCommand="{Binding ClearSelectedListOnlyCommand}"
+                                   AlternateConfirmedCommand="{Binding ClearSelectedWithFileCommand}"
+                                   IsEnabled="{Binding HasSelectedItems}">
+            <Button Content="{Binding ClearSelectedButtonText}" Classes="flat-btn btn-toolbar"
+                    ToolTip.Tip="{Binding ClearSelectedToolTip}"
+                    automation:AutomationProperties.Name="{Binding ClearSelectedToolTip}"/>
+          </controls:PopconfirmHost>
+          <Button Classes="icon-more-btn" ToolTip.Tip="{Binding MoreToolTip}"
+                  automation:AutomationProperties.Name="{Binding MoreToolTip}">
+            <Button.Flyout>
+              <Flyout Placement="BottomEdgeAlignedRight">
+                <Border Classes="ant-popover ant-popover-flyout player-flyout-panel" MinWidth="200">
+                  <StackPanel Spacing="4">
+                    <Button Content="{Binding RefreshButtonText}" Classes="flat-btn btn-toolbar"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Command="{Binding RefreshDownloadsCommand}"
+                            automation:AutomationProperties.Name="{Binding RefreshButtonText}"/>
+                    <Button Content="{Binding ClearSearchText}" Classes="flat-btn btn-toolbar"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Command="{Binding ClearSearchCommand}"
+                            IsEnabled="{Binding HasActiveViewFilters}"
+                            ToolTip.Tip="{Binding ClearSearchToolTip}"
+                            automation:AutomationProperties.Name="{Binding ClearSearchToolTip}"/>
+                    <Button Content="{Binding ResetAllViewFiltersText}" Classes="flat-btn btn-toolbar"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Command="{Binding ResetAllViewFiltersCommand}"
+                            ToolTip.Tip="{Binding ResetAllViewFiltersToolTip}"
+                            automation:AutomationProperties.Name="{Binding ResetAllViewFiltersToolTip}"/>
+                    <Button Content="{Binding ClearQuickCompletedText}" Classes="flat-btn btn-toolbar"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Command="{Binding ClearCompletedCommand}"
+                            IsVisible="{Binding HasCompleted}"
+                            ToolTip.Tip="{Binding ClearQuickCompletedToolTip}"
+                            automation:AutomationProperties.Name="{Binding ClearQuickCompletedToolTip}"/>
+                    <controls:PopconfirmHost Title="{Binding ClearAllPopconfirmTitle}"
+                                             Description="{Binding ClearAllPopconfirmDescription}"
+                                             ConfirmText="{Binding ClearAllConfirmText}"
+                                             ConfirmIsDanger="True"
+                                             ConfirmedCommand="{Binding ClearAllConfirmedCommand}">
+                      <Button Content="{Binding ClearAllButtonText}" Classes="flat-btn btn-toolbar"
+                              HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                              IsEnabled="{Binding CanClearAll}"
+                              ToolTip.Tip="{Binding ClearAllButtonToolTip}"
+                              automation:AutomationProperties.Name="{Binding ClearAllButtonToolTip}"/>
+                    </controls:PopconfirmHost>
+                  </StackPanel>
+                </Border>
+              </Flyout>
+            </Button.Flyout>
+            <TextBlock Text="{StaticResource IconGlyphMore}" Classes="icon-xs"/>
+          </Button>
+        </StackPanel>
+      </StackPanel>
+
+      <StackPanel Classes="page-hero-toolbar transfers-toolbar-flow"
+                  IsVisible="{Binding !HasAnyItems}">
+        <TextBlock Classes="text-caption"
+                   Foreground="{DynamicResource TextSecondaryBrush}"
+                   VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Text="{Binding EmptyListDescription}"/>
+        <Border Classes="transfers-toolbar-group-sep"/>
+        <Button Content="{Binding EmptyGoDiscoverText}" Classes="primary btn-toolbar"
+                Command="{Binding OpenDiscoverCommand}"
+                automation:AutomationProperties.Name="{Binding EmptyGoDiscoverText}"/>
+      </StackPanel>
+
+      <Border Classes="page-hero-divider"/>
+    </StackPanel>
+
+    <Panel DockPanel.Dock="Top" Margin="{DynamicResource PageContentHorizontalMargin}"
+           IsVisible="{Binding HasStatusText}">
+      <Border Classes="ant-alert ant-alert-success" IsVisible="{Binding StatusIsSuccess}">
+        <TextBlock Classes="ant-alert-message" Text="{Binding StatusText}" TextWrapping="Wrap"/>
+      </Border>
+      <Border Classes="ant-alert ant-alert-error" IsVisible="{Binding StatusIsError}">
+        <TextBlock Classes="ant-alert-message" Text="{Binding StatusText}" TextWrapping="Wrap"/>
+      </Border>
+      <Border Classes="ant-alert ant-alert-info" IsVisible="{Binding StatusIsInfo}">
+        <TextBlock Classes="ant-alert-message" Text="{Binding StatusText}" TextWrapping="Wrap"/>
+      </Border>
+    </Panel>
+
+    <controls:DownloadQueueTableHeader x:Name="TransferTableHeader"
+                                       DockPanel.Dock="Top"
+                                       HorizontalAlignment="Stretch"
+                                       IsVisible="{Binding HasAnyItems}"/>
+
+    <Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          MinHeight="0">
+      <Panel HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             MinHeight="0">
+        <ListBox x:Name="DownloadListBox"
+                 ItemsSource="{Binding FilteredItems}"
+                 Classes="virtual-list download-queue-list transfers-table-list track-table-scroll-list"
+                 ItemTemplate="{StaticResource DownloadQueueItemDetailTemplate}"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 IsVisible="{Binding HasFilteredItems}"/>
+
+        <controls:EmptyStateView IsVisible="{Binding ShowFilterEmpty}"
+                                 Title="{Binding EmptyFilterTitle}"
+                                 Description="{Binding EmptyFilterDescription}"
+                                 IconGlyph="&#xE721;"
+                                 ShowIcon="True"
+                                 ShowAction="False"/>
+
+        <controls:EmptyStateView IsVisible="{Binding ShowStatusFilterEmpty}"
+                                 Title="{Binding EmptyStatusTitle}"
+                                 Description="{Binding EmptyStatusDescription}"
+                                 IconGlyph="&#xE721;"
+                                 ShowIcon="True"
+                                 ShowAction="True"
+                                 ActionText="{Binding EmptyStatusActionText}"
+                                 ActionCommand="{Binding RunEmptyStatusActionCommand}"/>
+
+        <Button x:Name="DownloadScrollTopBtn" Content="&#xE70E;"
+                Classes="list-scroll-top-btn"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
+                Click="OnDownloadScrollTopClick"/>
+
+        <controls:EmptyStateView IsVisible="{Binding IsEmpty}"
+                                 Title="{Binding EmptyListTitle}"
+                                 Description="{Binding EmptyListDescription}"
+                                 IconGlyph="&#xE896;"
+                                 ShowIcon="True"
+                                 ShowAction="True"
+                                 ActionText="{Binding EmptyGoDiscoverText}"
+                                 ActionCommand="{Binding OpenDiscoverCommand}"/>
+      </Panel>
+
+      <controls:PopconfirmHost x:Name="CancelActivePopconfirm"
+                               Title="{Binding CancelActivePopconfirmTitle}"
+                               Description="{Binding CancelActivePopconfirmDescription}"
+                               ConfirmText="{Binding CancelActiveConfirmText}"
+                               ConfirmIsDanger="True"
+                               ConfirmedCommand="{Binding CancelCommand}">
+        <Button Width="0" Height="0" Opacity="0" IsHitTestVisible="False"/>
+      </controls:PopconfirmHost>
+    </Grid>
+  </DockPanel>
+</UserControl>

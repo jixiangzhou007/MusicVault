@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MusicVault.App.Controls"
+             x:Class="MusicVault.App.Controls.SkeletonPlaceholder"
+             x:Name="Root">
+  <StackPanel Classes="ant-skeleton" Spacing="{Binding ContentSpacing, ElementName=Root}">
+    <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding ShowAvatar, ElementName=Root}">
+      <controls:SkeletonBlock Grid.Column="0"
+                              BlockWidth="{Binding AvatarSize, ElementName=Root}"
+                              BlockHeight="{Binding AvatarSize, ElementName=Root}"
+                              BlockCornerRadius="9999"
+                              IsActive="{Binding IsActive, ElementName=Root}"/>
+      <StackPanel Grid.Column="1" Margin="12,0,0,0" Spacing="8" VerticalAlignment="Center">
+        <controls:SkeletonLine IsTitle="True" LineWidth="220" IsActive="{Binding IsActive, ElementName=Root}"/>
+        <controls:SkeletonLine LineWidth="140" IsActive="{Binding IsActive, ElementName=Root}"/>
+      </StackPanel>
+    </Grid>
+    <controls:SkeletonLine IsTitle="True"
+                           IsVisible="{Binding ShowTitle, ElementName=Root}"
+                           LineWidth="280"
+                           IsActive="{Binding IsActive, ElementName=Root}"/>
+    <StackPanel Classes="ant-skeleton-paragraph-group"
+                IsVisible="{Binding ShowParagraph, ElementName=Root}">
+      <controls:SkeletonLine IsActive="{Binding IsActive, ElementName=Root}"/>
+      <controls:SkeletonLine LineWidth="360" IsActive="{Binding IsActive, ElementName=Root}"/>
+      <controls:SkeletonLine LineWidth="300" IsActive="{Binding IsActive, ElementName=Root}"/>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

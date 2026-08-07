@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:MusicVault.App.Converters"
+             x:Class="MusicVault.App.Controls.EmptyStateView"
+             x:Name="Root"
+             x:CompileBindings="False">
+  <StackPanel Classes="ant-empty" Margin="24">
+    <Border Classes="ant-empty-icon" IsVisible="{Binding ShowIcon, ElementName=Root}">
+      <TextBlock Text="{Binding IconGlyph, ElementName=Root}"
+                 Classes="icon-xl icon-accent"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center"/>
+    </Border>
+    <TextBlock Text="{Binding Title, ElementName=Root}"
+               Classes="ant-empty-title"
+               IsVisible="{Binding Title, ElementName=Root, Converter={x:Static conv:StringNotEmptyConverter.Instance}}"/>
+    <TextBlock Text="{Binding Description, ElementName=Root}"
+               Classes="ant-empty-desc"/>
+    <Button Content="{Binding ActionText, ElementName=Root}"
+            Command="{Binding ActionCommand, ElementName=Root}"
+            Classes="primary btn-toolbar"
+            HorizontalAlignment="Center"
+            Margin="0,4,0,0"
+            IsVisible="{Binding ShowAction, ElementName=Root}"/>
+  </StackPanel>
+</UserControl>

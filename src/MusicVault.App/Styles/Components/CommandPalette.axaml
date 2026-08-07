@@ -1,0 +1,71 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="Border.command-palette-panel">
+    <Setter Property="MinWidth" Value="480"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ContentWidthList}"/>
+    <Setter Property="Width" Value="560"/>
+    <Setter Property="Padding" Value="14"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusCard}"/>
+    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="BoxShadow" Value="{DynamicResource PanelShadow}"/>
+  </Style>
+
+  <Style Selector="TextBox.command-palette-search">
+    <Setter Property="MinHeight" Value="36"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+  </Style>
+
+  <Style Selector="Border.command-palette-list-host">
+    <Setter Property="MaxHeight" Value="360"/>
+  </Style>
+
+  <Style Selector="ListBox.command-palette-list">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+
+  <Style Selector="Border.command-palette-item">
+    <Setter Property="Padding" Value="10,8"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+  </Style>
+
+  <Style Selector="ListBoxItem:selected /template/ ContentPresenter Border.command-palette-item">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+
+  <Style Selector="Border.command-palette-item.disabled">
+    <Setter Property="Opacity" Value="0.45"/>
+  </Style>
+
+  <Style Selector="TextBlock.command-palette-item-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.command-palette-item-subtitle">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.command-palette-item-group">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="Margin" Value="12,0,0,0"/>
+  </Style>
+
+  <Style Selector="TextBlock.command-palette-empty">
+    <Setter Property="Padding" Value="8,16"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.command-palette-footer">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+</Styles>

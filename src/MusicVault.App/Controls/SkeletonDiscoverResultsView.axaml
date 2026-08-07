@@ -1,0 +1,111 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MusicVault.App.Controls"
+             x:Class="MusicVault.App.Controls.SkeletonDiscoverResultsView">
+  <StackPanel Classes="skeleton-discover-list">
+    <Border Classes="skeleton-discover-row">
+      <Grid ColumnDefinitions="40,4*,2.2*,1.1*,0.9*,2.5*" Height="34" VerticalAlignment="Center">
+        <controls:SkeletonBlock Grid.Column="0" BlockWidth="20" BlockHeight="14" BlockHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0" LineHeight="14"/>
+        <controls:SkeletonLine Grid.Column="2" Margin="8,0" LineWidth="100"/>
+        <controls:SkeletonLine Grid.Column="3" Margin="8,0" LineWidth="56"/>
+        <controls:SkeletonLine Grid.Column="4" LineWidth="36" LineHorizontalAlignment="Center"/>
+        <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" Margin="8,0,0,0" VerticalAlignment="Center">
+          <controls:SkeletonBlock BlockWidth="44" BlockHeight="24" BlockCornerRadius="4"/>
+          <controls:SkeletonBlock BlockWidth="52" BlockHeight="24" BlockCornerRadius="4"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-discover-row">
+      <Grid ColumnDefinitions="40,4*,2.2*,1.1*,0.9*,2.5*" Height="34" VerticalAlignment="Center">
+        <controls:SkeletonBlock Grid.Column="0" BlockWidth="20" BlockHeight="14" BlockHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0" LineWidth="180"/>
+        <controls:SkeletonLine Grid.Column="2" Margin="8,0" LineWidth="90"/>
+        <controls:SkeletonLine Grid.Column="3" Margin="8,0" LineWidth="48"/>
+        <controls:SkeletonLine Grid.Column="4" LineWidth="32" LineHorizontalAlignment="Center"/>
+        <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" Margin="8,0,0,0" VerticalAlignment="Center">
+          <controls:SkeletonBlock BlockWidth="44" BlockHeight="24" BlockCornerRadius="4"/>
+          <controls:SkeletonBlock BlockWidth="60" BlockHeight="24" BlockCornerRadius="4"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-discover-row">
+      <Grid ColumnDefinitions="40,4*,2.2*,1.1*,0.9*,2.5*" Height="34" VerticalAlignment="Center">
+        <controls:SkeletonBlock Grid.Column="0" BlockWidth="20" BlockHeight="14" BlockHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0" LineWidth="200"/>
+        <controls:SkeletonLine Grid.Column="2" Margin="8,0" LineWidth="110"/>
+        <controls:SkeletonLine Grid.Column="3" Margin="8,0" LineWidth="52"/>
+        <controls:SkeletonLine Grid.Column="4" LineWidth="36" LineHorizontalAlignment="Center"/>
+        <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" Margin="8,0,0,0" VerticalAlignment="Center">
+          <controls:SkeletonBlock BlockWidth="44" BlockHeight="24" BlockCornerRadius="4"/>
+          <controls:SkeletonBlock BlockWidth="48" BlockHeight="24" BlockCornerRadius="4"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-discover-row">
+      <Grid ColumnDefinitions="40,4*,2.2*,1.1*,0.9*,2.5*" Height="34" VerticalAlignment="Center">
+        <controls:SkeletonBlock Grid.Column="0" BlockWidth="20" BlockHeight="14" BlockHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0"/>
+        <controls:SkeletonLine Grid.Column="2" Margin="8,0" LineWidth="95"/>
+        <controls:SkeletonLine Grid.Column="3" Margin="8,0" LineWidth="44"/>
+        <controls:SkeletonLine Grid.Column="4" LineWidth="32" LineHorizontalAlignment="Center"/>
+        <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" Margin="8,0,0,0" VerticalAlignment="Center">
+          <controls:SkeletonBlock BlockWidth="44" BlockHeight="24" BlockCornerRadius="4"/>
+          <controls:SkeletonBlock BlockWidth="56" BlockHeight="24" BlockCornerRadius="4"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-discover-row">
+      <Grid ColumnDefinitions="40,4*,2.2*,1.1*,0.9*,2.5*" Height="34" VerticalAlignment="Center">
+        <controls:SkeletonBlock Grid.Column="0" BlockWidth="20" BlockHeight="14" BlockHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0" LineWidth="170"/>
+        <controls:SkeletonLine Grid.Column="2" Margin="8,0" LineWidth="100"/>
+        <controls:SkeletonLine Grid.Column="3" Margin="8,0" LineWidth="50"/>
+        <controls:SkeletonLine Grid.Column="4" LineWidth="36" LineHorizontalAlignment="Center"/>
+        <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" Margin="8,0,0,0" VerticalAlignment="Center">
+          <controls:SkeletonBlock BlockWidth="44" BlockHeight="24" BlockCornerRadius="4"/>
+          <controls:SkeletonBlock BlockWidth="52" BlockHeight="24" BlockCornerRadius="4"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-discover-row">
+      <Grid ColumnDefinitions="40,4*,2.2*,1.1*,0.9*,2.5*" Height="34" VerticalAlignment="Center">
+        <controls:SkeletonBlock Grid.Column="0" BlockWidth="20" BlockHeight="14" BlockHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0" LineWidth="190"/>
+        <controls:SkeletonLine Grid.Column="2" Margin="8,0" LineWidth="105"/>
+        <controls:SkeletonLine Grid.Column="3" Margin="8,0" LineWidth="46"/>
+        <controls:SkeletonLine Grid.Column="4" LineWidth="32" LineHorizontalAlignment="Center"/>
+        <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" Margin="8,0,0,0" VerticalAlignment="Center">
+          <controls:SkeletonBlock BlockWidth="44" BlockHeight="24" BlockCornerRadius="4"/>
+          <controls:SkeletonBlock BlockWidth="58" BlockHeight="24" BlockCornerRadius="4"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-discover-row">
+      <Grid ColumnDefinitions="40,4*,2.2*,1.1*,0.9*,2.5*" Height="34" VerticalAlignment="Center">
+        <controls:SkeletonBlock Grid.Column="0" BlockWidth="20" BlockHeight="14" BlockHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0" LineWidth="210"/>
+        <controls:SkeletonLine Grid.Column="2" Margin="8,0" LineWidth="88"/>
+        <controls:SkeletonLine Grid.Column="3" Margin="8,0" LineWidth="54"/>
+        <controls:SkeletonLine Grid.Column="4" LineWidth="36" LineHorizontalAlignment="Center"/>
+        <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" Margin="8,0,0,0" VerticalAlignment="Center">
+          <controls:SkeletonBlock BlockWidth="44" BlockHeight="24" BlockCornerRadius="4"/>
+          <controls:SkeletonBlock BlockWidth="50" BlockHeight="24" BlockCornerRadius="4"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-discover-row">
+      <Grid ColumnDefinitions="40,4*,2.2*,1.1*,0.9*,2.5*" Height="34" VerticalAlignment="Center">
+        <controls:SkeletonBlock Grid.Column="0" BlockWidth="20" BlockHeight="14" BlockHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0"/>
+        <controls:SkeletonLine Grid.Column="2" Margin="8,0" LineWidth="115"/>
+        <controls:SkeletonLine Grid.Column="3" Margin="8,0" LineWidth="42"/>
+        <controls:SkeletonLine Grid.Column="4" LineWidth="32" LineHorizontalAlignment="Center"/>
+        <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" Margin="8,0,0,0" VerticalAlignment="Center">
+          <controls:SkeletonBlock BlockWidth="44" BlockHeight="24" BlockCornerRadius="4"/>
+          <controls:SkeletonBlock BlockWidth="54" BlockHeight="24" BlockCornerRadius="4"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Pages"
+             x:Class="MusicVault.App.Views.Pages.PlaceholderPageView"
+             x:DataType="pvm:PlaceholderPageViewModel">
+  <Border Classes="card" Padding="32" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <StackPanel Spacing="12" HorizontalAlignment="Center">
+      <TextBlock Text="{Binding PageTitle}" Classes="text-title" HorizontalAlignment="Center"/>
+      <TextBlock Text="{Binding Description}" TextWrapping="Wrap" MaxWidth="400"
+                 Classes="text-body" HorizontalAlignment="Center"/>
+    </StackPanel>
+  </Border>
+</UserControl>

@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             x:Class="MusicVault.App.Views.Overlays.PlaylistEditModalView"
+             x:DataType="vm:PlaylistEditModalViewModel">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel" MaxWidth="440">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding CancelButtonText}" Classes="flat-btn app-dialog-btn"
+                  Command="{Binding CancelCommand}"/>
+          <Button Content="{Binding SaveButtonText}" Classes="primary app-dialog-btn"
+                  Command="{Binding SaveCommand}"/>
+        </StackPanel>
+      </Border>
+      <StackPanel Classes="app-dialog-body" Spacing="12">
+        <TextBlock Text="{Binding Title}" Classes="text-title"/>
+        <StackPanel Spacing="4">
+          <TextBlock Text="{Binding NameLabel}" Classes="text-label"/>
+          <TextBox Text="{Binding Name}" Watermark="{Binding NameWatermark}"
+                   Classes="field-input discover-field"/>
+        </StackPanel>
+        <StackPanel Spacing="4">
+          <TextBlock Text="{Binding DescriptionLabel}" Classes="text-label"/>
+          <TextBox Text="{Binding Description}" Watermark="{Binding DescriptionWatermark}"
+                   Classes="field-input discover-field" AcceptsReturn="True"
+                   MinHeight="72" TextWrapping="Wrap"/>
+        </StackPanel>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</UserControl>

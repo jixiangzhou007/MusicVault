@@ -1,0 +1,196 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Fluent / WinUI 3 设计令牌（深色默认） -->
+  <CornerRadius x:Key="RadiusSm">4</CornerRadius>
+  <CornerRadius x:Key="RadiusMd">8</CornerRadius>
+  <CornerRadius x:Key="RadiusLg">8</CornerRadius>
+  <CornerRadius x:Key="RadiusXl">12</CornerRadius>
+  <CornerRadius x:Key="RadiusCard">8</CornerRadius>
+  <CornerRadius x:Key="RadiusPanel">0</CornerRadius>
+  <CornerRadius x:Key="RadiusButton">4</CornerRadius>
+  <CornerRadius x:Key="WindowShellCornerRadius">6</CornerRadius>
+  <CornerRadius x:Key="WindowShellInnerCornerRadius">5</CornerRadius>
+  <Thickness x:Key="WindowShellStrokePadding">1</Thickness>
+
+  <!-- 语义令牌（Ant Design 层次结构；强调色保持 AccentBrush #007AFF，圆角保持 4px）
+       TextPrimary/Secondary/Tertiary/Quaternary：文案层级；MutedBrush 等同 Tertiary。
+       Container*/Surface*：容器与抬升背景；BorderSecondary：深色下低透明度描边。
+       应用内分割线统一使用 SeparatorBrush（1px，与播放栏顶部分割线一致）。 -->
+  <SolidColorBrush x:Key="TextQuaternaryBrush" Color="#48484A"/>
+  <SolidColorBrush x:Key="MutedBrush" Color="#636366"/>
+  <SolidColorBrush x:Key="ContainerBrush" Color="#1B1B1F"/>
+  <SolidColorBrush x:Key="ContainerElevatedBrush" Color="#232328"/>
+  <SolidColorBrush x:Key="SurfaceBaseBrush" Color="#1B1B1F"/>
+  <SolidColorBrush x:Key="BorderSecondaryBrush" Color="#14FFFFFF"/>
+  <SolidColorBrush x:Key="OverlayHoverSubtleBrush" Color="#0FFFFFFF"/>
+  <SolidColorBrush x:Key="MessageSurfaceBrush" Color="#303036"/>
+  <SolidColorBrush x:Key="MessageBorderBrush" Color="#3A3A42"/>
+
+  <!-- WinUI 语义色（映射现有 Surface / Control 层次） -->
+  <SolidColorBrush x:Key="ControlFillDefaultBrush" Color="#1A1A1E"/>
+  <SolidColorBrush x:Key="ControlFillSecondaryBrush" Color="#28282E"/>
+  <SolidColorBrush x:Key="ControlStrokeDefaultBrush" Color="#3A3A42"/>
+  <SolidColorBrush x:Key="ControlStrokeOnAccentBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="SubtleFillTransparentBrush" Color="#00FFFFFF"/>
+
+  <!-- 强调色层级：L1=AccentBrush 实心（主 CTA/进度/Logo）；L2=AccentSoft 底 + OnAccentSoft 字 + Accent 边线；L3=LinkBrush 仅链接 -->
+  <SolidColorBrush x:Key="AccentBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="DangerBrush" Color="#FF453A"/>
+  <SolidColorBrush x:Key="DangerSoftBrush" Color="#3A1A1C"/>
+  <SolidColorBrush x:Key="DangerBorderBrush" Color="#662528"/>
+  <SolidColorBrush x:Key="FavoriteBrush" Color="#FF453A"/>
+  <SolidColorBrush x:Key="AccentSoftBrush" Color="#1A2D4D"/>
+  <SolidColorBrush x:Key="OnAccentSoftForegroundBrush" Color="#F2F2F7"/>
+  <SolidColorBrush x:Key="AccentMutedBrush" Color="#40007AFF"/>
+  <SolidColorBrush x:Key="AccentForegroundBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="AccentHoverBrush" Color="#0066DD"/>
+  <SolidColorBrush x:Key="DangerHoverBrush" Color="#E0352B"/>
+  <SolidColorBrush x:Key="WarningSolidBrush" Color="#FA8C16"/>
+  <SolidColorBrush x:Key="ButtonIconHoverBrush" Color="#28282E"/>
+  <SolidColorBrush x:Key="ButtonIconPressedBrush" Color="#323238"/>
+  <SolidColorBrush x:Key="ButtonGhostHoverBrush" Color="#0FFFFFFF"/>
+  <SolidColorBrush x:Key="FocusRingBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="LinkBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="IconPrimaryBrush" Color="#F2F2F7"/>
+  <SolidColorBrush x:Key="IconSecondaryBrush" Color="#98989F"/>
+  <SolidColorBrush x:Key="IconTertiaryBrush" Color="#636366"/>
+  <SolidColorBrush x:Key="IconAccentBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="IconOnAccentBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="BackgroundBrush" Color="#141416"/>
+  <SolidColorBrush x:Key="WindowChromeBrush" Color="#0E0E10"/>
+  <SolidColorBrush x:Key="SurfaceBrush" Color="#1B1B1F"/>
+  <SolidColorBrush x:Key="SurfaceElevatedBrush" Color="#232328"/>
+  <SolidColorBrush x:Key="SidebarBrush" Color="#1B1B1F"/>
+  <SolidColorBrush x:Key="PlayerBarBrush" Color="#18181C"/>
+  <SolidColorBrush x:Key="RightPanelBrush" Color="#1E1E22"/>
+  <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F2F2F7"/>
+  <SolidColorBrush x:Key="TextSecondaryBrush" Color="#98989F"/>
+  <SolidColorBrush x:Key="TextTertiaryBrush" Color="#636366"/>
+  <SolidColorBrush x:Key="SeparatorBrush" Color="#2A2A2E"/>
+  <!-- 与 SeparatorBrush 同色，供 pane/splitter 等样式键复用 -->
+  <SolidColorBrush x:Key="PageHeaderDividerBrush" Color="#2A2A2E"/>
+  <SolidColorBrush x:Key="PaneSeparatorBrush" Color="#2A2A2E"/>
+  <SolidColorBrush x:Key="BorderSubtleBrush" Color="#2A2A2E"/>
+  <SolidColorBrush x:Key="NavHoverBrush" Color="#28282E"/>
+  <SolidColorBrush x:Key="NavSelectedBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="NavSelectedBgBrush" Color="#1A2D4D"/>
+  <SolidColorBrush x:Key="NavIconBrush" Color="#AEAEB2"/>
+  <!-- StatAccent 随强调色；紫/橙为固定分类色，不随 Accent -->
+  <SolidColorBrush x:Key="StatAccentBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="StatBlueBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="StatPurpleBrush" Color="#7B61FF"/>
+  <SolidColorBrush x:Key="StatOrangeBrush" Color="#FF9F0A"/>
+  <SolidColorBrush x:Key="PlayerCoverPlaceholderBrush" Color="#2A2A30"/>
+  <SolidColorBrush x:Key="VinylDiscBrush" Color="#101012"/>
+  <SolidColorBrush x:Key="VinylDiscEdgeBrush" Color="#484852"/>
+  <SolidColorBrush x:Key="VinylDiscShadowBrush" Color="#000000"/>
+  <SolidColorBrush x:Key="VinylGrooveBrush" Color="#7A7A86"/>
+  <SolidColorBrush x:Key="VinylLabelRingBrush" Color="#3A3A44"/>
+  <SolidColorBrush x:Key="VinylSpindleBrush" Color="#08080A"/>
+  <SolidColorBrush x:Key="VinylSpindleRingBrush" Color="#565660"/>
+  <RadialGradientBrush x:Key="VinylDiscSheenBrush" GradientOrigin="32%,28%" RadiusX="72%" RadiusY="72%">
+    <GradientStop Color="#00FFFFFF" Offset="0"/>
+    <GradientStop Color="#18FFFFFF" Offset="0.42"/>
+    <GradientStop Color="#00FFFFFF" Offset="1"/>
+  </RadialGradientBrush>
+  <SolidColorBrush x:Key="VinylTonearmBrush" Color="#9494A0"/>
+  <SolidColorBrush x:Key="VinylTonearmHeadshellBrush" Color="#A6A6B0"/>
+  <SolidColorBrush x:Key="VinylTonearmStylusBrush" Color="#707078"/>
+  <SolidColorBrush x:Key="VinylTonearmStrokeBrush" Color="#64646E"/>
+  <SolidColorBrush x:Key="VinylTonearmPivotBrush" Color="#282830"/>
+  <SolidColorBrush x:Key="VinylTonearmPivotCapBrush" Color="#7C7C88"/>
+  <SolidColorBrush x:Key="CoverPlaceholderBrush" Color="#2A2A30"/>
+  <SolidColorBrush x:Key="ModalScrimBrush" Color="#B3000000"/>
+  <SolidColorBrush x:Key="FullscreenScrimBrush" Color="#F50A0A0C"/>
+  <!-- 全屏播放统一底色（与遮罩一致，顶栏拖动区与内容区同色） -->
+  <SolidColorBrush x:Key="FullscreenCanvasBrush" Color="#0A0A0C"/>
+  <SolidColorBrush x:Key="AlbumDetailBackdropScrimBrush" Color="#D00A0A0C"/>
+  <LinearGradientBrush x:Key="AlbumDetailBackdropGradientBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+    <GradientStop Color="#700A0A0C" Offset="0"/>
+    <GradientStop Color="#A80A0A0C" Offset="0.32"/>
+    <GradientStop Color="#D80A0A0C" Offset="0.58"/>
+    <GradientStop Color="#FF121214" Offset="1"/>
+  </LinearGradientBrush>
+  <SolidColorBrush x:Key="WarningSoftBrush" Color="#3D3520"/>
+  <SolidColorBrush x:Key="WarningTextBrush" Color="#FFD60A"/>
+  <SolidColorBrush x:Key="WarningBorderBrush" Color="#665500"/>
+  <SolidColorBrush x:Key="StatPinkBrush" Color="#E91E8C"/>
+  <SolidColorBrush x:Key="SuccessBrush" Color="#34C759"/>
+  <SolidColorBrush x:Key="SuccessSoftBrush" Color="#1A3326"/>
+  <SolidColorBrush x:Key="SuccessBorderBrush" Color="#2A5C3A"/>
+  <SolidColorBrush x:Key="ErrorSoftBrush" Color="#3D1F1C"/>
+  <SolidColorBrush x:Key="ErrorBorderBrush" Color="#66FF453A"/>
+  <SolidColorBrush x:Key="ErrorTextBrush" Color="#FF9A8F"/>
+  <SolidColorBrush x:Key="InfoSoftBrush" Color="#1A2D4D"/>
+  <SolidColorBrush x:Key="InfoBorderBrush" Color="#40007AFF"/>
+  <SolidColorBrush x:Key="OverlayHoverLightBrush" Color="#18FFFFFF"/>
+  <SolidColorBrush x:Key="OverlaySelectedLightBrush" Color="#0CFFFFFF"/>
+  <SolidColorBrush x:Key="OverlayChipHoverBrush" Color="#22FFFFFF"/>
+  <SolidColorBrush x:Key="OverlayProgressTrackBrush" Color="#18FFFFFF"/>
+  <SolidColorBrush x:Key="FlyoutSurfaceBrush" Color="#303036"/>
+  <SolidColorBrush x:Key="FlyoutBorderBrush" Color="#565660"/>
+  <SolidColorBrush x:Key="SliderThumbFillBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="FullscreenControlHoverBrush" Color="#20FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerProgressTrackBrush" Color="#3A3A40"/>
+  <SolidColorBrush x:Key="PlayerProgressFillBrush" Color="#007AFF"/>
+
+  <!-- 精简播放器 / 桌面歌词：沉浸暗色 chrome（独立迷你窗；主界面浅色主题下仍用暗色） -->
+  <SolidColorBrush x:Key="PlayerChromeBaseBrush" Color="#101014"/>
+  <SolidColorBrush x:Key="PlayerChromeCoverBrush" Color="#18181C"/>
+  <SolidColorBrush x:Key="PlayerChromePanelBrush" Color="#1A1A1F"/>
+  <SolidColorBrush x:Key="PlayerChromeSurfaceBrush" Color="#B018181C"/>
+  <SolidColorBrush x:Key="PlayerChromeBorderBrush" Color="#30FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeBorderSubtleBrush" Color="#22FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeDividerBrush" Color="#25FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeProgressTrackBrush" Color="#35FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeHoverBrush" Color="#18FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeOverlayHoverBrush" Color="#30FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeOverlayActiveBrush" Color="#40FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundBrush" Color="#FFFFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundPrimaryBrush" Color="#F2FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundSecondaryBrush" Color="#D9FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundTertiaryBrush" Color="#99FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundMutedBrush" Color="#80FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundIconBrush" Color="#E8FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeBarIconBrush" Color="#E6FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeCoverIconBrush" Color="#F0FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundDimBrush" Color="#CCFFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundLabelBrush" Color="#AAFFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeArtistBrush" Color="#B3FFFFFF"/>
+  <LinearGradientBrush x:Key="PlayerChromeHeroScrimBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+    <GradientStop Color="#00000000" Offset="0"/>
+    <GradientStop Color="#90101014" Offset="0.35"/>
+    <GradientStop Color="#F0101014" Offset="1"/>
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="PlayerChromeCoverFadeBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+    <GradientStop Color="#00000000" Offset="0"/>
+    <GradientStop Color="#B0101014" Offset="0.45"/>
+    <GradientStop Color="#FF101014" Offset="1"/>
+  </LinearGradientBrush>
+
+  <SolidColorBrush x:Key="TopBarBrush" Color="#141416"/>
+  <SolidColorBrush x:Key="MusicBrowseBarBrush" Color="#1A1A1E"/>
+  <SolidColorBrush x:Key="LibraryPaneBrush" Color="#161618"/>
+  <SolidColorBrush x:Key="PlayPaneBrush" Color="#121214"/>
+  <SolidColorBrush x:Key="SearchFieldBrush" Color="#232328"/>
+  <SolidColorBrush x:Key="InputFieldBrush" Color="#1A1A1E"/>
+
+  <!-- Ant Tooltip：深色半透明底 + 白字（深浅主题通用） -->
+  <SolidColorBrush x:Key="TooltipBackgroundBrush" Color="#D9000000"/>
+  <SolidColorBrush x:Key="TooltipForegroundBrush" Color="#FFFFFF"/>
+
+  <BoxShadows x:Key="ShadowSm">0 1 3 0 #33000000</BoxShadows>
+  <BoxShadows x:Key="TooltipShadow">0 4 12 0 #66000000</BoxShadows>
+  <BoxShadows x:Key="PopoverShadow">0 20 56 8 #99000000</BoxShadows>
+  <BoxShadows x:Key="CardShadow">0 2 8 0 #40000000</BoxShadows>
+  <BoxShadows x:Key="PanelShadow">0 4 16 0 #50000000</BoxShadows>
+  <BoxShadows x:Key="PlayerShadow">0 -2 12 0 #60000000</BoxShadows>
+
+  <!-- Ant Tabs type="card"：标签条高度与内容区顶边对齐 -->
+  <x:Double x:Key="AntdCardTabStripHeight">36</x:Double>
+  <x:Double x:Key="AntdCardTabChromeHeight">35</x:Double>
+  <Thickness x:Key="AntdCardTabContentMargin">0,36,0,0</Thickness>
+  <Thickness x:Key="AntdCardTabRailMargin">0,35,0,0</Thickness>
+
+</ResourceDictionary>

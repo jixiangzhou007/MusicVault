@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:layout="using:MusicVault.App.Layout"
+             x:Class="MusicVault.App.Controls.DownloadQueueTableHeader"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+  <StackPanel Spacing="0" HorizontalAlignment="Stretch">
+    <Grid x:Name="HeaderGrid"
+          Classes="track-table-header ant-table-header transfers-table-header track-table-header-paired"
+          ColumnDefinitions="{x:Static layout:TrackTableLayout.TransferQueueColumns}"
+          HorizontalAlignment="Stretch">
+      <TextBlock x:Name="HColSelect" Grid.Column="0" Text="选" Classes="track-col-header track-col-header-index"/>
+      <TextBlock x:Name="HColIndex" Grid.Column="1" Text="#" Classes="track-col-header track-col-header-index"/>
+      <TextBlock x:Name="HColTitle" Grid.Column="2" Text="歌曲" Classes="track-col-header track-col-header-muted"/>
+      <TextBlock x:Name="HColArtist" Grid.Column="3" Text="歌手" Classes="track-col-header"/>
+      <TextBlock x:Name="HColStatus" Grid.Column="4" Text="状态" Classes="track-col-header track-col-header-meta"/>
+      <TextBlock x:Name="HColFormat" Grid.Column="5" Text="格式" Classes="track-col-header track-col-header-meta"/>
+      <TextBlock x:Name="HColSize" Grid.Column="6" Text="大小" Classes="track-col-header track-col-header-meta"/>
+      <TextBlock x:Name="HColActions" Grid.Column="7" Text="操作" Classes="track-col-header track-col-header-index"/>
+    </Grid>
+    <Border x:Name="HeaderDivider" Height="1" Classes="splitter-h track-row-divider track-table-divider-paired"/>
+  </StackPanel>
+</UserControl>

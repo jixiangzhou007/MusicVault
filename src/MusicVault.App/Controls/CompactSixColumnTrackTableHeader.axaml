@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:layout="using:MusicVault.App.Layout"
+             x:Class="MusicVault.App.Controls.CompactSixColumnTrackTableHeader"
+             x:Name="Root"
+             HorizontalAlignment="Stretch"
+             HorizontalContentAlignment="Stretch">
+  <StackPanel Spacing="0" HorizontalAlignment="Stretch">
+    <Grid Classes="track-table-header ant-table-header track-table-header-paired"
+          ColumnDefinitions="{x:Static layout:TrackTableLayout.CompactSixColumns}"
+          Height="{x:Static layout:TrackTableLayout.HeaderHeight}"
+          HorizontalAlignment="Stretch">
+      <TextBlock Grid.Column="0" Text="{Binding #Root.LeadingColumnHeader}"
+                 Classes="track-col-header track-col-header-index"/>
+      <TextBlock Grid.Column="1" Text="{Binding #Root.TitleColumnHeader}"
+                 Classes="track-col-header track-col-header-muted"/>
+      <TextBlock Grid.Column="2" Text="{Binding #Root.ArtistColumnHeader}"
+                 Classes="track-col-header"/>
+      <TextBlock Grid.Column="3" Text="{Binding #Root.AlbumColumnHeader}"
+                 Classes="track-col-header"/>
+      <TextBlock Grid.Column="4" Text="{Binding #Root.DurationColumnHeader}"
+                 Classes="track-col-header track-col-header-meta"/>
+      <TextBlock Grid.Column="5" Text="{Binding #Root.FavoriteColumnHeader}"
+                 Classes="track-col-header track-col-header-index"/>
+    </Grid>
+    <Border Classes="track-row-divider track-table-divider-paired"/>
+  </StackPanel>
+</UserControl>

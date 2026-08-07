@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MusicVault.App.Controls"
+             x:Class="MusicVault.App.Controls.StepsIndicator"
+             x:Name="Root"
+             x:CompileBindings="False">
+  <ItemsControl ItemsSource="{Binding Items, ElementName=Root}" Classes="ant-steps">
+    <ItemsControl.ItemsPanel>
+      <ItemsPanelTemplate>
+        <StackPanel Orientation="Horizontal" Classes="ant-steps-row" HorizontalAlignment="Center"/>
+      </ItemsPanelTemplate>
+    </ItemsControl.ItemsPanel>
+    <ItemsControl.ItemTemplate>
+      <DataTemplate x:DataType="controls:StepItem">
+        <controls:StepItemView Title="{Binding Title}"
+                               Status="{Binding Status}"
+                               StepNumber="{Binding StepNumber}"
+                               ShowConnector="{Binding ShowConnector}"/>
+      </DataTemplate>
+    </ItemsControl.ItemTemplate>
+  </ItemsControl>
+</UserControl>

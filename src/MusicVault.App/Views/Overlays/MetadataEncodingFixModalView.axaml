@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             x:Class="MusicVault.App.Views.Overlays.MetadataEncodingFixModalView"
+             x:DataType="vm:MetadataEncodingFixModalViewModel">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel">
+    <DockPanel MinWidth="440" MinHeight="320">
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding CancelButtonText}" Classes="flat-btn app-dialog-btn" Command="{Binding CancelCommand}"/>
+          <Button Content="{Binding ConfirmButtonText}" Classes="primary app-dialog-btn" Command="{Binding ConfirmCommand}"/>
+        </StackPanel>
+      </Border>
+
+      <StackPanel DockPanel.Dock="Top" Classes="app-dialog-body" Spacing="8">
+        <TextBlock Text="{Binding ModalTitle}" Classes="text-title"/>
+        <TextBlock Text="{Binding IntroText}" Classes="app-dialog-intro"/>
+      </StackPanel>
+
+      <ListBox ItemsSource="{Binding Candidates}"
+               SelectedItem="{Binding SelectedCandidate, Mode=TwoWay}"
+               Margin="{DynamicResource MarginTopSm}">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:EncodingFixRowViewModel">
+            <StackPanel Spacing="4" Margin="{DynamicResource MarginTopSm}">
+              <TextBlock Text="{Binding EncodingName}" Classes="text-label"/>
+              <TextBlock Text="{Binding Preview}" Classes="text-body"
+                         TextWrapping="Wrap" MaxLines="4"/>
+            </StackPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </DockPanel>
+  </Border>
+</UserControl>

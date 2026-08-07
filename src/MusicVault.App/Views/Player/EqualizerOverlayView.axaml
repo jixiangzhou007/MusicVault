@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Player"
+             xmlns:player="using:MusicVault.App.Views.Player"
+             x:Class="MusicVault.App.Views.Player.EqualizerOverlayView"
+             x:DataType="pvm:EqualizerViewModel">
+
+  <Border Classes="ant-popover player-elevated-popover eq-modal">
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
+
+      <!-- 标题 -->
+      <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="{DynamicResource EqualizerSectionGap}">
+        <Border Classes="eq-modal-icon">
+          <TextBlock Text="&#xE9E9;" Classes="icon-xs icon-on-accent"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <TextBlock Text="{Binding Title}" Classes="eq-modal-title" VerticalAlignment="Center"/>
+      </StackPanel>
+
+      <Border Grid.Row="1" Height="1" Background="{DynamicResource SeparatorBrush}" Margin="{DynamicResource EqualizerSectionGap}"/>
+
+      <!-- 工具栏 -->
+      <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" Margin="{DynamicResource MarginBottomMd}">
+        <CheckBox Content="{Binding EnableLabel}" IsChecked="{Binding IsEnabled}"
+                  Classes="eq-modal-body" VerticalAlignment="Center"/>
+        <ComboBox Grid.Column="1" Margin="{DynamicResource MarginLeadingMd}" MinWidth="148"
+                  ItemsSource="{Binding PresetOptions}"
+                  SelectedItem="{Binding SelectedPresetOption}"
+                  Classes="eq-modal-combo" VerticalAlignment="Center">
+          <ComboBox.ItemTemplate>
+            <DataTemplate x:DataType="pvm:EqualizerPresetOption">
+              <TextBlock Text="{Binding DisplayName}"/>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6">
+          <Button Content="{Binding DeleteLabel}" Classes="eq-modal-tool-btn" Command="{Binding DeletePresetCommand}"/>
+          <Button Content="{Binding SaveLabel}" Classes="eq-modal-tool-btn" Command="{Binding SavePresetCommand}"/>
+          <Button Content="{Binding ResetLabel}" Classes="eq-modal-tool-btn" Command="{Binding ResetCommand}"/>
+        </StackPanel>
+      </Grid>
+
+      <!-- 滑条区 -->
+      <player:EqualizerBandsView Grid.Row="3" Margin="{DynamicResource MarginBottomMd}"/>
+
+      <!-- 底部 -->
+      <StackPanel Grid.Row="4" Spacing="10">
+        <Border Height="1" Background="{DynamicResource SeparatorBrush}"/>
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Text="{Binding StatusMessage}" Classes="eq-modal-caption" VerticalAlignment="Center"/>
+          <Button Grid.Column="1" Content="{Binding CloseLabel}" Classes="eq-modal-close"
+                  Command="{Binding CloseCommand}"/>
+        </Grid>
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

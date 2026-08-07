@@ -1,0 +1,186 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- ===== 列表 ===== -->
+  <Style Selector="ListBox.virtual-list">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+    <Setter Property="ScrollViewer.Padding" Value="{DynamicResource PlayerProgressScrollPadding}"/>
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <VirtualizingStackPanel/>
+      </ItemsPanelTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="ScrollViewer.scroll-clear-player-progress">
+    <Setter Property="Padding" Value="{DynamicResource PlayerProgressScrollPadding}"/>
+  </Style>
+  <Style Selector="ScrollViewer.playlist-browse-scroll">
+    <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+    <Setter Property="Padding" Value="{DynamicResource PlaylistChartsScrollPadding}"/>
+  </Style>
+  <Style Selector="ItemsControl.playlist-charts-grid">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list">
+    <Setter Property="Padding" Value="0,0,0,0"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list > ListBoxItem">
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ListBox.download-queue-list > ListBoxItem /template/ ContentPresenter">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ListBox.album-catalog-tracks-list > ListBoxItem">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ListBox.album-catalog-tracks-list > ListBoxItem /template/ ContentPresenter">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ListBox.album-catalog-tracks-list ListBoxItem:pointerover:not(:selected) Grid.album-catalog-track-row">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="ListBox.album-catalog-tracks-list ListBoxItem:selected Grid.album-catalog-track-row">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+  <Style Selector="ListBox.album-catalog-tracks-list Button.format-chip">
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem /template/ ContentPresenter">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="CornerRadius" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem:selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem:selected">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem:selected Grid.track-row-content">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list.discover-results-list ListBoxItem:selected Grid.track-row-content">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem:selected Grid.track-row-content TextBlock.track-title,
+                 ListBox.virtual-list ListBoxItem:selected Grid.track-row-content TextBlock.track-artist,
+                 ListBox.virtual-list ListBoxItem:selected Grid.track-row-content TextBlock.track-album,
+                 ListBox.virtual-list ListBoxItem:selected Grid.track-row-content TextBlock.track-col-cell-meta">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem:selected Grid.track-row-content TextBlock.track-col-cell-leading">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="ListBox.discover-results-list.virtual-list ListBoxItem:selected Grid.track-row-content TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem:selected Grid.track-row-content Button.row-action-btn TextBlock.track-row-glyph">
+    <Setter Property="Foreground" Value="{DynamicResource IconSecondaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem:selected Grid.track-row-content Button.track-favorite-btn TextBlock.track-favorite-glyph-on">
+    <Setter Property="Foreground" Value="{DynamicResource FavoriteBrush}"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem:selected Grid.track-row-content Button.track-favorite-btn TextBlock.track-favorite-glyph-off">
+    <Setter Property="Foreground" Value="{DynamicResource IconSecondaryBrush}"/>
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem:pointerover:not(:selected) /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Border.track-row.queue-row-current > DockPanel > Grid.track-row-content">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+  <Style Selector="ListBox.queue-sidebar-list ListBoxItem:selected Border.track-row.queue-row-current > DockPanel > Grid.track-row-content">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+  <Style Selector="Button.queue-toolbar-btn.active">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+  <Style Selector="Button.queue-toolbar-btn.active TextBlock.icon-sm">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list ListBoxItem:pointerover:not(:selected) Grid.track-row-content">
+    <Setter Property="Background" Value="{DynamicResource OverlayHoverSubtleBrush}"/>
+  </Style>
+
+  <Style Selector="ListBox.download-queue-list ListBoxItem:pointerover:not(:selected) Grid.download-row-content">
+    <Setter Property="Background" Value="{DynamicResource OverlayHoverSubtleBrush}"/>
+  </Style>
+  <Style Selector="ListBoxItem">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="ItemsControl.batch-scrape-items">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="Border.batch-scrape-item">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="Border.batch-scrape-item:pointerover Grid.batch-scrape-row">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+
+  <Style Selector="ListBox.batch-scrape-list > ListBoxItem">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.batch-scrape-list > ListBoxItem /template/ ContentPresenter">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.batch-scrape-list">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="Grid.batch-scrape-table-header">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="ContentControl.page-content">
+    <Setter Property="Background" Value="{DynamicResource PlayPaneBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+  <Style Selector="ContentControl.page-content /template/ ContentPresenter">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ContentControl.page-content > UserControl">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Grid.track-table-header">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Grid.track-table-header.ant-table-header">
+    <Setter Property="Background" Value="{DynamicResource ContainerBrush}"/>
+  </Style>
+
+</Styles>

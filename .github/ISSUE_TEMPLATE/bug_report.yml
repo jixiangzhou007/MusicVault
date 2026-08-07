@@ -1,0 +1,39 @@
+name: 🐛 Bug 报告
+description: 报告功能异常或崩溃
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: MusicVault 版本
+      placeholder: "1.0.10"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: 操作系统
+      options: [Windows 11, Windows 10, macOS]
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 问题描述
+      description: 发生了什么？预期行为是什么？
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      placeholder: "1. 打开…\n2. 点击…\n3. 观察…"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 诊断日志（可选）
+      description: 从 `%LOCALAPPDATA%\MusicVault\logs\` 附加相关日志
+    validations:
+      required: false

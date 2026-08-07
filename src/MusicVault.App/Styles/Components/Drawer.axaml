@@ -1,0 +1,51 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Ant Drawer：右侧滑出 + 遮罩（与 modal-scrim 共用蒙层色） -->
+
+  <Style Selector="Border.ant-drawer-panel">
+    <Setter Property="Background" Value="{DynamicResource RightPanelBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="1,0,0,0"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+    <!-- Avalonia Transform 不支持 %，用像素偏移（与 MainWindow Drawer MaxWidth 560 对齐） -->
+    <Setter Property="RenderTransformOrigin" Value="1,0.5"/>
+    <Setter Property="RenderTransform" Value="translateX(560px)"/>
+    <Setter Property="Transitions">
+      <Transitions>
+        <TransformOperationsTransition Property="RenderTransform" Duration="{DynamicResource MotionDurationDrawer}" Easing="CubicEaseOut"/>
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="Border.ant-drawer-panel.drawer-open">
+    <Setter Property="RenderTransform" Value="translateX(0px)"/>
+  </Style>
+
+  <!-- Form Drawer 宽表（组合标签搜索）：滑入偏移与 FormDrawerWidthCombinedLabels 对齐 -->
+  <Style Selector="Border.ant-drawer-panel.form-drawer-wide">
+    <Setter Property="RenderTransform" Value="translateX(1040px)"/>
+  </Style>
+
+  <Style Selector="Border.ant-drawer-panel.form-drawer-wide.drawer-open">
+    <Setter Property="RenderTransform" Value="translateX(0px)"/>
+  </Style>
+
+  <Style Selector="Grid.ant-drawer-host > Border.modal-scrim">
+    <Setter Property="Opacity" Value="0"/>
+    <Setter Property="IsHitTestVisible" Value="False"/>
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="{DynamicResource MotionDurationDrawer}"/>
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="Grid.ant-drawer-host.drawer-open > Border.modal-scrim">
+    <Setter Property="Opacity" Value="1"/>
+    <Setter Property="IsHitTestVisible" Value="True"/>
+  </Style>
+
+</Styles>

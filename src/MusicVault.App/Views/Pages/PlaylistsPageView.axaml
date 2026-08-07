@@ -1,0 +1,630 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Pages"
+             xmlns:controls="using:MusicVault.App.Controls"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:layout="using:MusicVault.App.Layout"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="MusicVault.App.Views.Pages.PlaylistsPageView"
+             x:Name="PlaylistsRoot"
+             x:DataType="pvm:PlaylistsPageViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+  <Grid x:Name="RootGrid" ColumnDefinitions="260,6,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+    <!-- 左侧二级菜单（与工具页 ListBox 选中样式一致） -->
+    <DockPanel x:Name="PlaylistNavPane" Grid.Column="0" Classes="pane-library">
+      <Grid DockPanel.Dock="Top" Margin="{DynamicResource LibraryPaneHeaderMargin}" MinHeight="32">
+        <TextBlock Text="{Binding PageTitle}" Classes="text-subtitle" VerticalAlignment="Center"/>
+      </Grid>
+
+      <StackPanel DockPanel.Dock="Bottom" Spacing="4" Margin="{DynamicResource LibraryPaneFooterMargin}">
+        <TextBlock Text="{Binding StatusMessage}" Classes="text-caption" TextWrapping="Wrap"
+                   Foreground="{DynamicResource TextSecondaryBrush}"
+                   IsVisible="{Binding StatusMessage, Converter={x:Static conv:StringNotEmptyConverter.Instance}}"/>
+      </StackPanel>
+
+      <ListBox x:Name="NavFilterList"
+               ItemsSource="{Binding NavItems}"
+               SelectedItem="{Binding SelectedNavItem}"
+               Classes="music-library-list">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="pvm:PlaylistNavItemViewModel">
+            <Border Classes="library-list-row library-list-row-child" HorizontalAlignment="Stretch">
+              <TextBlock Text="{Binding Title}" Classes="text-label"
+                         TextTrimming="CharacterEllipsis" MaxLines="1"
+                         VerticalAlignment="Center"/>
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </DockPanel>
+
+    <controls:VerticalPaneSplitter x:Name="PlaylistSplitter" Grid.Column="1"/>
+
+    <Grid Grid.Column="2" Classes="pane-play" RowDefinitions="*">
+
+      <Grid RowDefinitions="Auto,*">
+
+        <!-- 我的歌单浏览 -->
+        <DockPanel Grid.Row="0" HorizontalAlignment="Stretch" LastChildFill="True"
+                   IsVisible="{Binding ShowPlaylistsBrowsePageHeader}">
+          <StackPanel DockPanel.Dock="Top" Classes="page-hero-copy">
+            <TextBlock Text="{Binding PlaylistsBrowsePageTitle}" Classes="page-title"/>
+            <TextBlock Text="{Binding PlaylistsBrowsePageSubtitle}" Classes="page-intro"
+                       TextWrapping="Wrap"/>
+          </StackPanel>
+          <StackPanel DockPanel.Dock="Top" Classes="page-hero-toolbar" Spacing="0"
+                      IsVisible="{Binding ShowPlaylistsBrowsePageHeader}">
+            <StackPanel Classes="transfers-toolbar-flow">
+              <TextBlock Text="{Binding PlaylistsBrowseSummaryText}"
+                         Classes="discover-results-summary" VerticalAlignment="Center"
+                         TextTrimming="CharacterEllipsis"/>
+              <TextBox Width="{DynamicResource SearchFieldWidth}" MaxWidth="{DynamicResource SearchFieldWidth}"
+                       Watermark="{Binding ImportLinkWatermark}" Text="{Binding ImportLink}"
+                       Classes="top-search browse-search" VerticalAlignment="Center"/>
+              <Button Content="{Binding ImportPlatformButton}" Classes="primary btn-toolbar"
+                      Command="{Binding ImportPlatformPlaylistCommand}"
+                      automation:AutomationProperties.Name="{Binding ImportPlatformButton}"/>
+              <Button Content="{Binding CreatePlaylistButton}" Classes="primary btn-toolbar"
+                      Command="{Binding CreatePlaylistCommand}"
+                      automation:AutomationProperties.Name="{Binding CreatePlaylistButton}"/>
+              <Button Content="{Binding MergePlaylistsButton}" Classes="primary btn-toolbar"
+                      Command="{Binding MergeSelectedPlaylistsCommand}"
+                      IsEnabled="{Binding CanMergeSelectedPlaylists}"
+                      ToolTip.Tip="{Binding MergePlaylistsToolTip}"
+                      automation:AutomationProperties.Name="{Binding MergePlaylistsToolTip}"/>
+            </StackPanel>
+          </StackPanel>
+          <Border DockPanel.Dock="Top" Classes="page-hero-divider"/>
+        </DockPanel>
+
+        <ScrollViewer x:Name="PlaylistBrowseScroll" Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Classes="scroll-clear-player-progress playlist-browse-scroll"
+                      IsVisible="{Binding ShowBrowseGrid}">
+          <StackPanel Spacing="0">
+            <!-- 歌单列表 -->
+            <StackPanel IsVisible="{Binding BrowseAsList}" Margin="{DynamicResource MarginBottomMd}" Spacing="0">
+              <DockPanel Margin="{DynamicResource MarginBottomXs}" LastChildFill="True">
+                <Border DockPanel.Dock="Bottom" Classes="track-row-divider" Margin="{DynamicResource PageContentHorizontalMargin}"/>
+                <Grid Classes="track-table-header ant-table-header discover-track-header"
+                      Margin="{DynamicResource TrackTableHeaderMargin}" Height="27"
+                      ColumnDefinitions="32,40,48,3*,1*,1*,1.2*,72">
+                  <TextBlock Grid.Column="1" Text="#" Classes="track-col-header track-col-header-muted discover-track-index"
+                             HorizontalAlignment="Center"/>
+                  <TextBlock Grid.Column="3" Text="{Binding BrowseColPlaylist}"
+                             Classes="track-col-header track-col-header-muted" Margin="{DynamicResource TrackColCellMargin}"/>
+                  <TextBlock Grid.Column="4" Text="{Binding BrowseColMeta}"
+                             Classes="track-col-header track-col-header-muted" Margin="{DynamicResource TrackColCellMargin}"/>
+                  <TextBlock Grid.Column="5" Text="{Binding BrowseColTracks}"
+                             Classes="track-col-header track-col-header-muted" Margin="{DynamicResource TrackColCellMargin}"/>
+                  <TextBlock Grid.Column="6" Text="{Binding BrowseColCreated}"
+                             Classes="track-col-header track-col-header-muted" Margin="{DynamicResource TrackColCellMargin}"/>
+                  <TextBlock Grid.Column="7" Text="{Binding BrowseColActions}"
+                             Classes="track-col-header track-col-header-muted" Margin="{DynamicResource FieldCaptionLeadingMargin}"/>
+                </Grid>
+              </DockPanel>
+              <ListBox x:Name="PlaylistBrowseList" ItemsSource="{Binding BrowseCards}"
+                       Classes="virtual-list discover-results-list playlist-browse-list"
+                       DoubleTapped="OnPlaylistBrowseDoubleTapped">
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="pvm:PlaylistBrowseCardViewModel">
+                    <Border Background="Transparent" Classes="track-row">
+                      <DockPanel>
+                        <Grid DockPanel.Dock="Top" Classes="track-row-content discover-track-row playlist-browse-row"
+                              Margin="{DynamicResource PageContentHorizontalMargin}" Height="44" MinHeight="44" MaxHeight="44"
+                              VerticalAlignment="Center" ClipToBounds="True"
+                              ColumnDefinitions="32,40,48,3*,1*,1*,1.2*,72">
+                          <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" Classes="choice-check-icon"
+                                    IsEnabled="{Binding ShowSelectCheck}"
+                                    IsVisible="{Binding ShowSelectCheck}"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0"
+                                    automation:AutomationProperties.Name="{Binding RowCheckboxAccessibilityName}"
+                                    PointerPressed="OnPlaylistRowActionPointerPressed"/>
+                          <Panel Grid.Column="0" IsVisible="{Binding !ShowSelectCheck}"/>
+                          <TextBlock Grid.Column="1" Text="{Binding RowIndexText}"
+                                     Classes="track-col-cell discover-track-index discover-track-text"
+                                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                          <Border Grid.Column="2" Width="40" Height="40"
+                                  Classes="browse-entity-avatar browse-entity-avatar-square" ClipToBounds="True"
+                                  VerticalAlignment="Center">
+                            <Panel>
+                              <Image Source="{Binding CoverThumb, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                                     Stretch="UniformToFill" IsVisible="{Binding HasCover}"/>
+                              <Border IsVisible="{Binding !HasCover}" Background="{DynamicResource SurfaceElevatedBrush}">
+                                <TextBlock Text="&#xE8DD;" Classes="icon-sm"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextTertiaryBrush}"/>
+                              </Border>
+                            </Panel>
+                          </Border>
+                          <StackPanel Grid.Column="3" VerticalAlignment="Center" Spacing="2" Margin="{DynamicResource TrackColCellMargin}"
+                                      MaxHeight="36" ClipToBounds="True">
+                            <TextBlock Text="{Binding Name}" Classes="track-col-cell track-title discover-track-text"
+                                       TextTrimming="CharacterEllipsis" MaxLines="1"/>
+                            <TextBlock Text="{Binding DetailLine}" Classes="text-caption browse-artist-list-muted"
+                                       TextTrimming="CharacterEllipsis" MaxLines="1"
+                                       IsVisible="{Binding HasDetailLine}"/>
+                          </StackPanel>
+                          <TextBlock Grid.Column="4" Text="{Binding MetaColumnText}"
+                                     Classes="track-col-cell discover-track-text"
+                                     VerticalAlignment="Center" Margin="{DynamicResource TrackColCellMargin}" TextTrimming="CharacterEllipsis"/>
+                          <TextBlock Grid.Column="5" Text="{Binding TrackCountText}"
+                                     Classes="track-col-cell discover-track-text"
+                                     VerticalAlignment="Center" Margin="{DynamicResource TrackColCellMargin}"/>
+                          <TextBlock Grid.Column="6" Text="{Binding CreatedAtText}"
+                                     Classes="track-col-cell discover-track-text"
+                                     VerticalAlignment="Center" Margin="{DynamicResource TrackColCellMargin}"/>
+                          <StackPanel Grid.Column="7" Orientation="Horizontal" Spacing="2"
+                                      VerticalAlignment="Center" HorizontalAlignment="Center"
+                                      IsVisible="{Binding ShowRowActions}"
+                                      PointerPressed="OnPlaylistRowActionPointerPressed">
+                            <Button Classes="row-action-btn"
+                                    Command="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).EditPlaylistCommand}"
+                                    CommandParameter="{Binding}"
+                                    IsVisible="{Binding CanEdit}"
+                                    ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).EditPlaylistButton}">
+                              <TextBlock Text="&#xE70F;" Classes="track-row-glyph"/>
+                            </Button>
+                            <Button Classes="row-action-btn track-delete-btn"
+                                    Command="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DeletePlaylistCommand}"
+                                    CommandParameter="{Binding}"
+                                    IsVisible="{Binding CanDelete}"
+                                    ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DeletePlaylistButton}">
+                              <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+                            </Button>
+                          </StackPanel>
+                        </Grid>
+                        <Border DockPanel.Dock="Bottom" Classes="track-row-divider" Margin="{DynamicResource PageContentHorizontalMargin}"/>
+                      </DockPanel>
+                    </Border>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </StackPanel>
+
+            <!-- 榜单排行：封面卡片（WrapPanel 需有限宽；勿用 Panel 包裹以免单行横排） -->
+            <ItemsControl x:Name="ChartsGrid" ItemsSource="{Binding BrowseCards}"
+                          Margin="{DynamicResource PageContentHorizontalMargin}"
+                          HorizontalAlignment="Stretch"
+                          Classes="playlist-charts-grid"
+                          IsVisible="{Binding BrowseAsGrid}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="pvm:PlaylistBrowseCardViewModel">
+                  <Button Classes="flat-btn playlist-browse-card-btn" Margin="{DynamicResource CardGridItemMargin}"
+                          Command="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).SelectBrowseCardCommand}"
+                          CommandParameter="{Binding}"
+                          HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch">
+                    <StackPanel Width="{DynamicResource BrowseCoverTileSize}" Spacing="8" HorizontalAlignment="Center">
+                      <Border Classes="playlist-browse-cover"
+                              Width="{DynamicResource BrowseCoverTileSize}"
+                              Height="{DynamicResource BrowseCoverTileSize}"
+                              HorizontalAlignment="Center">
+                        <Panel>
+                          <Image Source="{Binding CoverThumb, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                                 Stretch="UniformToFill" IsVisible="{Binding HasCover}"/>
+                          <Border IsVisible="{Binding !HasCover}" Background="{DynamicResource SurfaceElevatedBrush}">
+                            <TextBlock Text="&#xE8DD;" Classes="icon-sm"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextTertiaryBrush}"/>
+                          </Border>
+                        </Panel>
+                      </Border>
+                      <controls:MarqueeTextBlock Text="{Binding Name}"
+                                                 Width="{DynamicResource BrowseCoverTileSize}"
+                                                 Classes="playlist-browse-card-marquee"
+                                                 HorizontalAlignment="Center"
+                                                 LabelAlignment="Center"
+                                                 ToolTip.Tip="{Binding Name}"/>
+                      <TextBlock Text="{Binding Subtitle}" Width="{DynamicResource BrowseCoverTileSize}" MaxLines="1"
+                                 Classes="text-caption"
+                                 HorizontalAlignment="Center" TextAlignment="Center"
+                                 Foreground="{DynamicResource TextSecondaryBrush}"
+                                 TextTrimming="CharacterEllipsis"
+                                 ToolTip.Tip="{Binding Subtitle}"/>
+                    </StackPanel>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <controls:SkeletonBrowseCoverGridView Margin="{DynamicResource PageContentHorizontalMargin}"
+                                                  IsVisible="{Binding ShowChartsBrowseSkeleton}"/>
+            <controls:EmptyStateView IsVisible="{Binding ShowBrowseEmpty}"
+                                     Title="{Binding BrowseEmptyTitle}"
+                                     Description="{Binding BrowseEmptyDescription}"
+                                     IconGlyph="&#xE8DD;"/>
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"
+                        Margin="{DynamicResource MarginTopSm}"
+                        IsVisible="{Binding ShowChartsEmptyActions}">
+              <Button Content="{Binding ChartsRetryButtonText}" Classes="primary btn-toolbar"
+                      MinWidth="{DynamicResource ControlWidthFilterMin}"
+                      Command="{Binding RetryLoadChartsCommand}"
+                      automation:AutomationProperties.Name="{Binding ChartsRetryButtonText}"/>
+              <Button Content="{Binding ChartsOpenSettingsButtonText}" Classes="flat-btn btn-toolbar"
+                      MinWidth="{DynamicResource ControlWidthFilterMin}"
+                      Command="{Binding OpenOnlineSourcesSettingsCommand}"
+                      automation:AutomationProperties.Name="{Binding ChartsOpenSettingsButtonText}"/>
+            </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1" IsVisible="{Binding ShowingDetail}" LastChildFill="True">
+          <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch" LastChildFill="True">
+            <!-- 在线收藏 / 试听记录 -->
+            <StackPanel DockPanel.Dock="Top" Classes="page-hero-copy"
+                        IsVisible="{Binding ShowOnlineCollectionPageHeader}">
+              <TextBlock Text="{Binding DetailTitle}" Classes="page-title"
+                         TextTrimming="CharacterEllipsis"/>
+              <TextBlock Text="{Binding OnlineListenHistoryIntro}" Classes="page-intro"
+                         TextWrapping="Wrap"
+                         IsVisible="{Binding ShowOnlineListenHistoryGuide}"/>
+              <TextBlock Text="{Binding DetailDescription}" Classes="page-intro"
+                         TextWrapping="Wrap"
+                         IsVisible="{Binding ShowOnlineCollectionDetailDescription}"/>
+            </StackPanel>
+
+            <Grid DockPanel.Dock="Top" Classes="page-hero-toolbar" ColumnDefinitions="*,Auto"
+                  IsVisible="{Binding ShowOnlineCollectionPageHeader}">
+              <TextBlock Grid.Column="0" Text="{Binding OnlineDetailSummaryText}"
+                         Classes="discover-results-summary" VerticalAlignment="Center"
+                         IsVisible="{Binding ShowOnlineDetailSummary}"/>
+              <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6"
+                          HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="{Binding RemoveFromListenHistoryButton}" Classes="primary btn-toolbar"
+                        Command="{Binding RemoveSelectedFromListenHistoryCommand}"
+                        IsEnabled="{Binding CanRemoveSelectedFromListenHistory}"
+                        IsVisible="{Binding ShowListenHistoryBulkActions}"
+                        ToolTip.Tip="{Binding RemoveFromListenHistoryToolTip}"
+                        automation:AutomationProperties.Name="{Binding RemoveFromListenHistoryToolTip}"/>
+                <Button Content="{Binding ClearListenHistoryCacheButton}" Classes="primary btn-toolbar"
+                        Command="{Binding ClearSelectedListenHistoryCacheCommand}"
+                        IsEnabled="{Binding CanClearSelectedListenHistoryCache}"
+                        IsVisible="{Binding ShowListenHistoryBulkActions}"
+                        ToolTip.Tip="{Binding ClearListenHistoryCacheToolTip}"
+                        automation:AutomationProperties.Name="{Binding ClearListenHistoryCacheToolTip}"/>
+                <Button Content="{Binding LoadMoreButtonText}" Classes="primary btn-toolbar"
+                        Command="{Binding LoadMoreOnlineDetailTracksCommand}"
+                        IsVisible="{Binding HasMoreOnlineDetailTracks}"
+                        automation:AutomationProperties.Name="{Binding LoadMoreButtonText}"/>
+              </StackPanel>
+            </Grid>
+
+            <Border DockPanel.Dock="Top" Classes="page-hero-divider"
+                    IsVisible="{Binding ShowOnlineCollectionPageHeader}"/>
+
+            <!-- 歌单/榜单详情 -->
+            <StackPanel DockPanel.Dock="Top" Classes="page-hero-copy"
+                        IsVisible="{Binding ShowStandardDetailHeader}">
+              <TextBlock Text="{Binding DetailTitle}" Classes="page-title"
+                         TextTrimming="CharacterEllipsis"/>
+              <TextBlock Text="{Binding DetailDescription}" Classes="page-intro"
+                         TextWrapping="Wrap"
+                         IsVisible="{Binding ShowStandardDetailDescription}"/>
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Top" Classes="page-hero-toolbar" Spacing="10"
+                        IsVisible="{Binding ShowStandardDetailHeader}">
+              <StackPanel Classes="transfers-toolbar-flow" IsVisible="{Binding ShowImportM3uPanel}">
+                <TextBlock Text="{Binding M3uImportLabel}" Classes="discover-field-label" VerticalAlignment="Center"/>
+                <TextBox Width="{DynamicResource SearchFieldWidth}" MaxWidth="{DynamicResource SearchFieldWidth}" Watermark="{Binding M3uImportWatermark}" Text="{Binding ImportLink}"
+                         Classes="top-search browse-search" VerticalAlignment="Center"/>
+                <Button Content="{Binding M3uImportButton}" Classes="primary btn-toolbar"
+                        Command="{Binding ImportM3uCommand}" VerticalAlignment="Center"
+                        automation:AutomationProperties.Name="{Binding M3uImportButton}"/>
+              </StackPanel>
+              <StackPanel Classes="transfers-toolbar-flow">
+                <Button Command="{Binding BackToBrowseCommand}" Classes="flat-btn btn-toolbar"
+                        IsVisible="{Binding ShowBackToBrowseButton}"
+                        Padding="8,4" VerticalAlignment="Center"
+                        automation:AutomationProperties.Name="{Binding BackToBrowseLabel}">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="&#xE72B;" Classes="icon-sm"/>
+                    <TextBlock Text="{Binding BackToBrowseLabel}" Classes="text-label"/>
+                  </StackPanel>
+                </Button>
+                <TextBlock Text="{Binding PlaylistTracksSummary}"
+                           Classes="discover-results-summary" TextTrimming="CharacterEllipsis"
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding ShowPlaylistTracksList}"/>
+                <TextBlock Text="{Binding PlaylistTracksSummary}"
+                           Classes="discover-results-summary" TextTrimming="CharacterEllipsis"
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding IsChartDetail}"/>
+                <Border Classes="transfers-toolbar-group-sep"
+                        IsVisible="{Binding ShowPlaylistTracksList}"/>
+                <Button Content="{Binding EditPlaylistButton}" Classes="primary btn-toolbar"
+                        Command="{Binding EditPlaylistCommand}"
+                        IsVisible="{Binding CanEditSelectedPlaylist}"
+                        automation:AutomationProperties.Name="{Binding EditPlaylistButton}"/>
+                <Button Content="{Binding DeletePlaylistButton}" Classes="primary btn-toolbar"
+                        Command="{Binding DeletePlaylistCommand}"
+                        IsVisible="{Binding CanDeleteSelectedPlaylist}"
+                        automation:AutomationProperties.Name="{Binding DeletePlaylistButton}"/>
+                <Button Content="{Binding ExportM3uButton}" Classes="primary btn-toolbar"
+                        Command="{Binding ExportM3uCommand}"
+                        IsVisible="{Binding ShowExportM3uAction}"
+                        automation:AutomationProperties.Name="{Binding ExportM3uButton}"/>
+                <Button Content="{Binding PreviewChartPlaylistButton}" Classes="primary btn-toolbar"
+                        Command="{Binding PreviewChartPlaylistCommand}"
+                        IsVisible="{Binding IsChartDetail}"
+                        automation:AutomationProperties.Name="{Binding PreviewChartPlaylistButton}"/>
+                <Button Content="{Binding BatchDownloadButton}" Classes="primary btn-toolbar"
+                        Command="{Binding BatchDownloadChartCommand}"
+                        IsVisible="{Binding IsChartDetail}"
+                        automation:AutomationProperties.Name="{Binding BatchDownloadButton}"/>
+                <Button Content="{Binding LoadMoreButtonText}" Classes="primary btn-toolbar"
+                        Command="{Binding LoadMoreOnlineDetailTracksCommand}"
+                        IsVisible="{Binding HasMoreOnlineDetailTracks}"
+                        automation:AutomationProperties.Name="{Binding LoadMoreButtonText}"/>
+                <Button Content="{Binding LoadMoreButtonText}" Classes="primary btn-toolbar"
+                        Command="{Binding LoadMorePlaylistTracksCommand}"
+                        IsVisible="{Binding HasMorePlaylistLocalTracks}"
+                        automation:AutomationProperties.Name="{Binding LoadMoreButtonText}"/>
+                <Button Content="{Binding BatchDownloadButton}" Classes="primary btn-toolbar"
+                        Command="{Binding BatchDownloadPendingCommand}"
+                        IsVisible="{Binding HasPendingOnlineTracks}"
+                        automation:AutomationProperties.Name="{Binding BatchDownloadButton}"/>
+                <Button Content="{Binding RetryFailedButton}" Classes="primary btn-toolbar"
+                        Command="{Binding RetryFailedDownloadsCommand}"
+                        IsVisible="{Binding IsLocalPlaylistDetail}"
+                        automation:AutomationProperties.Name="{Binding RetryFailedButton}"/>
+              </StackPanel>
+            </StackPanel>
+
+            <Border DockPanel.Dock="Top" Classes="page-hero-divider"
+                    IsVisible="{Binding ShowStandardDetailHeader}"/>
+          </DockPanel>
+
+          <controls:LibraryTrackTableHeader DockPanel.Dock="Top"
+                                            IsVisible="{Binding ShowPlaylistTracksList}"/>
+
+          <!-- 试听记录表头（含勾选列） -->
+          <DockPanel DockPanel.Dock="Top" Margin="{DynamicResource MarginBottomXs}"
+                     IsVisible="{Binding ShowListenHistoryTracksList}"
+                     LastChildFill="True">
+            <Border DockPanel.Dock="Bottom" Classes="track-row-divider track-table-divider-paired"/>
+            <Grid x:Name="ListenHistoryHeaderGrid" Classes="track-table-header ant-table-header discover-track-header track-table-header-paired"
+                  ColumnDefinitions="{x:Static layout:TrackTableLayout.DiscoverBatchColumns}">
+              <Button Grid.Column="0" Classes="flat-btn" Padding="0" MinWidth="28" MinHeight="24"
+                      Background="Transparent" BorderThickness="0"
+                      Command="{Binding ToggleListenHistorySelectAllCommand}"
+                      ToolTip.Tip="{Binding ListenHistorySelectAllToolTip}"
+                      automation:AutomationProperties.Name="{Binding ListenHistorySelectAllToolTip}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="{Binding ColumnSelectHeader}" Classes="track-col-header track-col-header-muted track-col-header-index"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              </Button>
+              <TextBlock Grid.Column="1" Text="#" Classes="track-col-header track-col-header-muted track-col-header-index discover-track-index"
+                         HorizontalAlignment="Center"/>
+              <!-- 封面列无表头 -->
+              <TextBlock Grid.Column="3" Text="{Binding ColumnSongHeader}" Classes="track-col-header track-col-header-muted discover-track-song-label"/>
+              <TextBlock Grid.Column="4" Text="{Binding ColumnSourceHeader}" Classes="track-col-header track-col-header-muted"/>
+              <TextBlock Grid.Column="5" Text="{Binding ColumnDurationHeader}" Classes="track-col-header track-col-header-muted track-col-header-index" HorizontalAlignment="Center"/>
+              <TextBlock Grid.Column="6" Text="{Binding ColumnCacheHeader}" Classes="track-col-header track-col-header-muted track-col-header-index" HorizontalAlignment="Center"/>
+              <TextBlock Grid.Column="7" Text="{Binding ColumnFavoriteHeader}" Classes="track-col-header track-col-header-muted track-col-header-index" HorizontalAlignment="Center"/>
+              <TextBlock Grid.Column="8" Text="{Binding ColumnPlaylistHeader}" Classes="track-col-header track-col-header-muted track-col-header-index" HorizontalAlignment="Center"/>
+              <TextBlock Grid.Column="9" Text="{Binding ColumnActionsHeader}" Classes="track-col-header track-col-header-muted track-col-header-last"/>
+            </Grid>
+          </DockPanel>
+
+          <!-- 在线曲目表头（榜单 / 收藏 / 歌单内在线项） -->
+          <controls:DiscoverOnlineTrackTableHeader x:Name="ChartDiscoverHeader"
+                                                   DockPanel.Dock="Top"
+                                                   Margin="{DynamicResource MarginBottomXs}"
+                                                   IsVisible="{Binding ShowStandardChartTracksList}"/>
+
+          <Panel>
+            <ListBox x:Name="PlaylistTrackList" ItemsSource="{Binding PlaylistTracks}"
+                     Classes="virtual-list track-table-scroll-list"
+                     ItemTemplate="{StaticResource PlaylistLocalTrackRowTemplate}"
+                     IsVisible="{Binding ShowPlaylistTracksList}"/>
+
+            <ListBox x:Name="ListenHistoryTrackList" ItemsSource="{Binding DetailOnlineTracks}"
+                     DoubleTapped="OnChartTrackDoubleTapped"
+                     Classes="virtual-list discover-results-list track-table-scroll-list"
+                     IsVisible="{Binding ShowListenHistoryTracksList}">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:OnlineTrackViewModel">
+                  <Border Background="Transparent" Classes="track-row">
+                    <DockPanel>
+                      <Grid DockPanel.Dock="Top" Classes="track-row-content discover-track-row"
+                            VerticalAlignment="Center"
+                            MinHeight="{x:Static layout:TrackTableLayout.DiscoverRowHeight}"
+                            ColumnDefinitions="{x:Static layout:TrackTableLayout.DiscoverBatchColumns}">
+                        <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" Classes="choice-check-icon"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0"
+                                  automation:AutomationProperties.Name="{Binding RowCheckboxAccessibilityName}"
+                                  automation:AutomationProperties.HelpText="{Binding RowCheckboxAccessibilityHelp}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding RowIndexText}"
+                                   Classes="track-col-cell discover-track-index discover-track-text"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border Grid.Column="2" Classes="discover-cover-thumb"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                ToolTip.Tip="{Binding Title}">
+                          <Panel>
+                            <Image Source="{Binding CoverBitmap}" Stretch="UniformToFill"
+                                   IsVisible="{Binding HasCoverThumb}"/>
+                            <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-xs icon-muted"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       IsVisible="{Binding !HasCoverThumb}"/>
+                          </Panel>
+                        </Border>
+                        <StackPanel Grid.Column="3" Classes="discover-track-title-stack"
+                                    VerticalAlignment="Center" Spacing="2">
+                          <controls:MarqueeTextBlock Text="{Binding Title}" LabelAlignment="Left"
+                                                     Classes="discover-track-marquee discover-track-marquee-title"/>
+                          <controls:MarqueeTextBlock Text="{Binding Artist}" LabelAlignment="Left"
+                                                     Classes="discover-track-marquee discover-track-marquee-subtitle"/>
+                        </StackPanel>
+                        <Grid Grid.Column="4" Classes="discover-track-cell" ToolTip.Tip="{Binding PlatformLabel}">
+                          <controls:MarqueeTextBlock Text="{Binding PlatformLabel}" LabelAlignment="Left"
+                                                     Classes="discover-track-marquee discover-track-marquee-subtitle"/>
+                        </Grid>
+                        <TextBlock Grid.Column="5" Text="{Binding DurationText}" Classes="track-col-cell discover-track-text"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border Grid.Column="6" Classes="discover-cache-chip"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                ToolTip.Tip="{Binding PreviewCacheToolTip}"
+                                IsVisible="{Binding IsPreviewCached}">
+                          <TextBlock Text="{Binding PreviewCacheStatusText}" Classes="discover-cache-chip-text"/>
+                        </Border>
+                        <Button Grid.Column="7"
+                                Classes="row-action-btn track-favorite-btn"
+                                HorizontalAlignment="Center"
+                                ToolTip.Tip="{Binding OnlineFavoriteToolTip}"
+                                automation:AutomationProperties.Name="{Binding OnlineFavoriteToolTip}"
+                                Command="{Binding ToggleOnlineFavoriteCommand}">
+                          <Panel>
+                            <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph online-favorite-heart-off"
+                                       IsVisible="{Binding !IsOnlineFavorite}"/>
+                            <TextBlock Text="{StaticResource IconGlyphHeartFill}" Classes="track-row-glyph online-favorite-heart-on"
+                                       IsVisible="{Binding IsOnlineFavorite}"/>
+                          </Panel>
+                        </Button>
+                        <Button Grid.Column="8"
+                                Classes="row-action-btn track-playlist-btn"
+                                HorizontalAlignment="Center"
+                                ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).AddToPlaylistToolTip}"
+                                automation:AutomationProperties.Name="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).AddToPlaylistToolTip}"
+                                Click="OnAddOnlineTrackToPlaylistClick">
+                          <TextBlock Text="+" Classes="track-row-glyph"/>
+                        </Button>
+                        <Button Grid.Column="9" Classes="row-action-btn"
+                                HorizontalAlignment="Left"
+                                Margin="{DynamicResource FieldCaptionLeadingMargin}"
+                                ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DownloadToolTip}"
+                                automation:AutomationProperties.Name="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DownloadToolTip}"
+                                Command="{Binding OpenDownloadPickerCommand}">
+                          <TextBlock Text="&#xE896;" Classes="track-row-glyph"/>
+                        </Button>
+                      </Grid>
+                      <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+
+            <ListBox x:Name="ChartTrackList" ItemsSource="{Binding DetailOnlineTracks}"
+                     DoubleTapped="OnChartTrackDoubleTapped"
+                     Classes="virtual-list discover-results-list track-table-scroll-list"
+                     IsVisible="{Binding ShowStandardChartTracksList}">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:OnlineTrackViewModel">
+                  <Border Background="Transparent" Classes="track-row">
+                    <DockPanel>
+                      <Grid DockPanel.Dock="Top" Classes="track-row-content discover-track-row"
+                            VerticalAlignment="Center"
+                            MinHeight="{x:Static layout:TrackTableLayout.DiscoverRowHeight}"
+                            ColumnDefinitions="{x:Static layout:TrackTableLayout.DiscoverColumns}">
+                        <TextBlock Grid.Column="0" Text="{Binding RowIndexText}"
+                                   Classes="track-col-cell discover-track-index discover-track-text"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border Grid.Column="1" Classes="discover-cover-thumb"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                ToolTip.Tip="{Binding Title}">
+                          <Panel>
+                            <Image Source="{Binding CoverBitmap}" Stretch="UniformToFill"
+                                   IsVisible="{Binding HasCoverThumb}"/>
+                            <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-xs icon-muted"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       IsVisible="{Binding !HasCoverThumb}"/>
+                          </Panel>
+                        </Border>
+                        <StackPanel Grid.Column="2" Classes="discover-track-title-stack"
+                                    VerticalAlignment="Center" Spacing="2">
+                          <controls:MarqueeTextBlock Text="{Binding Title}" LabelAlignment="Left"
+                                                     Classes="discover-track-marquee discover-track-marquee-title"/>
+                          <controls:MarqueeTextBlock Text="{Binding Artist}" LabelAlignment="Left"
+                                                     Classes="discover-track-marquee discover-track-marquee-subtitle"/>
+                        </StackPanel>
+                        <Grid Grid.Column="3" Classes="discover-track-cell" ToolTip.Tip="{Binding PlatformLabel}">
+                          <controls:MarqueeTextBlock Text="{Binding PlatformLabel}" LabelAlignment="Left"
+                                                     Classes="discover-track-marquee discover-track-marquee-subtitle"/>
+                        </Grid>
+                        <TextBlock Grid.Column="4" Text="{Binding DurationText}" Classes="track-col-cell discover-track-text"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border Grid.Column="5" Classes="discover-cache-chip"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                ToolTip.Tip="{Binding PreviewCacheToolTip}"
+                                IsVisible="{Binding IsPreviewCached}">
+                          <TextBlock Text="{Binding PreviewCacheStatusText}" Classes="discover-cache-chip-text"/>
+                        </Border>
+                        <Button Grid.Column="6"
+                                Classes="row-action-btn track-favorite-btn"
+                                HorizontalAlignment="Center"
+                                ToolTip.Tip="{Binding OnlineFavoriteToolTip}"
+                                automation:AutomationProperties.Name="{Binding OnlineFavoriteToolTip}"
+                                Command="{Binding ToggleOnlineFavoriteCommand}">
+                          <Panel>
+                            <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph online-favorite-heart-off"
+                                       IsVisible="{Binding !IsOnlineFavorite}"/>
+                            <TextBlock Text="{StaticResource IconGlyphHeartFill}" Classes="track-row-glyph online-favorite-heart-on"
+                                       IsVisible="{Binding IsOnlineFavorite}"/>
+                          </Panel>
+                        </Button>
+                        <Button Grid.Column="7"
+                                Classes="row-action-btn track-playlist-btn"
+                                HorizontalAlignment="Center"
+                                ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).AddToPlaylistToolTip}"
+                                automation:AutomationProperties.Name="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).AddToPlaylistToolTip}"
+                                Click="OnAddOnlineTrackToPlaylistClick">
+                          <TextBlock Text="+" Classes="track-row-glyph"/>
+                        </Button>
+                        <Button Grid.Column="8" Classes="row-action-btn"
+                                HorizontalAlignment="Center"
+                                ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DownloadToolTip}"
+                                automation:AutomationProperties.Name="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DownloadToolTip}"
+                                Command="{Binding OpenDownloadPickerCommand}">
+                          <TextBlock Text="&#xE896;" Classes="track-row-glyph"/>
+                        </Button>
+                      </Grid>
+                      <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Grid Margin="{DynamicResource PageContentHorizontalMargin}"
+                  ColumnDefinitions="{x:Static layout:TrackTableLayout.DiscoverColumns}"
+                  Height="{x:Static layout:TrackTableLayout.DiscoverRowHeight}"
+                  IsVisible="{Binding ShowChartTracksLoadMoreSkeleton}">
+              <controls:SkeletonLine Grid.Column="0" LineWidth="16" LineHorizontalAlignment="Center"/>
+              <controls:SkeletonLine Grid.Column="1" LineWidth="40" LineHorizontalAlignment="Center"/>
+              <controls:SkeletonLine Grid.Column="2" Margin="{DynamicResource TrackColCellMargin}"/>
+              <controls:SkeletonLine Grid.Column="3" Margin="{DynamicResource TrackColCellMargin}" LineWidth="60"/>
+              <controls:SkeletonLine Grid.Column="4" LineWidth="32" LineHorizontalAlignment="Center"/>
+              <controls:SkeletonLine Grid.Column="5" LineWidth="24" LineHorizontalAlignment="Center"/>
+              <controls:SkeletonLine Grid.Column="6" LineWidth="24" LineHorizontalAlignment="Center"/>
+              <controls:SkeletonLine Grid.Column="7" LineWidth="24" LineHorizontalAlignment="Center"/>
+              <controls:SkeletonLine Grid.Column="8" LineWidth="24" LineHorizontalAlignment="Center"/>
+            </Grid>
+
+            <Button x:Name="ChartScrollTopBtn" Content="&#xE70E;"
+                    Classes="list-scroll-top-btn"
+                    HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                    Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
+                    Click="OnChartScrollTopClick"/>
+
+            <controls:SkeletonAlbumTrackListView Margin="{DynamicResource PageContentHorizontalMargin}"
+                                                 IsVisible="{Binding IsLoadingChartTracks}"/>
+            <controls:EmptyStateView IsVisible="{Binding ShowDetailTracksEmpty}"
+                                     Title="{Binding EmptyTracksTitle}"
+                                     Description="{Binding EmptyTracksDescription}"
+                                     IconGlyph="&#xE8DD;"/>
+          </Panel>
+        </DockPanel>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

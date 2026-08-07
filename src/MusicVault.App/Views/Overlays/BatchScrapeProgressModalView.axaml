@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             x:Class="MusicVault.App.Views.Overlays.BatchScrapeProgressModalView"
+             x:DataType="vm:BatchScrapeProgressModalViewModel">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel" MinWidth="460" MaxWidth="560">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding CancelLabel}" Classes="flat-btn app-dialog-btn" Command="{Binding CancelCommand}"/>
+        </StackPanel>
+      </Border>
+      <StackPanel Classes="app-dialog-body" Spacing="12">
+        <TextBlock Text="{Binding Title}" Classes="text-subtitle"/>
+        <TextBlock Text="{Binding CurrentFileText}" Classes="text-body" TextWrapping="Wrap" LineHeight="22"/>
+        <Grid ColumnDefinitions="*,Auto">
+          <ProgressBar Grid.Column="0" Minimum="0" Maximum="{Binding ProgressMaximum}"
+                       Value="{Binding ProgressValue}"
+                       Classes="ant-progress-line-modal"/>
+          <TextBlock Grid.Column="1" Text="{Binding ProgressPercentText}"
+                     Classes="ant-progress-percent"/>
+        </Grid>
+        <TextBlock Text="{Binding StatsText}" Classes="text-label"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</UserControl>

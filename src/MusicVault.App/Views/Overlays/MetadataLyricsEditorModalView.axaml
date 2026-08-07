@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             x:Class="MusicVault.App.Views.Overlays.MetadataLyricsEditorModalView"
+             x:DataType="vm:MetadataLyricsEditorModalViewModel"
+             Focusable="True"
+             KeyDown="OnKeyDown">
+  <Grid RowDefinitions="Auto,*,Auto">
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="{DynamicResource LibraryPaneHeaderMargin}">
+      <StackPanel Spacing="4">
+        <TextBlock Text="{Binding Title}" Classes="text-subtitle"/>
+        <TextBlock Text="{Binding Subtitle}" Classes="text-caption"
+                   Foreground="{DynamicResource TextTertiaryBrush}"/>
+      </StackPanel>
+      <Button Grid.Column="1" Classes="icon-btn" ToolTip.Tip="{Binding CloseToolTip}"
+              Command="{Binding CancelCommand}">
+        <TextBlock Text="&#xE8BB;" Classes="icon-sm"/>
+      </Button>
+    </Grid>
+
+    <ScrollViewer Grid.Row="1" Margin="{DynamicResource PageContentHorizontalMarginSm}" VerticalScrollBarVisibility="Auto">
+      <StackPanel Spacing="8">
+        <TextBox Text="{Binding Lyrics, Mode=TwoWay}"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 MinHeight="280"
+                 Classes="app-dialog-field metadata-lyrics-field"/>
+
+        <Border IsVisible="{Binding ShowEncodingFixPanel}"
+                BorderBrush="{DynamicResource BorderSubtleBrush}"
+                BorderThickness="1"
+                Padding="8"
+                CornerRadius="6">
+          <StackPanel Spacing="8">
+            <TextBlock Text="{Binding EncodingPrompt}" Classes="text-label"/>
+            <ListBox ItemsSource="{Binding EncodingCandidates}"
+                     SelectedItem="{Binding SelectedEncodingCandidate, Mode=TwoWay}"
+                     MaxHeight="160">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:EncodingFixRowViewModel">
+                  <StackPanel Spacing="2" Margin="{DynamicResource MarginTopXs}">
+                    <TextBlock Text="{Binding EncodingName}" Classes="text-label"/>
+                    <TextBlock Text="{Binding Preview}" Classes="text-caption"
+                               TextWrapping="Wrap" MaxLines="3"/>
+                  </StackPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            <Button Content="{Binding ApplyEncodingLabel}" Classes="primary app-dialog-btn"
+                    HorizontalAlignment="Right"
+                    Command="{Binding ApplyEncodingFixCommand}"/>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Border Grid.Row="2" Padding="12,8,12,12" Classes="app-dialog-footer"
+            BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="0,1,0,0">
+      <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto">
+        <Button Grid.Column="0" Content="{Binding FixEncodingLabel}" Classes="flat-btn btn-toolbar app-dialog-btn"
+                Margin="{DynamicResource MarginTrailingSm}" Command="{Binding ToggleEncodingFixCommand}"/>
+        <Button Grid.Column="2" Content="{Binding SaveAsLrcLabel}" Classes="flat-btn app-dialog-btn"
+                MinWidth="90" Margin="{DynamicResource MarginTrailingSm}" Command="{Binding SaveAsLrcCommand}"/>
+        <Button Grid.Column="3" Content="{Binding CancelLabel}" Classes="flat-btn app-dialog-btn"
+                MinWidth="80" Margin="{DynamicResource MarginTrailingSm}" Command="{Binding CancelCommand}"/>
+        <Button Grid.Column="4" Content="{Binding ApplyLabel}" Classes="flat-btn app-dialog-btn"
+                MinWidth="80" Margin="{DynamicResource MarginTrailingSm}" Command="{Binding ApplyCommand}"/>
+        <Button Grid.Column="5" Content="{Binding ApplyAndSaveLabel}" Classes="primary app-dialog-btn"
+                MinWidth="100" Command="{Binding ApplyAndSaveCommand}"/>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

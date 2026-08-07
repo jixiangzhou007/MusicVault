@@ -1,0 +1,116 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- ===== 侧边栏（保留兼容） ===== -->
+  <Style Selector="Border.sidebar-panel">
+    <Setter Property="Background" Value="{DynamicResource SidebarBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusPanel}"/>
+    <Setter Property="BoxShadow" Value="{DynamicResource PanelShadow}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="Border.content-panel">
+    <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusPanel}"/>
+    <Setter Property="BoxShadow" Value="{DynamicResource CardShadow}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="Border.glass-panel">
+    <Setter Property="Background" Value="{DynamicResource SidebarBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusPanel}"/>
+    <Setter Property="BoxShadow" Value="{DynamicResource PanelShadow}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="TextBlock.app-logo">
+    <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle3}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="LetterSpacing" Value="-0.3"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.section-header">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="Margin" Value="14,18,14,6"/>
+    <Setter Property="LetterSpacing" Value="0.4"/>
+  </Style>
+
+  <Style Selector="Button.nav-item">
+    <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="10,7"/>
+    <Setter Property="Margin" Value="6,1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.18"/>
+      </Transitions>
+    </Setter>
+  </Style>
+  <Style Selector="Button.nav-item:pointerover">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="Button.nav-item.selected">
+    <Setter Property="Background" Value="{DynamicResource NavSelectedBgBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+  </Style>
+  <Style Selector="Button.nav-item Path">
+    <Setter Property="Fill" Value="{DynamicResource NavIconBrush}"/>
+  </Style>
+  <Style Selector="Button.nav-item.selected Path">
+    <Setter Property="Fill" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.page-title">
+    <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizePageTitle}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="LetterSpacing" Value="-0.25"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.page-subtitle">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Margin" Value="0,4,0,0"/>
+  </Style>
+  <!-- 壳层标准页头分割线（左右 inset 16px；页内 Hero 请用 page-hero-divider 通栏） -->
+  <Style Selector="Border.page-header-divider">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="MinHeight" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="16,8,16,4"/>
+  </Style>
+  <Style Selector="Border.pane-divider-h">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="MinHeight" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Button.page-back-btn">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0,2"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Button.page-back-btn:pointerover TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+</Styles>

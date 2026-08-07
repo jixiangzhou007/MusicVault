@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MusicVault.App.Controls"
+             x:Class="MusicVault.App.Views.Overlays.ConfirmBatchEnqueueModalView"
+             x:CompileBindings="False">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel" MinWidth="480" MaxWidth="560">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding CancelButtonText}" Classes="flat-btn app-dialog-btn" Command="{Binding CancelCommand}"/>
+          <Button Content="{Binding ConfirmButtonText}" Classes="primary app-dialog-btn"
+                  IsEnabled="{Binding CanConfirm}" Command="{Binding ConfirmCommand}"/>
+        </StackPanel>
+      </Border>
+      <StackPanel Classes="app-dialog-body" Spacing="16">
+        <controls:StepsIndicator Items="{Binding WizardSteps}" Margin="{DynamicResource MarginBottomXs}"/>
+        <TextBlock Text="{Binding TitleText}" Classes="text-subtitle" TextWrapping="Wrap"/>
+        <TextBlock Text="{Binding SummaryText}" Classes="text-body" TextWrapping="Wrap" LineHeight="22"/>
+        <TextBlock Text="{Binding StatsLine}" Classes="text-caption" TextWrapping="Wrap" LineHeight="20"
+                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+        <TextBlock Text="{Binding DetailText}" Classes="text-caption" TextWrapping="Wrap" LineHeight="20"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</UserControl>

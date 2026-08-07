@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MusicVault.App.Views.Dialogs.MusicApiUpdateDialog"
+        Classes="app-dialog"
+        Width="480"
+        SizeToContent="Height"
+        MinHeight="220"
+        MaxWidth="520">
+  <Border Classes="app-dialog-shell">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button x:Name="SkipButton" Classes="flat-btn app-dialog-btn"/>
+          <Button x:Name="UpdateButton" Classes="primary app-dialog-btn"/>
+        </StackPanel>
+      </Border>
+
+      <StackPanel Classes="app-dialog-body">
+        <TextBlock x:Name="TitleText" Classes="text-title"/>
+        <TextBlock x:Name="DetailText" TextWrapping="Wrap" LineHeight="22" Classes="text-body"/>
+        <ProgressBar x:Name="DownloadProgress" Minimum="0" Maximum="100"
+                     Classes="ant-progress-line-modal" IsVisible="False"/>
+        <TextBlock x:Name="StageText" Classes="text-caption" IsVisible="False"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</Window>

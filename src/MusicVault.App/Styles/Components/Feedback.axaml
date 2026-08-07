@@ -1,0 +1,240 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- ===== Ant Design Tag（与 discover-action-chip / track-status-chip 共用语义） ===== -->
+  <Style Selector="Border.ant-tag">
+    <Setter Property="CornerRadius" Value="3"/>
+    <Setter Property="Padding" Value="6,2"/>
+    <Setter Property="MinHeight" Value="18"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Border.ant-tag TextBlock">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeMicro}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="LineHeight" Value="12"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Border.ant-tag-filled-primary">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="Border.ant-tag-filled-primary TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-tag-filled-success">
+    <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="Border.ant-tag-filled-success TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-tag-filled-error">
+    <Setter Property="Background" Value="{DynamicResource DangerBrush}"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="Border.ant-tag-filled-error TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-tag-outlined">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-tag-outlined TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-tag-filled-warning">
+    <Setter Property="Background" Value="{DynamicResource WarningTextBrush}"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="Border.ant-tag-filled-warning TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+  </Style>
+
+  <!-- ===== Segmented 分段控制器 ===== -->
+  <Style Selector="Border.ant-segmented">
+    <Setter Property="Background" Value="{DynamicResource ContainerBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSecondaryBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Padding" Value="2"/>
+  </Style>
+  <Style Selector="Button.ant-segmented-item">
+    <Setter Property="MinHeight" Value="24"/>
+    <Setter Property="Height" Value="24"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Padding" Value="10,0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="CornerRadius" Value="2"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.ant-segmented-item:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Button.ant-segmented-item.selected">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+
+  <!-- ===== Alert 行内提示 ===== -->
+  <Style Selector="Border.ant-alert">
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Padding" Value="10,8"/>
+    <Setter Property="Margin" Value="0,0,0,10"/>
+  </Style>
+  <Style Selector="Border.ant-alert TextBlock.ant-alert-message">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="18"/>
+  </Style>
+  <Style Selector="Border.ant-alert TextBlock.ant-alert-description">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="18"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="Opacity" Value="0.92"/>
+  </Style>
+  <Style Selector="Border.ant-alert > TextBlock">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="LineHeight" Value="18"/>
+  </Style>
+  <Style Selector="Border.ant-alert Run.ant-alert-description">
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-alert-info">
+    <Setter Property="Background" Value="{DynamicResource InfoSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource InfoBorderBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-alert-info TextBlock.ant-alert-message">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-alert-info Run.ant-alert-message">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-alert-warning">
+    <Setter Property="Background" Value="{DynamicResource WarningSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource WarningBorderBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-alert-warning TextBlock.ant-alert-message">
+    <Setter Property="Foreground" Value="{DynamicResource WarningTextBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-alert-warning Run.ant-alert-message">
+    <Setter Property="Foreground" Value="{DynamicResource WarningTextBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-alert-error">
+    <Setter Property="Background" Value="{DynamicResource ErrorSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ErrorBorderBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-alert-error TextBlock.ant-alert-message">
+    <Setter Property="Foreground" Value="{DynamicResource ErrorTextBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-alert-error Run.ant-alert-message">
+    <Setter Property="Foreground" Value="{DynamicResource ErrorTextBrush}"/>
+  </Style>
+
+  <!-- ===== Empty 空状态 ===== -->
+  <Style Selector="StackPanel.ant-empty">
+    <Setter Property="Spacing" Value="10"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="MaxWidth" Value="400"/>
+  </Style>
+  <Style Selector="Border.ant-empty-icon">
+    <Setter Property="Width" Value="52"/>
+    <Setter Property="Height" Value="52"/>
+    <Setter Property="CornerRadius" Value="26"/>
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.ant-empty-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle3}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.ant-empty-desc">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+
+  <!-- ===== Table 表头（Ant 弱对比表头 + 行 hover 已由 List.axaml 负责） ===== -->
+  <Style Selector="Grid.ant-table-header">
+    <Setter Property="Background" Value="{DynamicResource ContainerBrush}"/>
+  </Style>
+  <Style Selector="Grid.ant-table-header TextBlock.track-col-header">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+
+  <!-- ===== Descriptions 描述列表 ===== -->
+  <Style Selector="Border.ant-descriptions">
+    <Setter Property="Background" Value="{DynamicResource ContainerBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSecondaryBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Padding" Value="12,10"/>
+    <Setter Property="Margin" Value="0,0,0,12"/>
+  </Style>
+  <Style Selector="Grid.ant-descriptions-row">
+    <Setter Property="Margin" Value="0,0,0,8"/>
+  </Style>
+  <Style Selector="TextBlock.ant-descriptions-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.ant-descriptions-value">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+
+  <!-- ===== Switch / Collapse ===== -->
+  <Style Selector="ToggleSwitch.ant-switch">
+    <Setter Property="Theme" Value="{DynamicResource MusicVaultSwitchTheme}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="ClipToBounds" Value="False"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="OnContent" Value=""/>
+    <Setter Property="OffContent" Value=""/>
+  </Style>
+
+  <Style Selector="ToggleSwitch.ant-switch TextBlock">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Grid.settings-switch-row">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="Expander.ant-collapse">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSecondaryBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Margin" Value="0,0,0,12"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+
+</Styles>

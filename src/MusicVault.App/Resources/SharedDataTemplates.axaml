@@ -1,0 +1,546 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="using:MusicVault.App.ViewModels"
+                    xmlns:pvm="using:MusicVault.App.ViewModels.Pages"
+                    xmlns:dvm="using:MusicVault.App.ViewModels.Dialogs"
+                    xmlns:controls="using:MusicVault.App.Controls"
+                    xmlns:layout="using:MusicVault.App.Layout"
+                    xmlns:automation="using:Avalonia.Automation">
+
+  <DataTemplate x:Key="LibraryTrackRowTemplate" DataType="vm:TrackItemViewModel">
+    <Border Background="Transparent" Classes="track-row">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" Classes="track-row-content"
+              ColumnDefinitions="{x:Static layout:TrackTableLayout.LibraryColumns}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
+              MinWidth="0">
+          <TextBlock Grid.Column="0" Text="{Binding RowIndexText}" Classes="track-col-cell track-col-cell-leading"/>
+          <Grid Grid.Column="1" Classes="track-col-title-host" ColumnDefinitions="*,Auto" MinWidth="0">
+            <TextBlock Grid.Column="0" Text="{Binding Title}" Classes="track-col-cell track-title"
+                       TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0" MinWidth="0"/>
+            <TextBlock Grid.Column="1" Text="{Binding NasPlaybackCacheStatusText}"
+                       Classes="discover-preview-cache-tag"
+                       VerticalAlignment="Center" Margin="4,0,0,0"
+                       ToolTip.Tip="{Binding NasPlaybackCacheToolTip}"
+                       IsVisible="{Binding ShowNasPlaybackCached}"/>
+          </Grid>
+          <TextBlock Grid.Column="2" Text="{Binding Artist}" Classes="track-col-cell track-artist"
+                     MinWidth="0" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="3" Text="{Binding Album}" Classes="track-col-cell track-album"
+                     MinWidth="0" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="4" Text="{Binding YearText}" Classes="track-col-cell track-col-cell-meta"/>
+          <TextBlock Grid.Column="5" Text="{Binding DurationText}" Classes="track-col-cell track-col-cell-meta"/>
+          <Button Grid.Column="6" Classes="row-action-btn track-favorite-btn" Tag="{Binding}"
+                  ToolTip.Tip="{Binding FavoriteToolTip}"
+                  automation:AutomationProperties.Name="{Binding FavoriteToolTip}">
+            <Panel>
+              <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph track-favorite-glyph-off"
+                         IsVisible="{Binding !IsFavorite}"/>
+              <TextBlock Text="{StaticResource IconGlyphHeartFill}" Classes="track-row-glyph track-favorite-glyph-on"
+                         IsVisible="{Binding IsFavorite}"/>
+            </Panel>
+          </Button>
+          <Button Grid.Column="7" Classes="row-action-btn track-playlist-btn" Tag="{Binding}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  ToolTip.Tip="{Binding AddToPlaylistToolTip}"
+                  automation:AutomationProperties.Name="{Binding AddToPlaylistToolTip}">
+            <TextBlock Text="+" Classes="track-row-glyph"
+                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+          </Button>
+          <Button Grid.Column="8" Classes="row-action-btn track-delete-btn" Tag="{Binding}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  ToolTip.Tip="{Binding DeleteFromLibraryToolTip}"
+                  automation:AutomationProperties.Name="{Binding DeleteFromLibraryToolTip}">
+            <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+          </Button>
+        </Grid>
+        <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
+      </DockPanel>
+    </Border>
+  </DataTemplate>
+
+  <!-- 歌单详情：本地曲目行（操作列为「从歌单移除」） -->
+  <DataTemplate x:Key="PlaylistLocalTrackRowTemplate" DataType="vm:TrackItemViewModel">
+    <Border Background="Transparent" Classes="track-row">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" Classes="track-row-content"
+              ColumnDefinitions="{x:Static layout:TrackTableLayout.LibraryColumns}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
+              MinWidth="0">
+          <TextBlock Grid.Column="0" Text="{Binding RowIndexText}" Classes="track-col-cell track-col-cell-leading"/>
+          <TextBlock Grid.Column="1" Text="{Binding Title}" Classes="track-col-cell track-title"
+                     MinWidth="0" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="2" Text="{Binding Artist}" Classes="track-col-cell track-artist"
+                     MinWidth="0" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="3" Text="{Binding Album}" Classes="track-col-cell track-album"
+                     MinWidth="0" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="4" Text="{Binding YearText}" Classes="track-col-cell track-col-cell-meta"/>
+          <TextBlock Grid.Column="5" Text="{Binding DurationText}" Classes="track-col-cell track-col-cell-meta"/>
+          <Button Grid.Column="6" Classes="row-action-btn track-favorite-btn" Tag="{Binding}"
+                  ToolTip.Tip="{Binding FavoriteToolTip}"
+                  automation:AutomationProperties.Name="{Binding FavoriteToolTip}">
+            <Panel>
+              <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph track-favorite-glyph-off"
+                         IsVisible="{Binding !IsFavorite}"/>
+              <TextBlock Text="{StaticResource IconGlyphHeartFill}" Classes="track-row-glyph track-favorite-glyph-on"
+                         IsVisible="{Binding IsFavorite}"/>
+            </Panel>
+          </Button>
+          <Button Grid.Column="7" Classes="row-action-btn track-playlist-btn" Tag="{Binding}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  ToolTip.Tip="{Binding AddToOtherPlaylistToolTip}"
+                  automation:AutomationProperties.Name="{Binding AddToOtherPlaylistToolTip}">
+            <TextBlock Text="+" Classes="track-row-glyph"
+                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+          </Button>
+          <Button Grid.Column="8" Classes="row-action-btn track-delete-btn" Tag="{Binding}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  ToolTip.Tip="{Binding RemoveFromPlaylistToolTip}"
+                  automation:AutomationProperties.Name="{Binding RemoveFromPlaylistToolTip}">
+            <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+          </Button>
+        </Grid>
+        <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
+      </DockPanel>
+    </Border>
+  </DataTemplate>
+
+  <DataTemplate x:Key="FrequentTrackRowTemplate" DataType="pvm:QueueRowViewModel">
+    <Border Background="Transparent" Classes="track-row">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" Classes="track-row-content"
+              ColumnDefinitions="{x:Static layout:TrackTableLayout.CompactSixColumns}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
+              MinWidth="0">
+          <TextBlock Grid.Column="0" Text="{Binding IndexOrPlayCountText}"
+                     Classes="track-col-cell track-col-cell-leading"
+                     Foreground="{DynamicResource TextTertiaryBrush}"
+                     ToolTip.Tip="{Binding PlayCountToolTip}"/>
+          <TextBlock Grid.Column="1" Text="{Binding Title}" Classes="track-col-cell track-title"
+                     MinWidth="0" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="2" Text="{Binding Artist}" Classes="track-col-cell track-artist"
+                     MinWidth="0" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="3" Text="{Binding Album}" Classes="track-col-cell track-album"
+                     MinWidth="0" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="4" Text="{Binding DurationText}" Classes="track-col-cell track-col-cell-meta"/>
+          <Button Grid.Column="5" Classes="row-action-btn track-favorite-btn" Tag="{Binding}"
+                  ToolTip.Tip="{Binding FavoriteToolTip}"
+                  automation:AutomationProperties.Name="{Binding FavoriteToolTip}">
+            <Panel>
+              <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph track-favorite-glyph-off"
+                         IsVisible="{Binding !IsFavorite}"/>
+              <TextBlock Text="{StaticResource IconGlyphHeartFill}" Classes="track-row-glyph track-favorite-glyph-on"
+                         IsVisible="{Binding IsFavorite}"/>
+            </Panel>
+          </Button>
+        </Grid>
+        <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
+      </DockPanel>
+    </Border>
+  </DataTemplate>
+
+  <DataTemplate x:Key="QueueTrackRowTemplate" DataType="pvm:QueueRowViewModel">
+    <Border Background="Transparent" Classes="track-row">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" Classes="track-row-content"
+              ColumnDefinitions="{x:Static layout:TrackTableLayout.CompactSixColumns}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
+              MinWidth="0">
+          <TextBlock Grid.Column="0" Text="{Binding DisplayIndex}"
+                     Classes="track-col-cell track-col-cell-leading"
+                     Foreground="{DynamicResource TextTertiaryBrush}"/>
+          <TextBlock Grid.Column="1" Text="{Binding Title}" Classes="track-col-cell track-title"
+                     MinWidth="0" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="2" Text="{Binding Artist}" Classes="track-col-cell track-artist"
+                     MinWidth="0" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="3" Text="{Binding Album}" Classes="track-col-cell track-album"
+                     MinWidth="0" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="4" Text="{Binding DurationText}" Classes="track-col-cell track-col-cell-meta"/>
+          <Button Grid.Column="5" Classes="row-action-btn track-favorite-btn" Tag="{Binding}"
+                  ToolTip.Tip="{Binding FavoriteToolTip}"
+                  automation:AutomationProperties.Name="{Binding FavoriteToolTip}">
+            <Panel>
+              <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph track-favorite-glyph-off"
+                         IsVisible="{Binding !IsFavorite}"/>
+              <TextBlock Text="{StaticResource IconGlyphHeartFill}" Classes="track-row-glyph track-favorite-glyph-on"
+                         IsVisible="{Binding IsFavorite}"/>
+            </Panel>
+          </Button>
+        </Grid>
+        <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
+      </DockPanel>
+    </Border>
+  </DataTemplate>
+
+  <!-- 右侧栏播放队列：无专辑列，支持批量勾选 -->
+  <DataTemplate x:Key="SidebarQueueTrackRowTemplate" DataType="pvm:QueueRowViewModel">
+    <Border Background="Transparent" Classes="track-row"
+            Classes.queue-row-current="{Binding IsCurrent}">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" Classes="track-row-content queue-sidebar-row"
+              ColumnDefinitions="{x:Static layout:TrackTableLayout.SidebarQueueColumns}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center">
+          <TextBlock Grid.Column="0" Text="{Binding DisplayIndex}"
+                     Classes="track-col-cell track-col-cell-leading"
+                     IsVisible="{Binding ShowDisplayIndex}"/>
+          <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    IsVisible="{Binding ShowBatchCheck}"
+                    automation:AutomationProperties.Name="{Binding RowCheckboxAccessibilityName}"
+                    automation:AutomationProperties.HelpText="{Binding RowCheckboxAccessibilityHelp}"/>
+          <TextBlock Grid.Column="1" Text="{Binding Title}" Classes="track-col-cell track-title"
+                     TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="2" Text="{Binding Artist}" Classes="track-col-cell track-artist"
+                     TextTrimming="CharacterEllipsis"/>
+          <TextBlock Grid.Column="3" Text="{Binding DurationText}" Classes="track-col-cell track-col-cell-meta"/>
+          <Button Grid.Column="4" Classes="row-action-btn track-favorite-btn" Tag="{Binding}"
+                  IsVisible="{Binding ShowDisplayIndex}"
+                  ToolTip.Tip="{Binding FavoriteToolTip}"
+                  automation:AutomationProperties.Name="{Binding FavoriteToolTip}">
+            <Panel>
+            <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph track-favorite-glyph-off"
+                       IsVisible="{Binding !IsFavorite}"/>
+            <TextBlock Text="{StaticResource IconGlyphHeartFill}" Classes="track-row-glyph track-favorite-glyph-on"
+                       IsVisible="{Binding IsFavorite}"/>
+            </Panel>
+          </Button>
+        </Grid>
+        <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
+      </DockPanel>
+    </Border>
+  </DataTemplate>
+
+  <!-- 发现页：精简传输列表（序号 · 状态点 · 歌名 · 歌手 · 格式/进度） -->
+  <DataTemplate x:Key="DownloadQueueItemCompactTemplate" DataType="vm:DownloadItemViewModel">
+    <Border Background="Transparent" Classes="track-row download-row-compact" HorizontalAlignment="Stretch">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top"
+              Classes="download-row-content dl-transfer-row-compact"
+              ColumnDefinitions="{x:Static layout:TrackTableLayout.TransferQuickViewColumns}"
+              Margin="{DynamicResource DiscoverTransferQuickRowMargin}"
+              HorizontalAlignment="Stretch" VerticalAlignment="Center">
+          <TextBlock Grid.Column="0" Text="{Binding RowIndexText}" Classes="track-col-cell"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                     Foreground="{DynamicResource TextTertiaryBrush}"/>
+          <Panel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Border Classes="download-status-dot download-status-dot-success"
+                    IsVisible="{Binding ShowStatusSuccess}" ToolTip.Tip="{Binding StatusDotToolTip}"/>
+            <Border Classes="download-status-dot download-status-dot-failed"
+                    IsVisible="{Binding ShowStatusFailed}" ToolTip.Tip="{Binding StatusDotToolTip}"/>
+            <Border Classes="download-status-dot download-status-dot-active"
+                    IsVisible="{Binding ShowStatusActive}" ToolTip.Tip="{Binding StatusDotToolTip}"/>
+          </Panel>
+          <TextBlock Grid.Column="2" Text="{Binding Title}" Classes="download-row-title track-col-cell"
+                     Margin="4,0,6,0" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                     ToolTip.Tip="{Binding Title}"/>
+          <TextBlock Grid.Column="3" Text="{Binding Artist}" Classes="download-row-artist track-col-cell"
+                     Margin="0,0,6,0" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                     ToolTip.Tip="{Binding Artist}"/>
+          <Border Grid.Column="4" Classes="ant-tag ant-tag-filled-primary download-quality-chip download-quality-chip-compact"
+                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                  ToolTip.Tip="{Binding FormatLabel}"
+                  IsVisible="{Binding ShowTrailingFormat}">
+            <TextBlock Text="{Binding QualityChip}"/>
+          </Border>
+          <TextBlock Grid.Column="4" Text="{Binding TrailingProgressText}"
+                     Classes="download-row-inline-status"
+                     HorizontalAlignment="Right" VerticalAlignment="Center"
+                     TextTrimming="CharacterEllipsis" MaxWidth="38"
+                     ToolTip.Tip="{Binding StatusDotToolTip}"
+                     IsVisible="{Binding ShowTrailingProgress}"/>
+        </Grid>
+        <ProgressBar DockPanel.Dock="Top" Margin="42,1,12,0"
+                     Value="{Binding Progress}" Maximum="100"
+                     IsIndeterminate="{Binding IsProgressIndeterminate}"
+                     Classes="ant-progress-line-small"
+                     IsVisible="{Binding ShowProgressBar}" MinWidth="0"/>
+        <Border DockPanel.Dock="Bottom" Classes="track-row-divider download-row-divider"
+                Margin="{DynamicResource DiscoverTransferQuickDividerMargin}"/>
+      </DockPanel>
+    </Border>
+  </DataTemplate>
+
+  <!-- 专辑详情曲目行（与库内/发现列表一致的 track-row 样式） -->
+  <DataTemplate x:Key="AlbumCatalogTrackRowTemplate" DataType="pvm:ArtistAlbumTrackItemViewModel">
+    <Border Background="Transparent" Classes="track-row">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" Classes="track-row-content album-catalog-track-row"
+              ColumnDefinitions="32,36,4*,2.5*,52,56,68,0.9*,0.9*,1.6*"
+              VerticalAlignment="Center">
+          <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" Classes="choice-check-icon"
+                    IsEnabled="{Binding ShowSelectCheck}"
+                    IsVisible="{Binding ShowSelectCheck}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0"
+                    automation:AutomationProperties.Name="{Binding RowCheckboxAccessibilityName}"
+                    automation:AutomationProperties.HelpText="{Binding RowCheckboxAccessibilityHelp}"/>
+          <Panel Grid.Column="0" IsVisible="{Binding !ShowSelectCheck}"/>
+          <TextBlock Grid.Column="1" Text="{Binding RowIndexText}" Classes="track-col-cell"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          <TextBlock Grid.Column="2" Text="{Binding Title}" Classes="track-col-cell track-title"
+                     Margin="8,0,8,0" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                     ToolTip.Tip="{Binding Title}"/>
+          <TextBlock Grid.Column="3" Text="{Binding Artist}" Classes="track-col-cell"
+                     Margin="8,0,8,0" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                     Foreground="{DynamicResource TextSecondaryBrush}"
+                     ToolTip.Tip="{Binding Artist}"/>
+          <TextBlock Grid.Column="4" Text="{Binding DurationText}" Classes="track-col-cell"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          <Border Grid.Column="5" Classes="ant-tag ant-tag-filled-primary download-quality-chip"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  ToolTip.Tip="{Binding FormatChipText}"
+                  IsVisible="{Binding ShowFormatChip}">
+            <TextBlock Text="{Binding FormatChipText}"/>
+          </Border>
+          <TextBlock Grid.Column="5" Text="—" Classes="track-col-cell"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                     Foreground="{DynamicResource TextTertiaryBrush}"
+                     IsVisible="{Binding !ShowFormatChip}"/>
+          <Border Grid.Column="6" Classes="ant-tag track-status-chip"
+                  Classes.ant-tag-filled-success="{Binding UseSuccessStatusChip}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  ToolTip.Tip="{Binding StatusChipText}">
+            <TextBlock Text="{Binding StatusChipText}"/>
+          </Border>
+          <Button Grid.Column="7"
+                  Classes="row-action-btn track-favorite-btn"
+                  HorizontalAlignment="Center"
+                  ToolTip.Tip="{Binding OnlineFavoriteToolTip}"
+                  automation:AutomationProperties.Name="{Binding OnlineFavoriteToolTip}"
+                  Command="{Binding ToggleOnlineFavoriteCommand}"
+                  IsVisible="{Binding ShowOnlineFavorite}">
+            <Panel>
+              <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph online-favorite-heart-off"
+                         IsVisible="{Binding !IsOnlineFavorite}"/>
+              <TextBlock Text="{StaticResource IconGlyphHeartFill}" Classes="track-row-glyph online-favorite-heart-on"
+                         IsVisible="{Binding IsOnlineFavorite}"/>
+            </Panel>
+          </Button>
+          <Button Grid.Column="8"
+                  Classes="row-action-btn track-playlist-btn"
+                  HorizontalAlignment="Center"
+                  ToolTip.Tip="{Binding AddToPlaylistToolTip}"
+                  automation:AutomationProperties.Name="{Binding AddToPlaylistToolTip}"
+                  IsVisible="{Binding ShowOnlinePlaylist}">
+            <TextBlock Text="+" Classes="track-row-glyph"/>
+          </Button>
+          <Button Grid.Column="9"
+                  Classes="row-action-btn"
+                  HorizontalAlignment="Left"
+                  Margin="8,0,0,0"
+                  ToolTip.Tip="{Binding DownloadToolTip}"
+                  automation:AutomationProperties.Name="{Binding DownloadToolTip}"
+                  Command="{Binding OpenDownloadPickerCommand}"
+                  IsVisible="{Binding ShowOnlineDownload}">
+            <TextBlock Text="&#xE896;" Classes="track-row-glyph"/>
+          </Button>
+          <Button Grid.Column="9" Content="{Binding PlayButtonLabel}" Classes="format-chip"
+                  HorizontalAlignment="Left"
+                  Margin="8,0,0,0"
+                  automation:AutomationProperties.Name="{Binding PlayButtonLabel}"
+                  Command="{Binding PlayTrackCommand}"
+                  IsVisible="{Binding ShowPlayButton}"/>
+        </Grid>
+        <Border DockPanel.Dock="Bottom" Classes="track-row-divider album-catalog-row-divider"/>
+      </DockPanel>
+    </Border>
+  </DataTemplate>
+
+  <!-- 传输页：与表头列对齐的完整行 -->
+  <DataTemplate x:Key="DownloadQueueItemDetailTemplate" DataType="vm:DownloadItemViewModel">
+    <Border Background="Transparent" Classes="track-row download-row-detail dl-transfer-item-root"
+            HorizontalAlignment="Stretch">
+      <Grid HorizontalAlignment="Stretch" MinWidth="0">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Classes="download-row-content dl-transfer-row"
+              ColumnDefinitions="{x:Static layout:TrackTableLayout.TransferQueueColumns}"
+              VerticalAlignment="Center">
+          <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" Classes="choice-check-icon"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0"
+                    automation:AutomationProperties.Name="{Binding RowCheckboxAccessibilityName}"
+                    automation:AutomationProperties.HelpText="{Binding RowCheckboxAccessibilityHelp}"/>
+          <TextBlock Grid.Column="1" Text="{Binding RowIndexText}" Classes="track-col-cell track-col-cell-leading"
+                     VerticalAlignment="Center"/>
+          <TextBlock Grid.Column="2" Text="{Binding Title}" Classes="download-row-title track-col-cell"
+                     TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                     ToolTip.Tip="{Binding Title}"/>
+          <TextBlock Grid.Column="3" Text="{Binding Artist}" Classes="download-row-artist track-col-cell"
+                     TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                     ToolTip.Tip="{Binding Artist}"/>
+          <Border Grid.Column="4" Classes="ant-tag track-status-chip"
+                  Classes.ant-tag-filled-success="{Binding UseSuccessStatusChip}"
+                  Classes.ant-tag-filled-error="{Binding UseFailedStatusChip}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  ToolTip.Tip="{Binding StatusBadgeToolTip}">
+            <TextBlock Text="{Binding StatusChipText}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          </Border>
+          <Border Grid.Column="5" Classes="ant-tag ant-tag-filled-primary download-quality-chip"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  ToolTip.Tip="{Binding FormatLabel}">
+            <TextBlock Text="{Binding FormatDisplay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          </Border>
+          <TextBlock Grid.Column="6" Text="{Binding SizeText}" Classes="download-row-size"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                     ToolTip.Tip="{Binding StatusBadgeToolTip}"/>
+          <StackPanel Grid.Column="7" Orientation="Horizontal" Spacing="4"
+                      VerticalAlignment="Center" Margin="8,0,0,0">
+            <Button Classes="row-action-btn" ToolTip.Tip="{Binding PauseDownloadToolTip}"
+                    automation:AutomationProperties.Name="{Binding PauseDownloadToolTip}"
+                    Command="{Binding PauseDownloadCommand}"
+                    CommandParameter="{Binding}"
+                    IsVisible="{Binding CanPause}">
+              <TextBlock Text="&#xE769;" Classes="track-row-glyph"/>
+            </Button>
+            <Button Classes="row-action-btn" ToolTip.Tip="{Binding ResumeDownloadToolTip}"
+                    automation:AutomationProperties.Name="{Binding ResumeDownloadToolTip}"
+                    Command="{Binding ResumeDownloadCommand}"
+                    CommandParameter="{Binding}"
+                    IsVisible="{Binding CanResume}">
+              <TextBlock Text="&#xE768;" Classes="track-row-glyph"/>
+            </Button>
+            <controls:PopconfirmHost Title="{Binding CancelDownloadPopconfirmTitle}"
+                                     Description="{Binding CancelDownloadPopconfirmDescription}"
+                                     ConfirmText="{Binding CancelDownloadConfirmText}"
+                                     ConfirmIsDanger="True"
+                                     ConfirmedCommand="{Binding CancelDownloadCommand}"
+                                     CommandParameter="{Binding}"
+                                     IsVisible="{Binding CanCancel}">
+              <Button Classes="row-action-btn" ToolTip.Tip="{Binding CancelDownloadToolTip}"
+                      automation:AutomationProperties.Name="{Binding CancelDownloadToolTip}">
+                <TextBlock Text="&#xE711;" Classes="track-row-glyph"/>
+              </Button>
+            </controls:PopconfirmHost>
+            <Button Classes="row-action-btn" ToolTip.Tip="{Binding RetryDownloadToolTip}"
+                    automation:AutomationProperties.Name="{Binding RetryDownloadToolTip}"
+                    Command="{Binding RetryDownloadCommand}"
+                    CommandParameter="{Binding}"
+                    IsVisible="{Binding CanRetry}">
+              <TextBlock Text="&#xE72C;" Classes="track-row-glyph"/>
+            </Button>
+            <Button Classes="row-action-btn" ToolTip.Tip="{Binding CopyFailedErrorToolTip}"
+                    automation:AutomationProperties.Name="{Binding CopyFailedErrorToolTip}"
+                    Command="{Binding CopyFailedErrorCommand}"
+                    CommandParameter="{Binding}"
+                    IsVisible="{Binding ShowFailedRecoveryActions}">
+              <TextBlock Text="&#xE8C8;" Classes="track-row-glyph"/>
+            </Button>
+            <Button Classes="row-action-btn" ToolTip.Tip="{Binding SearchFailedInDiscoverToolTip}"
+                    automation:AutomationProperties.Name="{Binding SearchFailedInDiscoverToolTip}"
+                    Command="{Binding SearchFailedInDiscoverCommand}"
+                    CommandParameter="{Binding}"
+                    IsVisible="{Binding ShowFailedRecoveryActions}">
+              <TextBlock Text="&#xE721;" Classes="track-row-glyph"/>
+            </Button>
+            <Button Classes="row-action-btn"
+                    ToolTip.Tip="{Binding RevealInFolderToolTip}"
+                    automation:AutomationProperties.Name="{Binding RevealInFolderToolTip}"
+                    Command="{Binding RevealInFolderCommand}"
+                    IsVisible="{Binding CanRevealInFolder}"
+                    IsEnabled="{Binding CanRevealInFolder}">
+              <TextBlock Text="&#xE838;" Classes="track-row-glyph"/>
+            </Button>
+            <controls:PopconfirmHost Title="{Binding RemovePopconfirmTitle}"
+                                     Description="{Binding RemovePopconfirmDescription}"
+                                     ConfirmText="{Binding RemoveConfirmText}"
+                                     AlternateConfirmText="{Binding RemoveAlternateConfirmText}"
+                                     ShowAlternateConfirm="{Binding CanDeleteLocalFile}"
+                                     ConfirmedCommand="{Binding RemoveListOnlyCommand}"
+                                     AlternateConfirmedCommand="{Binding RemoveWithFileCommand}"
+                                     CommandParameter="{Binding}">
+              <Button Classes="row-action-btn" ToolTip.Tip="{Binding DeleteRecordToolTip}"
+                      automation:AutomationProperties.Name="{Binding DeleteRecordToolTip}">
+                <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+              </Button>
+            </controls:PopconfirmHost>
+          </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" Margin="{DynamicResource DownloadTransferProgressMargin}" ColumnDefinitions="*,Auto"
+              IsVisible="{Binding ShowProgressBar}">
+          <ProgressBar Grid.Column="0"
+                       Value="{Binding Progress}" Maximum="100"
+                       IsIndeterminate="{Binding IsProgressIndeterminate}"
+                       Classes="ant-progress-line"
+                       MinWidth="0"/>
+          <TextBlock Grid.Column="1" Text="{Binding ProgressPercentText}"
+                     Classes="ant-progress-percent"
+                     IsVisible="{Binding ShowProgressPercent}"/>
+        </Grid>
+        <Border Grid.Row="2" Classes="track-row-divider download-row-divider track-table-divider-paired" Margin="0,3,0,2"/>
+      </Grid>
+    </Border>
+  </DataTemplate>
+
+  <DataTemplate x:Key="DownloadQueueItemTemplate" DataType="vm:DownloadItemViewModel">
+    <Border Background="Transparent" Classes="track-row download-row" HorizontalAlignment="Stretch">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" Classes="download-row-content"
+              ColumnDefinitions="24,3*,2*,Auto,28,28"
+              Margin="12,0,12,0" Height="34" MinWidth="0"
+              HorizontalAlignment="Stretch" VerticalAlignment="Center">
+          <Border Grid.Column="0" Classes="download-status-badge download-status-badge-success"
+                  IsVisible="{Binding ShowStatusSuccess}" ToolTip.Tip="{Binding StatusBadgeToolTip}">
+            <TextBlock Text="✓" Classes="download-status-badge-glyph"/>
+          </Border>
+          <Border Grid.Column="0" Classes="download-status-badge download-status-badge-failed"
+                  IsVisible="{Binding ShowStatusFailed}"
+                  ToolTip.Tip="{Binding StatusBadgeToolTip}">
+            <TextBlock Text="✕" Classes="download-status-badge-glyph"/>
+          </Border>
+          <Border Grid.Column="0" Classes="download-status-badge download-status-badge-active"
+                  IsVisible="{Binding ShowStatusActive}" ToolTip.Tip="{Binding StatusBadgeToolTip}">
+            <TextBlock Text="&#xE895;"
+                       Classes="download-status-badge-glyph download-status-badge-glyph-active"/>
+          </Border>
+          <TextBlock Grid.Column="1" Text="{Binding Title}" Classes="download-row-title"
+                     Margin="6,0,8,0" TextTrimming="CharacterEllipsis"
+                     ToolTip.Tip="{Binding Title}"/>
+          <TextBlock Grid.Column="2" Text="{Binding Artist}" Classes="download-row-artist"
+                     Margin="0,0,8,0" TextTrimming="CharacterEllipsis"
+                     ToolTip.Tip="{Binding Artist}"/>
+          <Border Grid.Column="3" Classes="ant-tag ant-tag-filled-primary download-quality-chip" Margin="0,0,6,0"
+                  VerticalAlignment="Center" ToolTip.Tip="{Binding FormatLabel}">
+            <TextBlock Text="{Binding QualityChip}"/>
+          </Border>
+          <Button Grid.Column="4" Classes="row-action-btn"
+                  ToolTip.Tip="{Binding RevealInFolderToolTip}"
+                  automation:AutomationProperties.Name="{Binding RevealInFolderToolTip}"
+                  Command="{Binding RevealInFolderCommand}"
+                  IsVisible="{Binding CanRevealInFolder}"
+                  IsEnabled="{Binding CanRevealInFolder}">
+            <TextBlock Text="&#xE838;" Classes="track-row-glyph"/>
+          </Button>
+          <controls:PopconfirmHost Grid.Column="5"
+                                   Title="{Binding RemovePopconfirmTitle}"
+                                   Description="{Binding RemovePopconfirmDescription}"
+                                   ConfirmText="{Binding RemoveConfirmText}"
+                                   AlternateConfirmText="{Binding RemoveAlternateConfirmText}"
+                                   ShowAlternateConfirm="{Binding CanDeleteLocalFile}"
+                                   ConfirmedCommand="{Binding RemoveListOnlyCommand}"
+                                   AlternateConfirmedCommand="{Binding RemoveWithFileCommand}"
+                                   CommandParameter="{Binding}">
+            <Button Classes="row-action-btn" ToolTip.Tip="{Binding DeleteRecordToolTip}"
+                    automation:AutomationProperties.Name="{Binding DeleteRecordToolTip}">
+              <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+            </Button>
+          </controls:PopconfirmHost>
+        </Grid>
+        <ProgressBar DockPanel.Dock="Top" Margin="40,0,12,4"
+                     Value="{Binding Progress}" Maximum="100"
+                     IsIndeterminate="{Binding IsProgressIndeterminate}"
+                     Classes="ant-progress-line"
+                     IsVisible="{Binding ShowProgressBar}"
+                     MinWidth="0"/>
+        <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
+      </DockPanel>
+    </Border>
+  </DataTemplate>
+
+</ResourceDictionary>

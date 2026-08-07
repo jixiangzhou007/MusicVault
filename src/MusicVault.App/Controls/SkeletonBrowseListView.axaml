@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MusicVault.App.Controls"
+             x:Class="MusicVault.App.Controls.SkeletonBrowseListView">
+  <StackPanel Classes="skeleton-browse-list">
+    <Border Classes="skeleton-browse-row">
+      <Grid ColumnDefinitions="48,*">
+        <controls:SkeletonBlock BlockWidth="48" BlockHeight="48" BlockCornerRadius="9999"/>
+        <StackPanel Grid.Column="1" Margin="12,0,0,0" Spacing="8" VerticalAlignment="Center">
+          <controls:SkeletonLine IsTitle="True" LineWidth="200"/>
+          <controls:SkeletonLine LineWidth="120"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-browse-row">
+      <Grid ColumnDefinitions="48,*">
+        <controls:SkeletonBlock BlockWidth="48" BlockHeight="48" BlockCornerRadius="9999"/>
+        <StackPanel Grid.Column="1" Margin="12,0,0,0" Spacing="8" VerticalAlignment="Center">
+          <controls:SkeletonLine IsTitle="True" LineWidth="180"/>
+          <controls:SkeletonLine LineWidth="100"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-browse-row">
+      <Grid ColumnDefinitions="48,*">
+        <controls:SkeletonBlock BlockWidth="48" BlockHeight="48" BlockCornerRadius="9999"/>
+        <StackPanel Grid.Column="1" Margin="12,0,0,0" Spacing="8" VerticalAlignment="Center">
+          <controls:SkeletonLine IsTitle="True" LineWidth="220"/>
+          <controls:SkeletonLine LineWidth="90"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-browse-row">
+      <Grid ColumnDefinitions="48,*">
+        <controls:SkeletonBlock BlockWidth="48" BlockHeight="48" BlockCornerRadius="9999"/>
+        <StackPanel Grid.Column="1" Margin="12,0,0,0" Spacing="8" VerticalAlignment="Center">
+          <controls:SkeletonLine IsTitle="True" LineWidth="160"/>
+          <controls:SkeletonLine LineWidth="110"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-browse-row">
+      <Grid ColumnDefinitions="48,*">
+        <controls:SkeletonBlock BlockWidth="48" BlockHeight="48" BlockCornerRadius="9999"/>
+        <StackPanel Grid.Column="1" Margin="12,0,0,0" Spacing="8" VerticalAlignment="Center">
+          <controls:SkeletonLine IsTitle="True" LineWidth="210"/>
+          <controls:SkeletonLine LineWidth="130"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-browse-row">
+      <Grid ColumnDefinitions="48,*">
+        <controls:SkeletonBlock BlockWidth="48" BlockHeight="48" BlockCornerRadius="9999"/>
+        <StackPanel Grid.Column="1" Margin="12,0,0,0" Spacing="8" VerticalAlignment="Center">
+          <controls:SkeletonLine IsTitle="True" LineWidth="190"/>
+          <controls:SkeletonLine LineWidth="95"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-browse-row">
+      <Grid ColumnDefinitions="48,*">
+        <controls:SkeletonBlock BlockWidth="48" BlockHeight="48" BlockCornerRadius="9999"/>
+        <StackPanel Grid.Column="1" Margin="12,0,0,0" Spacing="8" VerticalAlignment="Center">
+          <controls:SkeletonLine IsTitle="True" LineWidth="170"/>
+          <controls:SkeletonLine LineWidth="105"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-browse-row">
+      <Grid ColumnDefinitions="48,*">
+        <controls:SkeletonBlock BlockWidth="48" BlockHeight="48" BlockCornerRadius="9999"/>
+        <StackPanel Grid.Column="1" Margin="12,0,0,0" Spacing="8" VerticalAlignment="Center">
+          <controls:SkeletonLine IsTitle="True" LineWidth="200"/>
+          <controls:SkeletonLine LineWidth="115"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+  </StackPanel>
+</UserControl>

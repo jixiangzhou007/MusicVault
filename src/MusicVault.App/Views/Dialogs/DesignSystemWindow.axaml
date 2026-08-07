@@ -1,0 +1,17 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="using:MusicVault.App.Views.Pages"
+        x:Class="MusicVault.App.Views.Dialogs.DesignSystemWindow"
+        Width="760" Height="820"
+        MinWidth="640" MinHeight="560"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="True"
+        Background="{DynamicResource BackgroundBrush}">
+  <DockPanel>
+    <Border DockPanel.Dock="Bottom" Padding="12,10"
+            BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="0,1,0,0">
+      <Button x:Name="CloseButton" Classes="flat-btn" HorizontalAlignment="Right" Click="OnClose"/>
+    </Border>
+    <views:DesignSystemPageView x:Name="PreviewContent"/>
+  </DockPanel>
+</Window>

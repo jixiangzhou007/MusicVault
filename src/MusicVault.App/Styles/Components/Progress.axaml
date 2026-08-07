@@ -1,0 +1,92 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Ant Progress（线形）：基于 ProgressBar，4px 圆角轨道 + 主色填充 -->
+
+  <Style Selector="ProgressBar.ant-progress-line,
+                   ProgressBar.download-progress">
+    <Setter Property="Height" Value="4"/>
+    <Setter Property="MinHeight" Value="4"/>
+    <Setter Property="MaxHeight" Value="4"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource OverlayProgressTrackBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+    <Setter Property="Transitions" Value="{x:Null}"/>
+  </Style>
+
+  <Style Selector="ProgressBar.ant-progress-line-small">
+    <Setter Property="Height" Value="2"/>
+    <Setter Property="MinHeight" Value="2"/>
+    <Setter Property="MaxHeight" Value="2"/>
+    <Setter Property="CornerRadius" Value="2"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource OverlayProgressTrackBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+    <Setter Property="Transitions" Value="{x:Null}"/>
+  </Style>
+
+  <!-- 刮削行内进度：未显示时不占位，避免与底部 track-row-divider 叠成双线 -->
+  <Style Selector="ProgressBar.batch-scrape-item-progress">
+    <Setter Property="Height" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="MaxHeight" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="IsHitTestVisible" Value="False"/>
+  </Style>
+  <Style Selector="ProgressBar.batch-scrape-item-progress:visible">
+    <Setter Property="Height" Value="2"/>
+    <Setter Property="MinHeight" Value="2"/>
+    <Setter Property="MaxHeight" Value="2"/>
+    <Setter Property="Margin" Value="52,0,12,0"/>
+    <Setter Property="Background" Value="{DynamicResource OverlayProgressTrackBrush}"/>
+    <Setter Property="IsHitTestVisible" Value="True"/>
+  </Style>
+
+  <Style Selector="ProgressBar.ant-progress-line-modal">
+    <Setter Property="Height" Value="8"/>
+    <Setter Property="MinHeight" Value="8"/>
+    <Setter Property="MaxHeight" Value="8"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource OverlayProgressTrackBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+    <Setter Property="Transitions" Value="{x:Null}"/>
+  </Style>
+
+  <Style Selector="ProgressBar.ant-progress-line-success">
+    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+  </Style>
+
+  <Style Selector="ProgressBar.ant-progress-line-exception">
+    <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+
+  <Style Selector="ProgressBar.ant-progress-line:indeterminate,
+                   ProgressBar.ant-progress-line-small:indeterminate,
+                   ProgressBar.ant-progress-line-modal:indeterminate,
+                   ProgressBar.download-progress:indeterminate">
+    <Setter Property="Transitions" Value="{x:Null}"/>
+  </Style>
+
+  <Style Selector="TextBlock.ant-progress-percent">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+    <Setter Property="Margin" Value="8,0,0,0"/>
+    <Setter Property="MinWidth" Value="32"/>
+  </Style>
+
+  <Style Selector="TextBlock.ant-progress-caption">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+
+</Styles>

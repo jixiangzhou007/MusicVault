@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             x:Class="MusicVault.App.Views.Overlays.BatchScrapeConfirmModalView"
+             x:DataType="vm:BatchScrapeConfirmModalViewModel">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel" MinWidth="420" MaxWidth="520">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding CancelLabel}" Classes="flat-btn app-dialog-btn" Command="{Binding CancelCommand}"/>
+          <Button Content="{Binding ConfirmLabel}" Classes="primary app-dialog-btn"
+                  IsEnabled="{Binding CanConfirm}" Command="{Binding ConfirmCommand}"/>
+        </StackPanel>
+      </Border>
+      <StackPanel Classes="app-dialog-body" Spacing="10">
+        <TextBlock Text="{Binding ModalTitle}" Classes="text-subtitle"/>
+        <TextBlock Text="{Binding SummaryText}" Classes="text-body" TextWrapping="Wrap" LineHeight="22"/>
+        <TextBlock Text="{Binding FieldsHeader}" Classes="text-label"/>
+        <Border Background="{DynamicResource SearchFieldBrush}"
+                BorderBrush="{DynamicResource BorderSubtleBrush}"
+                BorderThickness="1" CornerRadius="6" Padding="8,6">
+          <ItemsControl ItemsSource="{Binding Context.Fields}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:BatchScrapeConfirmField">
+                <Grid ColumnDefinitions="24,*" Margin="{DynamicResource MarginBottomXs}">
+                  <TextBlock Grid.Column="0" Text="{Binding StatusGlyph}"
+                             HorizontalAlignment="Center" VerticalAlignment="Center"
+                             Classes="batch-scrape-check"
+                             Classes.success="{Binding Enabled}"/>
+                  <TextBlock Grid.Column="1" Text="{Binding Label}" Classes="text-label" VerticalAlignment="Center"/>
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Border>
+        <TextBlock Text="{Binding EnabledFieldsText}" Classes="text-caption"
+                   TextWrapping="Wrap" LineHeight="18"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</UserControl>

@@ -1,0 +1,80 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Ant Skeleton：列表/网格首屏占位；背景 ContainerBrush，圆角 4px -->
+
+  <Style Selector="Border.ant-skeleton">
+    <Setter Property="Background" Value="{DynamicResource ContainerBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+
+  <Style Selector="Border.ant-skeleton.ant-skeleton-active">
+    <Style.Animations>
+      <Animation Duration="0:0:1.2" IterationCount="Infinite" PlaybackDirection="Alternate">
+        <KeyFrame Cue="0%">
+          <Setter Property="Opacity" Value="1"/>
+        </KeyFrame>
+        <KeyFrame Cue="100%">
+          <Setter Property="Opacity" Value="0.45"/>
+        </KeyFrame>
+      </Animation>
+    </Style.Animations>
+  </Style>
+
+  <Style Selector="Border.ant-skeleton-input">
+    <Setter Property="Height" Value="32"/>
+    <Setter Property="MinHeight" Value="32"/>
+  </Style>
+
+  <Style Selector="Border.ant-skeleton-avatar">
+    <Setter Property="CornerRadius" Value="9999"/>
+  </Style>
+
+  <Style Selector="Border.ant-skeleton-title">
+    <Setter Property="Height" Value="20"/>
+    <Setter Property="MinHeight" Value="20"/>
+  </Style>
+
+  <Style Selector="Border.ant-skeleton-paragraph">
+    <Setter Property="Height" Value="14"/>
+    <Setter Property="MinHeight" Value="14"/>
+  </Style>
+
+  <Style Selector="StackPanel.ant-skeleton">
+    <Setter Property="Spacing" Value="8"/>
+  </Style>
+
+  <Style Selector="StackPanel.ant-skeleton-paragraph-group">
+    <Setter Property="Spacing" Value="6"/>
+  </Style>
+
+  <Style Selector="StackPanel.skeleton-browse-list">
+    <Setter Property="Spacing" Value="0"/>
+  </Style>
+
+  <Style Selector="Border.skeleton-browse-row">
+    <Setter Property="Padding" Value="16,12"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.skeleton-discover-list">
+    <Setter Property="Spacing" Value="0"/>
+  </Style>
+
+  <Style Selector="Border.skeleton-discover-row">
+    <Setter Property="Padding" Value="16,8"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.skeleton-track-list">
+    <Setter Property="Spacing" Value="0"/>
+  </Style>
+
+  <Style Selector="Border.skeleton-track-row">
+    <Setter Property="Padding" Value="0,6"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+</Styles>

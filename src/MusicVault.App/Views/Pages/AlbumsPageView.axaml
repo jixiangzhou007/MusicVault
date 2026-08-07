@@ -1,0 +1,301 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Pages"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:controls="using:MusicVault.App.Controls"
+             xmlns:vm="using:MusicVault.App.ViewModels"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="MusicVault.App.Views.Pages.AlbumsPageView"
+             x:Name="AlbumsRoot"
+             x:DataType="pvm:AlbumsPageViewModel">
+  <UserControl.DataTemplates>
+    <DataTemplate DataType="pvm:ArtistSectionHeaderViewModel">
+      <Border Classes="browse-artist-section-header" HorizontalAlignment="Stretch"
+              IsHitTestVisible="False" Focusable="False">
+        <Grid ColumnDefinitions="Auto,*" Margin="{DynamicResource PageToolbarGridMargin}">
+          <TextBlock Text="{Binding Letter}" Classes="text-subtitle"/>
+          <Border Grid.Column="1" Classes="browse-artist-section-divider"
+                  VerticalAlignment="Center" Margin="{DynamicResource WindowNavLeadingMargin}"/>
+        </Grid>
+      </Border>
+    </DataTemplate>
+    <DataTemplate DataType="pvm:AlbumListItemViewModel">
+      <Border Classes="browse-artist-list-row" HorizontalAlignment="Stretch">
+        <Grid ColumnDefinitions="48,*" Margin="{DynamicResource PageHeaderBlockMargin}">
+          <Grid Width="48" Height="48">
+            <Border Classes="browse-entity-avatar browse-entity-avatar-square"
+                    IsVisible="{Binding !HasCover}">
+              <TextBlock Text="&#xE8D6;"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Foreground="{DynamicResource TextTertiaryBrush}"/>
+            </Border>
+            <Border Classes="browse-entity-avatar browse-entity-avatar-square" ClipToBounds="True"
+                    IsVisible="{Binding HasCover}">
+              <Image Source="{Binding CoverThumb, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                     Stretch="UniformToFill"/>
+            </Border>
+          </Grid>
+          <StackPanel Grid.Column="1" Margin="{DynamicResource MarginLeadingMd}" VerticalAlignment="Center" Spacing="2">
+            <TextBlock Text="{Binding Album}" Classes="text-label" TextTrimming="CharacterEllipsis"/>
+            <TextBlock Text="{Binding Artist}" Classes="text-caption browse-artist-list-muted"
+                       TextTrimming="CharacterEllipsis"/>
+            <TextBlock Text="{Binding StatsLine}" Classes="text-caption browse-artist-list-muted"/>
+          </StackPanel>
+        </Grid>
+      </Border>
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <Grid>
+  <!-- 专辑列表 -->
+  <DockPanel IsVisible="{Binding !ShowingTracks}" Classes="pane-play">
+    <Grid DockPanel.Dock="Top" Margin="{DynamicResource PageHeaderBlockMargin}" Grid.IsSharedSizeScope="True"
+          RowDefinitions="Auto,10,Auto">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" SharedSizeGroup="AlbumBrowseAlign"/>
+        <ColumnDefinition Width="10"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+
+      <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding BrowsePageTitle}" Classes="page-title"
+                 HorizontalAlignment="Right" VerticalAlignment="Top" Margin="{DynamicResource MarginBottomXs}"/>
+      <StackPanel Grid.Row="0" Grid.Column="2" Spacing="4" Margin="{DynamicResource MarginTrailingLg}">
+        <TextBlock Classes="page-intro" Text="{Binding PageHeaderText}" TextWrapping="Wrap"/>
+        <TextBlock Classes="text-caption" Text="{Binding BrowseStatsLine}" TextWrapping="Wrap"
+                   Foreground="{DynamicResource TextTertiaryBrush}"/>
+      </StackPanel>
+
+      <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding SearchFieldLabel}" Classes="discover-field-label"
+                 VerticalAlignment="Center"/>
+      <Grid Grid.Row="2" Grid.Column="2" ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <TextBox x:Name="AlbumSearchBox" Classes="discover-field" Width="240"
+                   VerticalAlignment="Center"
+                   Watermark="{Binding SearchWatermarkText}"
+                   Text="{Binding AlbumSearchText, UpdateSourceTrigger=PropertyChanged}"
+                   KeyDown="OnAlbumSearchKeyDown"/>
+          <Button Content="{Binding SearchButtonLabel}" Classes="primary discover-action"
+                  VerticalAlignment="Center"
+                  Command="{Binding ApplyAlbumSearchCommand}"
+                  automation:AutomationProperties.Name="{Binding SearchButtonLabel}"/>
+          <Button Content="{Binding ResetButtonLabel}" Classes="flat-btn btn-toolbar"
+                  VerticalAlignment="Center"
+                  Command="{Binding ClearBrowseFiltersCommand}"
+                  IsEnabled="{Binding HasActiveBrowseFilter}"
+                  automation:AutomationProperties.Name="{Binding ResetButtonLabel}"/>
+          <Button Content="{Binding RefreshMetadataButtonLabel}" Classes="flat-btn btn-toolbar"
+                  VerticalAlignment="Center"
+                  Command="{Binding RefreshAlbumCatalogsCommand}"
+                  IsEnabled="{Binding !IsRefreshingAlbumCatalogs}"
+                  ToolTip.Tip="{Binding RefreshMetadataToolTip}"
+                  automation:AutomationProperties.Name="{Binding RefreshMetadataToolTip}"/>
+        </StackPanel>
+      </Grid>
+    </Grid>
+
+    <Border DockPanel.Dock="Top" Classes="page-hero-divider"/>
+
+    <Grid Margin="{DynamicResource PageContentBottomMargin}" ColumnDefinitions="*,Auto" VerticalAlignment="Stretch">
+      <Grid Grid.Column="0" VerticalAlignment="Stretch">
+        <ListBox x:Name="AlbumList" ItemsSource="{Binding BrowseItems}"
+                 Classes="virtual-list browse-artist-list" SelectionMode="Single"
+                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                 IsVisible="{Binding HasFilteredAlbums}"/>
+
+        <controls:SkeletonBrowseListView IsVisible="{Binding ShowBrowseSkeleton}"/>
+
+        <controls:EmptyStateView IsVisible="{Binding ShowBrowseFilterEmpty}"
+                                 Title="{Binding EmptyFilterTitle}"
+                                 Description="{Binding BrowseFilterEmptyHint}"
+                                 ActionText="{Binding EmptyFilterAction}"
+                                 ShowAction="True"
+                                 ActionCommand="{Binding ClearBrowseFiltersCommand}"
+                                 IconGlyph="&#xE721;"/>
+
+        <controls:EmptyStateView IsVisible="{Binding ShowLibraryEmpty}"
+                                 Title="{Binding EmptyLibraryTitle}"
+                                 Description="{Binding EmptyLibraryDescription}"
+                                 ShowIcon="False"/>
+      </Grid>
+
+      <Border Grid.Column="1" Width="22" Margin="{DynamicResource MarginBottomXs}" VerticalAlignment="Stretch"
+              HorizontalAlignment="Right"
+              IsVisible="{Binding HasFilteredAlbums}">
+        <ItemsControl Classes="browse-az-rail" ItemsSource="{Binding IndexRailLetters}"
+                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <UniformGrid Rows="27" Columns="1"/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Button Classes="browse-az-letter" Content="{Binding}"
+                      Tag="{Binding}" Click="OnIndexLetterClick"/>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+    </Grid>
+  </DockPanel>
+
+  <!-- 专辑详情：视口固定背景（铺满左右） + 内容滚动 -->
+  <Grid IsVisible="{Binding ShowingTracks}" RowDefinitions="*" Margin="{DynamicResource MarginBottomMd}">
+    <Panel IsHitTestVisible="False" ClipToBounds="True">
+      <Image Source="{Binding AlbumCoverLarge, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+             Stretch="UniformToFill" Opacity="0.34" IsVisible="{Binding HasAlbumCover}"
+             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+      <Border Background="{DynamicResource AlbumDetailBackdropGradientBrush}"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    </Panel>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  Background="Transparent"
+                  Classes="scroll-clear-player-progress"
+                  Margin="{DynamicResource DetailHeroMargin}">
+      <StackPanel Spacing="0">
+        <Grid ColumnDefinitions="Auto,*" Margin="{DynamicResource MarginBottomMd}">
+          <Border Width="96" Height="96" Margin="{DynamicResource MarginTrailingLg}" CornerRadius="8"
+                  Background="{DynamicResource SurfaceElevatedBrush}" ClipToBounds="True">
+            <Grid>
+              <TextBlock Text="&#xE8D6;" Classes="icon-2xl icon-muted"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                         IsVisible="{Binding !HasAlbumCover}"/>
+              <Image Source="{Binding AlbumCoverLarge, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                     Stretch="UniformToFill" IsVisible="{Binding HasAlbumCover}"/>
+            </Grid>
+          </Border>
+          <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*" Height="96">
+            <TextBlock Grid.Row="0" Text="{Binding SelectedAlbum.Album}" Classes="text-title" TextTrimming="CharacterEllipsis"/>
+            <TextBlock Grid.Row="1" Text="{Binding AlbumDetailSubtitle}" Classes="text-caption"
+                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Bottom">
+              <Button Content="{Binding PlayAllLabel}" Classes="browse-artist-action-btn accent"
+                      Command="{Binding PlayAllCommand}"
+                      automation:AutomationProperties.Name="{Binding PlayAllLabel}"/>
+              <Button Content="{Binding ShufflePlayLabel}" Classes="browse-artist-action-btn"
+                      Command="{Binding ShufflePlayCommand}"
+                      automation:AutomationProperties.Name="{Binding ShufflePlayLabel}"/>
+              <Button Content="{Binding RefreshMetadataButtonLabel}" Classes="browse-artist-action-btn"
+                      Command="{Binding RefreshCurrentAlbumDetailCommand}"
+                      IsEnabled="{Binding !IsRefreshingAlbumCatalogs}"
+                      automation:AutomationProperties.Name="{Binding RefreshMetadataButtonLabel}"/>
+            </StackPanel>
+          </Grid>
+        </Grid>
+
+        <StackPanel Spacing="8" Margin="{DynamicResource MarginTrailingSm}" IsVisible="{Binding HasAlbumDescription}">
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <TextBlock Text="{Binding IntroSectionLabel}" Classes="text-subtitle" VerticalAlignment="Center"/>
+            <TextBlock Classes="text-caption" VerticalAlignment="Center"
+                       Foreground="{DynamicResource TextTertiaryBrush}"
+                       IsVisible="{Binding ShowAlbumDescriptionSource}"
+                       Text="{Binding AlbumDescriptionSourceDisplay}"/>
+          </StackPanel>
+          <TextBlock Text="{Binding AlbumDescriptionPreviewDisplay}"
+                     IsVisible="{Binding ShowAlbumDescriptionCollapsedPlain}"
+                     Classes="text-caption album-desc-body"
+                     Foreground="{DynamicResource TextSecondaryBrush}"
+                     TextWrapping="Wrap" LineHeight="22"
+                     HorizontalAlignment="Stretch"/>
+          <TextBlock x:CompileBindings="False"
+                     IsVisible="{Binding ShowAlbumDescriptionExpandLink}"
+                     Classes="text-caption album-desc-body"
+                     Foreground="{DynamicResource TextSecondaryBrush}"
+                     TextWrapping="Wrap" LineHeight="22"
+                     HorizontalAlignment="Stretch">
+            <Run Text="{Binding AlbumDescriptionPreviewDisplay}"/>
+            <Run Text="..." Foreground="{DynamicResource TextSecondaryBrush}"/>
+            <InlineUIContainer BaselineAlignment="TextBottom">
+              <Button Content="{Binding ExpandFullLabel}" Classes="text-link-accent album-desc-expand-btn"
+                      Command="{Binding ToggleAlbumDescriptionExpandedCommand}"/>
+            </InlineUIContainer>
+          </TextBlock>
+          <TextBlock Text="{Binding AlbumDescriptionExpandedDisplay}"
+                     IsVisible="{Binding ShowAlbumDescriptionExpandedPlain}"
+                     Classes="text-caption album-desc-body"
+                     Foreground="{DynamicResource TextSecondaryBrush}"
+                     TextWrapping="Wrap" LineHeight="22"
+                     HorizontalAlignment="Stretch"/>
+          <TextBlock x:CompileBindings="False"
+                     IsVisible="{Binding ShowAlbumDescriptionCollapseLink}"
+                     Classes="text-caption album-desc-body"
+                     Foreground="{DynamicResource TextSecondaryBrush}"
+                     TextWrapping="Wrap" LineHeight="22"
+                     HorizontalAlignment="Stretch">
+            <Run Text="{Binding AlbumDescriptionExpandedDisplay}"/>
+            <InlineUIContainer BaselineAlignment="TextBottom">
+              <Button Content="{Binding CollapseLabel}" Classes="text-link-accent album-desc-expand-btn"
+                      Command="{Binding ToggleAlbumDescriptionExpandedCommand}"/>
+            </InlineUIContainer>
+          </TextBlock>
+        </StackPanel>
+
+        <Grid Margin="{DynamicResource MarginBottomMd}" ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+          <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10"
+                      VerticalAlignment="Center">
+            <TextBlock Text="{Binding TracksSectionLabel}" Classes="text-subtitle" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding AlbumDetailTracksSummary}" Classes="discover-results-summary"
+                       VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding AlbumDetailStatusMessage}" Classes="text-caption"
+                       Foreground="{DynamicResource TextTertiaryBrush}"
+                       VerticalAlignment="Center"
+                       IsVisible="{Binding ShowAlbumDetailStatus}"/>
+          </StackPanel>
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8"
+                      VerticalAlignment="Center" Margin="{DynamicResource MarginLeadingMd}">
+            <ComboBox SelectedIndex="{Binding AlbumDetailDownloadQualityIndex}"
+                      ItemsSource="{Binding AlbumDetailQualityOptionLabels}"
+                      Classes="field-select batch-toolbar-field batch-toolbar-select-filter"
+                      VerticalAlignment="Center"/>
+            <Button Content="{Binding DownloadSelectedLabel}" Classes="browse-artist-action-btn accent"
+                    Command="{Binding DownloadSelectedAlbumTracksCommand}"
+                    IsEnabled="{Binding HasSelectedDownloadable}"
+                    automation:AutomationProperties.Name="{Binding DownloadSelectedLabel}"/>
+            <Button Content="{Binding DownloadMissingLabel}" Classes="browse-artist-action-btn"
+                    Command="{Binding DownloadMissingAlbumTracksCommand}"
+                    IsVisible="{Binding HasAlbumMissingTracks}"
+                    automation:AutomationProperties.Name="{Binding DownloadMissingLabel}"/>
+            <Button Content="{Binding SelectAllDownloadableLabel}" Classes="flat-btn btn-toolbar"
+                    Command="{Binding SelectAllDownloadableTracksCommand}"
+                    automation:AutomationProperties.Name="{Binding SelectAllDownloadableLabel}"/>
+            <Button Content="{Binding DeselectAllLabel}" Classes="flat-btn btn-toolbar"
+                    Command="{Binding ClearDownloadableTrackSelectionCommand}"
+                    automation:AutomationProperties.Name="{Binding DeselectAllLabel}"/>
+            <Button Content="{Binding LoadMoreLabel}" Classes="flat-btn btn-toolbar"
+                    Command="{Binding LoadMoreAlbumDetailTracksCommand}"
+                    IsVisible="{Binding HasMoreAlbumDetailTracks}"
+                    automation:AutomationProperties.Name="{Binding LoadMoreLabel}"/>
+          </StackPanel>
+        </Grid>
+
+        <controls:AlbumCatalogTrackTableHeader/>
+
+        <Panel Margin="{DynamicResource MarginBottomMd}" MinHeight="80">
+          <ListBox x:Name="AlbumDetailTrackList" ItemsSource="{Binding AlbumDetailTracks}"
+                   Classes="virtual-list album-catalog-tracks-list discover-results-list"
+                   ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                   IsVisible="{Binding !IsLoadingAlbumDetail}"
+                   ItemTemplate="{StaticResource AlbumCatalogTrackRowTemplate}">
+            <ListBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <VirtualizingStackPanel/>
+              </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+          </ListBox>
+
+          <Button x:Name="AlbumDetailScrollTopBtn" Content="&#xE70E;"
+                  Classes="list-scroll-top-btn"
+                  HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                  Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
+                  Click="OnAlbumDetailScrollTopClick"/>
+
+          <controls:SkeletonAlbumTrackListView IsVisible="{Binding IsLoadingAlbumDetail}"/>
+        </Panel>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+  </Grid>
+</UserControl>

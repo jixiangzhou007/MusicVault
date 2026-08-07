@@ -1,0 +1,2134 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MusicVault.App.Controls">
+
+  <Style Selector="StackPanel.settings-form">
+    <Setter Property="Margin" Value="{DynamicResource SettingsPaneContentMargin}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Spacing" Value="0"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-form StackPanel.page-hero-toolbar,
+                   StackPanel.settings-form Grid.page-hero-toolbar">
+    <Setter Property="Margin" Value="0,0,0,8"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-form Border.page-hero-divider">
+    <Setter Property="Margin" Value="0,8,0,8"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section">
+    <Setter Property="Spacing" Value="{DynamicResource SettingsGroupBodySpacing}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <!-- 与概览页一致：分区全宽左对齐，勿用 MaxWidth 居中窄栏 -->
+
+  <Style Selector="StackPanel.settings-section-header">
+    <Setter Property="Spacing" Value="4"/>
+    <Setter Property="Margin" Value="0,0,0,4"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <Style Selector="Border.settings-page-header">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0,0,0,8"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Border.settings-page-header DockPanel > Button.settings-save-header-btn">
+    <Setter Property="Margin" Value="12,0,0,0"/>
+  </Style>
+
+  <Style Selector="Border.settings-sticky-save-bar">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="0,1,0,0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Border.settings-recommend-summary">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0,2,0,0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section > Border">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section > Border.ant-descriptions">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-page-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizePageTitle}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-section-intro">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="20"/>
+    <Setter Property="Margin" Value="0,0,0,12"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-intro-page">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-intro-page > Border">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section-compact">
+    <Setter Property="Spacing" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section-compact > TextBlock.settings-section-intro">
+    <Setter Property="Margin" Value="0,0,0,8"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section-compact > Grid.settings-field-row">
+    <Setter Property="Margin" Value="0,1"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section-compact > Grid.settings-field-row.tall">
+    <Setter Property="Margin" Value="0,2"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section-compact StackPanel.settings-field-body">
+    <Setter Property="Spacing" Value="4"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section-compact Border.settings-gatherer-row">
+    <Setter Property="Padding" Value="0,4"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="Margin" Value="0,0,0,4"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row.tall">
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-field-label">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="TextAlignment" Value="Right"/>
+    <Setter Property="Padding" Value="0,0,2,0"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > TextBlock.metadata-field-label,
+                   Grid.settings-field-row > TextBlock.settings-field-label">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="TextAlignment" Value="Right"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+    <Setter Property="Padding" Value="0,0,2,0"/>
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row.tall > TextBlock.metadata-field-label,
+                   Grid.settings-field-row.tall > TextBlock.settings-field-label">
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Margin" Value="0,6,0,0"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-value">
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthWide}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > Grid.settings-field-value">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > Grid.settings-field-value.settings-inline-action-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="MaxWidth" Value="Infinity"/>
+    <Setter Property="Width" Value="NaN"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row.tall > Grid.settings-field-value">
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-field-caption">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+
+  <!-- 字段说明：优先 ToolTip；区块说明用 settings-field-caption；多控件区用 settings-field-stack -->
+
+  <Style Selector="Grid.settings-field-value > TextBlock.settings-field-caption,
+                   Grid.settings-field-value > TextBlock.text-caption">
+    <Setter Property="Margin" Value="0,0,12,0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-value > ToggleSwitch.ant-switch,
+                   Grid.settings-field-row ToggleSwitch.ant-switch">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="ClipToBounds" Value="False"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-control-inline">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Spacing" Value="8"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-control-inline > TextBlock.settings-field-caption">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    <Setter Property="MaxWidth" Value="520"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-field-value-text">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-field-actions > TextBlock.settings-field-value-text">
+    <Setter Property="Margin" Value="0,0,12,0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-inline-control > TextBlock.settings-field-caption,
+                   Grid.settings-inline-control > TextBlock.text-caption">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-field-actions > Button">
+    <Setter Property="Margin" Value="0,0,10,0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-slider-value">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="MinWidth" Value="{DynamicResource SettingsSliderValueColumnWidth}"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+  </Style>
+
+  <Style Selector="ListBox.settings-nav-list Border.library-list-row.settings-nav-row">
+    <Setter Property="Padding" Value="{DynamicResource SettingsNavRowPadding}"/>
+  </Style>
+
+  <Style Selector="ListBox.settings-nav-list Border.library-list-row.settings-nav-row > Grid">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="ListBox.settings-nav-list ListBoxItem:selected Border.settings-nav-badge TextBlock,
+                   ListBox.settings-nav-list ListBoxItem:selected Border.settings-nav-pending-dot">
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+
+  <Style Selector="Border.settings-nav-pending-dot">
+    <Setter Property="Width" Value="6"/>
+    <Setter Property="Height" Value="6"/>
+    <Setter Property="CornerRadius" Value="3"/>
+    <Setter Property="Background" Value="{DynamicResource WarningSoftBrush}"/>
+    <Setter Property="Margin" Value="6,0,0,0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.settings-nav-badge">
+    <Setter Property="MinWidth" Value="16"/>
+    <Setter Property="MinHeight" Value="16"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="Padding" Value="4,1"/>
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+    <Setter Property="Margin" Value="6,0,0,0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.settings-nav-badge TextBlock">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeMicro}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.intro-chip">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="3"/>
+    <Setter Property="Padding" Value="8,4"/>
+    <Setter Property="Margin" Value="0,0,8,8"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+
+  <Style Selector="Button.intro-chip:pointerover">
+    <Setter Property="Background" Value="{DynamicResource AccentMutedBrush}"/>
+  </Style>
+
+  <Style Selector="Button.intro-chip TextBlock.intro-chip-name">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeMicro}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-connection-result-text">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-connection-result-text.connection-result-ok">
+    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-connection-result-text.connection-result-fail">
+    <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+
+  <Style Selector="Button.settings-connection-test-btn.connection-test-ok">
+    <Setter Property="Background" Value="{DynamicResource SuccessSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SuccessBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+  </Style>
+
+  <Style Selector="Button.settings-connection-test-btn.connection-test-ok:pointerover">
+    <Setter Property="Background" Value="{DynamicResource SuccessSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-connection-test-line">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-connection-test-line > Button">
+    <Setter Property="Margin" Value="0,0,10,8"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-connection-test-group">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Spacing" Value="8"/>
+    <Setter Property="Margin" Value="0,0,10,8"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.settings-connection-pill">
+    <Setter Property="CornerRadius" Value="10"/>
+    <Setter Property="Padding" Value="8,4"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="Border.settings-connection-pill TextBlock">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.settings-connection-pill.success">
+    <Setter Property="Background" Value="{DynamicResource SuccessSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SuccessBorderBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-connection-pill.success TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-connection-pill.error">
+    <Setter Property="Background" Value="{DynamicResource DangerSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource DangerBorderBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-connection-pill.error TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+
+  <Style Selector="Button.settings-gatherer-name-btn">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="2,0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+
+  <Style Selector="Button.settings-gatherer-name-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+
+  <Style Selector="TextBox.settings-url-input">
+    <Setter Property="Width" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Grid.settings-url-input-line">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Grid.settings-control-line">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-status-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Grid.settings-usage-kv-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="0,2,0,2"/>
+  </Style>
+
+  <Style Selector="ItemsControl.settings-usage-kv-list">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="ItemsControl.settings-usage-kv-list ContentPresenter">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Grid.settings-usage-kv-row > TextBlock.settings-field-label">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="TextAlignment" Value="Right"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-usage-kv-value">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-usage-kv-value-mono">
+    <Setter Property="FontFamily" Value="Cascadia Mono, Consolas, Courier New, monospace"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-usage-funnel">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-page-subtitle">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-field-hint">
+    <Setter Property="Margin" Value="{DynamicResource SettingsFieldHintMargin}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource WarningSoftBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-field-hint.tight">
+    <Setter Property="Margin" Value="{DynamicResource SettingsFieldContentMargin}"/>
+  </Style>
+
+  <Style Selector="ItemsControl.settings-capability-list">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-capability-inline-row">
+    <Setter Property="Margin" Value="0,0,0,4"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-capability-row">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Spacing" Value="20"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-capability-list-row">
+    <Setter Property="ClipToBounds" Value="False"/>
+  </Style>
+
+  <Style Selector="Grid.settings-capability-list-row > ItemsControl.settings-capability-list">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="ClipToBounds" Value="False"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-capability-row">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <!-- 已弃用 settings-playback-control 宽栏右置开关；控件紧跟标签见 settings-control-inline -->
+
+  <Style Selector="Grid.settings-field-row > ComboBox.settings-playback-combo">
+    <Setter Property="Width" Value="{DynamicResource ControlWidthWide}"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthWide}"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-capability-item">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Spacing" Value="6"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.settings-capability-pill.success">
+    <Setter Property="Background" Value="{DynamicResource SuccessSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SuccessBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="Border.settings-capability-pill.success TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-capability-pill.warning">
+    <Setter Property="Background" Value="{DynamicResource WarningSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource WarningTextBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="Border.settings-capability-pill.warning TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource WarningTextBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-capability-pill.error">
+    <Setter Property="Background" Value="{DynamicResource DangerSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="Border.settings-capability-pill.error TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-capability-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+    <Setter Property="LineHeight" Value="{DynamicResource FontSizeLabel}"/>
+  </Style>
+
+  <Style Selector="Border.settings-capability-pill">
+    <Setter Property="CornerRadius" Value="10"/>
+    <Setter Property="Padding" Value="10,4"/>
+    <Setter Property="MinHeight" Value="22"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.settings-capability-pill TextBlock">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="LineHeight" Value="14"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > ComboBox,
+                   Grid.settings-field-row > ComboBox.settings-field-control">
+    <Setter Property="Width" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > Slider">
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Grid.settings-inline-control">
+    <Setter Property="Width" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > Grid.settings-inline-control">
+    <Setter Property="Width" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-inline-control > Slider">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="MinWidth" Value="{DynamicResource SettingsSliderMinWidth}"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > TextBox">
+    <Setter Property="Width" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > TextBox.settings-field-wide">
+    <Setter Property="Width" Value="{DynamicResource ControlWidthWide}"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthWide}"/>
+  </Style>
+
+  <Style Selector="Grid.settings-control-line > TextBox.settings-control-input,
+                   Grid.settings-field-row > TextBox.settings-control-input">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="MaxWidth" Value="Infinity"/>
+    <Setter Property="Width" Value="NaN"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > Button">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > TextBlock.metadata-field-label,
+                   Grid.settings-field-row > TextBlock.settings-field-label">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="TextAlignment" Value="Right"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Padding" Value="0,0,2,0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > StackPanel.settings-field-actions">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > WrapPanel">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthWide}"/>
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > StackPanel.settings-field-stack">
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthWide}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Spacing" Value="6"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-field-stack > ComboBox,
+                   StackPanel.settings-field-stack > TextBox">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="MaxWidth" Value="Infinity"/>
+    <Setter Property="Width" Value="NaN"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-field-stack > ComboBox.settings-field-wide">
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthWide}"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-field-stack > TextBlock.settings-field-caption">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-field-stack > Button">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > WrapPanel.settings-field-actions">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="Width" Value="NaN"/>
+    <Setter Property="MaxWidth" Value="Infinity"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-shortcut-actions">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <!-- 与下方通栏表格左缘对齐：勿用固定宽标签列 -->
+  <Style Selector="StackPanel.settings-shortcut-enable-row">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="Margin" Value="0,0,0,8"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-path-row">
+    <Setter Property="Spacing" Value="6"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-path-row > TextBlock.settings-field-value-text">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="MaxWidth" Value="Infinity"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-path-row > TextBlock">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-path-row > WrapPanel.settings-field-actions > Button">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-inline-action-row > Button">
+    <Setter Property="Margin" Value="{DynamicResource FieldCaptionLeadingMargin}"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > StackPanel:not(.settings-field-actions):not(.settings-field-stack)">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthWide}"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-group-body > Grid.settings-field-row,
+                   StackPanel.settings-group > Grid.settings-field-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Grid.settings-path-row > Button">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > ItemsControl">
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthWide}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > ListBox">
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthWide}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="TextBox.settings-gatherer-url">
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthWide}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row.settings-check-row">
+    <Setter Property="MinHeight" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row.settings-check-row > TextBlock.metadata-field-label,
+                   Grid.settings-field-row.settings-check-row > TextBlock.settings-field-label">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row.settings-check-row > CheckBox.choice-check">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > CheckBox">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row.settings-switch-row">
+    <Setter Property="MinHeight" Value="32"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row.settings-switch-row > Grid.settings-field-value">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="MinHeight" Value="20"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row.settings-switch-row > TextBlock.metadata-field-label,
+                   Grid.settings-field-row.settings-switch-row > TextBlock.settings-field-label">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row.settings-check-row > TextBlock.text-label">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-field-body">
+    <Setter Property="Spacing" Value="8"/>
+  </Style>
+
+  <Style Selector="Border.settings-section-divider">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="Margin" Value="0,12"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-group-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Margin" Value="0,16,0,4"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-group">
+    <Setter Property="Spacing" Value="{DynamicResource SettingsGroupBodySpacing}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section > StackPanel.settings-group-body">
+    <Setter Property="Spacing" Value="{DynamicResource SettingsGroupBodySpacing}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-group > TextBlock.settings-group-title">
+    <Setter Property="Margin" Value="0,12,0,4"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-group > TextBlock.settings-group-title:first-child">
+    <Setter Property="Margin" Value="0,0,0,4"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-group-body">
+    <Setter Property="Margin" Value="{DynamicResource SettingsGroupBodyMargin}"/>
+    <Setter Property="Spacing" Value="{DynamicResource SettingsGroupBodySpacing}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-group-body > TextBlock.settings-field-hint">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-group-body > WrapPanel.settings-field-actions,
+                   StackPanel.settings-group-body > StackPanel.settings-field-actions">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-field-row > StackPanel.settings-field-actions">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-subgroup">
+    <Setter Property="Margin" Value="0,8,0,0"/>
+    <Setter Property="Spacing" Value="4"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-subgroup-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="Margin" Value="0,0,0,4"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-subgroup-body">
+    <Setter Property="Margin" Value="{DynamicResource SettingsSubgroupBodyMargin}"/>
+    <Setter Property="Spacing" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Border.settings-library-overview-card">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Border.settings-library-overview-card.settings-overview-section-follow">
+    <Setter Property="Margin" Value="0,16,0,0"/>
+    <Setter Property="Padding" Value="0,16,0,0"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="0,1,0,0"/>
+  </Style>
+
+  <Style Selector="Border.settings-library-overview-card > StackPanel > Border.settings-overview-divider">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Border.settings-library-overview-header">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="{DynamicResource SettingsOverviewHeaderPadding}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-overview-header-actions">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-overview-header-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-overview-header-row > StackPanel">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-subsection-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Margin" Value="0,2,0,2"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-overview-dashboard">
+    <Setter Property="Spacing" Value="14"/>
+    <!-- 与首页 PageHeroToolbarInsetMargin 一致；概览在 settings-form 外，不受 SettingsPaneContentMargin 约束 -->
+    <Setter Property="Margin" Value="{DynamicResource SettingsOverviewPageMargin}"/>
+  </Style>
+
+  <!-- 外观页：独立于 settings-form -->
+  <Style Selector="StackPanel.settings-appearance-page">
+    <Setter Property="Spacing" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Margin" Value="{DynamicResource SettingsSubpagePageMargin}"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-appearance-page Border.settings-page-header">
+    <Setter Property="Margin" Value="0,0,0,8"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-appearance-page StackPanel.settings-appearance-body">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-appearance-page Grid.settings-field-row > ComboBox.settings-appearance-control">
+    <Setter Property="Width" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-appearance-page Button.settings-appearance-swatch">
+    <Setter Property="Margin" Value="{DynamicResource SettingsAppearanceSwatchGridMargin}"/>
+  </Style>
+
+  <!-- 播放与音频页：独立于 settings-form，Tab 内容去框/背景 -->
+  <Style Selector="StackPanel.settings-playback-page">
+    <Setter Property="Spacing" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Margin" Value="{DynamicResource SettingsSubpagePageMargin}"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-playback-page Border.settings-page-header">
+    <Setter Property="Margin" Value="0,0,0,8"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tabs.settings-playback-tabs">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tab-content.settings-playback-tab-content">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="Padding" Value="{DynamicResource SettingsPlaybackTabContentPadding}"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <Setter Property="Margin" Value="{DynamicResource AntdCardTabContentMargin}"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-playback-page StackPanel.settings-shortcut-enable-row">
+    <Setter Property="Margin" Value="0,0,0,4"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-playback-page Border.settings-shortcut-list">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-playback-page WrapPanel.settings-shortcut-actions">
+    <Setter Property="Margin" Value="0,8,0,0"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-playback-page TextBlock.settings-overview-panel-title">
+    <Setter Property="Margin" Value="0,0,0,2"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-playback-page Grid.settings-field-row > ComboBox.settings-playback-control">
+    <Setter Property="Width" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ControlWidthStandard}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-playback-page Grid.settings-field-row > TextBlock.metadata-field-label,
+                   StackPanel.settings-playback-page Grid.settings-field-row > TextBlock.settings-field-label">
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-overview-block">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-disclaimer-text">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource WarningTextBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="18"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-library-path">
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="Margin" Value="0,0,0,2"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-overview-feature-row">
+    <Setter Property="Margin" Value="0,0,0,12"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-feature-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-feature-desc">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="LineHeight" Value="18"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-overview-hero">
+    <Setter Property="Spacing" Value="4"/>
+    <Setter Property="Margin" Value="0,0,0,2"/>
+  </Style>
+
+  <Style Selector="Border.settings-overview-panel">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusMd}"/>
+    <Setter Property="Padding" Value="12,10"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-panel-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Border.settings-overview-compliance-capsule">
+    <Setter Property="Background" Value="{DynamicResource WarningSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource WarningBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="999"/>
+    <Setter Property="Padding" Value="10,4"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-compliance-text">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource WarningTextBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.settings-overview-text-btn">
+    <Setter Property="MinHeight" Value="24"/>
+    <Setter Property="Height" Value="24"/>
+    <Setter Property="Padding" Value="8,0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-intro-body">
+    <Setter Property="Margin" Value="0,2,0,0"/>
+    <Setter Property="LineHeight" Value="18"/>
+  </Style>
+
+  <Style Selector="Grid.settings-overview-kpi-grid">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Border.settings-overview-kpi-card">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}"/>
+    <Setter Property="Padding" Value="10,8"/>
+    <Setter Property="MinHeight" Value="60"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-kpi-card-value">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeOverviewKpi}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-kpi-card-value.settings-overview-kpi-value-empty">
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-kpi-card-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-overview-quickstart-actions > Button">
+    <Setter Property="Margin" Value="0,0,6,6"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-overview-compact">
+    <Setter Property="Spacing" Value="8"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-overview-compact StackPanel.settings-intro-hero">
+    <Setter Property="Margin" Value="0,0,0,2"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-overview-compact TextBlock.settings-intro-desc">
+    <Setter Property="Margin" Value="0,2,0,0"/>
+    <Setter Property="LineHeight" Value="17"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-block-title">
+    <Setter Property="Margin" Value="0,0,0,0"/>
+  </Style>
+
+  <Style Selector="Border.settings-overview-section-divider">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Margin" Value="0,2,0,2"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Grid.settings-overview-inline-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-inline-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-inline-label.settings-overview-inline-label-muted">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-overview-opensource-chips > ItemsControl > ItemsPresenter > WrapPanel > Button">
+    <Setter Property="Margin" Value="0,0,6,2"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-library-hint">
+    <Setter Property="Margin" Value="0,0,0,0"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-overview-stat-chips">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Margin" Value="0,0,0,0"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-overview-quick-actions">
+    <Setter Property="Margin" Value="0,0,0,0"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-overview-quick-actions > Button">
+    <Setter Property="Margin" Value="0,0,6,0"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-overview-compact Border.settings-overview-empty-guidance">
+    <Setter Property="Padding" Value="8,6"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-overview-stat-chips > Border.ant-tag">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="CornerRadius" Value="999"/>
+    <Setter Property="Padding" Value="7,2"/>
+    <Setter Property="MinHeight" Value="20"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-top-caption">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-library-overview-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-library-overview-body">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="{DynamicResource SettingsOverviewBodyPadding}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-intro-page Border.settings-library-overview-card">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-overview-kpi-row">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Spacing" Value="10"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.settings-overview-kpi-sep">
+    <Setter Property="Width" Value="1"/>
+    <Setter Property="Height" Value="14"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-overview-kpi">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Spacing" Value="4"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.settings-overview-kpi">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-kpi-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-kpi-value">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="LetterSpacing" Value="-0.25"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-overview-kpi-value.settings-overview-kpi-value-empty">
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+
+  <Style Selector="Border.settings-overview-empty-guidance">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-gatherer-section">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="{DynamicResource SettingsOverviewCardMargin}"/>
+  </Style>
+
+  <Style Selector="DockPanel.settings-gatherer-header-row,
+                   DockPanel.settings-section-header-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="0,8,0,4"/>
+    <Setter Property="LastChildFill" Value="True"/>
+  </Style>
+
+  <Style Selector="DockPanel.settings-gatherer-header-row > Button,
+                   DockPanel.settings-section-header-row > StackPanel,
+                   DockPanel.settings-section-header-row > TextBlock.settings-field-caption">
+    <Setter Property="Margin" Value="12,0,0,0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-group-title.settings-group-title-inline">
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-gatherer-header-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="0,8,0,4"/>
+  </Style>
+
+  <Style Selector="Grid.settings-gatherer-header-row > TextBlock.settings-group-title">
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-gatherer-header-row > Button">
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-gatherer-wrap">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Margin" Value="{DynamicResource SettingsGroupBodyMargin}"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-group-body WrapPanel.settings-gatherer-wrap,
+                   StackPanel.settings-group > StackPanel.settings-gatherer-section WrapPanel.settings-gatherer-wrap">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-save-header-hint">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource WarningSoftBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+
+  <Style Selector="ItemsControl.settings-gatherer-list">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ContentWidthList}"/>
+  </Style>
+
+  <Style Selector="Grid.settings-gatherer-cell">
+    <Setter Property="Margin" Value="0,0,12,2"/>
+    <Setter Property="MinHeight" Value="26"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-gatherer-cell.gatherer-row-disabled TextBlock.settings-gatherer-cell-label">
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+
+  <Style Selector="Grid.settings-gatherer-cell ToggleSwitch.ant-switch">
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-gatherer-cell-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-gatherer-row-status">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-guide-page">
+    <Setter Property="Spacing" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-intro-hero">
+    <Setter Property="Margin" Value="0,0,0,8"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-intro-page TextBlock.settings-group-title">
+    <Setter Property="Margin" Value="0,12,0,4"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Border.settings-intro-logo">
+    <Setter Property="Width" Value="48"/>
+    <Setter Property="Height" Value="48"/>
+    <Setter Property="CornerRadius" Value="24"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-intro-app-name">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle2}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-intro-version">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontFamily" Value="{DynamicResource MonoFontFamily}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-intro-tagline">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Margin" Value="0,2,0,0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-intro-author">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Margin" Value="0,2,0,0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-intro-desc">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="20"/>
+    <Setter Property="Margin" Value="0,6,0,0"/>
+    <Setter Property="Padding" Value="2,0,0,0"/>
+  </Style>
+
+  <!-- Ant Design Tabs type="card"：标签条固定 44px；内容顶边在标签条下方（仅间隙可见） -->
+  <Style Selector="controls|AntdCardTab">
+    <Setter Property="ZIndex" Value="2"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tabs">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="ScrollViewer.antd-card-tab-nav">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="ClipToBounds" Value="False"/>
+    <Setter Property="ZIndex" Value="2"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tab-content">
+    <Setter Property="Background" Value="{DynamicResource PlayPaneBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSecondaryBrush}"/>
+    <Setter Property="BorderThickness" Value="1,0,1,1"/>
+    <Setter Property="CornerRadius" Value="0,0,4,4"/>
+    <Setter Property="MinHeight" Value="120"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+
+  <!-- 偏好页 Tab 卡片：四边 12px（Playback / Update 等统一） -->
+  <Style Selector="StackPanel.settings-section Border.antd-card-tab-content,
+                   StackPanel.settings-intro-page Border.antd-card-tab-content,
+                   StackPanel.settings-update-page Border.antd-card-tab-content">
+    <Setter Property="Padding" Value="{DynamicResource SettingsAntdCardTabContentPadding}"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tab-rail">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource BorderSecondaryBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="ZIndex" Value="1"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tab-chrome">
+    <Setter Property="MinHeight" Value="{DynamicResource AntdCardTabChromeHeight}"/>
+    <Setter Property="Height" Value="{DynamicResource AntdCardTabChromeHeight}"/>
+    <Setter Property="CornerRadius" Value="4,4,0,0"/>
+    <Setter Property="Background" Value="{DynamicResource ContainerBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSecondaryBrush}"/>
+    <Setter Property="BorderThickness" Value="1,1,1,0"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tab-chrome.selected">
+    <Setter Property="Background" Value="{DynamicResource PlayPaneBrush}"/>
+    <Setter Property="BorderThickness" Value="1,1,1,0"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tab-mask">
+    <Setter Property="Background" Value="{DynamicResource ContainerBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tab-mask.selected">
+    <Setter Property="Background" Value="{DynamicResource PlayPaneBrush}"/>
+  </Style>
+
+  <Style Selector="Button.antd-card-tab-inner">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="MinHeight" Value="{DynamicResource AntdCardTabChromeHeight}"/>
+    <Setter Property="Height" Value="{DynamicResource AntdCardTabChromeHeight}"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Padding" Value="14,0"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Button.antd-card-tab-inner:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tab-chrome.selected Button.antd-card-tab-inner">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+
+  <Style Selector="Border.intro-chip">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="3"/>
+    <Setter Property="Padding" Value="8,4"/>
+    <Setter Property="Margin" Value="0,0,8,8"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="TextBlock.intro-chip-name">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeMicro}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-intro-feature-desc">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="20"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-intro-footer">
+    <Setter Property="Margin" Value="0,4,0,0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <Style Selector="Border.settings-intro-chips">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-intro-copyright">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="LineHeight" Value="18"/>
+    <Setter Property="Margin" Value="0,4,0,0"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Border.settings-guide-hero">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusMd}"/>
+    <Setter Property="Padding" Value="18,16"/>
+    <Setter Property="Margin" Value="0,0,0,14"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-guide-hero-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle2}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-guide-hero-tagline">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Margin" Value="0,4,0,0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-guide-hero-desc">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="22"/>
+    <Setter Property="Margin" Value="0,10,0,0"/>
+  </Style>
+
+  <Style Selector="Border.settings-guide-card">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusMd}"/>
+    <Setter Property="Padding" Value="14,12"/>
+    <Setter Property="Margin" Value="0,0,0,10"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-guide-index">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontFamily" Value="{DynamicResource MonoFontFamily}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Margin" Value="0,2,12,0"/>
+    <Setter Property="MinWidth" Value="28"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-guide-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-guide-summary">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="22"/>
+    <Setter Property="Margin" Value="0,8,0,0"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-guide-bullets">
+    <Setter Property="Spacing" Value="0"/>
+    <Setter Property="Margin" Value="0,10,0,0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-guide-bullet-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Margin" Value="0,5,12,0"/>
+    <Setter Property="MinWidth" Value="104"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-guide-bullet-detail">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="22"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Margin" Value="0,5,0,0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-guide-bullet-simple">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="22"/>
+    <Setter Property="Margin" Value="0,5,0,0"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section > Border.ant-alert">
+    <Setter Property="Margin" Value="{DynamicResource MarginBottomSm}"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-group > Border.ant-alert">
+    <Setter Property="Margin" Value="{DynamicResource MarginBottomSm}"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section > Border.ant-descriptions:first-child">
+    <Setter Property="Margin" Value="0,0,0,10"/>
+  </Style>
+
+  <Style Selector="Border.settings-shortcut-list">
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ContentWidthList}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+
+  <Style Selector="Grid.settings-shortcut-list-header">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-shortcut-list-th">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+    <Setter Property="Margin" Value="8,4"/>
+  </Style>
+
+  <Style Selector="Border.settings-shortcut-list-row">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Border.settings-shortcut-list-row:last-child">
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-shortcut-list-td">
+    <Setter Property="Margin" Value="8,3"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-status">
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}"/>
+    <Setter Property="Padding" Value="8,2"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="0,0,8,0"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-status-new">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-status-new TextBlock.settings-update-status-text">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-status-ok">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-status-ok TextBlock.settings-update-status-text">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-status-error">
+    <Setter Property="Background" Value="{DynamicResource WarningSoftBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-status-error TextBlock.settings-update-status-text">
+    <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-update-status-text">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section-compact > Border.settings-section-divider">
+    <Setter Property="Margin" Value="0,10"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section-compact > TextBlock.settings-group-title">
+    <Setter Property="Margin" Value="0,14,0,4"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-section-compact > TextBlock.settings-group-title:first-child">
+    <Setter Property="Margin" Value="0,0,0,4"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-card">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0,0,0,12"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-update-card-body">
+    <Setter Property="Spacing" Value="6"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-update-card-body > TextBlock.settings-field-hint">
+    <Setter Property="Margin" Value="0,2,0,2"/>
+    <Setter Property="Foreground" Value="{DynamicResource WarningSoftBrush}"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-update-page">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Spacing" Value="{DynamicResource SettingsGroupBodySpacing}"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tabs.settings-update-diagnostics-tabs">
+    <Setter Property="Margin" Value="0,0,0,4"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tabs.settings-overview-features-tabs">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Border.antd-card-tab-content.settings-overview-feature-tab-content">
+    <Setter Property="Height" Value="{DynamicResource SettingsOverviewFeatureTabContentHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource SettingsOverviewFeatureTabContentHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource SettingsOverviewFeatureTabContentHeight}"/>
+  </Style>
+
+  <Style Selector="Border.settings-overview-feature-tab-content ScrollViewer">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-update-page > TextBlock.settings-section-intro">
+    <Setter Property="Margin" Value="0,0,0,8"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-group-body > StackPanel.settings-update-progress">
+    <Setter Property="Margin" Value="0,0,0,6"/>
+    <Setter Property="Spacing" Value="4"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-update-actions">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-update-actions > TextBlock.settings-update-version">
+    <Setter Property="Margin" Value="0,0,12,8"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-update-actions > Button">
+    <Setter Property="Margin" Value="0,0,10,8"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-update-actions > Border.settings-update-pill">
+    <Setter Property="Margin" Value="0,0,8,8"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-update-version">
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    <Setter Property="MaxWidth" Value="200"/>
+  </Style>
+
+  <Style Selector="ComboBox.settings-update-frequency-combo">
+    <Setter Property="Width" Value="{DynamicResource SettingsUpdateFrequencyWidth}"/>
+    <Setter Property="MinWidth" Value="{DynamicResource SettingsUpdateFrequencyWidth}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-pill">
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}"/>
+    <Setter Property="Padding" Value="10,4"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-pill TextBlock.settings-update-status-text">
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-pill.settings-update-status-new">
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-pill.settings-update-status-ok">
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-pill.settings-update-status-error">
+    <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-info">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}"/>
+    <Setter Property="Padding" Value="10,10,12,10"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="Margin" Value="0,4,0,0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-update-info-text">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-release-day">
+    <Setter Property="Spacing" Value="4"/>
+    <Setter Property="Margin" Value="0,0,0,16"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-release-day:last-child">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-release-header">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Margin" Value="0,0,0,4"/>
+  </Style>
+
+  <Style Selector="Grid.settings-release-bullet-row">
+    <Setter Property="Margin" Value="0,2,0,0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-release-bullet-mark">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Margin" Value="0,0,8,0"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-release-bullet">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="20"/>
+  </Style>
+
+  <Style Selector="Button.settings-update-history-toggle">
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="Margin" Value="0,0,0,4"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Border.settings-update-status-list">
+    <Setter Property="Background" Value="{DynamicResource SurfaceBaseBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}"/>
+    <Setter Property="Padding" Value="10,8,12,12"/>
+    <Setter Property="MaxWidth" Value="{DynamicResource ContentWidthList}"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-update-status-time">
+    <Setter Property="Margin" Value="0,0,8,0"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-update-troubleshoot-section">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-update-troubleshoot-section > TextBlock.settings-group-title">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-update-status-row">
+    <Setter Property="Margin" Value="0,3,0,0"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-group-body.settings-changelog-panel">
+    <Setter Property="Spacing" Value="6"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-changelog-panel">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="ScrollViewer.settings-changelog-scroll">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="MinHeight" Value="{DynamicResource SettingsUpdateHistoryMinHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource SettingsUpdateHistoryMaxHeight}"/>
+  </Style>
+
+  <Style Selector="Border.settings-troubleshoot-panel">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="0,0,0,8"/>
+  </Style>
+
+  <Style Selector="Border.settings-troubleshoot-panel.settings-capability-panel">
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+
+  <Style Selector="Border.settings-troubleshoot-panel:not(.settings-capability-panel)">
+    <Setter Property="Background" Value="{DynamicResource SurfaceBaseBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}"/>
+    <Setter Property="Padding" Value="{DynamicResource SettingsOverviewBodyPadding}"/>
+  </Style>
+
+  <Style Selector="Border.settings-backup-panel">
+    <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}"/>
+    <Setter Property="BoxShadow" Value="{DynamicResource CardShadow}"/>
+    <Setter Property="Padding" Value="16"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="MinHeight" Value="120"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-backup-empty">
+    <Setter Property="Margin" Value="12,14"/>
+    <Setter Property="Spacing" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Border.settings-backup-table">
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+
+  <Style Selector="Border.settings-backup-table-header-wrap">
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Grid.settings-backup-table-header,
+                   Grid.settings-backup-table-row-grid">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="MinHeight" Value="32"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-backup-table-th">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+    <Setter Property="Margin" Value="10,6,10,6"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-backup-table-th.settings-backup-table-meta,
+                   TextBlock.settings-backup-table-td.settings-backup-table-meta">
+    <Setter Property="Margin" Value="16,6,16,6"/>
+    <Setter Property="MinWidth" Value="168"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-backup-table-th.settings-backup-table-action">
+    <Setter Property="Margin" Value="8,6,14,6"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="Border.settings-backup-table-row">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="MinHeight" Value="32"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-backup-table-td">
+    <Setter Property="Margin" Value="10,5"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+  </Style>
+
+  <Style Selector="Grid.settings-backup-table-row-grid > Button.settings-backup-restore-action">
+    <Setter Property="Margin" Value="8,5,14,5"/>
+  </Style>
+
+  <Style Selector="Grid.settings-backup-pagination">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="0,6,0,0"/>
+    <Setter Property="MinHeight" Value="28"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-backup-pagination-info">
+    <Setter Property="Margin" Value="10,0,0,0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-backup-pagination > StackPanel">
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Button.primary.btn-toolbar.settings-backup-restore-action">
+    <Setter Property="MinWidth" Value="48"/>
+    <Setter Property="Height" Value="22"/>
+    <Setter Property="MinHeight" Value="22"/>
+    <Setter Property="MaxHeight" Value="22"/>
+    <Setter Property="Padding" Value="8,0"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="8,5,14,5"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-about-page">
+    <Setter Property="Spacing" Value="12"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-about-hero">
+    <Setter Property="Margin" Value="0,0,0,4"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.settings-about-page > Border.ant-alert">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="TextBlock.settings-update-status-empty">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="Margin" Value="8,6"/>
+  </Style>
+
+  <Style Selector="Grid.settings-diag-tool-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="Margin" Value="0,3"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-diag-tool-row > TextBlock.metadata-field-label,
+                   Grid.settings-diag-tool-row > TextBlock.settings-field-label">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-diag-tool-row > StackPanel.settings-field-actions">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Grid.settings-diag-tool-row > StackPanel.settings-field-actions > Button">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.settings-diag-tool-row.tall > TextBlock.settings-field-label">
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Margin" Value="0,6,0,0"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-intro-actions">
+    <Setter Property="Margin" Value="0,4,0,0"/>
+  </Style>
+
+  <Style Selector="WrapPanel.settings-intro-actions > Button">
+    <Setter Property="Margin" Value="0,0,10,8"/>
+  </Style>
+
+</Styles>

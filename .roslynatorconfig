@@ -1,0 +1,42 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/roslynator/main/src/Common/Configuration/roslynator.schema.json",
+  "roslynator": {
+    "general": {
+      "prefixFieldIdentifierWithUnderscore": true,
+      "useVarInsteadOfImplicitType": "when_type_is_obvious"
+    },
+    "refactorings": {
+      "UseExpressionBodiedMember": {
+        "style": "when_on_single_line"
+      }
+    },
+    "analyzers": {
+      "RCS1001": { "severity": "warning" },
+      "RCS1002": { "severity": "warning" },
+      "RCS1005": { "severity": "warning" },
+      "RCS1018": { "severity": "warning" },
+      "RCS1032": { "severity": "warning" },
+      "RCS1036": { "severity": "warning" },
+      "RCS1047": { "severity": "warning" },
+      "RCS1055": { "severity": "suggestion" },
+      "RCS1075": { "severity": "suggestion" },
+      "RCS1090": { "severity": "warning" },
+      "RCS1102": { "severity": "warning" },
+      "RCS1118": { "severity": "warning" },
+      "RCS1123": { "severity": "warning" },
+      "RCS1138": { "severity": "suggestion" },
+      "RCS1139": { "severity": "suggestion" },
+      "RCS1141": { "severity": "suggestion" },
+      "RCS1163": { "severity": "suggestion" },
+      "RCS1168": { "severity": "warning" },
+      "RCS1174": { "severity": "suggestion" },
+      "RCS1194": { "severity": "warning" },
+      "RCS1202": { "severity": "suggestion" },
+      "RCS1203": { "severity": "suggestion" },
+      "RCS1225": { "severity": "suggestion" },
+      "RCS1228": { "severity": "warning" },
+      "RCS1235": { "severity": "warning" },
+      "RCS1241": { "severity": "warning" }
+    }
+  }
+}

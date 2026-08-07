@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             x:Class="MusicVault.App.Views.Overlays.MusicRecognitionGuideModalView"
+             x:DataType="vm:MusicRecognitionGuideModalViewModel">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel" MaxWidth="560" MinWidth="420">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding CloseLabel}" Classes="primary app-dialog-btn"
+                  Command="{Binding CloseCommand}"/>
+        </StackPanel>
+      </Border>
+      <StackPanel Classes="app-dialog-body" Spacing="10">
+        <TextBlock Text="{Binding Title}" Classes="text-title"/>
+        <ScrollViewer MaxHeight="420"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+          <TextBlock Text="{Binding Body}" Classes="text-body" TextWrapping="Wrap" LineHeight="22"/>
+        </ScrollViewer>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</UserControl>

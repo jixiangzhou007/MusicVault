@@ -1,0 +1,28 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MusicVault.App.Controls">
+
+  <Style Selector="controls|VinylRecordCoverView">
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.now-playing-track-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle2}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+    <Setter Property="MaxLines" Value="2"/>
+    <Setter Property="LineHeight" Value="28"/>
+  </Style>
+  <Style Selector="TextBlock.now-playing-track-meta">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+    <Setter Property="MaxLines" Value="2"/>
+    <Setter Property="LineHeight" Value="18"/>
+  </Style>
+
+</Styles>

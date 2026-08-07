@@ -1,0 +1,160 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="Grid.library-pane-header">
+    <Setter Property="Margin" Value="{DynamicResource LibraryPaneHeaderMargin}"/>
+    <Setter Property="MinHeight" Value="32"/>
+  </Style>
+  <Style Selector="StackPanel.library-pane-footer">
+    <Setter Property="Margin" Value="{DynamicResource LibraryPaneFooterMargin}"/>
+  </Style>
+  <Style Selector="Grid.library-pane-toolbar">
+    <Setter Property="Margin" Value="{DynamicResource LibraryPaneToolbarMargin}"/>
+    <Setter Property="MinHeight" Value="32"/>
+  </Style>
+  <Style Selector="Grid.page-header-block">
+    <Setter Property="Margin" Value="{DynamicResource PageHeaderMargin}"/>
+  </Style>
+  <Style Selector="Grid.page-header-toolbar">
+    <Setter Property="Margin" Value="{DynamicResource PageHeaderBlockMargin}"/>
+  </Style>
+  <Style Selector="Grid.page-toolbar-block">
+    <Setter Property="Margin" Value="{DynamicResource PageToolbarGridMargin}"/>
+  </Style>
+  <Style Selector="Border.page-toolbar-divider-tight">
+    <Setter Property="Margin" Value="{DynamicResource PageToolbarDividerTightMargin}"/>
+  </Style>
+  <Style Selector="Border.page-inset-h">
+    <Setter Property="Margin" Value="{DynamicResource PageContentHorizontalMargin}"/>
+  </Style>
+  <Style Selector="Border.page-inset-h-sm">
+    <Setter Property="Margin" Value="{DynamicResource PageContentHorizontalMarginSm}"/>
+  </Style>
+  <Style Selector="Grid.track-table-header">
+    <Setter Property="Margin" Value="{DynamicResource TrackTableHeaderMargin}"/>
+    <Setter Property="Height" Value="{DynamicResource TrackTableHeaderHeight}"/>
+  </Style>
+  <Style Selector="Grid.track-table-header.track-table-header-paired">
+    <Setter Property="Margin" Value="{DynamicResource TrackTableHeaderPairedMargin}"/>
+  </Style>
+  <Style Selector="Border.track-row-divider.track-table-divider-paired">
+    <Setter Property="Margin" Value="{DynamicResource TrackTableRowPairedMargin}"/>
+  </Style>
+  <Style Selector="ListBox.virtual-list.track-table-scroll-list">
+    <Setter Property="ScrollViewer.Padding" Value="{DynamicResource TrackTableScrollPadding}"/>
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible"/>
+  </Style>
+  <Style Selector="ListBox.track-table-scroll-list Grid.track-row-content,
+                   ListBox.track-table-scroll-list Grid.track-row-content.discover-track-row,
+                   ListBox.track-table-scroll-list Grid.track-row-content.playlist-browse-row,
+                   ListBox.track-table-scroll-list Grid.track-row-content.batch-scrape-row">
+    <Setter Property="Margin" Value="{DynamicResource TrackTableRowPairedMargin}"/>
+  </Style>
+  <Style Selector="ListBox.track-table-scroll-list Border.track-row-divider">
+    <Setter Property="Margin" Value="{DynamicResource TrackTableRowPairedMargin}"/>
+  </Style>
+  <Style Selector="Grid.track-row-content.playlist-browse-row">
+    <Setter Property="Margin" Value="{DynamicResource TrackRowHorizontalMargin}"/>
+  </Style>
+  <Style Selector="Grid.discover-track-row,
+                   Grid.discover-track-header">
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="Grid.discover-track-row">
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+  <Style Selector="Grid.discover-track-row > TextBlock.track-col-cell">
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="MaxLines" Value="1"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+  <Style Selector="Grid.discover-track-row > Grid.discover-track-cell">
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Margin" Value="{DynamicResource TrackColCellMargin}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+  <Style Selector="Border.discover-table-frame">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+  <Style Selector="Border.discover-table-frame Grid.track-table-header">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="Border.discover-table-frame Border.track-row-divider">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.discover-table-body.track-table-scroll-list Grid.track-row-content,
+                   ListBox.discover-table-body.track-table-scroll-list Grid.track-row-content.discover-track-row,
+                   ListBox.discover-table-body.track-table-scroll-list Grid.track-row-content.playlist-browse-row">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.discover-table-body.track-table-scroll-list Border.track-row-divider">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="Grid.track-table-header.album-catalog-track-header">
+    <Setter Property="Margin" Value="{DynamicResource AlbumCatalogTrackTableHeaderMargin}"/>
+    <Setter Property="Height" Value="{DynamicResource TrackTableHeaderHeight}"/>
+  </Style>
+  <Style Selector="Border.album-catalog-track-header-divider">
+    <Setter Property="Margin" Value="{DynamicResource AlbumCatalogTrackTableDividerMargin}"/>
+  </Style>
+  <Style Selector="Grid.track-row-content.album-catalog-track-row">
+    <Setter Property="Margin" Value="{DynamicResource AlbumCatalogTrackTableDividerMargin}"/>
+  </Style>
+  <Style Selector="Border.track-row-divider.album-catalog-row-divider">
+    <Setter Property="Margin" Value="{DynamicResource AlbumCatalogTrackTableDividerMargin}"/>
+  </Style>
+  <Style Selector="TextBlock.page-intro">
+    <Setter Property="Margin" Value="{DynamicResource MarginBottomSm}"/>
+  </Style>
+
+  <!-- 主内容区：与 PlayPane 同色，避免浅色主题下页头/页身露出 BackgroundBrush 灰边 -->
+  <Style Selector="Grid.main-content-grid">
+    <Setter Property="Background" Value="{DynamicResource PlayPaneBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+
+  <!-- 页头 Hero：文案区（仅标题/说明，不放主操作按钮） -->
+  <Style Selector="StackPanel.page-hero-copy">
+    <Setter Property="Margin" Value="{DynamicResource PageHeaderMargin}"/>
+    <Setter Property="Spacing" Value="4"/>
+  </Style>
+
+  <!-- 页头 Hero：工具栏（筛选/搜索/主按钮，位于分割线上方） -->
+  <Style Selector="Grid.page-hero-toolbar,
+                   StackPanel.page-hero-toolbar">
+    <Setter Property="Margin" Value="{DynamicResource PageHeroToolbarMargin}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <!-- 页头 Hero：分割线下统计/摘要（不放主操作按钮） -->
+  <Style Selector="Grid.page-hero-footer,
+                   StackPanel.page-hero-footer">
+    <Setter Property="Margin" Value="{DynamicResource PageHeroToolbarMargin}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <!-- 页内区块标题行（标题 + 按钮同排，非整页 Hero） -->
+  <Style Selector="Grid.page-section-header">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="{DynamicResource PageHeaderBlockMargin}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <!-- 页头 Hero 通栏分割线（与 page-toolbar-divider 视觉一致，全宽无 inset） -->
+  <Style Selector="Border.page-hero-divider,
+                   Border.discover-section-split">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="MinHeight" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="{DynamicResource PageHeroDividerMargin}"/>
+  </Style>
+
+</Styles>

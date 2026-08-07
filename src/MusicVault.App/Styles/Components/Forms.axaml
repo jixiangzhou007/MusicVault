@@ -1,0 +1,269 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MusicVault.App.Controls">
+  <Style Selector="TextBlock.list-header">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.page-intro">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="LineHeight" Value="18"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.page-disclaimer">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="LineHeight" Value="16"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="FontStyle" Value="Italic"/>
+  </Style>
+
+  <Style Selector="TextBlock.discover-field-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+  </Style>
+
+  <Style Selector="TextBlock.discover-track-song-label">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.discover-track-index">
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.metadata-field-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+    <Setter Property="TextAlignment" Value="Right"/>
+  </Style>
+
+  <Style Selector="TextBox.metadata-lyrics-field.metadata-lyrics-field-compact">
+    <Setter Property="MinHeight" Value="48"/>
+    <Setter Property="MaxHeight" Value="120"/>
+    <Setter Property="Padding" Value="8,8"/>
+    <Setter Property="VerticalContentAlignment" Value="Top"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="TextBlock.metadata-field-label.metadata-editor-row-top">
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+
+  <!-- 侧栏编辑器内：行间距仅由 metadata-editor-row-* 控制，勿叠加 margin -->
+  <Style Selector="TextBox.metadata-field.metadata-editor-row-margin,
+                   TextBox.metadata-field.metadata-editor-row-top">
+    <Setter Property="Margin" Value="0,6,0,0"/>
+  </Style>
+
+  <!-- field-* / choice-*：与 metadata-* 等价，供新页面与预览页使用 -->
+  <Style Selector="TextBox.field-input">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="TextBox.field-input:focus">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource FocusRingBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+  <Style Selector="ComboBox.field-select">
+    <Setter Property="Height" Value="{DynamicResource ControlHeightSm}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSm}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ControlHeightSm}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Background" Value="{DynamicResource ControlFillDefaultBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeDefaultBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Padding" Value="8,0,28,0"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="ComboBox.field-select.batch-toolbar-field">
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="Padding" Value="8,0,28,0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+  <Style Selector="ComboBox.field-select.batch-toolbar-select">
+    <Setter Property="Width" Value="168"/>
+    <Setter Property="MinWidth" Value="168"/>
+    <Setter Property="MaxWidth" Value="168"/>
+  </Style>
+  <Style Selector="ComboBox.field-select.batch-toolbar-select-filter">
+    <Setter Property="Width" Value="120"/>
+    <Setter Property="MinWidth" Value="120"/>
+    <Setter Property="MaxWidth" Value="120"/>
+  </Style>
+  <Style Selector="RadioButton.choice-inline">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Padding" Value="4,0,0,0"/>
+    <Setter Property="MinHeight" Value="22"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="CheckBox.choice-check">
+    <Setter Property="Theme" Value="{DynamicResource MusicVaultCheckTheme}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="CheckBox.choice-check-icon">
+    <Setter Property="Theme" Value="{DynamicResource MusicVaultCheckIconTheme}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="Width" Value="16"/>
+    <Setter Property="Height" Value="16"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="TextBlock.batch-scrape-field-label">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="TextAlignment" Value="Right"/>
+  </Style>
+  <Style Selector="TextBlock.batch-scrape-option-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Opacity" Value="1"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <!-- 元数据侧栏平台下拉：勿设 Padding（会破坏 Avalonia 内部选中文字显示） -->
+  <Style Selector="ComboBox.metadata-platform-combo,
+                   controls|PlatformComboBox.metadata-platform-combo ComboBox">
+    <Setter Property="Height" Value="{DynamicResource ControlHeightSm}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSm}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ControlHeightSm}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Background" Value="{DynamicResource ControlFillDefaultBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeDefaultBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="MinWidth" Value="64"/>
+  </Style>
+
+  <Style Selector="TextBox.metadata-field">
+    <Setter Property="Margin" Value="0,6,0,0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="TextBox.metadata-lyrics-field">
+    <Setter Property="Height" Value="NaN"/>
+    <Setter Property="MinHeight" Value="120"/>
+    <Setter Property="Padding" Value="8,8"/>
+    <Setter Property="VerticalContentAlignment" Value="Top"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="TextBox.discover-field">
+    <Setter Property="Height" Value="{DynamicResource ControlHeightSm}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSm}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Padding" Value="8,0"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Background" Value="{DynamicResource ControlFillDefaultBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeDefaultBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+
+  <!-- 模态弹窗表单：与面板背景区分、边框常显、正文级字号 -->
+  <Style Selector="TextBox.app-dialog-field">
+    <Setter Property="Height" Value="{DynamicResource ControlHeightMd}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMd}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Padding" Value="10,0"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Background" Value="{DynamicResource InputFieldBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBox.app-dialog-field:focus">
+    <Setter Property="BorderBrush" Value="{DynamicResource FocusRingBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <!-- 元数据侧栏输入：未聚焦灰字，聚焦细蓝框 + 白字 -->
+  <Style Selector="TextBox.metadata-input">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="TextBox.metadata-input:focus">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource FocusRingBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <!-- 风格下拉：与平台下拉同一套模板，略增高避免占位/选中文字裁切 -->
+  <Style Selector="ComboBox.metadata-genre-combo">
+    <Setter Property="Height" Value="{DynamicResource ControlHeightMd}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMd}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ControlHeightMd}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Background" Value="{DynamicResource SearchFieldBrush}"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="MinWidth" Value="64"/>
+  </Style>
+  <Style Selector="ComboBox.metadata-genre-combo:focus">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource FocusRingBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+  <Style Selector="ComboBox.metadata-genre-combo:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <!-- 元数据侧栏单选/复选：自定义主题保证文字水平对齐 -->
+  <Style Selector="RadioButton.metadata-option">
+    <Setter Property="Theme" Value="{DynamicResource MetadataRadioTheme}"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="CheckBox.metadata-fetch-media">
+    <Setter Property="Theme" Value="{DynamicResource MusicVaultCheckTheme}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+</Styles>

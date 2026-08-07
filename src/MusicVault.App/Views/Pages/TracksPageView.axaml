@@ -1,0 +1,232 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Pages"
+             xmlns:controls="using:MusicVault.App.Controls"
+             xmlns:layout="using:MusicVault.App.Layout"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="MusicVault.App.Views.Pages.TracksPageView"
+             x:Name="TracksRoot"
+             x:DataType="pvm:TracksPageViewModel">
+  <Grid x:Name="RootGrid" ColumnDefinitions="260,6,*">
+
+    <DockPanel x:Name="LibraryPane" Grid.Column="0" Classes="pane-library">
+      <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="{DynamicResource LibraryPaneHeaderMargin}" MinHeight="32">
+        <TextBlock Text="{Binding SwitchLibraryLabel}" Classes="text-subtitle" VerticalAlignment="Center"/>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+          <Button Classes="icon-toolbar-btn" ToolTip.Tip="{Binding AddSourceToolTip}"
+                  automation:AutomationProperties.Name="{Binding AddSourceToolTip}">
+            <Button.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="{Binding AddLocalFolderLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding PickFolderAndAddCommand}"/>
+                <MenuItem Header="{Binding AddRemoteNasLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding ConnectNasLibraryCommand}"/>
+                <MenuItem Header="{Binding AddRemoteWebDavLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding ConnectWebDavLibraryCommand}"/>
+              </MenuFlyout>
+            </Button.Flyout>
+            <TextBlock Text="&#xE710;" Classes="icon-xs"/>
+          </Button>
+          <Button Classes="icon-toolbar-btn" ToolTip.Tip="{Binding RefreshListToolTip}"
+                  Command="{Binding RefreshCommand}"
+                  automation:AutomationProperties.Name="{Binding RefreshListToolTip}">
+            <TextBlock Text="&#xE72C;" Classes="icon-xs"/>
+          </Button>
+          <Button Classes="icon-more-btn" ToolTip.Tip="{Binding MoreActionsToolTip}"
+                  automation:AutomationProperties.Name="{Binding MoreActionsToolTip}">
+            <Button.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="{Binding ScanSelectedLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding ScanSelectedCommand}"
+                          IsEnabled="{Binding !IsScanning}"/>
+                <MenuItem Header="{Binding ScanAllLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding ScanAllCommand}"
+                          IsEnabled="{Binding !IsScanning}"/>
+                <MenuItem Header="{Binding ReconnectNasLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding ReconnectNasLibraryCommand}"
+                          IsVisible="{Binding CanReconnectSelectedNas}"/>
+                <MenuItem Header="{Binding DownloadNasLibraryLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding DownloadNasLibraryToLocalCommand}"
+                          IsVisible="{Binding CanDownloadSelectedNasLibrary}"/>
+                <MenuItem Header="{Binding DeleteLibraryMenuLabel}" Classes="app-compact-menu-item"
+                          Click="OnDeleteLibraryMenuClick"
+                          IsEnabled="{Binding CanDeleteSelectedLibrary}"/>
+              </MenuFlyout>
+            </Button.Flyout>
+            <TextBlock Text="{StaticResource IconGlyphMore}" Classes="icon-xs"/>
+          </Button>
+          <Border Classes="library-pane-toolbar-sep"/>
+          <Button Classes="icon-toolbar-btn library-pane-toggle-btn"
+                  Command="{Binding ToggleLibraryPaneCommand}"
+                  ToolTip.Tip="{Binding LibraryPaneToggleToolTip}"
+                  automation:AutomationProperties.Name="{Binding LibraryPaneToggleToolTip}">
+            <TextBlock Text="{Binding LibraryPaneToggleGlyph}" Classes="icon-xs"/>
+          </Button>
+        </StackPanel>
+      </Grid>
+
+      <StackPanel DockPanel.Dock="Bottom" Spacing="8" Margin="{DynamicResource LibraryPaneFooterMargin}">
+        <Button Content="{Binding ManageSourcesLabel}" Classes="flat-btn btn-toolbar" HorizontalAlignment="Stretch"
+                Command="{Binding OpenLibrarySourcesCommand}"
+                ToolTip.Tip="{Binding ManageSourcesToolTip}"
+                automation:AutomationProperties.Name="{Binding ManageSourcesToolTip}"/>
+        <TextBlock Text="{Binding StatusMessage}" Classes="text-caption" TextWrapping="Wrap"
+                   Foreground="{DynamicResource TextSecondaryBrush}"
+                   IsVisible="{Binding HasStatusMessage}"/>
+        <StackPanel Spacing="4" IsVisible="{Binding IsScanning}">
+          <Grid ColumnDefinitions="*,Auto">
+            <ProgressBar Grid.Column="0" Value="{Binding ScanProgress}" Maximum="100"
+                         Classes="ant-progress-line"/>
+            <TextBlock Grid.Column="1" Text="{Binding ScanProgress, StringFormat={}{0:F0}%}"
+                       Classes="ant-progress-percent"/>
+          </Grid>
+          <TextBlock Text="{Binding ScanStatusText}" Classes="ant-progress-caption"/>
+        </StackPanel>
+      </StackPanel>
+
+      <ListBox x:Name="LibraryList" ItemsSource="{Binding Libraries}"
+               SelectionChanged="OnLibrarySelectionChanged"
+               Classes="music-library-list">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:LibraryListItemViewModel">
+            <StackPanel>
+              <Border Classes="library-list-row"
+                      Classes.library-list-row-child="{Binding !IsAllLibraries}"
+                      ToolTip.Tip="{Binding NasStatusToolTip, TargetNullValue={x:Null}}"
+                      HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding DisplayName}" Classes="text-label"
+                             TextTrimming="CharacterEllipsis" MaxLines="1"/>
+                  <TextBlock Text="{Binding NasStatusSegment}" Classes="text-caption"
+                             Foreground="{DynamicResource TextSecondaryBrush}"
+                             VerticalAlignment="Center"
+                             IsVisible="{Binding ShowNasOnlineStatus}"/>
+                  <TextBlock Text="{Binding NasStatusSegment}" Classes="text-caption"
+                             Foreground="{DynamicResource WarningBrush}"
+                             VerticalAlignment="Center"
+                             IsVisible="{Binding ShowNasOfflineStatus}"/>
+                  <TextBlock Text="{Binding TrackCountSegment}" Classes="text-caption"
+                             Foreground="{DynamicResource TextSecondaryBrush}"
+                             VerticalAlignment="Center"/>
+                  <TextBlock Text="{Binding SizeGbText}" Classes="text-caption"
+                             Foreground="{DynamicResource TextSecondaryBrush}"
+                             VerticalAlignment="Center"/>
+                </StackPanel>
+              </Border>
+              <Border Classes="library-pane-split" IsVisible="{Binding IsAllLibraries}"/>
+            </StackPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </DockPanel>
+
+    <controls:VerticalPaneSplitter x:Name="LibrarySplitter" Grid.Column="1"/>
+
+    <DockPanel Grid.Column="2" Classes="pane-play">
+      <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" Margin="{DynamicResource PageToolbarGridMargin}" MinHeight="32">
+        <Button Grid.Column="0" Classes="icon-toolbar-btn library-pane-toggle-btn" Margin="{DynamicResource MarginTrailingSm}"
+                Command="{Binding ToggleLibraryPaneCommand}"
+                ToolTip.Tip="{Binding LibraryPaneToggleToolTip}"
+                automation:AutomationProperties.Name="{Binding LibraryPaneToggleToolTip}"
+                IsVisible="{Binding !IsLibraryPaneOpen}">
+          <TextBlock Text="{Binding LibraryPaneToggleGlyph}" Classes="icon-xs"/>
+        </Button>
+        <TextBlock Grid.Column="1" Text="{Binding TracksListSummary}"
+                   Classes="text-label" VerticalAlignment="Center" Margin="{DynamicResource MarginTrailingSm}"
+                   Foreground="{DynamicResource TextTertiaryBrush}"
+                   TextTrimming="CharacterEllipsis"/>
+        <TextBox x:Name="TrackSearchBox" Grid.Column="2" Classes="top-search browse-search"
+                 Width="{DynamicResource ControlWidthOrganize}" VerticalAlignment="Center" Margin="{DynamicResource MarginToolbarBtnGap}"
+                 Watermark="{Binding TrackSearchWatermark}"
+                 Text="{Binding TrackSearchText}"
+                 KeyDown="OnTrackSearchKeyDown"/>
+        <Button Grid.Column="3" Content="{Binding SearchButtonLabel}" Classes="browse-search" Margin="{DynamicResource MarginToolbarBtnGap}"
+                VerticalAlignment="Center"
+                Command="{Binding ApplyTrackSearchCommand}"
+                automation:AutomationProperties.Name="{Binding SearchButtonLabel}"/>
+        <Button Grid.Column="4" Classes="flat-btn btn-toolbar" VerticalAlignment="Center" Margin="{DynamicResource MarginToolbarBtnGap}"
+                ToolTip.Tip="{Binding OrganizeToolTip}"
+                automation:AutomationProperties.Name="{Binding OrganizeToolTip}">
+          <Button.Flyout>
+            <MenuFlyout>
+              <MenuItem Header="{Binding OrganizeAddCurrentListLabel}" Classes="app-compact-menu-item"
+                        Command="{Binding AddCurrentListToOrganizeCommand}"/>
+              <MenuItem Header="{Binding OrganizeOpenToolsLabel}" Classes="app-compact-menu-item"
+                        Command="{Binding OpenOrganizeToolsCommand}"/>
+            </MenuFlyout>
+          </Button.Flyout>
+          <TextBlock Text="{Binding OrganizeLabel}" Classes="text-label"/>
+        </Button>
+        <ToggleButton Grid.Column="5" Content="{Binding FavoritesLabel}" Classes="browse-filter"
+                      HorizontalAlignment="Right"
+                      IsChecked="{Binding FavoritesOnly}"
+                      IsVisible="{Binding ShowFavoritesFilter}"
+                      ToolTip.Tip="{Binding FavoritesFilterToolTip}"
+                      automation:AutomationProperties.Name="{Binding FavoritesFilterToolTip}"/>
+      </Grid>
+
+      <controls:LibraryTrackTableHeader DockPanel.Dock="Top"/>
+
+      <Panel>
+        <ListBox x:Name="TrackList" ItemsSource="{Binding TrackListItems}" Classes="virtual-list track-table-scroll-list"
+                 ItemTemplate="{StaticResource LibraryTrackRowTemplate}"
+                 IsVisible="{Binding ShowTracksList}">
+          <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <VirtualizingStackPanel/>
+            </ItemsPanelTemplate>
+          </ListBox.ItemsPanel>
+        </ListBox>
+        <controls:SkeletonAlbumTrackListView Margin="{DynamicResource SettingsOverviewCardMargin}"
+                                           IsVisible="{Binding ShowTracksSkeleton}"/>
+        <Border VerticalAlignment="Bottom" Margin="{DynamicResource TrackTableHeaderPairedMargin}" Padding="0,4,0,0"
+                IsVisible="{Binding ShowTracksLoadMoreSkeleton}">
+          <Grid ColumnDefinitions="{x:Static layout:TrackTableLayout.LibraryColumns}" Height="{x:Static layout:TrackTableLayout.RowHeight}">
+            <controls:SkeletonLine Grid.Column="0" LineWidth="20" LineHorizontalAlignment="Center"/>
+            <controls:SkeletonLine Grid.Column="1" Margin="{DynamicResource TrackColCellMargin}"/>
+            <controls:SkeletonLine Grid.Column="2" Margin="{DynamicResource TrackColCellMargin}" LineWidth="80"/>
+            <controls:SkeletonLine Grid.Column="3" Margin="{DynamicResource TrackColCellMargin}" LineWidth="100"/>
+            <controls:SkeletonLine Grid.Column="4" LineWidth="32" LineHorizontalAlignment="Center"/>
+            <controls:SkeletonLine Grid.Column="5" LineWidth="36" LineHorizontalAlignment="Center"/>
+          </Grid>
+        </Border>
+        <Button x:Name="TrackScrollTopBtn" Content="&#xE70E;"
+                Classes="list-scroll-top-btn"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
+                Click="OnTrackScrollTopClick"/>
+
+        <controls:EmptyStateView IsVisible="{Binding ShowTracksEmpty}"
+                                 Title="{Binding TracksEmptyTitle}"
+                                 Description="{Binding TracksEmptyDescription}"
+                                 ShowAction="{Binding ShowTracksEmptyAction}"
+                                 ActionText="{Binding TracksEmptyActionText}"
+                                 ActionCommand="{Binding TracksEmptyPrimaryActionCommand}"
+                                 IconGlyph="&#xE8D6;"/>
+      </Panel>
+    </DockPanel>
+
+    <controls:PopconfirmHost x:Name="DeleteLibraryPopconfirm"
+                             Grid.ColumnSpan="3"
+                             Title="{Binding DeleteLibraryPopconfirmTitle}"
+                             Description="{Binding DeleteLibraryPopconfirmDescription}"
+                             ConfirmText="{Binding DeletePopconfirmText}"
+                             ConfirmIsDanger="True"
+                             ConfirmedCommand="{Binding DeleteSelectedLibraryCommand}">
+      <Button Width="0" Height="0" Opacity="0" IsHitTestVisible="False"/>
+    </controls:PopconfirmHost>
+    <controls:PopconfirmHost x:Name="RemoveTrackPopconfirm"
+                             Grid.ColumnSpan="3"
+                             Title="{Binding RemoveTrackPopconfirmTitle}"
+                             Description="{Binding RemoveTrackPopconfirmDescription}"
+                             ConfirmText="{Binding RemoveTrackIndexOnlyText}"
+                             AlternateConfirmText="{Binding RemoveTrackDeleteWithFileText}"
+                             ShowAlternateConfirm="{Binding ShowRemoveTrackAlternateConfirm}"
+                             AlternateConfirmIsDanger="True"
+                             ConfirmedCommand="{Binding RemoveTrackIndexOnlyCommand}"
+                             AlternateConfirmedCommand="{Binding RemoveTrackWithFileCommand}">
+      <Button Width="0" Height="0" Opacity="0" IsHitTestVisible="False"/>
+    </controls:PopconfirmHost>
+  </Grid>
+</UserControl>

@@ -1,0 +1,772 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- ===== 播放栏（Dopamine 底栏） ===== -->
+  <Style Selector="Border.player-bar">
+    <Setter Property="Background" Value="{DynamicResource PlayerBarBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="ClipToBounds" Value="False"/>
+  </Style>
+
+  <Style Selector="TextBlock.player-time">
+    <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="LineHeight" Value="14"/>
+    <Setter Property="MinWidth" Value="36"/>
+  </Style>
+  <Style Selector="TextBlock.player-time-end">
+    <Setter Property="MinWidth" Value="36"/>
+    <Setter Property="Width" Value="36"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+  <Style Selector="TextBlock.player-time-combined">
+    <Setter Property="MinWidth" Value="72"/>
+    <Setter Property="Margin" Value="0,0,4,0"/>
+    <Setter Property="TextAlignment" Value="Right"/>
+  </Style>
+
+  <Style Selector="Border.player-progress-host">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="ClipToBounds" Value="False"/>
+    <Setter Property="ZIndex" Value="100"/>
+  </Style>
+  <Style Selector="Border.player-progress-track">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="MinHeight" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="CornerRadius" Value="0"/>
+  </Style>
+  <Style Selector="Border.player-progress-fill">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="MinHeight" Value="1"/>
+    <Setter Property="CornerRadius" Value="0"/>
+  </Style>
+  <Style Selector="Ellipse.player-progress-thumb">
+    <Setter Property="Width" Value="10"/>
+    <Setter Property="Height" Value="10"/>
+    <Setter Property="ZIndex" Value="101"/>
+    <Setter Property="Fill" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Stroke" Value="{DynamicResource PlayerBarBrush}"/>
+    <Setter Property="StrokeThickness" Value="1.5"/>
+  </Style>
+
+  <Style Selector="TextBlock.player-title">
+    <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="LineHeight" Value="16"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+
+  <Style Selector="TextBlock.player-artist">
+    <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="LineHeight" Value="14"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+
+  <Style Selector="TextBlock.player-nowplaying-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="LineHeight" Value="18"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.player-nowplaying-artist">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="LineHeight" Value="14"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.player-nowplaying-source">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="LineHeight" Value="14"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+
+  <Style Selector="Button.player-transport">
+    <Setter Property="Width" Value="36"/>
+    <Setter Property="Height" Value="36"/>
+    <Setter Property="MinWidth" Value="36"/>
+    <Setter Property="MinHeight" Value="36"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="18"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.player-transport:pointerover">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="Button.player-transport.busy">
+    <Setter Property="Opacity" Value="0.55"/>
+  </Style>
+  <Style Selector="Button.volume-mute-btn">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="TextBlock.player-transport-icon">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeMd}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.player-transport-icon.player-transport-muted">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.player-transport-mode-icon">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeMd}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.player-transport-mode-icon.active">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+
+  <Style Selector="Button.player-icon">
+    <Setter Property="Width" Value="36"/>
+    <Setter Property="Height" Value="36"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.player-icon:pointerover">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="Button.player-bar-side">
+    <Setter Property="Width" Value="36"/>
+    <Setter Property="Height" Value="36"/>
+    <Setter Property="MinWidth" Value="36"/>
+    <Setter Property="MinHeight" Value="36"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="18"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.player-bar-side:pointerover">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.player-bar-side-icon">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeMd}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.player-bar-side:pointerover TextBlock.player-bar-side-icon">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="Border.volume-popover-icon">
+    <Setter Property="Width" Value="20"/>
+    <Setter Property="Height" Value="20"/>
+    <Setter Property="CornerRadius" Value="10"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.volume-popover-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.volume-popover-value">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Width" Value="30"/>
+    <Setter Property="MinWidth" Value="30"/>
+    <Setter Property="TextAlignment" Value="Right"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.player-bar-side.volume-active TextBlock.player-bar-side-icon">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.player-flyout-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.player-flyout-caption">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.player-flyout-reset">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Padding" Value="8,4"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.player-flyout-reset:pointerover">
+    <Setter Property="Opacity" Value="0.85"/>
+  </Style>
+
+  <Style Selector="ProgressBar.player-progress-line">
+    <Setter Property="Foreground" Value="{DynamicResource PlayerProgressFillBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource PlayerProgressTrackBrush}"/>
+    <Setter Property="CornerRadius" Value="0"/>
+  </Style>
+
+  <Style Selector="Border.volume-slider-host">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Border.volume-slider-track">
+    <Setter Property="CornerRadius" Value="2"/>
+    <Setter Property="Height" Value="4"/>
+    <Setter Property="Background" Value="{DynamicResource PlayerProgressTrackBrush}"/>
+  </Style>
+  <Style Selector="Border.volume-slider-fill">
+    <Setter Property="CornerRadius" Value="2"/>
+    <Setter Property="Height" Value="4"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+  <Style Selector="Ellipse.volume-slider-thumb">
+    <Setter Property="Width" Value="11"/>
+    <Setter Property="Height" Value="11"/>
+    <Setter Property="Fill" Value="{DynamicResource SliderThumbFillBrush}"/>
+    <Setter Property="Stroke" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="StrokeThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="Border.modal-scrim">
+    <Setter Property="Background" Value="{DynamicResource ModalScrimBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Button.player-cover-btn">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.player-cover-btn:pointerover">
+    <Setter Property="Opacity" Value="0.88"/>
+  </Style>
+
+  <Style Selector="Button.player-nowplaying-hit">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.player-nowplaying-hit:pointerover">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="Button.player-nowplaying-hit:pressed">
+    <Setter Property="Opacity" Value="0.92"/>
+  </Style>
+  <Style Selector="Button.player-nowplaying-hit:focus-visible">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+
+  <!-- ===== 精简播放模式（Dopamine 式竖版迷你窗） ===== -->
+  <Style Selector="UserControl.compact-player-root">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="Button.compact-player-exit-btn">
+    <Setter Property="Height" Value="32"/>
+    <Setter Property="Padding" Value="10,4"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.compact-player-exit-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource PlayerChromeHoverBrush}"/>
+  </Style>
+  <Style Selector="Border.compact-player-controls">
+    <Setter Property="Background" Value="{DynamicResource PlayerChromePanelBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource PlayerChromeBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1,0,0,0"/>
+  </Style>
+  <Style Selector="Border.compact-player-progress-host">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Padding" Value="0,2"/>
+  </Style>
+  <Style Selector="Border.compact-player-progress-track">
+    <Setter Property="Background" Value="{DynamicResource PlayerChromeProgressTrackBrush}"/>
+  </Style>
+  <Style Selector="Border.compact-player-progress-fill">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-lyric">
+    <Setter Property="FontSize" Value="20"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeForegroundPrimaryBrush}"/>
+    <Setter Property="LineHeight" Value="26"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeForegroundTertiaryBrush}"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-artist">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLead}"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeArtistBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-time">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeForegroundMutedBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.compact-player-transport">
+    <Setter Property="Width" Value="40"/>
+    <Setter Property="Height" Value="40"/>
+    <Setter Property="MinWidth" Value="40"/>
+    <Setter Property="MinHeight" Value="40"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.compact-player-transport:pointerover">
+    <Setter Property="Background" Value="{DynamicResource PlayerChromeHoverBrush}"/>
+  </Style>
+  <Style Selector="Button.compact-player-play">
+    <Setter Property="Width" Value="52"/>
+    <Setter Property="Height" Value="52"/>
+    <Setter Property="MinWidth" Value="52"/>
+    <Setter Property="MinHeight" Value="52"/>
+    <Setter Property="CornerRadius" Value="26"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="Button.compact-player-play.compact-player-play-bar">
+    <Setter Property="Width" Value="44"/>
+    <Setter Property="Height" Value="44"/>
+    <Setter Property="MinWidth" Value="44"/>
+    <Setter Property="MinHeight" Value="44"/>
+    <Setter Property="CornerRadius" Value="22"/>
+  </Style>
+  <Style Selector="Button.compact-player-play:pointerover">
+    <Setter Property="Opacity" Value="0.9"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-transport-icon">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="16"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeForegroundIconBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-transport-icon.active">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-play-icon">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="18"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.compact-cover-chrome-btn">
+    <Setter Property="Width" Value="32"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="MinWidth" Value="32"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.compact-cover-chrome-btn:pointerover">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Button.compact-cover-chrome-close:pointerover">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="TextBlock.compact-cover-chrome-icon">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="11"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeCoverIconBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.compact-player-cover-hit">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.compact-player-cover-hit:pointerover">
+    <Setter Property="Opacity" Value="0.92"/>
+  </Style>
+  <Style Selector="Button.compact-player-next-only">
+    <Setter Property="Width" Value="36"/>
+    <Setter Property="Height" Value="36"/>
+    <Setter Property="MinWidth" Value="36"/>
+    <Setter Property="MinHeight" Value="36"/>
+  </Style>
+  <Style Selector="Border.compact-player-controls-bar">
+    <Setter Property="Background" Value="{DynamicResource PlayerChromeBaseBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource PlayerChromeBorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="0,1,0,0"/>
+  </Style>
+  <Style Selector="Border.compact-player-hero-scrim">
+    <Setter Property="Padding" Value="0,72,0,0"/>
+    <Setter Property="Background" Value="{DynamicResource PlayerChromeHeroScrimBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-overlay-title">
+    <Setter Property="FontSize" Value="22"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeForegroundBrush}"/>
+    <Setter Property="LineHeight" Value="28"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-overlay-artist">
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeForegroundSecondaryBrush}"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-info-title">
+    <Setter Property="FontSize" Value="20"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="LineHeight" Value="26"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-info-artist">
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+  <Style Selector="Button.compact-player-bar-btn">
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="MinHeight" Value="44"/>
+    <Setter Property="Height" Value="44"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.compact-player-bar-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource PlayerChromeHoverBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-bar-icon">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="15"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeBarIconBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-bar-icon.active">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.compact-player-bar-icon-play">
+    <Setter Property="FontSize" Value="16"/>
+  </Style>
+
+  <Style Selector="Button.fullscreen-back-btn">
+    <Setter Property="MinWidth" Value="32"/>
+    <Setter Property="MinHeight" Value="32"/>
+    <Setter Property="Padding" Value="4"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.fullscreen-back-btn:pointerover">
+    <Setter Property="Opacity" Value="0.75"/>
+  </Style>
+
+  <Style Selector="TextBlock.fullscreen-song-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLargeTitle}"/>
+    <Setter Property="FontWeight" Value="Bold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.fullscreen-song-artist">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLead}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.fullscreen-font-btn">
+    <Setter Property="Width" Value="34"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.fullscreen-font-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource FullscreenControlHoverBrush}"/>
+  </Style>
+  <Style Selector="Button.fullscreen-font-btn:disabled">
+    <Setter Property="Opacity" Value="0.4"/>
+  </Style>
+  <Style Selector="TextBlock.fullscreen-font-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.fullscreen-cover-btn">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.fullscreen-cover-btn:pointerover">
+    <Setter Property="Opacity" Value="0.92"/>
+  </Style>
+
+  <!-- 全屏歌词：占满主区剩余宽度，避免窄列把整句拆成多行 -->
+  <Style Selector="UserControl.lyrics-scroll-fullscreen TextBlock.lyrics-line">
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+    <Setter Property="MaxWidth" Value="Infinity"/>
+  </Style>
+  <Style Selector="UserControl.lyrics-scroll-fullscreen TextBlock.lyrics-line-translation">
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+    <Setter Property="MaxWidth" Value="Infinity"/>
+  </Style>
+
+  <Style Selector="Border.desktop-lyrics-root">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="Cursor" Value="SizeAll"/>
+  </Style>
+  <Style Selector="Border.desktop-lyrics-chrome">
+    <Setter Property="Background" Value="{DynamicResource PlayerChromeSurfaceBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource PlayerChromeProgressTrackBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="Border.desktop-lyrics-toolbar">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource PlayerChromeDividerBrush}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+  </Style>
+  <Style Selector="TextBlock.desktop-lyrics-toolbar-title">
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeBarIconBrush}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+  </Style>
+  <Style Selector="TextBlock.desktop-lyrics-toolbar-artist">
+    <Setter Property="FontSize" Value="11"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeForegroundTertiaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+    <Setter Property="TextAlignment" Value="Right"/>
+  </Style>
+  <Style Selector="Button.desktop-lyrics-tool-btn">
+    <Setter Property="Width" Value="30"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.desktop-lyrics-tool-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource PlayerChromeOverlayHoverBrush}"/>
+  </Style>
+  <Style Selector="Button.desktop-lyrics-tool-btn.active">
+    <Setter Property="Background" Value="{DynamicResource PlayerChromeOverlayActiveBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.desktop-lyrics-tool-icon">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeForegroundDimBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.desktop-lyrics-tool-label">
+    <Setter Property="FontSize" Value="11"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeForegroundLabelBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.desktop-lyrics-transport">
+    <Setter Property="Width" Value="34"/>
+    <Setter Property="Height" Value="30"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.desktop-lyrics-transport:pointerover">
+    <Setter Property="Background" Value="{DynamicResource PlayerChromeOverlayHoverBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.desktop-lyrics-transport-icon">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeForegroundIconBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.desktop-lyrics-current">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    <Setter Property="MaxLines" Value="2"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+  </Style>
+  <Style Selector="TextBlock.desktop-lyrics-next">
+    <Setter Property="Foreground" Value="{DynamicResource PlayerChromeForegroundDimBrush}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    <Setter Property="MaxLines" Value="2"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+    <Setter Property="TextAlignment" Value="Right"/>
+  </Style>
+  <Style Selector="Button.player-bar-side.active TextBlock.player-bar-side-icon">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+
+  <Style Selector="Border.eq-modal">
+    <Setter Property="Padding" Value="16,14"/>
+    <Setter Property="Width" Value="700"/>
+    <Setter Property="MaxHeight" Value="500"/>
+  </Style>
+  <Style Selector="Border.eq-modal-icon">
+    <Setter Property="Width" Value="22"/>
+    <Setter Property="Height" Value="22"/>
+    <Setter Property="CornerRadius" Value="11"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="TextBlock.eq-modal-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="Medium"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.eq-modal-body">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="CheckBox.eq-modal-body">
+    <Setter Property="Theme" Value="{DynamicResource MusicVaultCheckTheme}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.eq-modal-caption">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+  <Style Selector="ComboBox.eq-modal-combo">
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="MinWidth" Value="148"/>
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Padding" Value="8,4"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+  </Style>
+  <Style Selector="ComboBox.eq-modal-combo:pointerover">
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+  </Style>
+  <Style Selector="ComboBox.eq-modal-combo:focus">
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="Button.eq-modal-tool-btn">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Padding" Value="10,6"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="MinHeight" Value="28"/>
+  </Style>
+  <Style Selector="Button.eq-modal-tool-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+  </Style>
+  <Style Selector="Button.eq-modal-tool-btn:pressed">
+    <Setter Property="Opacity" Value="0.85"/>
+  </Style>
+  <Style Selector="Button.eq-modal-close">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="Padding" Value="16,6"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="MinHeight" Value="28"/>
+  </Style>
+  <Style Selector="Button.eq-modal-close:pointerover">
+    <Setter Property="Opacity" Value="0.9"/>
+  </Style>
+  <Style Selector="Border.eq-band-track">
+    <Setter Property="Background" Value="{DynamicResource PlayerProgressTrackBrush}"/>
+    <Setter Property="CornerRadius" Value="2"/>
+  </Style>
+  <Style Selector="Border.eq-band-fill">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="CornerRadius" Value="2"/>
+    <Setter Property="MinHeight" Value="0"/>
+  </Style>
+  <Style Selector="TextBlock.eq-band-value">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+
+  <Style Selector="Border.volume-track-bg">
+    <Setter Property="Width" Value="3"/>
+    <Setter Property="CornerRadius" Value="1.5"/>
+    <Setter Property="Background" Value="{DynamicResource PlayerProgressTrackBrush}"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+  <Style Selector="Border.volume-track-fill">
+    <Setter Property="CornerRadius" Value="1.5"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="MinHeight" Value="0"/>
+  </Style>
+
+</Styles>

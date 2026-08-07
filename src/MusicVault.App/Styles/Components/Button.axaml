@@ -1,0 +1,446 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MusicVault.App.Controls">
+
+  <!-- 全局 Button 居中：Styles/ButtonControlThemes.axaml（{x:Type Button} 覆盖 Fluent ControlTheme） -->
+
+  <!-- 全局：按钮文字不加粗 -->
+  <Style Selector="Button, ToggleButton">
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+
+  <!-- 共享紧凑按钮（不含 browse-filter，筛选 chip 单独定义以免 Padding 被清零） -->
+  <Style Selector="Button.discover-action, Button.browse-search, Button.btn-toolbar, Button.flat-btn.btn-toolbar, Button.batch-toolbar-accent, Button.app-dialog-btn, Button.browse-artist-action-btn, Button.metadata-field-write-btn, Button.discover-dl-btn, Button.discover-action-chip, Button.format-chip">
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="UseLayoutRounding" Value="True"/>
+  </Style>
+
+  <!-- 工具栏紧凑按钮：统一高度 28，宽度随文字 + 左右内边距自适应 -->
+  <Style Selector="Button.btn-toolbar, Button.flat-btn.btn-toolbar, Button.primary.discover-action, Button.browse-search, Button.discover-action">
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="{DynamicResource MarginToolbarBtnGap}"/>
+  </Style>
+
+  <!-- ===== 按钮（primary / btn-primary 等为同义 class） ===== -->
+  <Style Selector="Button.primary, Button.btn-primary">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusButton}"/>
+    <Setter Property="Padding" Value="{DynamicResource ButtonPaddingStandard}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+
+  <!-- 紧凑主色按钮：覆盖 primary 的 MinHeight，禁止垂直 Padding（与固定高度并用会裁切中文） -->
+  <Style Selector="Button.primary.btn-toolbar,
+                   Button.primary.flat-btn.btn-toolbar,
+                   Button.primary.batch-toolbar-accent,
+                   Button.primary.discover-action,
+                   Button.primary.discover-dl-btn,
+                   Button.primary.browse-artist-action-btn">
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+  </Style>
+  <Style Selector="Button.primary.app-dialog-btn">
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource DialogButtonHeight}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+
+  <Style Selector="Button.primary.discover-action">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Button.primary.btn-toolbar">
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+
+  <Style Selector="Button.primary:pointerover, Button.btn-primary:pointerover">
+    <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}"/>
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+  <Style Selector="Button.primary:pressed, Button.btn-primary:pressed">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Opacity" Value="0.88"/>
+  </Style>
+
+  <Style Selector="Button.danger, Button.btn-danger">
+    <Setter Property="Background" Value="{DynamicResource DangerBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusButton}"/>
+    <Setter Property="Padding" Value="{DynamicResource ButtonPaddingStandard}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.danger.btn-toolbar">
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+  </Style>
+  <Style Selector="Button.danger.app-dialog-btn">
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource DialogButtonHeight}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+  <Style Selector="Button.danger:pointerover, Button.btn-danger:pointerover">
+    <Setter Property="Background" Value="{DynamicResource DangerHoverBrush}"/>
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+  <Style Selector="Button.danger:pressed, Button.btn-danger:pressed">
+    <Setter Property="Background" Value="{DynamicResource DangerBrush}"/>
+    <Setter Property="Opacity" Value="0.88"/>
+  </Style>
+  <Style Selector="Button.flat-btn.app-dialog-btn">
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+
+  <Style Selector="Button.btn-toolbar:not(.primary), Button.flat-btn.btn-toolbar">
+    <Setter Property="Background" Value="{DynamicResource ControlFillDefaultBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeDefaultBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+  <Style Selector="Button.btn-toolbar:not(.primary):pointerover, Button.flat-btn.btn-toolbar:pointerover">
+    <Setter Property="Background" Value="{DynamicResource ButtonGhostHoverBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeDefaultBrush}"/>
+  </Style>
+  <Style Selector="Button.btn-toolbar:not(.primary):pressed, Button.flat-btn.btn-toolbar:pressed">
+    <Setter Property="Background" Value="{DynamicResource ControlFillSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Button.btn-toolbar:disabled">
+    <Setter Property="Opacity" Value="0.45"/>
+  </Style>
+
+  <Style Selector="Button.batch-toolbar-accent">
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.batch-toolbar-btn-text">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.batch-toolbar-accent:pointerover">
+    <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}"/>
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+  <Style Selector="Button.batch-toolbar-accent:disabled">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="Opacity" Value="0.5"/>
+  </Style>
+  <Style Selector="Button.primary.batch-toolbar-accent">
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+
+  <Style Selector="Button.flat-btn.batch-toolbar-flat">
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.subtle, Button.btn-subtle">
+    <Setter Property="Background" Value="{DynamicResource SubtleFillTransparentBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Padding" Value="{DynamicResource ButtonPaddingStandard}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.subtle:pointerover, Button.btn-subtle:pointerover">
+    <Setter Property="Background" Value="{DynamicResource ControlFillSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBox.search-box">
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusOverlay}"/>
+    <Setter Property="Padding" Value="12,8"/>
+    <Setter Property="Background" Value="{DynamicResource ControlFillDefaultBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeDefaultBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="ComboBox.discover-combo,
+                   controls|PlatformComboBox.discover-combo ComboBox">
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="MaxHeight" Value="28"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Background" Value="{DynamicResource ControlFillDefaultBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeDefaultBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Padding" Value="8,0,28,0"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="controls|PlatformComboBox.discover-combo">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="ComboBox.discover-combo-platform,
+                   controls|PlatformComboBox.discover-combo-platform ComboBox">
+    <Setter Property="MinWidth" Value="128"/>
+    <Setter Property="Width" Value="128"/>
+  </Style>
+  <Style Selector="ComboBox.discover-combo-platform.discover-search-platform">
+    <Setter Property="MinWidth" Value="120"/>
+    <Setter Property="Width" Value="120"/>
+    <Setter Property="Height" Value="{DynamicResource ControlHeightLg}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLg}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ControlHeightLg}"/>
+  </Style>
+  <Style Selector="ComboBox.discover-combo-quality">
+    <Setter Property="MinWidth" Value="136"/>
+    <Setter Property="Width" Value="136"/>
+    <Setter Property="Padding" Value="8,0,30,0"/>
+  </Style>
+
+  <Style Selector="Button.discover-dl-btn">
+    <Setter Property="Width" Value="36"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="MinWidth" Value="36"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="MaxHeight" Value="28"/>
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.discover-dl-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+  </Style>
+  <Style Selector="Button.discover-dl-btn:disabled">
+    <Setter Property="Opacity" Value="0.35"/>
+  </Style>
+
+  <Style Selector="Button.text-link-accent">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0,2"/>
+    <Setter Property="MinHeight" Value="22"/>
+    <Setter Property="Height" Value="22"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Bottom"/>
+  </Style>
+  <Style Selector="Button.text-link-accent:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Button.album-desc-expand-btn">
+    <Setter Property="Padding" Value="0,0,0,1"/>
+    <Setter Property="MinHeight" Value="18"/>
+    <Setter Property="Height" Value="18"/>
+    <Setter Property="Margin" Value="2,0,0,0"/>
+    <Setter Property="VerticalAlignment" Value="Bottom"/>
+  </Style>
+
+  <Style Selector="Button.format-chip">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="MinHeight" Value="26"/>
+    <Setter Property="Height" Value="26"/>
+    <Setter Property="MaxHeight" Value="26"/>
+    <Setter Property="Padding" Value="6,0"/>
+    <Setter Property="MinWidth" Value="32"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.format-chip:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="CornerRadius" Value="4"/>
+  </Style>
+  <Style Selector="Button.format-chip:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="Opacity" Value="0.45"/>
+    <Setter Property="Cursor" Value="Arrow"/>
+  </Style>
+
+  <Style Selector="Button.secondary, Button.btn-secondary">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusButton}"/>
+    <Setter Property="Padding" Value="{DynamicResource ButtonPaddingStandard}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.secondary.btn-toolbar, Button.btn-secondary.btn-toolbar">
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+  </Style>
+  <Style Selector="Button.secondary:pointerover, Button.btn-secondary:pointerover">
+    <Setter Property="Background" Value="{DynamicResource ButtonGhostHoverBrush}"/>
+  </Style>
+
+  <!-- 筛选 chip（艺术家页地区等）：灰底 + 选中高亮，不用主色蓝按钮 -->
+  <Style Selector="Button.browse-filter">
+    <Setter Property="Background" Value="{DynamicResource SearchFieldBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Padding" Value="12,0"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.browse-filter:pointerover:not(.selected)">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="Button.browse-filter.selected">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+  <Style Selector="Button.browse-filter.selected:pointerover">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="Button.discover-login-capsule">
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinWidth" Value="84"/>
+    <Setter Property="Padding" Value="10,0"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource SearchFieldBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.discover-login-capsule:pointerover">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Button.discover-login-capsule.active">
+    <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+  </Style>
+  <Style Selector="Button.discover-login-capsule.active:pointerover">
+    <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+  </Style>
+  <Style Selector="Button.discover-login-capsule.active:pressed">
+    <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+  </Style>
+  <Style Selector="Button.discover-login-capsule.proxy">
+    <Setter Property="Background" Value="{DynamicResource WarningSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource WarningBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource WarningTextBrush}"/>
+  </Style>
+  <Style Selector="Button.discover-login-capsule.proxy:pointerover">
+    <Setter Property="Background" Value="{DynamicResource WarningSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource WarningTextBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource WarningTextBrush}"/>
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+  <Style Selector="Button.discover-login-capsule.proxy:pressed">
+    <Setter Property="Background" Value="{DynamicResource WarningSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource WarningTextBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource WarningTextBrush}"/>
+    <Setter Property="Opacity" Value="0.92"/>
+  </Style>
+
+  <Style Selector="ToggleButton.browse-filter">
+    <Setter Property="Background" Value="{DynamicResource SearchFieldBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="ToggleButton.browse-filter:pointerover:not(:checked)">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="ToggleButton.browse-filter:checked">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+  </Style>
+  <Style Selector="ToggleButton.browse-filter:checked:pointerover">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+</Styles>

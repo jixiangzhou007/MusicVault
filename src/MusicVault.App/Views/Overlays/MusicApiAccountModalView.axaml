@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             xmlns:conv="using:MusicVault.App.Converters"
+             x:Class="MusicVault.App.Views.Overlays.MusicApiAccountModalView"
+             x:DataType="vm:MusicApiAccountModalViewModel"
+             Focusable="True"
+             KeyDown="OnKeyDown">
+  <Grid RowDefinitions="Auto,*,Auto">
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="{DynamicResource LibraryPaneHeaderMargin}">
+      <StackPanel Spacing="4">
+        <TextBlock Text="{Binding ModalTitle}" Classes="text-subtitle"/>
+        <TextBlock Text="{Binding ModalSubtitle}"
+                   Classes="text-caption" TextWrapping="Wrap" LineHeight="20"/>
+      </StackPanel>
+      <Button Grid.Column="1" Classes="icon-btn" ToolTip.Tip="{Binding CloseToolTip}"
+              Command="{Binding CloseCommand}">
+        <TextBlock Text="&#xE8BB;" Classes="icon-sm"/>
+      </Button>
+    </Grid>
+
+    <ScrollViewer Grid.Row="1" Margin="{DynamicResource PageContentHorizontalMarginSm}" VerticalScrollBarVisibility="Auto">
+      <StackPanel Spacing="12">
+        <TextBlock Text="{Binding CookieSummary}" Classes="text-caption"
+                   Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+        <ItemsControl ItemsSource="{Binding Sources}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:MusicApiLoginSourceOption">
+              <Button Content="{Binding Label}" Classes="format-chip" Margin="{DynamicResource ChipGridItemMargin}"
+                      Command="{Binding LoginCommand}"/>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Border HorizontalAlignment="Center" Padding="8" CornerRadius="8"
+                Background="{DynamicResource SurfaceElevatedBrush}"
+                IsVisible="{Binding HasQrImage}">
+          <Image Width="220" Height="220"
+                 Source="{Binding QrImageBytes, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"/>
+        </Border>
+        <ProgressBar IsIndeterminate="True" Classes="ant-progress-line"
+                     IsVisible="{Binding IsBusy}"/>
+        <TextBlock Text="{Binding StatusText}" Classes="text-body app-dialog-status"
+                   TextWrapping="Wrap" LineHeight="22"/>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Border Grid.Row="2" Padding="12,8,12,12" Classes="app-dialog-footer"
+            BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="0,1,0,0">
+      <Button Content="{Binding CloseButtonText}" Classes="flat-btn app-dialog-btn"
+              HorizontalAlignment="Right" Command="{Binding CloseCommand}"/>
+    </Border>
+  </Grid>
+</UserControl>

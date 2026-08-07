@@ -1,0 +1,54 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="using:MusicVault.App.Controls">
+
+  <ControlTheme x:Key="{x:Type controls:PopconfirmHost}" TargetType="controls:PopconfirmHost">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Template">
+      <ControlTemplate TargetType="controls:PopconfirmHost">
+        <Grid>
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"/>
+          <Popup Name="PART_Popup"
+                 Placement="Center"
+                 IsLightDismissEnabled="True"
+                 WindowManagerAddShadowHint="False">
+            <Border Classes="ant-popconfirm player-elevated-popover"
+                    MaxWidth="320"
+                    MinWidth="220">
+              <StackPanel Spacing="10">
+                <StackPanel Spacing="4">
+                  <TextBlock Text="{TemplateBinding Title}"
+                             Classes="text-label"
+                             TextWrapping="Wrap"/>
+                  <TextBlock Text="{TemplateBinding Description}"
+                             Classes="text-caption"
+                             TextWrapping="Wrap"
+                             LineHeight="18"
+                             IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                </StackPanel>
+                <StackPanel Classes="ant-popconfirm-actions">
+                  <Button x:Name="PART_CancelButton"
+                          Content="{TemplateBinding CancelText}"
+                          Classes="flat-btn app-dialog-btn ant-popconfirm-btn"/>
+                  <Button x:Name="PART_AlternateConfirmButton"
+                          Content="{TemplateBinding AlternateConfirmText}"
+                          Classes="danger ant-btn-danger app-dialog-btn ant-popconfirm-btn"
+                          IsVisible="{TemplateBinding ShowAlternateConfirm}"/>
+                  <Button x:Name="PART_ConfirmButton"
+                          Content="{TemplateBinding ConfirmText}"
+                          Classes="app-dialog-btn ant-popconfirm-btn"
+                          Classes.flat-btn="{TemplateBinding ShowAlternateConfirm}"
+                          Classes.danger="{TemplateBinding ConfirmIsDanger}"
+                          Classes.ant-btn-danger="{TemplateBinding ConfirmIsDanger}"/>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </Popup>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+</ResourceDictionary>

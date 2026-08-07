@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Vinyl Record Icon for MusicVault -->
+  <!-- Outer ring -->
+  <circle cx="256" cy="256" r="240" fill="#1a1a2e" stroke="#007AFF" stroke-width="8"/>
+  <!-- Grooves -->
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#2d2d44" stroke-width="2"/>
+  <circle cx="256" cy="256" r="180" fill="none" stroke="#2d2d44" stroke-width="1.5"/>
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#2d2d44" stroke-width="1"/>
+  <!-- Record label -->
+  <circle cx="256" cy="256" r="80" fill="#007AFF"/>
+  <!-- V letter mark -->
+  <text x="256" y="285" text-anchor="middle" font-family="Inter, Segoe UI, sans-serif" font-size="96" font-weight="700" fill="white">V</text>
+  <!-- Spindle hole -->
+  <circle cx="256" cy="256" r="12" fill="#1a1a2e"/>
+  <!-- Musical note accent -->
+  <text x="370" y="150" font-family="Segoe Fluent Icons, sans-serif" font-size="48" fill="#007AFF" opacity="0.8">🎵</text>
+</svg>

@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             x:Class="MusicVault.App.Views.Overlays.ConfirmSimpleModalView"
+             x:DataType="vm:ConfirmSimpleModalViewModel">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel" MaxWidth="420">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding CancelLabel}" Classes="flat-btn app-dialog-btn"
+                  Command="{Binding CancelCommand}"/>
+          <Button Content="{Binding ConfirmLabel}"
+                  Classes="app-dialog-btn"
+                  Classes.primary="{Binding !ConfirmIsDanger}"
+                  Classes.danger="{Binding ConfirmIsDanger}"
+                  Command="{Binding ConfirmCommand}"/>
+        </StackPanel>
+      </Border>
+      <StackPanel Classes="app-dialog-body" Spacing="8">
+        <TextBlock Text="{Binding Title}" Classes="text-subtitle" FontWeight="SemiBold"/>
+        <TextBlock Text="{Binding Message}" Classes="text-body"
+                   Foreground="{DynamicResource TextSecondaryBrush}"
+                   TextWrapping="Wrap" LineHeight="22"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</UserControl>

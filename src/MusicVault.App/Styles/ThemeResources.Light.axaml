@@ -1,0 +1,168 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <SolidColorBrush x:Key="AccentBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="DangerBrush" Color="#FF3B30"/>
+  <SolidColorBrush x:Key="DangerSoftBrush" Color="#FFF0EF"/>
+  <SolidColorBrush x:Key="DangerBorderBrush" Color="#FFD4D2"/>
+  <SolidColorBrush x:Key="FavoriteBrush" Color="#FF3B30"/>
+  <SolidColorBrush x:Key="AccentSoftBrush" Color="#E8F2FF"/>
+  <SolidColorBrush x:Key="OnAccentSoftForegroundBrush" Color="#1D1D1F"/>
+  <SolidColorBrush x:Key="AccentMutedBrush" Color="#40007AFF"/>
+  <SolidColorBrush x:Key="AccentForegroundBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="AccentHoverBrush" Color="#0066DD"/>
+  <SolidColorBrush x:Key="DangerHoverBrush" Color="#E0352B"/>
+  <SolidColorBrush x:Key="WarningSolidBrush" Color="#FA8C16"/>
+  <SolidColorBrush x:Key="ButtonIconHoverBrush" Color="#0A000000"/>
+  <SolidColorBrush x:Key="ButtonIconPressedBrush" Color="#14000000"/>
+  <SolidColorBrush x:Key="ButtonGhostHoverBrush" Color="#0F000000"/>
+  <SolidColorBrush x:Key="FocusRingBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="LinkBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="IconPrimaryBrush" Color="#1D1D1F"/>
+  <SolidColorBrush x:Key="IconSecondaryBrush" Color="#6E6E73"/>
+  <SolidColorBrush x:Key="IconTertiaryBrush" Color="#AEAEB2"/>
+  <SolidColorBrush x:Key="IconAccentBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="IconOnAccentBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="BackgroundBrush" Color="#ECECF1"/>
+  <SolidColorBrush x:Key="WindowChromeBrush" Color="#E3E3E8"/>
+  <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="SurfaceElevatedBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="SidebarBrush" Color="#F7F7FA"/>
+  <SolidColorBrush x:Key="PlayerBarBrush" Color="#FAFAFC"/>
+  <SolidColorBrush x:Key="RightPanelBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1D1D1F"/>
+  <SolidColorBrush x:Key="TextSecondaryBrush" Color="#6E6E73"/>
+  <SolidColorBrush x:Key="TextTertiaryBrush" Color="#AEAEB2"/>
+  <SolidColorBrush x:Key="SeparatorBrush" Color="#18000000"/>
+  <SolidColorBrush x:Key="PaneSeparatorBrush" Color="#18000000"/>
+  <SolidColorBrush x:Key="PageHeaderDividerBrush" Color="#18000000"/>
+  <SolidColorBrush x:Key="BorderSubtleBrush" Color="#0F000000"/>
+  <SolidColorBrush x:Key="TextQuaternaryBrush" Color="#C7C7CC"/>
+  <SolidColorBrush x:Key="MutedBrush" Color="#AEAEB2"/>
+  <SolidColorBrush x:Key="ContainerBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="ContainerElevatedBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="SurfaceBaseBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="BorderSecondaryBrush" Color="#14000000"/>
+  <SolidColorBrush x:Key="OverlayHoverSubtleBrush" Color="#0F000000"/>
+  <SolidColorBrush x:Key="MessageSurfaceBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="MessageBorderBrush" Color="#D1D1D6"/>
+  <SolidColorBrush x:Key="NavHoverBrush" Color="#0A000000"/>
+  <SolidColorBrush x:Key="NavSelectedBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="NavSelectedBgBrush" Color="#D6E8FF"/>
+  <SolidColorBrush x:Key="StatAccentBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="StatBlueBrush" Color="#007AFF"/>
+  <SolidColorBrush x:Key="StatPurpleBrush" Color="#7B61FF"/>
+  <SolidColorBrush x:Key="StatOrangeBrush" Color="#FF9F0A"/>
+  <SolidColorBrush x:Key="NavIconBrush" Color="#636366"/>
+  <SolidColorBrush x:Key="PlayerCoverPlaceholderBrush" Color="#E5E5EA"/>
+  <SolidColorBrush x:Key="VinylDiscBrush" Color="#18181A"/>
+  <SolidColorBrush x:Key="VinylDiscEdgeBrush" Color="#52525C"/>
+  <SolidColorBrush x:Key="VinylDiscShadowBrush" Color="#28000000"/>
+  <SolidColorBrush x:Key="VinylGrooveBrush" Color="#6A6A74"/>
+  <SolidColorBrush x:Key="VinylLabelRingBrush" Color="#48484F"/>
+  <SolidColorBrush x:Key="VinylSpindleBrush" Color="#101012"/>
+  <SolidColorBrush x:Key="VinylSpindleRingBrush" Color="#686872"/>
+  <RadialGradientBrush x:Key="VinylDiscSheenBrush" GradientOrigin="32%,28%" RadiusX="72%" RadiusY="72%">
+    <GradientStop Color="#00FFFFFF" Offset="0"/>
+    <GradientStop Color="#22FFFFFF" Offset="0.42"/>
+    <GradientStop Color="#00FFFFFF" Offset="1"/>
+  </RadialGradientBrush>
+  <SolidColorBrush x:Key="VinylTonearmBrush" Color="#A0A0AA"/>
+  <SolidColorBrush x:Key="VinylTonearmHeadshellBrush" Color="#B0B0BA"/>
+  <SolidColorBrush x:Key="VinylTonearmStylusBrush" Color="#787880"/>
+  <SolidColorBrush x:Key="VinylTonearmStrokeBrush" Color="#707078"/>
+  <SolidColorBrush x:Key="VinylTonearmPivotBrush" Color="#34343C"/>
+  <SolidColorBrush x:Key="VinylTonearmPivotCapBrush" Color="#888894"/>
+  <SolidColorBrush x:Key="CoverPlaceholderBrush" Color="#E5E5EA"/>
+  <SolidColorBrush x:Key="ModalScrimBrush" Color="#B3000000"/>
+  <SolidColorBrush x:Key="FullscreenScrimBrush" Color="#F5F2F2F7"/>
+  <SolidColorBrush x:Key="FullscreenCanvasBrush" Color="#F2F2F7"/>
+  <SolidColorBrush x:Key="AlbumDetailBackdropScrimBrush" Color="#D0ECECF1"/>
+  <LinearGradientBrush x:Key="AlbumDetailBackdropGradientBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+    <GradientStop Color="#70ECECF1" Offset="0"/>
+    <GradientStop Color="#A8ECECF1" Offset="0.32"/>
+    <GradientStop Color="#D8ECECF1" Offset="0.58"/>
+    <GradientStop Color="#FFFFFFFF" Offset="1"/>
+  </LinearGradientBrush>
+  <SolidColorBrush x:Key="WarningSoftBrush" Color="#FFF3CD"/>
+  <SolidColorBrush x:Key="WarningTextBrush" Color="#856404"/>
+  <SolidColorBrush x:Key="WarningBorderBrush" Color="#FFECB5"/>
+  <SolidColorBrush x:Key="StatPinkBrush" Color="#E91E8C"/>
+  <SolidColorBrush x:Key="SuccessBrush" Color="#34C759"/>
+  <SolidColorBrush x:Key="SuccessSoftBrush" Color="#E8F8ED"/>
+  <SolidColorBrush x:Key="SuccessBorderBrush" Color="#B8E6C8"/>
+  <SolidColorBrush x:Key="ErrorSoftBrush" Color="#FFF0EF"/>
+  <SolidColorBrush x:Key="ErrorBorderBrush" Color="#FFD4D2"/>
+  <SolidColorBrush x:Key="ErrorTextBrush" Color="#C0392B"/>
+  <SolidColorBrush x:Key="InfoSoftBrush" Color="#E8F2FF"/>
+  <SolidColorBrush x:Key="InfoBorderBrush" Color="#40007AFF"/>
+  <SolidColorBrush x:Key="OverlayHoverLightBrush" Color="#0C000000"/>
+  <SolidColorBrush x:Key="OverlaySelectedLightBrush" Color="#08000000"/>
+  <SolidColorBrush x:Key="OverlayChipHoverBrush" Color="#12000000"/>
+  <SolidColorBrush x:Key="OverlayProgressTrackBrush" Color="#18000000"/>
+  <SolidColorBrush x:Key="FlyoutSurfaceBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="FlyoutBorderBrush" Color="#D1D1D6"/>
+  <SolidColorBrush x:Key="SliderThumbFillBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="FullscreenControlHoverBrush" Color="#0C000000"/>
+  <SolidColorBrush x:Key="PlayerProgressTrackBrush" Color="#D2D2D7"/>
+  <SolidColorBrush x:Key="PlayerProgressFillBrush" Color="#007AFF"/>
+
+  <!-- 精简播放器 / 桌面歌词：沉浸暗色 chrome（独立迷你窗；主界面浅色主题下仍用暗色） -->
+  <SolidColorBrush x:Key="PlayerChromeBaseBrush" Color="#101014"/>
+  <SolidColorBrush x:Key="PlayerChromeCoverBrush" Color="#18181C"/>
+  <SolidColorBrush x:Key="PlayerChromePanelBrush" Color="#1A1A1F"/>
+  <SolidColorBrush x:Key="PlayerChromeSurfaceBrush" Color="#B018181C"/>
+  <SolidColorBrush x:Key="PlayerChromeBorderBrush" Color="#30FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeBorderSubtleBrush" Color="#22FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeDividerBrush" Color="#25FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeProgressTrackBrush" Color="#35FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeHoverBrush" Color="#18FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeOverlayHoverBrush" Color="#30FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeOverlayActiveBrush" Color="#40FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundBrush" Color="#FFFFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundPrimaryBrush" Color="#F2FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundSecondaryBrush" Color="#D9FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundTertiaryBrush" Color="#99FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundMutedBrush" Color="#80FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundIconBrush" Color="#E8FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeBarIconBrush" Color="#E6FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeCoverIconBrush" Color="#F0FFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundDimBrush" Color="#CCFFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeForegroundLabelBrush" Color="#AAFFFFFF"/>
+  <SolidColorBrush x:Key="PlayerChromeArtistBrush" Color="#B3FFFFFF"/>
+  <LinearGradientBrush x:Key="PlayerChromeHeroScrimBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+    <GradientStop Color="#00000000" Offset="0"/>
+    <GradientStop Color="#90101014" Offset="0.35"/>
+    <GradientStop Color="#F0101014" Offset="1"/>
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="PlayerChromeCoverFadeBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+    <GradientStop Color="#00000000" Offset="0"/>
+    <GradientStop Color="#B0101014" Offset="0.45"/>
+    <GradientStop Color="#FF101014" Offset="1"/>
+  </LinearGradientBrush>
+
+  <SolidColorBrush x:Key="TopBarBrush" Color="#F7F7FA"/>
+  <SolidColorBrush x:Key="MusicBrowseBarBrush" Color="#EFEFF4"/>
+  <SolidColorBrush x:Key="LibraryPaneBrush" Color="#F5F5F7"/>
+  <SolidColorBrush x:Key="PlayPaneBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="SearchFieldBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="InputFieldBrush" Color="#FFFFFF"/>
+
+  <!-- WinUI 语义色（浅色主题） -->
+  <SolidColorBrush x:Key="ControlFillDefaultBrush" Color="#EFEFF4"/>
+  <SolidColorBrush x:Key="ControlFillSecondaryBrush" Color="#0A000000"/>
+  <SolidColorBrush x:Key="ControlStrokeDefaultBrush" Color="#0F000000"/>
+  <SolidColorBrush x:Key="ControlStrokeOnAccentBrush" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="SubtleFillTransparentBrush" Color="#00FFFFFF"/>
+
+  <SolidColorBrush x:Key="TooltipBackgroundBrush" Color="#D9000000"/>
+  <SolidColorBrush x:Key="TooltipForegroundBrush" Color="#FFFFFF"/>
+
+  <BoxShadows x:Key="ShadowSm">0 1 2 0 #0C000000</BoxShadows>
+  <BoxShadows x:Key="TooltipShadow">0 4 12 0 #40000000</BoxShadows>
+  <BoxShadows x:Key="PopoverShadow">0 20 56 8 #28000000</BoxShadows>
+  <BoxShadows x:Key="CardShadow">0 1 3 0 #0F000000, 0 6 20 0 #12000012</BoxShadows>
+  <BoxShadows x:Key="PanelShadow">0 2 8 0 #10000000, 0 12 32 0 #14000014</BoxShadows>
+  <BoxShadows x:Key="PlayerShadow">0 -1 0 0 #12000000, 0 8 32 0 #18000018</BoxShadows>
+
+</ResourceDictionary>

@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MusicVault.App.Controls.MarqueeTextBlock">
+  <Border x:Name="Viewport" ClipToBounds="True" Background="Transparent" VerticalAlignment="Stretch">
+    <Canvas x:Name="CanvasHost" VerticalAlignment="Stretch">
+      <TextBlock x:Name="DisplayText" TextWrapping="NoWrap"/>
+    </Canvas>
+  </Border>
+</UserControl>

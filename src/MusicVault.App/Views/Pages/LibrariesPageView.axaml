@@ -1,0 +1,185 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Pages"
+             xmlns:vm="using:MusicVault.App.ViewModels"
+             xmlns:controls="using:MusicVault.App.Controls"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="MusicVault.App.Views.Pages.LibrariesPageView"
+             x:DataType="pvm:LibrariesPageViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+  <Grid x:Name="RootGrid" ColumnDefinitions="260,6,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+    <DockPanel Grid.Column="0" Classes="pane-library">
+      <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="{DynamicResource LibraryPaneHeaderMargin}" MinHeight="32">
+        <TextBlock Text="{Binding PaneTitle}" Classes="text-subtitle" VerticalAlignment="Center"/>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+          <Button Classes="icon-toolbar-btn" ToolTip.Tip="{Binding AddSourceToolTip}"
+                  automation:AutomationProperties.Name="{Binding AddSourceToolTip}">
+            <Button.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="{Binding AddLocalFolderLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding PickFolderAndAddCommand}"/>
+                <MenuItem Header="{Binding AddRemoteNasLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding ConnectNasLibraryCommand}"/>
+                <MenuItem Header="{Binding AddRemoteWebDavLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding ConnectWebDavLibraryCommand}"/>
+              </MenuFlyout>
+            </Button.Flyout>
+            <TextBlock Text="&#xE710;" Classes="icon-xs"/>
+          </Button>
+          <Button Classes="icon-toolbar-btn" ToolTip.Tip="{Binding RefreshListToolTip}"
+                  Command="{Binding RefreshCommand}"
+                  automation:AutomationProperties.Name="{Binding RefreshListToolTip}">
+            <TextBlock Text="&#xE72C;" Classes="icon-xs"/>
+          </Button>
+          <Button Classes="icon-more-btn" ToolTip.Tip="{Binding MoreActionsToolTip}"
+                  automation:AutomationProperties.Name="{Binding MoreActionsToolTip}">
+            <Button.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="{Binding ScanSelectedLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding ScanSelectedCommand}"
+                          IsEnabled="{Binding HasSelectedLibrary}"/>
+                <MenuItem Header="{Binding ScanAllLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding ScanAllCommand}"
+                          IsEnabled="{Binding !IsScanning}"/>
+                <MenuItem Header="{Binding DeleteLibraryMenuLabel}" Classes="app-compact-menu-item"
+                          Command="{Binding DeleteSelectedCommand}"
+                          IsEnabled="{Binding HasSelectedLibrary}"/>
+              </MenuFlyout>
+            </Button.Flyout>
+            <TextBlock Text="{StaticResource IconGlyphMore}" Classes="icon-xs"/>
+          </Button>
+        </StackPanel>
+      </Grid>
+
+      <StackPanel DockPanel.Dock="Bottom" Spacing="4" Margin="{DynamicResource LibraryPaneFooterMargin}">
+        <TextBlock Text="{Binding StatusMessage}" Classes="text-caption" TextWrapping="Wrap"
+                   Foreground="{DynamicResource TextSecondaryBrush}"
+                   IsVisible="{Binding HasStatusMessage}"/>
+        <StackPanel Spacing="4" IsVisible="{Binding IsScanning}">
+          <Grid ColumnDefinitions="*,Auto">
+            <ProgressBar Grid.Column="0" Value="{Binding ScanProgress}" Maximum="100"
+                         Classes="ant-progress-line"/>
+            <TextBlock Grid.Column="1" Text="{Binding ScanProgress, StringFormat={}{0:F0}%}"
+                       Classes="ant-progress-percent"/>
+          </Grid>
+          <TextBlock Text="{Binding ScanStatusText}" Classes="ant-progress-caption"/>
+        </StackPanel>
+      </StackPanel>
+
+      <Panel>
+        <ListBox x:Name="LibraryList" ItemsSource="{Binding Libraries}"
+                 SelectionChanged="OnLibrarySelectionChanged"
+                 Classes="music-library-list"
+                 IsVisible="{Binding !ShowLibrariesEmpty}">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:LibraryListItemViewModel">
+              <Border Classes="library-list-row library-list-row-child"
+                      Classes.library-list-row-muted="{Binding IsLibraryDisabled}"
+                      ToolTip.Tip="{Binding NasStatusToolTip, TargetNullValue={x:Null}}"
+                      HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding DisplayName}" Classes="text-label"
+                             TextTrimming="CharacterEllipsis" MaxLines="1"/>
+                  <TextBlock Text="{Binding NasStatusSegment}" Classes="text-caption"
+                             Foreground="{DynamicResource TextSecondaryBrush}"
+                             VerticalAlignment="Center"
+                             IsVisible="{Binding ShowNasOnlineStatus}"/>
+                  <TextBlock Text="{Binding NasStatusSegment}" Classes="text-caption"
+                             Foreground="{DynamicResource WarningBrush}"
+                             VerticalAlignment="Center"
+                             IsVisible="{Binding ShowNasOfflineStatus}"/>
+                  <TextBlock Text="{Binding TrackCountSegment}" Classes="text-caption"
+                             Foreground="{DynamicResource TextSecondaryBrush}"
+                             VerticalAlignment="Center"/>
+                  <TextBlock Text="{Binding SizeGbText}" Classes="text-caption"
+                             Foreground="{DynamicResource TextSecondaryBrush}"
+                             VerticalAlignment="Center"/>
+                  <TextBlock Text="{Binding DisabledLabel}" Classes="text-caption"
+                             Foreground="{DynamicResource TextTertiaryBrush}"
+                             VerticalAlignment="Center"
+                             IsVisible="{Binding IsLibraryDisabled}"/>
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+        <controls:EmptyStateView IsVisible="{Binding ShowLibrariesEmpty}"
+                                 Title="{Binding EmptyNoSourcesTitle}"
+                                 Description="{Binding EmptyNoSourcesDescription}"
+                                 IconGlyph="&#xE8B7;"/>
+      </Panel>
+    </DockPanel>
+
+    <controls:VerticalPaneSplitter x:Name="PaneSplitter" Grid.Column="1"/>
+
+    <DockPanel Grid.Column="2" Classes="pane-play" HorizontalAlignment="Stretch">
+      <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                    IsVisible="{Binding HasSelectedLibrary}">
+        <StackPanel Margin="{DynamicResource PageContentMargin}" Spacing="12" MaxWidth="{DynamicResource ContentWidthForm}" HorizontalAlignment="Left"
+                    DataContext="{Binding SelectedLibrary}">
+          <TextBlock Text="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).SettingsTitle}" Classes="text-subtitle"/>
+          <TextBlock Classes="text-caption" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"
+                     Text="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).SettingsIntro}"/>
+          <Grid ColumnDefinitions="72,8,Auto,*">
+            <TextBlock Grid.Column="0" Text="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).FieldNameLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+            <TextBox Grid.Column="2" Watermark="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).NameWatermark}" Text="{Binding Name}"
+                     Classes="discover-field field-input"/>
+          </Grid>
+          <Grid ColumnDefinitions="72,8,Auto,*">
+            <TextBlock Grid.Column="0" Text="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).FieldRootPathLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+            <TextBox Grid.Column="2" Text="{Binding RootPath}" IsReadOnly="True"
+                     Classes="discover-field field-input" TextWrapping="Wrap"/>
+          </Grid>
+          <TextBlock Text="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).SelectedNasStatusText}"
+                     Classes="text-caption" TextWrapping="Wrap"
+                     Foreground="{DynamicResource WarningBrush}"
+                     IsVisible="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).ShowSelectedNasStatus}"/>
+          <Grid ColumnDefinitions="72,8,Auto,*">
+            <TextBlock Grid.Column="0" Text="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).FieldFileNameLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+            <TextBox Grid.Column="2" Watermark="{}{Title} - {Artist}.{Extension}"
+                     Text="{Binding FileNameTemplate}" Classes="discover-field field-input"/>
+          </Grid>
+          <Grid ColumnDefinitions="72,8,Auto,*">
+            <TextBlock Grid.Column="0" Text="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).FieldFolderLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+            <TextBox Grid.Column="2" Watermark="{}{Artist}/{Album}"
+                     Text="{Binding FolderTemplate}" Classes="discover-field field-input"/>
+          </Grid>
+          <CheckBox Content="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).ParticipateInScanLabel}"
+                    IsChecked="{Binding IsEnabled}" Classes="choice-check"/>
+          <StackPanel Orientation="Horizontal" Spacing="8" Margin="{DynamicResource SettingsOverviewCardMargin}">
+            <Button Content="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).SaveLabel}" Classes="primary btn-toolbar"
+                    Command="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).SaveSelectedCommand}"/>
+            <Button Content="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).ScanThisLibraryLabel}" Classes="flat-btn btn-toolbar"
+                    Command="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).ScanSelectedCommand}"/>
+            <Button Content="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).ReconnectNasLabel}"
+                    Classes="flat-btn btn-toolbar"
+                    ToolTip.Tip="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).ReconnectNasToolTip}"
+                    Command="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).ReconnectNasLibraryCommand}"
+                    IsVisible="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).CanReconnectSelectedNas}"/>
+            <Button Content="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).DownloadNasLibraryLabel}"
+                    Classes="flat-btn btn-toolbar"
+                    ToolTip.Tip="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).DownloadNasLibraryToolTip}"
+                    Command="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).DownloadNasLibraryToLocalCommand}"
+                    IsVisible="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).CanDownloadNasLibraryToLocal}"/>
+            <controls:PopconfirmHost Title="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).DeleteLibraryPopconfirmTitle}"
+                                     Description="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).DeleteLibraryPopconfirmDescription}"
+                                     ConfirmText="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).DeleteConfirmText}"
+                                     ConfirmIsDanger="True"
+                                     ConfirmedCommand="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).DeleteSelectedCommand}">
+              <Button Content="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).RemoveLibraryLabel}" Classes="danger ant-btn-danger btn-toolbar"
+                      IsEnabled="{Binding $parent[UserControl].((pvm:LibrariesPageViewModel)DataContext).HasSelectedLibrary}"/>
+            </controls:PopconfirmHost>
+          </StackPanel>
+        </StackPanel>
+      </ScrollViewer>
+
+      <controls:EmptyStateView IsVisible="{Binding !HasSelectedLibrary}"
+                               Title="{Binding EmptySelectSourceTitle}"
+                               Description="{Binding EmptySelectSourceDescription}"
+                               IconGlyph="&#xE8B7;"/>
+    </DockPanel>
+  </Grid>
+</UserControl>

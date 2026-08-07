@@ -1,0 +1,68 @@
+# 打 tag 时：发布 Windows 自包含包 → Velopack → 上传 GitHub Release
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Read version from tag
+        id: ver
+        shell: pwsh
+        run: |
+          $tag = '${{ github.ref_name }}'
+          $v = $tag.TrimStart('v', 'V')
+          echo "version=$v" >> $env:GITHUB_OUTPUT
+          echo "tag=$tag" >> $env:GITHUB_OUTPUT
+
+      - name: Publish win-x64
+        shell: pwsh
+        run: |
+          .\scripts\publish-windows.ps1 -NoRestart -OutputDir .\publish\win-x64
+
+      - name: Install Velopack CLI
+        shell: pwsh
+        run: dotnet tool install -g vpk
+
+      - name: Pack Velopack
+        shell: pwsh
+        run: |
+          $env:Path = "$env:USERPROFILE\.dotnet\tools;$env:Path"
+          .\scripts\velopack-release.ps1 -Version '${{ steps.ver.outputs.version }}' -PublishDir .\publish\win-x64 -OutputDir .\releases -SkipDelta
+
+      - name: Create GitHub Release and upload
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = '${{ steps.ver.outputs.tag }}'
+          $ver = '${{ steps.ver.outputs.version }}'
+          $notes = @"
+          ## MusicVault $ver
+
+          Velopack 自动更新产物已挂到本 Release。
+          用户更新源填写仓库地址即可：https://github.com/${{ github.repository }}
+
+          详见 docs/ONLINE_UPDATE.md
+          "@
+          $notesFile = Join-Path $env:RUNNER_TEMP "notes.md"
+          Set-Content -Path $notesFile -Value $notes -Encoding UTF8
+
+          gh release create $tag --title "MusicVault $ver (Windows x64)" --notes-file $notesFile --verify-tag
+          Get-ChildItem .\releases -File | ForEach-Object {
+            gh release upload $tag $_.FullName --clobber
+          }

@@ -1,0 +1,182 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             xmlns:layout="using:MusicVault.App.Layout"
+             x:Class="MusicVault.App.Views.Overlays.CombinedLabelsSearchModalView"
+             x:DataType="vm:CombinedLabelsSearchViewModel"
+             Focusable="True"
+             KeyDown="OnKeyDown">
+  <Grid RowDefinitions="Auto,*,Auto">
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="{DynamicResource LibraryPaneHeaderMargin}">
+      <StackPanel Spacing="4">
+        <TextBlock Text="{Binding ModalTitle}" Classes="text-subtitle combined-labels-text"/>
+        <TextBlock Text="{Binding HeaderText}" Classes="text-label combined-labels-text-muted"
+                   TextWrapping="Wrap"/>
+        <CheckBox Content="{Binding FetchMediaLabel}" Classes="choice-check"
+                  IsChecked="{Binding FetchMedia}"/>
+      </StackPanel>
+      <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Top">
+        <Button Classes="icon-btn" ToolTip.Tip="{Binding CloseToolTip}" Command="{Binding CancelCommand}">
+          <TextBlock Text="&#xE8BB;" Classes="icon-sm"/>
+        </Button>
+        <TextBlock Text="{Binding MatchSummaryText}"
+                   Classes="text-caption combined-labels-text-muted"
+                   TextWrapping="Wrap" MaxWidth="180" HorizontalAlignment="Right"/>
+      </StackPanel>
+    </Grid>
+
+    <Panel Grid.Row="1">
+      <Border BorderBrush="{DynamicResource BorderSubtleBrush}"
+              BorderThickness="1" CornerRadius="8" ClipToBounds="True"
+              Background="{DynamicResource BackgroundBrush}">
+        <Panel>
+          <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                        VerticalScrollBarVisibility="Disabled"
+                        IsVisible="{Binding HasMatches}">
+            <DockPanel MinWidth="1000">
+            <Border DockPanel.Dock="Top" Classes="combined-labels-table-header">
+              <Grid Classes="track-table-header ant-table-header track-table-header-paired combined-labels-table-grid"
+                    ColumnDefinitions="{x:Static layout:TrackTableLayout.CombinedLabelsColumns}">
+                <TextBlock Grid.Column="0" Text="{Binding ColCover}" Classes="track-col-header track-col-header-muted track-col-header-index"/>
+                <TextBlock Grid.Column="1" Text="{Binding ColPlatform}" Classes="track-col-header track-col-header-muted"/>
+                <TextBlock Grid.Column="2" Text="{Binding ColTitle}" Classes="track-col-header track-col-header-muted"/>
+                <TextBlock Grid.Column="3" Text="{Binding ColArtist}" Classes="track-col-header track-col-header-muted"/>
+                <TextBlock Grid.Column="4" Text="{Binding ColAlbum}" Classes="track-col-header track-col-header-muted"/>
+                <TextBlock Grid.Column="5" Text="{Binding ColYear}" Classes="track-col-header track-col-header-muted track-col-header-meta"/>
+                <TextBlock Grid.Column="6" Text="{Binding ColDuration}" Classes="track-col-header track-col-header-muted track-col-header-meta"/>
+                <TextBlock Grid.Column="7" Text="{Binding ColTrack}" Classes="track-col-header track-col-header-muted track-col-header-meta"/>
+                <TextBlock Grid.Column="8" Text="{Binding ColGenre}" Classes="track-col-header track-col-header-muted"/>
+                <TextBlock Grid.Column="9" Text="{Binding ColComposer}" Classes="track-col-header track-col-header-muted"/>
+                <TextBlock Grid.Column="10" Text="{Binding ColQuality}" Classes="track-col-header track-col-header-muted track-col-header-meta"/>
+                <TextBlock Grid.Column="11" Text="{Binding ColMatch}" Classes="track-col-header track-col-header-muted track-col-header-meta"/>
+              </Grid>
+            </Border>
+            <Border DockPanel.Dock="Top" Height="1" MinHeight="1"
+                    Background="{DynamicResource SeparatorBrush}"/>
+
+            <ListBox x:Name="MatchList" ItemsSource="{Binding Matches}"
+                     SelectedItem="{Binding SelectedMatch, Mode=TwoWay}"
+                     SelectionMode="Single"
+                     Focusable="True"
+                     Classes="combined-labels-list"
+                     DoubleTapped="OnMatchDoubleTapped">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:MetadataMatchRowViewModel">
+                  <Border Classes="combined-labels-table-row">
+                    <Grid Classes="combined-labels-table-grid combined-labels-table-row-grid"
+                          ColumnDefinitions="{x:Static layout:TrackTableLayout.CombinedLabelsColumns}"
+                          Height="{x:Static layout:TrackTableLayout.RowHeight}"
+                          VerticalAlignment="Center">
+                      <Border Grid.Column="0" Width="30" Height="30" CornerRadius="4"
+                              Background="{DynamicResource SearchFieldBrush}" ClipToBounds="True"
+                              HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Panel>
+                          <Image Source="{Binding CoverBitmap}"
+                                 Stretch="UniformToFill" IsVisible="{Binding HasCoverThumb}"/>
+                          <TextBlock Text="—" Classes="text-micro combined-labels-text-muted"
+                                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                                     IsVisible="{Binding !HasCoverThumb}"/>
+                        </Panel>
+                      </Border>
+
+                      <TextBlock Grid.Column="1" Text="{Binding PlatformLabel}"
+                                 Classes="track-col-cell combined-labels-text"
+                                 TextTrimming="CharacterEllipsis"
+                                 VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding PlatformLabel}"/>
+
+                      <TextBlock Grid.Column="2" Text="{Binding Title}"
+                                 Classes="track-col-cell track-title combined-labels-text"
+                                 TextTrimming="CharacterEllipsis"
+                                 VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding TitleToolTip}"/>
+
+                      <TextBlock Grid.Column="3" Text="{Binding Artist}"
+                                 Classes="track-col-cell combined-labels-text"
+                                 TextTrimming="CharacterEllipsis"
+                                 VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding ArtistToolTip}"/>
+
+                      <TextBlock Grid.Column="4" Text="{Binding Album}"
+                                 Classes="track-col-cell combined-labels-text"
+                                 TextTrimming="CharacterEllipsis"
+                                 VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding AlbumToolTip}"/>
+
+                      <TextBlock Grid.Column="5" Text="{Binding YearDisplay}"
+                                 Classes="track-col-cell track-col-cell-meta combined-labels-text-muted"
+                                 VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding YearToolTip}"/>
+
+                      <TextBlock Grid.Column="6" Text="{Binding DurationDisplay}"
+                                 Classes="track-col-cell track-col-cell-meta combined-labels-text-muted"
+                                 VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding DurationToolTip}"/>
+
+                      <TextBlock Grid.Column="7" Text="{Binding TrackDisplay}"
+                                 Classes="track-col-cell track-col-cell-meta combined-labels-text-muted"
+                                 VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding TrackToolTip}"/>
+
+                      <TextBlock Grid.Column="8" Text="{Binding GenreDisplay}"
+                                 Classes="track-col-cell combined-labels-text"
+                                 TextTrimming="CharacterEllipsis"
+                                 VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding GenreToolTip}"/>
+
+                      <TextBlock Grid.Column="9" Text="{Binding ComposerDisplay}"
+                                 Classes="track-col-cell combined-labels-text"
+                                 TextTrimming="CharacterEllipsis"
+                                 VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding ComposerToolTip}"/>
+
+                      <TextBlock Grid.Column="10" Text="{Binding QualityHint}"
+                                 Classes="track-col-cell track-col-cell-meta combined-labels-text-muted"
+                                 VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding QualityToolTip}"/>
+
+                      <TextBlock Grid.Column="11" Text="{Binding MatchScoreDisplay}"
+                                 Classes="track-col-cell track-col-cell-meta combined-labels-text"
+                                 VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding MatchScoreToolTip}"/>
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            </DockPanel>
+          </ScrollViewer>
+
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10"
+                      Margin="{DynamicResource PageContentMargin}" IsVisible="{Binding ShowEmptyState}">
+            <TextBlock Text="&#xE721;"
+                       Classes="icon-2xl icon-muted" HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding EmptyStateTitle}" Classes="text-subtitle combined-labels-text"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding EmptyStateHint}"
+                       Classes="text-caption combined-labels-text-muted"
+                       HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+          </StackPanel>
+        </Panel>
+      </Border>
+    </Panel>
+
+    <Border Grid.Row="2" Padding="12,8,12,12" Classes="app-dialog-footer"
+            BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="0,1,0,0">
+      <Grid ColumnDefinitions="*,Auto,Auto">
+        <StackPanel Spacing="4" VerticalAlignment="Center">
+          <TextBlock Text="{Binding FooterHintText}"
+                     Classes="text-caption combined-labels-text-muted"
+                     TextWrapping="Wrap"/>
+          <TextBlock Text="{Binding StatusText}"
+                     Classes="text-caption combined-labels-text-muted"
+                     IsVisible="{Binding IsEnriching}"/>
+        </StackPanel>
+        <Button Grid.Column="1" Content="{Binding CancelButtonText}" Classes="flat-btn app-dialog-btn"
+                MinWidth="80" Margin="{DynamicResource MarginTrailingSm}" Command="{Binding CancelCommand}"/>
+        <Button Grid.Column="2" Content="{Binding ConfirmButtonText}" Classes="primary app-dialog-btn"
+                MinWidth="100" Command="{Binding ConfirmCommand}"/>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

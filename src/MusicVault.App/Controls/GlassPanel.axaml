@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MusicVault.App.Controls"
+             x:Class="MusicVault.App.Controls.GlassPanel"
+             x:DataType="controls:GlassPanel">
+  <Border Classes="glass-panel" Padding="{Binding Padding}">
+    <ContentPresenter Content="{Binding ChildContent}"/>
+  </Border>
+</UserControl>

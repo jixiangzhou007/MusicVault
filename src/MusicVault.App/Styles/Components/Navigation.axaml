@@ -1,0 +1,261 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- ===== 顶栏导航（Dopamine） ===== -->
+  <Style Selector="Border.top-nav-bar">
+    <Setter Property="Background" Value="{DynamicResource TopBarBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+  </Style>
+
+  <Style Selector="Border.top-logo">
+    <Setter Property="Width" Value="32"/>
+    <Setter Property="Height" Value="32"/>
+    <Setter Property="CornerRadius" Value="16"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+
+  <Style Selector="Button.top-logo-btn">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Width" Value="32"/>
+    <Setter Property="Height" Value="32"/>
+    <Setter Property="MinWidth" Value="32"/>
+    <Setter Property="MinHeight" Value="32"/>
+    <Setter Property="MaxWidth" Value="32"/>
+    <Setter Property="MaxHeight" Value="32"/>
+    <Setter Property="CornerRadius" Value="16"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.top-logo-btn /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="16"/>
+  </Style>
+  <Style Selector="Button.top-logo-btn:pointerover,
+                   Button.top-logo-btn:pressed">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Button.top-logo-btn:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                   Button.top-logo-btn:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Button.top-logo-btn:pointerover Border.top-logo">
+    <Setter Property="Opacity" Value="0.9"/>
+  </Style>
+
+  <!-- 顶栏下方：音乐浏览条（较浅背景） -->
+  <Style Selector="Border.music-browse-bar">
+    <Setter Property="Background" Value="{DynamicResource MusicBrowseBarBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+    <Setter Property="Height" Value="{DynamicResource MusicBrowseBarHeight}"/>
+  </Style>
+
+  <Style Selector="Button.music-browse-tab">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="12,0"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="MaxHeight" Value="28"/>
+    <Setter Property="Margin" Value="0,0,4,0"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.music-browse-tab:pointerover:not(.selected)">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="Button.music-browse-tab.selected">
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+    <Setter Property="FontWeight" Value="Medium"/>
+    <Setter Property="Background" Value="{DynamicResource NavSelectedBgBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="Button.music-browse-tab.selected:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource NavSelectedBgBrush}"/>
+  </Style>
+
+  <Style Selector="Button.nav-tab">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="14,0"/>
+    <Setter Property="Margin" Value="0,0,4,0"/>
+    <Setter Property="Height" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.15"/>
+        <BrushTransition Property="Foreground" Duration="0:0:0.15"/>
+      </Transitions>
+    </Setter>
+  </Style>
+  <Style Selector="Button.nav-tab /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+  </Style>
+  <Style Selector="Button.nav-tab:pointerover:not(.selected)">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource ControlFillSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Button.nav-tab:pointerover:not(.selected) /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Button.nav-tab:pressed:not(.selected)">
+    <Setter Property="Background" Value="{DynamicResource ControlFillSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Button.nav-tab:pointerover.selected">
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource NavSelectedBgBrush}"/>
+  </Style>
+  <Style Selector="Button.nav-tab.selected">
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+    <Setter Property="FontWeight" Value="Medium"/>
+    <Setter Property="Background" Value="{DynamicResource NavSelectedBgBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="Button.nav-tab:pointerover:not(.selected) TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Button.nav-tab.selected TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+  </Style>
+  <Style Selector="Button.nav-tab:not(.selected) TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="TextBox.top-search">
+    <Setter Property="Height" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Padding" Value="10,0"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Background" Value="{DynamicResource ControlFillDefaultBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeDefaultBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBox.top-search:focus">
+    <Setter Property="BorderBrush" Value="{DynamicResource FocusRingBrush}"/>
+  </Style>
+
+  <!-- 浏览条：本地搜索框与「搜索」按钮等高 -->
+  <Style Selector="TextBox.top-search.browse-search">
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="Padding" Value="8,0"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+  </Style>
+  <Style Selector="Button.browse-search:not(.btn-toolbar)">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.browse-search:pointerover">
+    <Setter Property="Opacity" Value="0.92"/>
+  </Style>
+  <Style Selector="Button.browse-search TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+  </Style>
+
+  <Style Selector="TextBlock.organize-browse-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.organize-wizard-step">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Padding" Value="10,6"/>
+  </Style>
+
+  <Style Selector="ComboBox.organize-browse-combo">
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBox.organize-browse-filter">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+  </Style>
+
+  <Style Selector="Button.organize-browse-load">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+  </Style>
+  <Style Selector="Button.organize-browse-load TextBlock">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+  </Style>
+
+  <!-- browse-filter 样式见 Button.axaml（紧凑居中模板 + 灰底选中态） -->
+
+  <!-- top-icon-btn / icon-btn 见 IconButton.axaml -->
+
+  <!-- 无边框窗口：最小化 / 最大化 / 关闭（仅 Windows 主窗口） -->
+  <Style Selector="Button.window-chrome-btn">
+    <Setter Property="Width" Value="46"/>
+    <Setter Property="Height" Value="{DynamicResource TopNavHeight}"/>
+    <Setter Property="MinWidth" Value="46"/>
+    <Setter Property="MinHeight" Value="{DynamicResource TopNavHeight}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.window-chrome-btn TextBlock">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.window-chrome-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource ControlFillSecondaryBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Button.window-chrome-btn.window-chrome-close:pointerover">
+    <Setter Property="Background" Value="{DynamicResource DangerBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+  </Style>
+  <Style Selector="Border.window-shell:not(.maximized) Button.window-chrome-close">
+    <Setter Property="CornerRadius" Value="0,6,0,0"/>
+  </Style>
+
+  <Style Selector="Border.right-panel">
+    <Setter Property="Background" Value="{DynamicResource RightPanelBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="1,0,0,0"/>
+  </Style>
+</Styles>

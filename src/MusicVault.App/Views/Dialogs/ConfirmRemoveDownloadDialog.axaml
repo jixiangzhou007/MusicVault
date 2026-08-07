@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MusicVault.App.Views.Dialogs.ConfirmRemoveDownloadDialog"
+        Classes="app-dialog"
+        Width="480"
+        SizeToContent="Height"
+        MinHeight="200"
+        MaxWidth="520">
+  <Border Classes="app-dialog-shell">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button x:Name="CancelButton" Classes="flat-btn app-dialog-btn"/>
+          <Button x:Name="ListOnlyButton" Classes="flat-btn app-dialog-btn"/>
+          <Button x:Name="ListAndFileButton" Classes="danger app-dialog-btn"/>
+        </StackPanel>
+      </Border>
+
+      <StackPanel Classes="app-dialog-body">
+        <TextBlock x:Name="ModalTitleText" Classes="text-title"/>
+        <TextBlock x:Name="SummaryText" Classes="text-body" TextWrapping="Wrap" LineHeight="22"/>
+        <TextBlock x:Name="DetailText" Classes="text-caption" TextWrapping="Wrap" LineHeight="20"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</Window>

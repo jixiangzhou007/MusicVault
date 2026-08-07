@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore MusicVault.sln
+
+      - name: Build
+        run: dotnet build MusicVault.sln -c Release --no-restore
+
+      - name: Format Check
+        run: dotnet format MusicVault.sln --verify-no-changes --verbosity minimal
+
+      - name: Design System Audit
+        run: powershell -ExecutionPolicy Bypass -File ./scripts/audit-design-system.ps1 -FailOnViolation
+
+      - name: Test
+        run: dotnet test MusicVault.sln -c Release --no-build --verbosity normal
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet format MusicVault.sln --verify-no-changes --verbosity minimal
+      - run: dotnet build MusicVault.sln -c Release

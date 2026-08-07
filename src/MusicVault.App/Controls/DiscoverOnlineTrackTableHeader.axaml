@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:layout="using:MusicVault.App.Layout"
+             x:Class="MusicVault.App.Controls.DiscoverOnlineTrackTableHeader">
+  <DockPanel LastChildFill="True">
+    <Border x:Name="HeaderDivider" DockPanel.Dock="Bottom" Classes="track-row-divider"/>
+    <Grid x:Name="DiscoverHeaderGrid"
+          Classes="track-table-header ant-table-header discover-track-header"
+          ColumnDefinitions="{x:Static layout:TrackTableLayout.DiscoverColumns}"
+          MinWidth="0"
+          HorizontalAlignment="Stretch">
+      <TextBlock x:Name="HColIndex" Grid.Column="0" Text="#" Classes="track-col-header track-col-header-muted track-col-header-index discover-track-index"
+                 HorizontalAlignment="Center"/>
+      <!-- 封面列无表头文案 -->
+      <TextBlock x:Name="HColTitle" Grid.Column="2" Classes="track-col-header track-col-header-muted discover-track-song-label"/>
+      <TextBlock x:Name="HColSource" Grid.Column="3" Classes="track-col-header track-col-header-muted"/>
+      <TextBlock x:Name="HColDuration" Grid.Column="4" Classes="track-col-header track-col-header-muted track-col-header-index"
+                 HorizontalAlignment="Center"/>
+      <TextBlock x:Name="HColCache" Grid.Column="5" Classes="track-col-header track-col-header-muted track-col-header-index"
+                 HorizontalAlignment="Center"/>
+      <TextBlock x:Name="HColFavorite" Grid.Column="6" Classes="track-col-header track-col-header-muted track-col-header-index"
+                 HorizontalAlignment="Center"/>
+      <TextBlock x:Name="HColPlaylist" Grid.Column="7" Classes="track-col-header track-col-header-muted track-col-header-index"
+                 HorizontalAlignment="Center"/>
+      <TextBlock x:Name="HColActions" Grid.Column="8" Classes="track-col-header track-col-header-muted track-col-header-last"/>
+    </Grid>
+  </DockPanel>
+</UserControl>

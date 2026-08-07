@@ -1,0 +1,19 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- 设置页强调色色块 -->
+  <Style Selector="Button.accent-swatch">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.accent-swatch:pointerover">
+    <Setter Property="Opacity" Value="0.9"/>
+  </Style>
+  <Style Selector="Border.accent-swatch-dot">
+    <Setter Property="BorderBrush" Value="Transparent"/>
+  </Style>
+  <Style Selector="Border.accent-swatch-dot.selected">
+    <Setter Property="BorderBrush" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+</Styles>

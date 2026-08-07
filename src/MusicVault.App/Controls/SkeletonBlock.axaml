@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MusicVault.App.Controls.SkeletonBlock"
+             x:Name="Root">
+  <Border x:Name="Block"
+          Classes="ant-skeleton ant-skeleton-active"
+          Width="{Binding BlockWidth, ElementName=Root}"
+          Height="{Binding BlockHeight, ElementName=Root}"
+          CornerRadius="{Binding BlockCornerRadius, ElementName=Root}"
+          HorizontalAlignment="{Binding BlockHorizontalAlignment, ElementName=Root}"/>
+</UserControl>

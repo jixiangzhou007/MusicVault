@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:constants="using:MusicVault.App.Constants"
+             x:Class="MusicVault.App.Controls.PlatformComboBox"
+             x:Name="Root"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Center">
+  <ComboBox x:Name="PlatformCombo"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            SelectedIndex="{Binding SelectedPlatformIndex, ElementName=Root, Mode=TwoWay}"/>
+</UserControl>

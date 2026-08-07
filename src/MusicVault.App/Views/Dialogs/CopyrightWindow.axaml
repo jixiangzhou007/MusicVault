@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MusicVault.App.Views.Dialogs.CopyrightWindow"
+        Classes="app-dialog"
+        Width="520"
+        SizeToContent="Height"
+        MinHeight="360"
+        MaxWidth="560"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        SystemDecorations="BorderOnly">
+  <Border Classes="app-dialog-shell">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button x:Name="DeclineButton" Classes="flat-btn app-dialog-btn"/>
+          <Button x:Name="AcceptButton" Classes="primary app-dialog-btn"/>
+        </StackPanel>
+      </Border>
+
+      <StackPanel Classes="app-dialog-body">
+        <TextBlock x:Name="HeaderText" Classes="text-title"/>
+        <ScrollViewer MaxHeight="280">
+          <TextBlock x:Name="BodyText" TextWrapping="Wrap" LineHeight="24" Classes="text-body"/>
+        </ScrollViewer>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</Window>

@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MusicVault.App.Controls"
+             x:Class="MusicVault.App.Controls.SkeletonAlbumTrackListView">
+  <StackPanel Classes="skeleton-track-list">
+    <Border Classes="skeleton-track-row">
+      <Grid ColumnDefinitions="40,*,120,80,100" Height="36" VerticalAlignment="Center">
+        <controls:SkeletonLine Grid.Column="0" LineWidth="24" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0"/>
+        <controls:SkeletonLine Grid.Column="2" LineWidth="80"/>
+        <controls:SkeletonLine Grid.Column="3" LineWidth="48" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonBlock Grid.Column="4" BlockWidth="72" BlockHeight="26" BlockCornerRadius="4" BlockHorizontalAlignment="Right"/>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-track-row">
+      <Grid ColumnDefinitions="40,*,120,80,100" Height="36" VerticalAlignment="Center">
+        <controls:SkeletonLine Grid.Column="0" LineWidth="24" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0" LineWidth="200"/>
+        <controls:SkeletonLine Grid.Column="2" LineWidth="70"/>
+        <controls:SkeletonLine Grid.Column="3" LineWidth="44" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonBlock Grid.Column="4" BlockWidth="68" BlockHeight="26" BlockCornerRadius="4" BlockHorizontalAlignment="Right"/>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-track-row">
+      <Grid ColumnDefinitions="40,*,120,80,100" Height="36" VerticalAlignment="Center">
+        <controls:SkeletonLine Grid.Column="0" LineWidth="24" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0"/>
+        <controls:SkeletonLine Grid.Column="2" LineWidth="90"/>
+        <controls:SkeletonLine Grid.Column="3" LineWidth="40" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonBlock Grid.Column="4" BlockWidth="76" BlockHeight="26" BlockCornerRadius="4" BlockHorizontalAlignment="Right"/>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-track-row">
+      <Grid ColumnDefinitions="40,*,120,80,100" Height="36" VerticalAlignment="Center">
+        <controls:SkeletonLine Grid.Column="0" LineWidth="24" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0" LineWidth="180"/>
+        <controls:SkeletonLine Grid.Column="2" LineWidth="75"/>
+        <controls:SkeletonLine Grid.Column="3" LineWidth="48" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonBlock Grid.Column="4" BlockWidth="64" BlockHeight="26" BlockCornerRadius="4" BlockHorizontalAlignment="Right"/>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-track-row">
+      <Grid ColumnDefinitions="40,*,120,80,100" Height="36" VerticalAlignment="Center">
+        <controls:SkeletonLine Grid.Column="0" LineWidth="24" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0" LineWidth="220"/>
+        <controls:SkeletonLine Grid.Column="2" LineWidth="85"/>
+        <controls:SkeletonLine Grid.Column="3" LineWidth="42" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonBlock Grid.Column="4" BlockWidth="70" BlockHeight="26" BlockCornerRadius="4" BlockHorizontalAlignment="Right"/>
+      </Grid>
+    </Border>
+    <Border Classes="skeleton-track-row">
+      <Grid ColumnDefinitions="40,*,120,80,100" Height="36" VerticalAlignment="Center">
+        <controls:SkeletonLine Grid.Column="0" LineWidth="24" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonLine Grid.Column="1" Margin="8,0"/>
+        <controls:SkeletonLine Grid.Column="2" LineWidth="65"/>
+        <controls:SkeletonLine Grid.Column="3" LineWidth="46" LineHorizontalAlignment="Center"/>
+        <controls:SkeletonBlock Grid.Column="4" BlockWidth="74" BlockHeight="26" BlockCornerRadius="4" BlockHorizontalAlignment="Right"/>
+      </Grid>
+    </Border>
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,71 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="ItemsControl.ant-steps">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.ant-steps-row">
+    <Setter Property="Spacing" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.ant-steps-icon">
+    <Setter Property="Width" Value="28"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="CornerRadius" Value="14"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+
+  <Style Selector="TextBlock.ant-steps-icon-glyph">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.ant-steps-icon-wait">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-steps-icon-process">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-steps-icon-finish">
+    <Setter Property="Background" Value="{DynamicResource SuccessSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-steps-icon-error">
+    <Setter Property="Background" Value="{DynamicResource ErrorSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.ant-steps-glyph-wait">
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.ant-steps-glyph-process">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.ant-steps-glyph-finish">
+    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.ant-steps-glyph-error">
+    <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.ant-steps-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.ant-steps-tail">
+    <Setter Property="Width" Value="48"/>
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource BorderSecondaryBrush}"/>
+    <Setter Property="Margin" Value="4,0"/>
+  </Style>
+
+</Styles>

@@ -1,0 +1,245 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MusicVault.App.Controls">
+  <Style Selector="Border.browse-entity-avatar">
+    <Setter Property="Width" Value="48"/>
+    <Setter Property="Height" Value="48"/>
+    <Setter Property="CornerRadius" Value="24"/>
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+  </Style>
+  <Style Selector="ItemsControl.browse-az-rail">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ItemsControl.browse-az-rail Button.browse-az-letter">
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Width" Value="NaN"/>
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+  <Style Selector="Button.browse-az-letter">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="Width" Value="20"/>
+    <Setter Property="MinWidth" Value="20"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="FontSize" Value="10"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="Button.browse-az-letter:pointerover">
+    <Setter Property="Opacity" Value="0.75"/>
+  </Style>
+
+  <Style Selector="Border.browse-stat-chip">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="Padding" Value="10,5"/>
+  </Style>
+  <Style Selector="Border.browse-stat-chip TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="Border.browse-entity-avatar.browse-entity-avatar-square">
+    <Setter Property="CornerRadius" Value="8"/>
+  </Style>
+
+  <Style Selector="Border.browse-artist-section-header">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="Border.browse-artist-section-divider">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="MinHeight" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Border.browse-artist-list-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+
+  <Style Selector="ListBox.browse-artist-list">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ListBox.browse-artist-list ListBoxItem">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="MinHeight" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ListBox.browse-artist-list ListBoxItem /template/ ContentPresenter">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="CornerRadius" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.browse-artist-list ListBoxItem:pointerover:not(:selected) /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ListBox.browse-artist-list ListBoxItem:pointerover:not(:selected) Border.browse-artist-list-row">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="ListBox.browse-artist-list ListBoxItem:selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ListBox.browse-artist-list ListBoxItem:selected">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ListBox.browse-artist-list ListBoxItem:selected Border.browse-artist-list-row">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="ListBox.browse-artist-list ListBoxItem:selected Border.browse-artist-list-row TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+  </Style>
+  <Style Selector="ListBox.browse-artist-list ListBoxItem:selected Border.browse-artist-list-row TextBlock Run">
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+  </Style>
+  <Style Selector="ListBox.browse-artist-list ListBoxItem:selected Border.browse-artist-list-row TextBlock.browse-artist-list-muted">
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="Opacity" Value="0.85"/>
+  </Style>
+
+  <Style Selector="Border.browse-artist-hero-avatar">
+    <Setter Property="Width" Value="96"/>
+    <Setter Property="Height" Value="96"/>
+    <Setter Property="CornerRadius" Value="48"/>
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+  </Style>
+
+  <!-- 艺术家详情：播放全部 / 随机 / 刷新 — 统一高度与圆角 -->
+  <Style Selector="Button.browse-artist-action-btn">
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="Padding" Value="14,0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusButton}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Button.browse-artist-action-btn:pointerover">
+    <Setter Property="Opacity" Value="0.9"/>
+  </Style>
+  <Style Selector="Button.browse-artist-action-btn.accent">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+  </Style>
+  <Style Selector="Button.browse-artist-action-btn.accent:pointerover">
+    <Setter Property="Opacity" Value="0.92"/>
+  </Style>
+  <Style Selector="Button.browse-artist-action-btn:disabled">
+    <Setter Property="Opacity" Value="0.45"/>
+  </Style>
+
+  <Style Selector="Border.browse-artist-bio-panel">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="CornerRadius" Value="10"/>
+    <Setter Property="Padding" Value="14,12"/>
+  </Style>
+
+  <Style Selector="Button.playlist-nav-btn">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="12,10"/>
+    <Setter Property="Margin" Value="4,1"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Button.playlist-nav-btn:pointerover:not(.selected)">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="Button.playlist-nav-btn.selected">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+  </Style>
+
+  <Style Selector="Button.playlist-browse-card-btn">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="{DynamicResource CardGridItemMargin}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.playlist-browse-card-btn:pointerover">
+    <Setter Property="Opacity" Value="0.88"/>
+  </Style>
+  <Style Selector="Border.playlist-browse-cover">
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+  </Style>
+  <Style Selector="controls|MarqueeTextBlock.playlist-browse-card-marquee">
+    <Setter Property="Width" Value="128"/>
+    <Setter Property="MinHeight" Value="34"/>
+    <Setter Property="MaxHeight" Value="34"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="ListBox.playlist-browse-list > ListBoxItem">
+    <Setter Property="Height" Value="45"/>
+    <Setter Property="MinHeight" Value="45"/>
+    <Setter Property="MaxHeight" Value="45"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Grid.playlist-browse-row">
+    <Setter Property="Height" Value="44"/>
+    <Setter Property="MinHeight" Value="44"/>
+    <Setter Property="MaxHeight" Value="44"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+
+  <Style Selector="Border.browse-artist-album-card">
+    <Setter Property="Width" Value="112"/>
+    <Setter Property="Margin" Value="0,0,12,0"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+
+  <Style Selector="Border.browse-artist-album-cover">
+    <Setter Property="Width" Value="112"/>
+    <Setter Property="Height" Value="112"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+
+  <Style Selector="Button.browse-album-scroll-btn">
+    <Setter Property="Width" Value="36"/>
+    <Setter Property="Height" Value="120"/>
+    <Setter Property="MinWidth" Value="36"/>
+    <Setter Property="MinHeight" Value="120"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="FontSize" Value="22"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.browse-album-scroll-btn:pointerover">
+    <Setter Property="Opacity" Value="0.9"/>
+  </Style>
+</Styles>

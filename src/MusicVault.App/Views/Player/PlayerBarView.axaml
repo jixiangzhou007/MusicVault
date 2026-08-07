@@ -1,0 +1,237 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:automation="using:Avalonia.Automation"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Player"
+             x:Class="MusicVault.App.Views.Player.PlayerBarView"
+             x:DataType="pvm:PlayerBarViewModel"
+             ClipToBounds="False">
+
+  <Border Classes="player-bar" ClipToBounds="False">
+    <Grid ClipToBounds="False">
+      <!-- 恢复播放位置提示 -->
+      <Border Classes="player-progress-track" HorizontalAlignment="Center"
+              VerticalAlignment="Top" Margin="{DynamicResource PlayerResumePromptOffsetMargin}" Padding="12,6"
+              CornerRadius="6" Background="{DynamicResource SurfaceElevatedBrush}"
+              IsVisible="{Binding ShowResumePrompt}"
+              BoxShadow="{DynamicResource PopoverShadow}">
+        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <TextBlock Text="{Binding ResumePromptText}" Classes="text-label"
+                     VerticalAlignment="Center"/>
+          <Button Classes="flat-btn" Content="{Binding ResumeButtonText}"
+                  Command="{Binding ResumeFromPositionCommand}"/>
+          <Button Classes="flat-btn" Content="{Binding StartOverButtonText}"
+                  Command="{Binding StartFromBeginningCommand}"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 主体（为顶部进度条留出 12px，避免与封面重叠） -->
+      <Grid ColumnDefinitions="Auto,*" Margin="{DynamicResource PlayerBarInnerMargin}">
+        <Button Grid.Column="0" Classes="player-nowplaying-hit" VerticalAlignment="Center"
+                Margin="{DynamicResource PlayerBarCoverMargin}"
+                MaxWidth="{DynamicResource PlayerBarTitleMaxWidth}"
+                automation:AutomationProperties.Name="{Binding TitleAreaToolTip}"
+                Command="{Binding OpenNowPlayingFullscreenCommand}"
+                IsEnabled="{Binding CanOpenNowPlayingFullscreen}"
+                ToolTip.Tip="{Binding TitleAreaToolTip}"
+                DoubleTapped="OnTitleAreaDoubleTapped">
+          <Grid ColumnDefinitions="Auto,*" MinWidth="0">
+            <Border Width="{DynamicResource PlayerBarCoverSize}"
+                    Height="{DynamicResource PlayerBarCoverSize}"
+                    CornerRadius="8" ClipToBounds="True"
+                    Background="{DynamicResource PlayerCoverPlaceholderBrush}">
+              <Panel>
+                <Image Source="{Binding CoverImage, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                       Stretch="UniformToFill" IsVisible="{Binding HasCover}"/>
+                <TextBlock Text="&#xE8D6;" Classes="icon-2xl icon-accent"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsVisible="{Binding HasCover, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"/>
+              </Panel>
+            </Border>
+
+            <StackPanel Grid.Column="1" Spacing="3" MinWidth="0"
+                        Margin="{DynamicResource PlayerBarTitleMargin}"
+                        VerticalAlignment="Center">
+              <TextBlock Text="{Binding Title}" Classes="player-nowplaying-title"
+                         TextTrimming="CharacterEllipsis" MaxLines="1"/>
+              <TextBlock Text="{Binding Artist}" Classes="player-nowplaying-artist"
+                         TextTrimming="CharacterEllipsis" MaxLines="1"
+                         IsVisible="{Binding Artist, Converter={x:Static conv:StringNotEmptyConverter.Instance}}"/>
+              <TextBlock Text="{Binding PlaybackSourceHint}" Classes="player-nowplaying-source"
+                         TextTrimming="CharacterEllipsis" MaxLines="1"
+                         IsVisible="{Binding HasPlaybackSourceHint}"/>
+            </StackPanel>
+          </Grid>
+        </Button>
+
+        <Grid Grid.Column="1" ColumnDefinitions="*,Auto,*" VerticalAlignment="Center">
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6"
+                      VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Classes="player-transport player-transport-mode" ToolTip.Tip="{Binding RepeatToolTip}"
+                    automation:AutomationProperties.Name="{Binding RepeatToolTip}"
+                    Command="{Binding CycleRepeatModeCommand}">
+              <TextBlock Text="{Binding RepeatIconGlyph}"
+                         Classes="player-transport-mode-icon"
+                         Classes.active="{Binding IsRepeatActive}"/>
+            </Button>
+            <Button Classes="player-transport" ToolTip.Tip="{Binding PreviousToolTip}"
+                    automation:AutomationProperties.Name="{Binding PreviousToolTip}"
+                    Command="{Binding PreviousCommand}"
+                    IsEnabled="{Binding CanGoPrevious}">
+              <TextBlock Text="&#xE892;" Classes="player-transport-icon"/>
+            </Button>
+            <Button Classes="player-transport" ToolTip.Tip="{Binding PlayPauseToolTip}"
+                    automation:AutomationProperties.Name="{Binding PlayPauseToolTip}"
+                    Command="{Binding TogglePlayPauseCommand}"
+                    IsEnabled="{Binding CanTogglePlayPause}"
+                    Classes.busy="{Binding IsPlaybackBusy}">
+              <Panel Width="16" Height="16">
+                <TextBlock Text="&#xE768;" Classes="player-transport-icon"
+                           IsVisible="{Binding IsPlaying, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"/>
+                <TextBlock Text="&#xE769;" Classes="player-transport-icon"
+                           IsVisible="{Binding IsPlaying}"/>
+              </Panel>
+            </Button>
+            <Button Classes="player-transport" ToolTip.Tip="{Binding NextToolTip}"
+                    automation:AutomationProperties.Name="{Binding NextToolTip}"
+                    Command="{Binding NextCommand}"
+                    IsEnabled="{Binding CanGoNext}">
+              <TextBlock Text="&#xE893;" Classes="player-transport-icon"/>
+            </Button>
+            <Button Classes="player-transport player-transport-mode" ToolTip.Tip="{Binding ShuffleToolTip}"
+                    automation:AutomationProperties.Name="{Binding ShuffleToolTip}"
+                    Command="{Binding ToggleShuffleCommand}">
+              <TextBlock Text="{Binding ShuffleIconGlyph}"
+                         Classes="player-transport-mode-icon"
+                         Classes.active="{Binding IsShuffleOn}"/>
+            </Button>
+          </StackPanel>
+
+          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8"
+                      VerticalAlignment="Center" HorizontalAlignment="Right">
+            <TextBlock Text="{Binding PlaybackTimeText}" Classes="player-time player-time-combined"
+                       VerticalAlignment="Center"
+                       IsVisible="{Binding ShowPlaybackTime}"/>
+            <Button Classes="player-bar-side" ToolTip.Tip="{Binding QueueToolTip}"
+                    automation:AutomationProperties.Name="{Binding QueueToolTip}"
+                    Command="{Binding ToggleQueueCommand}"
+                    IsEnabled="{Binding CanToggleQueue}">
+              <TextBlock Text="&#xE8FD;" Classes="player-bar-side-icon"/>
+            </Button>
+            <Button Classes="player-bar-side" ToolTip.Tip="{Binding LyricsToolTip}"
+                    automation:AutomationProperties.Name="{Binding LyricsToolTip}"
+                    Command="{Binding ToggleLyricsCommand}"
+                    IsEnabled="{Binding CanToggleLyrics}">
+              <TextBlock Text="&#xE8F2;" Classes="player-bar-side-icon"/>
+            </Button>
+            <Button Classes="player-bar-side"
+                    Classes.active="{Binding IsDesktopLyricsOpen}"
+                    ToolTip.Tip="{Binding DesktopLyricsToolTip}"
+                    automation:AutomationProperties.Name="{Binding DesktopLyricsToolTip}"
+                    Command="{Binding ToggleDesktopLyricsCommand}"
+                    IsVisible="{Binding IsDesktopLyricsSupported}"
+                    IsEnabled="{Binding CanToggleDesktopLyrics}">
+              <TextBlock Text="&#xE8A9;" Classes="player-bar-side-icon"/>
+            </Button>
+            <Button Classes="player-bar-side" ToolTip.Tip="{Binding EqualizerToolTip}"
+                    automation:AutomationProperties.Name="{Binding EqualizerToolTip}"
+                    Command="{Binding OpenEqualizerCommand}"
+                    IsEnabled="{Binding IsEqualizerSupported}">
+              <TextBlock Text="&#xE9E9;" Classes="player-bar-side-icon"/>
+            </Button>
+            <Button x:Name="VolumeFlyoutButton" Classes="player-bar-side" ToolTip.Tip="{Binding VolumeToolTip}"
+                    automation:AutomationProperties.Name="{Binding VolumeToolTip}">
+              <TextBlock Text="{Binding VolumeIconGlyph}" Classes="player-bar-side-icon"/>
+              <Button.Flyout>
+                <Flyout Placement="Top" ShowMode="Transient" VerticalOffset="-6">
+                  <Border Classes="ant-popover ant-popover-inline volume-popover-card">
+                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                      <Button Classes="player-bar-side volume-mute-btn"
+                              Command="{Binding ToggleMuteCommand}"
+                              ToolTip.Tip="{Binding VolumeMuteToolTip}"
+                              automation:AutomationProperties.Name="{Binding VolumeMuteToolTip}">
+                        <Border Classes="volume-popover-icon">
+                          <TextBlock Text="{Binding VolumeIconGlyph}" Classes="icon-xs"
+                                     Foreground="{DynamicResource IconOnAccentBrush}"
+                                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                      </Button>
+                      <TextBlock Text="{Binding VolumeLabel}" Classes="volume-popover-label" VerticalAlignment="Center"/>
+                      <Border x:Name="VolumeTrackHost" Width="{DynamicResource VolumeSliderWidth}" Height="20"
+                              Classes="volume-slider-host"
+                              Background="Transparent" Cursor="Hand"
+                              PointerPressed="OnVolumeSliderPointerPressed"
+                              PointerMoved="OnVolumeSliderPointerMoved"
+                              PointerReleased="OnVolumeSliderPointerReleased"
+                              PointerCaptureLost="OnVolumeSliderCaptureLost">
+                        <Panel>
+                          <Border Classes="volume-slider-track"
+                                  VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                  IsHitTestVisible="False"/>
+                          <Border Classes="volume-slider-fill"
+                                  VerticalAlignment="Center" HorizontalAlignment="Left"
+                                  IsHitTestVisible="False"
+                                  Width="{Binding Volume, Converter={x:Static conv:VolumeToSliderWidthConverter.Instance}, ConverterParameter=108}"/>
+                          <Ellipse Classes="volume-slider-thumb"
+                                   VerticalAlignment="Center" HorizontalAlignment="Left"
+                                   IsHitTestVisible="False"
+                                   Margin="{Binding Volume, Converter={x:Static conv:VolumeToThumbMarginConverter.Instance}, ConverterParameter=108}"/>
+                        </Panel>
+                      </Border>
+                      <TextBlock Text="{Binding VolumePercent, StringFormat={}{0}%}"
+                                 Classes="volume-popover-value" VerticalAlignment="Center"/>
+                    </StackPanel>
+                  </Border>
+                </Flyout>
+              </Button.Flyout>
+            </Button>
+          </StackPanel>
+        </Grid>
+      </Grid>
+
+      <!-- 顶缘进度条叠层：ZIndex 最高，圆点可压在封面等元素之上 -->
+      <Border x:Name="ProgressHost" Classes="player-progress-host"
+              VerticalAlignment="Top"
+              Cursor="Hand" Height="16"
+              IsHitTestVisible="{Binding CanSeekPlayback}"
+              IsEnabled="{Binding CanSeekPlayback}"
+              automation:AutomationProperties.Name="{Binding ProgressAccessibilityName}"
+              automation:AutomationProperties.HelpText="{Binding ProgressAccessibilityHelp}"
+              PointerPressed="OnProgressPointerPressed"
+              PointerReleased="OnProgressPointerReleased"
+              PointerMoved="OnProgressPointerMoved"
+              PointerCaptureLost="OnProgressCaptureLost"
+              SizeChanged="OnProgressHostSizeChanged">
+        <Panel ClipToBounds="False">
+          <Panel VerticalAlignment="Top" Height="1" IsHitTestVisible="False">
+            <Border Classes="player-progress-track"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Border Classes="volume-slider-fill player-progress-fill"
+                    HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                    IsVisible="{Binding ShowPlaybackTime}">
+              <Border.Width>
+                <MultiBinding Converter="{x:Static conv:PlaybackProgressToFillWidthConverter.Instance}">
+                  <Binding Path="Position"/>
+                  <Binding Path="Duration"/>
+                  <Binding ElementName="ProgressHost" Path="Bounds.Width"/>
+                </MultiBinding>
+              </Border.Width>
+            </Border>
+          </Panel>
+          <Ellipse Classes="player-progress-thumb"
+                   VerticalAlignment="Top" HorizontalAlignment="Left"
+                   IsHitTestVisible="False"
+                   IsVisible="{Binding ShowPlaybackTime}">
+            <Ellipse.Margin>
+              <MultiBinding Converter="{x:Static conv:PlaybackProgressToThumbMarginConverter.Instance}">
+                <Binding Path="Position"/>
+                <Binding Path="Duration"/>
+                <Binding ElementName="ProgressHost" Path="Bounds.Width"/>
+              </MultiBinding>
+            </Ellipse.Margin>
+          </Ellipse>
+        </Panel>
+      </Border>
+    </Grid>
+  </Border>
+</UserControl>

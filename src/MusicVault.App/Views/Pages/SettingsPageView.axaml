@@ -1,0 +1,751 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Pages"
+             xmlns:svc="using:MusicVault.App.Services"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:controls="using:MusicVault.App.Controls"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="MusicVault.App.Views.Pages.SettingsPageView"
+             x:DataType="pvm:SettingsPageViewModel"
+             HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+  <DockPanel Classes="pane-play" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid x:Name="RootGrid" ColumnDefinitions="260,6,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+      <!-- Nav sidebar -->
+      <DockPanel Grid.Column="0" Classes="pane-library">
+        <Grid DockPanel.Dock="Top" Margin="{DynamicResource LibraryPaneHeaderMargin}" MinHeight="32">
+          <TextBlock Text="{Binding PreferencesCenterLabel}" Classes="text-subtitle" VerticalAlignment="Center"/>
+        </Grid>
+        <ListBox x:Name="SettingsNavList"
+                 ItemsSource="{Binding NavItems}"
+                 SelectionChanged="OnSettingsNavSelectionChanged"
+                 Classes="music-library-list settings-nav-list">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="pvm:SettingsNavItemViewModel">
+              <Border Classes="library-list-row settings-nav-row" HorizontalAlignment="Stretch"
+                      automation:AutomationProperties.Name="{Binding Title}">
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Grid.Column="0" Text="{Binding Title}" Classes="text-label" TextTrimming="CharacterEllipsis" MaxLines="1" VerticalAlignment="Center"/>
+                  <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" IsVisible="{Binding ShowNavIndicators}">
+                    <Border Classes="settings-nav-badge" IsVisible="{Binding ShowNavBadge}"><TextBlock Text="{Binding NavBadgeText}"/></Border>
+                    <Border Classes="settings-nav-pending-dot" IsVisible="{Binding ShowPendingDot}"/>
+                  </StackPanel>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+
+      <controls:VerticalPaneSplitter x:Name="NavPaneSplitter" Grid.Column="1"/>
+
+      <!-- Content -->
+      <DockPanel Grid.Column="2" Classes="pane-play" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Border DockPanel.Dock="Bottom" Classes="settings-sticky-save-bar" IsVisible="{Binding ShowStickySaveBar}">
+          <DockPanel LastChildFill="True" Margin="{DynamicResource SettingsStickySaveBarPadding}">
+            <Button DockPanel.Dock="Right" Content="{Binding SaveSettingsButtonLabel}" Classes="primary btn-toolbar" Command="{Binding SaveSettingsCommand}" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding PendingChangesHint}" Classes="settings-field-caption" VerticalAlignment="Center" TextWrapping="Wrap"/>
+          </DockPanel>
+        </Border>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch">
+          <StackPanel Classes="settings-page-scroll" HorizontalAlignment="Stretch" VerticalAlignment="Top" Spacing="0">
+
+            <!-- ====== Overview (Dashboard) — 独立于 settings-form，对齐首页 play-pane inset ====== -->
+            <StackPanel Classes="settings-section settings-intro-page settings-overview-dashboard" Spacing="14" IsVisible="{Binding SelectedSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter={x:Static pvm:SettingsSectionKind.Overview}}">
+              <StackPanel Classes="settings-overview-block" Spacing="6">
+                <Grid ColumnDefinitions="*,Auto">
+                  <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="MusicVault" Classes="settings-intro-app-name"/>
+                    <TextBlock Text="{Binding VersionText}" Classes="settings-intro-version"/>
+                  </StackPanel>
+                  <TextBlock Grid.Column="1" Text="{Binding IntroductionAuthor}" Classes="settings-intro-author" VerticalAlignment="Center"/>
+                </Grid>
+                <TextBlock Text="{Binding IntroductionTagline}" Classes="settings-intro-tagline"/>
+                <TextBlock Text="{Binding HeroDescriptionDisclaimer}" Classes="settings-overview-disclaimer-text" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding HeroDescriptionLead}" Classes="settings-field-caption settings-overview-intro-body" TextWrapping="Wrap"/>
+              </StackPanel>
+
+              <StackPanel Classes="settings-overview-block" Spacing="10">
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Grid.Column="0" Text="{Binding GeneralOverviewTitle}" Classes="settings-overview-panel-title" VerticalAlignment="Center"/>
+                  <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                    <Button Classes="icon-toolbar-btn" Command="{Binding RefreshLibraryOverviewFromUiCommand}" ToolTip.Tip="{Binding GeneralRefreshStatsToolTip}">
+                      <TextBlock Text="&#xE92C;" Classes="icon-xs"/>
+                    </Button>
+                    <Button Content="{Binding GeneralManageSourcesLabel}" Classes="flat-btn btn-toolbar"
+                            Command="{Binding OpenLibrarySourcesFromOverviewCommand}" ToolTip.Tip="{Binding GeneralManageSourcesToolTip}"/>
+                  </StackPanel>
+                </Grid>
+                <Grid Classes="settings-overview-kpi-grid" ColumnDefinitions="*,*,*,*,*">
+                  <Border Grid.Column="0" Classes="settings-overview-kpi-card" Margin="{DynamicResource SettingsOverviewKpiCardGapMargin}">
+                    <StackPanel Spacing="4" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{Binding OverviewTracksDisplay}" Classes="settings-overview-kpi-card-value" Classes.settings-overview-kpi-value-empty="{Binding OverviewTracksKpiIsPlaceholder}"/>
+                      <TextBlock Text="{Binding GeneralKpiTracksLabel}" Classes="settings-overview-kpi-card-label"/>
+                    </StackPanel>
+                  </Border>
+                  <Border Grid.Column="1" Classes="settings-overview-kpi-card" Margin="{DynamicResource SettingsOverviewKpiCardGapMargin}">
+                    <StackPanel Spacing="4" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{Binding OverviewAlbumsDisplay}" Classes="settings-overview-kpi-card-value" Classes.settings-overview-kpi-value-empty="{Binding OverviewAlbumsKpiIsPlaceholder}"/>
+                      <TextBlock Text="{Binding GeneralKpiAlbumsLabel}" Classes="settings-overview-kpi-card-label"/>
+                    </StackPanel>
+                  </Border>
+                  <Border Grid.Column="2" Classes="settings-overview-kpi-card" Margin="{DynamicResource SettingsOverviewKpiCardGapMargin}">
+                    <StackPanel Spacing="4" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{Binding OverviewArtistsDisplay}" Classes="settings-overview-kpi-card-value" Classes.settings-overview-kpi-value-empty="{Binding OverviewArtistsKpiIsPlaceholder}"/>
+                      <TextBlock Text="{Binding GeneralKpiArtistsLabel}" Classes="settings-overview-kpi-card-label"/>
+                    </StackPanel>
+                  </Border>
+                  <Border Grid.Column="3" Classes="settings-overview-kpi-card" Margin="{DynamicResource SettingsOverviewKpiCardGapMargin}">
+                    <StackPanel Spacing="4" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{Binding OverviewTotalSizeText}" Classes="settings-overview-kpi-card-value" Classes.settings-overview-kpi-value-empty="{Binding OverviewTracksKpiIsPlaceholder}"/>
+                      <TextBlock Text="{Binding GeneralChipSizeLabel}" Classes="settings-overview-kpi-card-label"/>
+                    </StackPanel>
+                  </Border>
+                  <Border Grid.Column="4" Classes="settings-overview-kpi-card">
+                    <StackPanel Spacing="4" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{Binding OverviewPlayCountKpiDisplay}" Classes="settings-overview-kpi-card-value" Classes.settings-overview-kpi-value-empty="{Binding OverviewPlayCountKpiIsPlaceholder}"/>
+                      <TextBlock Text="{Binding GeneralChipPlayCountLabel}" Classes="settings-overview-kpi-card-label"/>
+                    </StackPanel>
+                  </Border>
+                </Grid>
+                <TextBlock Text="{Binding LibraryOverviewHint}" Classes="settings-field-caption" TextWrapping="Wrap" IsVisible="{Binding ShowLibraryOverviewHint}"/>
+                <Border Classes="settings-overview-empty-guidance" IsVisible="{Binding ShowOverviewLibraryEmptyGuidance}">
+                  <TextBlock Text="{Binding OverviewLibraryEmptyGuidance}" Classes="settings-field-caption" TextWrapping="Wrap"/>
+                </Border>
+              </StackPanel>
+
+              <StackPanel Classes="settings-overview-block" Spacing="8">
+                <TextBlock Text="{Binding OverviewQuickStartTitle}" Classes="settings-overview-panel-title"/>
+                <WrapPanel Classes="settings-overview-quickstart-actions">
+                  <Button Content="{Binding OverviewApplyRecommendedLabel}"
+                          Classes="btn-toolbar"
+                          Classes.primary="{Binding ShowOverviewRecommendPrimaryCta}"
+                          Classes.flat-btn="{Binding !ShowOverviewRecommendPrimaryCta}"
+                          Command="{Binding ApplyRecommendedSettingsCommand}"
+                          ToolTip.Tip="{Binding OverviewRecommendHint}"/>
+                  <Button Content="{Binding OverviewGoAppearanceLabel}" Classes="flat-btn btn-toolbar" Command="{Binding GoToOverviewAppearanceCommand}"/>
+                  <Button Content="{Binding OverviewGoPlaybackLabel}" Classes="flat-btn btn-toolbar" Command="{Binding GoToOverviewPlaybackCommand}"/>
+                  <Button Content="{Binding OverviewGoDownloadLabel}" Classes="flat-btn btn-toolbar" Command="{Binding GoToOverviewDownloadCommand}"/>
+                  <Button Content="{Binding OverviewGoAdvancedLabel}" Classes="flat-btn btn-toolbar" Command="{Binding GoToOverviewAdvancedCommand}"/>
+                </WrapPanel>
+                <Border Classes="settings-recommend-summary" IsVisible="{Binding ShowLastRecommendedApplySummary}">
+                  <TextBlock Text="{Binding LastRecommendedApplySummary}" Classes="settings-field-caption" TextWrapping="Wrap"/>
+                </Border>
+              </StackPanel>
+
+              <StackPanel Classes="settings-overview-block" Spacing="8">
+                <TextBlock Text="{Binding OverviewFeaturesTitle}" Classes="settings-overview-panel-title"/>
+                <Border Classes="antd-card-tabs settings-overview-features-tabs" HorizontalAlignment="Stretch"><Panel>
+                  <Border Classes="antd-card-tab-content settings-overview-feature-tab-content" Margin="{DynamicResource AntdCardTabContentMargin}" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                      <TextBlock Text="{Binding SelectedFeatureCard.Description}" Classes="settings-intro-feature-desc" TextWrapping="Wrap"/>
+                    </ScrollViewer>
+                  </Border>
+                  <Border Classes="antd-card-tab-rail" Margin="{DynamicResource AntdCardTabRailMargin}"/>
+                  <ScrollViewer VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Classes="antd-card-tab-nav">
+                    <ItemsControl ItemsSource="{Binding FeatureCards}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="8"/></ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="pvm:SoftwareFeatureCardViewModel">
+                          <controls:AntdCardTab Title="{Binding Title}"
+                                                IsSelected="{Binding IsSelected}"
+                                                SelectCommand="{Binding $parent[UserControl].((pvm:SettingsPageViewModel)DataContext).SelectFeatureCommand}"
+                                                CommandParameter="{Binding}"/>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </ScrollViewer>
+                </Panel></Border>
+              </StackPanel>
+
+              <StackPanel Classes="settings-overview-block" Spacing="8">
+                <TextBlock Text="{Binding OverviewLicenseSectionTitle}" Classes="settings-overview-panel-title"/>
+                <TextBlock Text="{Binding IntroductionCopyright}" Classes="settings-field-caption" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding AboutLicenseHint}" Classes="settings-field-caption" TextWrapping="Wrap"/>
+                <WrapPanel Orientation="Horizontal">
+                  <ItemsControl ItemsSource="{Binding OpenSourceProjects}">
+                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate><DataTemplate>
+                      <Button Classes="intro-chip" Command="{Binding $parent[UserControl].((pvm:SettingsPageViewModel)DataContext).ShowOpenSourceDetailCommand}" CommandParameter="{Binding}">
+                        <TextBlock Text="{Binding Name}" Classes="intro-chip-name"/>
+                      </Button>
+                    </DataTemplate></ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </WrapPanel>
+                <WrapPanel Classes="settings-overview-quickstart-actions" IsVisible="{Binding ShowDesignSystemPreview}">
+                  <TextBlock Text="{Binding AboutDevToolsTitle}" Classes="settings-field-caption" VerticalAlignment="Center" Margin="{DynamicResource MarginTrailingSm}"/>
+                  <Button Content="{Binding AboutOpenDesignPreviewLabel}" Classes="flat-btn btn-toolbar" Command="{Binding OpenDesignSystemPreviewCommand}"/>
+                </WrapPanel>
+              </StackPanel>
+            </StackPanel>
+
+            <!-- ====== Appearance — 独立于 settings-form，对齐首页 play-pane inset ====== -->
+            <StackPanel Classes="settings-appearance-page" IsVisible="{Binding SelectedSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter={x:Static pvm:SettingsSectionKind.Appearance}}">
+              <Border Classes="settings-page-header">
+                <StackPanel Spacing="6">
+                  <TextBlock Text="{Binding SelectedSectionTitle}" Classes="settings-page-title" VerticalAlignment="Center"/>
+                  <TextBlock Text="{Binding SelectedSectionSubtitle}" Classes="settings-page-subtitle" IsVisible="{Binding ShowSectionPageSubtitle}"/>
+                  <TextBlock Text="{Binding AppearanceInstantHint}" Classes="settings-field-caption" TextWrapping="Wrap" IsVisible="{Binding ShowAppearanceInstantHint}"/>
+                </StackPanel>
+              </Border>
+              <Border Classes="page-hero-divider"/>
+              <StackPanel Classes="settings-section settings-appearance-body" Spacing="{DynamicResource SettingsGroupBodySpacing}">
+                <Grid Classes="settings-field-row" ColumnDefinitions="80,10,Auto,*">
+                  <TextBlock Grid.Column="0" Text="{Binding AppearanceResetDefaultLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                  <Button Grid.Column="2" Content="{Binding AppearanceResetDefaultButtonLabel}" Classes="flat-btn btn-toolbar" HorizontalAlignment="Left" Command="{Binding ResetAppearanceToDefaultsCommand}"/></Grid>
+                <Grid Classes="settings-field-row" ColumnDefinitions="80,10,Auto,*">
+                  <TextBlock Grid.Column="0" Text="{Binding AppearanceLanguageLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                  <ComboBox Grid.Column="2" ItemsSource="{Binding LanguageOptionLabels}" SelectedIndex="{Binding CultureIndex}" VerticalAlignment="Center" Classes="field-select metadata-platform-combo settings-field-control settings-appearance-control"/></Grid>
+                <Grid Classes="settings-field-row" ColumnDefinitions="80,10,Auto,*">
+                  <TextBlock Grid.Column="0" Text="{Binding AppearanceThemeLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                  <ComboBox Grid.Column="2" ItemsSource="{Binding ThemeOptionLabels}" SelectedIndex="{Binding ThemeIndex}" VerticalAlignment="Center" Classes="field-select metadata-platform-combo settings-field-control settings-appearance-control"/></Grid>
+                <Grid Classes="settings-field-row" ColumnDefinitions="80,10,Auto,*">
+                  <TextBlock Grid.Column="0" Text="{Binding AppearanceFontScaleLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                  <ComboBox Grid.Column="2" ItemsSource="{Binding FontScaleOptionLabels}" SelectedIndex="{Binding UiFontScaleIndex}" VerticalAlignment="Center" Classes="field-select metadata-platform-combo settings-field-control settings-appearance-control"/></Grid>
+                <Grid Classes="settings-field-row tall" ColumnDefinitions="80,10,Auto,*">
+                  <TextBlock Grid.Column="0" Text="{Binding AppearanceAccentLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding AppearanceAccentHint}"/>
+                  <StackPanel Grid.Column="2" Spacing="4" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <ItemsControl ItemsSource="{Binding AccentColorOptions}" ToolTip.Tip="{Binding AppearanceAccentHint}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate><DataTemplate x:DataType="pvm:AccentColorOptionViewModel"><Button Classes="accent-swatch settings-appearance-swatch" ToolTip.Tip="{Binding Name}" Command="{Binding $parent[UserControl].((pvm:SettingsPageViewModel)DataContext).SelectAccentColorCommand}" CommandParameter="{Binding}"><Border Classes="accent-swatch-dot" Classes.selected="{Binding IsSelected}" Width="36" Height="36" CornerRadius="18" Background="{Binding SwatchBrush}" BorderThickness="2"/></Button></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></StackPanel></Grid>
+              </StackPanel>
+            </StackPanel>
+
+            <!-- ====== PlaybackAudio — 独立于 settings-form ====== -->
+            <StackPanel Classes="settings-playback-page" IsVisible="{Binding SelectedSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter={x:Static pvm:SettingsSectionKind.PlaybackAudio}}">
+              <Border Classes="settings-page-header">
+                <DockPanel LastChildFill="True">
+                  <Button DockPanel.Dock="Right" Content="{Binding SaveSettingsButtonLabel}" Classes="primary btn-toolbar settings-save-header-btn" Command="{Binding SaveSettingsCommand}" IsVisible="{Binding ShowHeaderSaveButton}" VerticalAlignment="Center"/>
+                  <StackPanel Spacing="6">
+                    <TextBlock Text="{Binding SelectedSectionTitle}" Classes="settings-page-title" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding SelectedSectionSubtitle}" Classes="settings-page-subtitle" IsVisible="{Binding ShowSectionPageSubtitle}"/>
+                    <TextBlock Text="{Binding StatusMessage}" Classes="text-caption" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" IsVisible="{Binding HasStatusMessage}"/>
+                  </StackPanel>
+                </DockPanel>
+              </Border>
+              <Border Classes="page-hero-divider"/>
+              <Border Classes="antd-card-tabs settings-playback-tabs" HorizontalAlignment="Stretch"><Panel>
+                <Border Classes="antd-card-tab-content settings-playback-tab-content" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                  <StackPanel Spacing="{DynamicResource SettingsGroupBodySpacing}">
+                    <StackPanel IsVisible="{Binding IsPlaybackTabPlaybackSelected}" Spacing="{DynamicResource SettingsGroupBodySpacing}">
+                      <StackPanel Spacing="8" Margin="{DynamicResource MarginBottomSm}">
+                        <TextBlock Text="{Binding PlatformCapabilityTitle}" Classes="settings-overview-panel-title"/>
+                        <ItemsControl ItemsSource="{Binding PlatformCapabilities}" Classes="settings-capability-list">
+                          <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                          <ItemsControl.ItemTemplate><DataTemplate x:DataType="pvm:PlatformCapabilityItemViewModel">
+                            <Border Classes="ant-tag ant-tag-filled-primary" Margin="{DynamicResource SettingsOverviewChipMargin}" ToolTip.Tip="{Binding Detail}">
+                              <TextBlock Text="{Binding Name}"/>
+                            </Border>
+                          </DataTemplate></ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <WrapPanel Classes="settings-field-actions" Orientation="Horizontal" IsVisible="{Binding ShowGoToOnlineSourcesFromPlayback}">
+                          <Button Content="{Binding PlaybackGoToOnlineSourcesLabel}" Classes="flat-btn btn-toolbar" Command="{Binding GoToAdvancedOnlineSourcesCommand}"/>
+                        </WrapPanel>
+                      </StackPanel>
+                      <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding PlaybackRestoreOnStartupLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding PlaybackRestoreOnStartupCaption}"/>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding RestorePlaybackOnStartup}" Classes="ant-switch" ToolTip.Tip="{Binding PlaybackRestoreOnStartupCaption}"/></Grid>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding ActivePlaybackEngineLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                        <StackPanel Grid.Column="2" Classes="settings-control-inline">
+                          <TextBlock Text="{Binding ActivePlaybackEngineName}" Classes="settings-field-value-text" VerticalAlignment="Center"/>
+                          <TextBlock Text="{Binding ActivePlaybackEngineDetail}" Classes="settings-field-caption" TextWrapping="Wrap"
+                                     IsVisible="{Binding ShowActivePlaybackEngineDetail}" MaxWidth="{DynamicResource SettingsListMaxWidth}"/>
+                        </StackPanel></Grid>
+                      <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="120,10,Auto,*" IsVisible="{Binding ShowExperimentalLibVlcEngineToggle}">
+                        <TextBlock Grid.Column="0" Text="{Binding ExperimentalLibVlcEngineLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding ExperimentalLibVlcEngineCaption}"/>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding UseExperimentalLibVlcEngine}" Classes="ant-switch" ToolTip.Tip="{Binding ExperimentalLibVlcEngineCaption}"/></Grid>
+                      <TextBlock Text="{Binding ExperimentalLibVlcEngineRestartHint}" Classes="settings-field-caption" TextWrapping="Wrap"
+                                 IsVisible="{Binding ShowExperimentalLibVlcEngineRestartHint}" Margin="{DynamicResource MarginBottomXs}"/>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding PlaybackDefaultVolumeLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                        <Grid Grid.Column="2" Classes="settings-inline-control" ColumnDefinitions="*,48" MaxWidth="{DynamicResource ControlWidthStandard}">
+                          <Slider Grid.Column="0" Minimum="0" Maximum="100" Value="{Binding DefaultVolumePercent}" VerticalAlignment="Center"/>
+                          <TextBlock Grid.Column="1" Text="{Binding DefaultVolumePercentSummary}" Classes="settings-slider-value" HorizontalAlignment="Right"/></Grid></Grid>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding PlaybackDefaultRepeatLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding RepeatModeOptionLabels}" SelectedIndex="{Binding DefaultRepeatModeIndex}" Classes="field-select settings-field-control settings-playback-control" VerticalAlignment="Center"/></Grid>
+                      <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding PlaybackDefaultShuffleLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding PlaybackDefaultShuffleCaption}"/>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding DefaultShuffleOn}" Classes="ant-switch" ToolTip.Tip="{Binding PlaybackDefaultShuffleCaption}"/></Grid>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding PlaybackDefaultQualityLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding PlaybackDefaultQualityCaption}"/>
+                        <StackPanel Grid.Column="2" Classes="settings-control-inline">
+                          <TextBlock Text="{Binding DefaultDownloadQualitySummary}" Classes="settings-field-value-text" ToolTip.Tip="{Binding PlaybackDefaultQualityCaption}"/>
+                          <Button Content="{Binding PlaybackGoToDownloadLabel}" Classes="flat-btn btn-toolbar" Command="{Binding GoToOverviewDownloadCommand}"/></StackPanel></Grid>
+                      <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding NasCacheOnPlayLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding NasCacheOnPlayCaption}"/>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding NasCacheOnPlay}" Classes="ant-switch" ToolTip.Tip="{Binding NasCacheOnPlayCaption}"/></Grid>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="120,10,Auto,*" IsVisible="{Binding ShowNasDownloadTargetLibrary}">
+                        <TextBlock Grid.Column="0" Text="{Binding NasDownloadTargetLibraryLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding NasDownloadTargetLibraryCaption}"/>
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding NasDownloadTargetLibraryLabels}" SelectedIndex="{Binding NasDownloadTargetLibraryIndex}" Classes="field-select settings-field-control settings-playback-control" VerticalAlignment="Center" ToolTip.Tip="{Binding NasDownloadTargetLibraryCaption}"/></Grid>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding NasPlaybackCacheStatsLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                          <TextBlock Text="{Binding NasPlaybackCacheStatsText}" Classes="settings-field-value-text" VerticalAlignment="Center"/>
+                          <Button Content="{Binding NasPlaybackCacheClearLabel}" Classes="flat-btn btn-toolbar" Command="{Binding ClearNasPlaybackCacheCommand}" IsEnabled="{Binding CanClearNasPlaybackCache}"/></StackPanel></Grid>
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding IsPlaybackTabLyricsAndSoundSelected}" Spacing="{DynamicResource SettingsGroupBodySpacing}">
+                      <TextBlock Text="{Binding PlaybackLyricsSectionTitle}" Classes="settings-overview-panel-title"/>
+                      <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="120,10,Auto,*" IsVisible="{Binding IsDesktopLyricsSupported}">
+                        <TextBlock Grid.Column="0" Text="{Binding PlaybackDesktopLyricsLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding PlaybackDesktopLyricsCaption}"/>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding DesktopLyricsEnabled}" Classes="ant-switch" ToolTip.Tip="{Binding PlaybackDesktopLyricsCaption}"/></Grid>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding PlaybackLyricsOpacityLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                        <Grid Grid.Column="2" Classes="settings-inline-control" ColumnDefinitions="*,48" MaxWidth="{DynamicResource ControlWidthStandard}">
+                          <Slider Grid.Column="0" Minimum="20" Maximum="100" Value="{Binding DesktopLyricsOpacityPercent}" VerticalAlignment="Center"/>
+                          <TextBlock Grid.Column="1" Text="{Binding DesktopLyricsOpacitySummary}" Classes="settings-slider-value" HorizontalAlignment="Right"/></Grid></Grid>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding PlaybackLyricsFontSizeLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                        <Grid Grid.Column="2" Classes="settings-inline-control" ColumnDefinitions="*,48" MaxWidth="{DynamicResource ControlWidthStandard}">
+                          <Slider Grid.Column="0" Minimum="14" Maximum="36" Value="{Binding DesktopLyricsFontSize}" VerticalAlignment="Center"/>
+                          <TextBlock Grid.Column="1" Text="{Binding DesktopLyricsFontSizeSummary}" Classes="settings-slider-value" HorizontalAlignment="Right"/></Grid></Grid>
+                      <TextBlock Text="{Binding PlaybackSoundEffectsSectionTitle}" Classes="settings-overview-panel-title" Margin="{DynamicResource MarginTopSm}"/>
+                      <TextBlock Text="{Binding EqualizerUnsupportedHint}" Classes="settings-field-caption" TextWrapping="Wrap" IsVisible="{Binding ShowEqualizerUnsupportedHint}" Margin="{DynamicResource MarginBottomSm}"/>
+                      <WrapPanel Classes="settings-field-actions" Orientation="Horizontal" IsVisible="{Binding ShowGoToTroubleshootFromPlayback}" Margin="{DynamicResource MarginBottomSm}">
+                        <Button Content="{Binding PlaybackGoToTroubleshootLabel}" Classes="flat-btn btn-toolbar" Command="{Binding GoToUpdateDiagnosticsTroubleshootCommand}"/>
+                      </WrapPanel>
+                      <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="120,10,Auto,*" IsVisible="{Binding IsEqualizerSupported}">
+                        <TextBlock Grid.Column="0" Text="{Binding PlaybackEqualizerLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding PlaybackEqualizerEnableCaption}"/>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding EqualizerEnabled}" Classes="ant-switch" ToolTip.Tip="{Binding PlaybackEqualizerEnableCaption}"/></Grid>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding PlaybackEqualizerPresetLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                        <Button Grid.Column="2" Content="{Binding PlaybackOpenEqualizerLabel}" Classes="flat-btn btn-toolbar" Command="{Binding OpenEqualizerCommand}" IsVisible="{Binding IsEqualizerSupported}" HorizontalAlignment="Left"/></Grid>
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding IsPlaybackTabShortcutsSelected}" Spacing="6">
+                      <StackPanel Classes="settings-shortcut-enable-row" Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{Binding PlaybackShortcutsGroupTitle}" Classes="text-label" VerticalAlignment="Center" ToolTip.Tip="{Binding PlaybackShortcutsEnableCaption}"/>
+                        <ToggleSwitch IsChecked="{Binding EnableHotkeys}" Classes="ant-switch" VerticalAlignment="Center" ToolTip.Tip="{Binding PlaybackShortcutsEnableCaption}"/>
+                      </StackPanel>
+                      <Border Classes="settings-shortcut-list"><StackPanel>
+                        <Grid Classes="settings-shortcut-list-header" ColumnDefinitions="172,*"><TextBlock Grid.Column="0" Text="{Binding ShortcutColumnKeyLabel}" Classes="settings-shortcut-list-th"/><TextBlock Grid.Column="1" Text="{Binding ShortcutColumnActionLabel}" Classes="settings-shortcut-list-th"/></Grid>
+                        <ItemsControl ItemsSource="{Binding ShortcutRows}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="pvm:SettingsShortcutRow">
+                          <Border Classes="settings-shortcut-list-row"><Grid ColumnDefinitions="172,*">
+                            <TextBlock Grid.Column="0" Text="{Binding Key}" Classes="settings-shortcut-list-td"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Action}" Classes="settings-shortcut-list-td"/></Grid></Border>
+                        </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                      </StackPanel></Border>
+                      <WrapPanel Classes="settings-shortcut-actions" Orientation="Horizontal">
+                        <Button Content="{Binding RestoreShortcutDefaultsLabel}" Classes="flat-btn btn-toolbar" Command="{Binding RestoreShortcutDefaultsCommand}"/>
+                        <Button Content="{Binding ExportShortcutsLabel}" Classes="flat-btn btn-toolbar" Command="{Binding ExportShortcutsCommand}"/></WrapPanel>
+                    </StackPanel>
+                  </StackPanel></Border>
+                <Border Classes="antd-card-tab-rail" Margin="{DynamicResource AntdCardTabRailMargin}"/>
+                <ScrollViewer VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Classes="antd-card-tab-nav"><StackPanel Orientation="Horizontal" Spacing="8">
+                  <controls:AntdCardTab Title="{Binding PlaybackTabPlaybackLabel}" IsSelected="{Binding IsPlaybackTabPlaybackSelected}" SelectCommand="{Binding SelectPlaybackAudioTabCommand}" CommandParameter="{x:Static pvm:PlaybackAudioTabKind.Playback}"/>
+                  <controls:AntdCardTab Title="{Binding PlaybackTabLyricsAndSoundLabel}" IsSelected="{Binding IsPlaybackTabLyricsAndSoundSelected}" SelectCommand="{Binding SelectPlaybackAudioTabCommand}" CommandParameter="{x:Static pvm:PlaybackAudioTabKind.LyricsAndSound}"/>
+                  <controls:AntdCardTab Title="{Binding PlaybackTabShortcutsLabel}" IsSelected="{Binding IsPlaybackTabShortcutsSelected}" SelectCommand="{Binding SelectPlaybackAudioTabCommand}" CommandParameter="{x:Static pvm:PlaybackAudioTabKind.Shortcuts}"/>
+                </StackPanel></ScrollViewer>
+              </Panel></Border>
+            </StackPanel>
+
+            <StackPanel Classes="settings-form" HorizontalAlignment="Stretch" VerticalAlignment="Top" IsVisible="{Binding ShowSectionPageHeader}">
+
+            <!-- ====== Page Header ====== -->
+            <Border Classes="settings-page-header">
+              <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Content="{Binding SaveSettingsButtonLabel}" Classes="primary btn-toolbar settings-save-header-btn" Command="{Binding SaveSettingsCommand}" IsVisible="{Binding ShowHeaderSaveButton}" VerticalAlignment="Center"/>
+                <StackPanel Spacing="6">
+                  <TextBlock Text="{Binding SelectedSectionTitle}" Classes="settings-page-title" VerticalAlignment="Center"/>
+                  <TextBlock Text="{Binding SelectedSectionSubtitle}" Classes="settings-page-subtitle" IsVisible="{Binding ShowSectionPageSubtitle}"/>
+                  <TextBlock Text="{Binding StatusMessage}" Classes="text-caption" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" IsVisible="{Binding HasStatusMessage}"/>
+                </StackPanel>
+              </DockPanel>
+            </Border>
+            <Border Classes="page-hero-divider"/>
+
+            <!-- ====== DownloadCache ====== -->
+            <StackPanel Classes="settings-section" IsVisible="{Binding SelectedSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter={x:Static pvm:SettingsSectionKind.DownloadCache}}">
+              <StackPanel Classes="settings-group-body">
+                <TextBlock Text="{Binding PersistSettingsFooterHint}" Classes="settings-field-caption" TextWrapping="Wrap"/>
+                <Border Classes="ant-alert ant-alert-warning" IsVisible="{Binding ShowDownloadDiskSpaceAlert}">
+                  <TextBlock Classes="ant-alert-message" Text="{Binding DownloadDiskSpaceAlertText}" TextWrapping="Wrap"/>
+                </Border>
+                <StackPanel Classes="settings-group">
+                  <TextBlock Text="{Binding DownloadCacheGroupTitle}" Classes="settings-group-title"/>
+                  <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                    <TextBlock Grid.Column="0" Text="{Binding DownloadSaveDirLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                    <StackPanel Grid.Column="2" Classes="settings-path-row">
+                      <TextBlock Text="{Binding DownloadDirectory}" Classes="settings-field-value-text" TextTrimming="CharacterEllipsis"/>
+                      <WrapPanel Classes="settings-field-actions" Orientation="Horizontal">
+                        <Button Content="{Binding PickDownloadFolderLabel}" Classes="flat-btn btn-toolbar" Command="{Binding PickDownloadFolderCommand}"/>
+                        <Button Content="{Binding DownloadOpenLabel}" Classes="flat-btn btn-toolbar" Command="{Binding OpenDownloadDirectoryCommand}" IsVisible="{Binding CanOpenDownloadDirectory}"/>
+                        <Button Content="{Binding DownloadCopyPathLabel}" Classes="flat-btn btn-toolbar" Command="{Binding CopyDownloadDirectoryCommand}"/>
+                      </WrapPanel>
+                    </StackPanel></Grid>
+                  <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                    <TextBlock Grid.Column="0" Text="{Binding DownloadConcurrencyLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                    <Grid Grid.Column="2" Classes="settings-inline-control" ColumnDefinitions="*,48" MaxWidth="{DynamicResource ControlWidthStandard}" VerticalAlignment="Center">
+                      <Slider Grid.Column="0" Minimum="1" Maximum="8" Value="{Binding MaxDownloads}" VerticalAlignment="Center"/>
+                      <TextBlock Grid.Column="1" Text="{Binding DownloadConcurrencySummary}" Classes="settings-slider-value" HorizontalAlignment="Right"/></Grid></Grid>
+                  <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                    <TextBlock Grid.Column="0" Text="{Binding PlaybackDefaultQualityLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding PlaybackDefaultQualityCaption}"/>
+                    <ComboBox Grid.Column="2" ItemsSource="{Binding DefaultQualityOptionLabels}" SelectedIndex="{Binding DefaultDownloadQualityIndex}" Classes="field-select settings-field-control" VerticalAlignment="Center"/></Grid>
+                </StackPanel>
+              </StackPanel>
+            </StackPanel>
+
+            <!-- ====== DataBackup ====== -->
+            <StackPanel Classes="settings-section" IsVisible="{Binding SelectedSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter={x:Static pvm:SettingsSectionKind.DataBackup}}">
+              <StackPanel Classes="settings-group-body">
+                <StackPanel Classes="settings-group">
+                  <TextBlock Text="{Binding BackupSectionTitle}" Classes="settings-group-title"/>
+                  <TextBlock Text="{Binding BackupDescription}" Classes="settings-field-caption" TextWrapping="Wrap"/>
+                  <WrapPanel Classes="settings-field-actions transfers-toolbar-flow">
+                    <Button Content="{Binding BackupNowLabel}" Classes="primary btn-toolbar" Command="{Binding CreateBackupCommand}"/>
+                    <Button Content="{Binding BackupOpenFolderLabel}" Classes="flat-btn btn-toolbar" Command="{Binding OpenBackupFolderCommand}" IsVisible="{Binding CanOpenBackupFolder}"/>
+                    <Border Classes="transfers-toolbar-group-sep"/>
+                    <Button Content="{Binding BackupExportDiagnosticsLabel}" Classes="flat-btn btn-toolbar"
+                            Command="{Binding ExportDiagnosticsCommand}"/>
+                  </WrapPanel>
+                  <Border Classes="settings-backup-table" Margin="{DynamicResource MarginTopSm}" HorizontalAlignment="Stretch">
+                    <StackPanel>
+                      <StackPanel Classes="settings-backup-empty" IsVisible="{Binding !HasBackupEntries}">
+                        <TextBlock Text="{Binding BackupEmptyHint}" Classes="settings-field-caption" TextWrapping="Wrap"/>
+                      </StackPanel>
+                      <StackPanel IsVisible="{Binding HasBackupEntries}">
+                        <Border Classes="settings-backup-table-header-wrap">
+                          <Grid Classes="settings-backup-table-header" ColumnDefinitions="*,Auto,Auto" HorizontalAlignment="Stretch">
+                            <TextBlock Grid.Column="0" Text="{Binding BackupColumnNameLabel}" Classes="settings-backup-table-th"/>
+                            <TextBlock Grid.Column="1" Text="{Binding BackupColumnMetaLabel}" Classes="settings-backup-table-th settings-backup-table-meta"/>
+                            <TextBlock Grid.Column="2" Text="{Binding BackupColumnActionsLabel}" Classes="settings-backup-table-th settings-backup-table-action"/>
+                          </Grid>
+                        </Border>
+                        <ItemsControl ItemsSource="{Binding BackupEntriesPage}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="pvm:SettingsBackupEntryViewModel">
+                          <Border Classes="settings-backup-table-row"><Grid Classes="settings-backup-table-row-grid" ColumnDefinitions="*,Auto,Auto" HorizontalAlignment="Stretch">
+                            <TextBlock Grid.Column="0" Text="{Binding DisplayName}" Classes="settings-backup-table-td text-label" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Grid.Column="1" Text="{Binding MetaText}" Classes="settings-backup-table-td text-caption settings-backup-table-meta"/>
+                            <Button Grid.Column="2" Content="{Binding $parent[UserControl].((pvm:SettingsPageViewModel)DataContext).BackupRestoreLabel}" Classes="primary btn-toolbar settings-backup-restore-action" Command="{Binding $parent[UserControl].((pvm:SettingsPageViewModel)DataContext).RestoreBackupCommand}" CommandParameter="{Binding}" HorizontalAlignment="Left"/></Grid></Border>
+                        </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                      </StackPanel>
+                    </StackPanel>
+                  </Border>
+                  <Grid Classes="settings-backup-pagination" ColumnDefinitions="*,Auto" IsVisible="{Binding HasBackupEntries}" HorizontalAlignment="Stretch">
+                    <TextBlock Grid.Column="0" Text="{Binding BackupListSummary}" Classes="settings-field-caption settings-backup-pagination-info" VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" IsVisible="{Binding ShowBackupPagination}">
+                      <TextBlock Text="{Binding BackupPageInfoText}" Classes="settings-field-caption" VerticalAlignment="Center"/>
+                      <Button Content="{Binding BackupPreviousPageLabel}" Classes="flat-btn btn-toolbar" Command="{Binding BackupPreviousPageCommand}" IsEnabled="{Binding CanBackupPreviousPage}"/>
+                      <Button Content="{Binding BackupNextPageLabel}" Classes="flat-btn btn-toolbar" Command="{Binding BackupNextPageCommand}" IsEnabled="{Binding CanBackupNextPage}"/>
+                    </StackPanel>
+                  </Grid>
+                </StackPanel>
+                <Border Classes="settings-section-divider"/>
+                <StackPanel Classes="settings-group">
+                  <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="Auto,8,Auto,8,*">
+                    <TextBlock Grid.Column="0" Text="{Binding AcoustIdLookupTitle}" Classes="text-label metadata-field-label settings-field-label" VerticalAlignment="Center"/>
+                    <ToggleSwitch Grid.Column="2" IsChecked="{Binding EnableAcoustIdFingerprintLookup}" Classes="ant-switch" VerticalAlignment="Center"
+                                  automation:AutomationProperties.Name="{Binding AcoustIdEnableLabel}"/>
+                    <TextBlock Grid.Column="4" Text="{Binding AcoustIdLookupHint}" Classes="settings-field-caption" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                  </Grid>
+                  <StackPanel IsVisible="{Binding ShowAcoustIdDetails}" Spacing="8">
+                    <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                      <TextBlock Grid.Column="0" Text="{Binding AcoustIdApiKeyLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding AcoustIdApiKeyToolTip}"/>
+                      <TextBox Grid.Column="2" Text="{Binding AcoustIdApiKey}" Watermark="{Binding AcoustIdApiKeyWatermark}" Classes="settings-url-input" MaxWidth="{DynamicResource ControlWidthStandard}" ToolTip.Tip="{Binding AcoustIdApiKeyToolTip}"/>
+                    </Grid>
+                    <TextBlock Text="{Binding AcoustIdPrerequisiteHint}" Classes="settings-field-caption"/>
+                    <Border Classes="ant-alert ant-alert-warning" IsVisible="{Binding ShowAcoustIdSetupWarning}">
+                      <TextBlock Classes="ant-alert-message" Text="{Binding AcoustIdSetupWarningText}" TextWrapping="Wrap"/>
+                    </Border>
+                    <StackPanel Classes="settings-connection-test-group" Orientation="Horizontal" Spacing="8">
+                      <Button Content="{Binding AcoustIdTestLabel}" Classes="flat-btn btn-toolbar settings-connection-test-btn"
+                              Command="{Binding TestAcoustIdLookupCommand}"
+                              automation:AutomationProperties.Name="{Binding AcoustIdTestLabel}"/>
+                      <Border Classes="settings-connection-pill" Classes.success="{Binding AcoustIdTestButtonOk}" Classes.error="{Binding AcoustIdTestFailed}"
+                              IsVisible="{Binding ShowAcoustIdTestResult}" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding AcoustIdTestResultText}" TextTrimming="CharacterEllipsis" MaxWidth="{DynamicResource ControlWidthStandard}"/>
+                      </Border>
+                    </StackPanel>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </StackPanel>
+
+            <!-- ====== OnlineSources ====== -->
+            <StackPanel Classes="settings-section" IsVisible="{Binding ShowAdvancedOnlinePanel}">
+              <StackPanel Classes="settings-group-body">
+                <TextBlock Text="{Binding SettingsPersistHint}" Classes="settings-field-caption" TextWrapping="Wrap" IsVisible="{Binding ShowOnlineSourcesPersistHint}"/>
+                <Border Classes="ant-alert ant-alert-warning" IsVisible="{Binding ShowOnlineDownloadAlert}">
+                  <TextBlock Classes="ant-alert-message" Text="{Binding PendingMusicApiUpdateNotice}" TextWrapping="Wrap"/>
+                </Border>
+                <StackPanel Classes="settings-group">
+                  <TextBlock Text="{Binding OnlineConnectionHealthTitle}" Classes="settings-group-title"/>
+                  <WrapPanel Classes="settings-connection-test-line" Orientation="Horizontal">
+                    <StackPanel Classes="settings-connection-test-group" Orientation="Horizontal" Spacing="8">
+                      <Button Content="{Binding OnlineTestUnifiedApiLabel}" Classes="flat-btn btn-toolbar settings-connection-test-btn" Command="{Binding TestUnifiedApiCommand}"/>
+                      <Border Classes="settings-connection-pill" Classes.success="{Binding UnifiedApiTestSucceeded}" Classes.error="{Binding UnifiedApiTestFailed}" IsVisible="{Binding ShowUnifiedApiTestResult}">
+                        <TextBlock Text="{Binding UnifiedApiTestResultText}" TextTrimming="CharacterEllipsis" MaxWidth="{DynamicResource ControlWidthStandard}"/>
+                      </Border>
+                    </StackPanel>
+                    <StackPanel Classes="settings-connection-test-group" Orientation="Horizontal" Spacing="8">
+                      <Button Content="{Binding OnlineTestNetEaseLabel}" Classes="flat-btn btn-toolbar settings-connection-test-btn" Command="{Binding TestNetEaseApiCommand}"/>
+                      <Border Classes="settings-connection-pill" Classes.success="{Binding NetEaseApiTestSucceeded}" Classes.error="{Binding NetEaseApiTestFailed}" IsVisible="{Binding ShowNetEaseApiTestResult}">
+                        <TextBlock Text="{Binding NetEaseApiTestResultText}" TextTrimming="CharacterEllipsis" MaxWidth="{DynamicResource ControlWidthStandard}"/>
+                      </Border>
+                    </StackPanel>
+                    <Button Content="{Binding OnlinePlatformLoginLabel}" Classes="flat-btn btn-toolbar" Command="{Binding OpenMusicApiAccountCommand}"/>
+                    <Button Content="{Binding OnlineDiagnoseLoginLabel}" Classes="flat-btn btn-toolbar" Command="{Binding DiagnosePlatformLoginCommand}"/>
+                    <Button Content="{Binding OnlineRunFullProbeLabel}" Classes="flat-btn btn-toolbar"
+                            Command="{Binding RunFullApiProbeCommand}" IsEnabled="{Binding !IsRunningApiProbe}"/>
+                    <Button Content="{Binding OnlineTroubleshootLabel}" Classes="flat-btn btn-toolbar" Command="{Binding GoToUpdateDiagnosticsTroubleshootCommand}" IsVisible="{Binding ShowConnectionTestTroubleshootLink}"/>
+                  </WrapPanel>
+                  <Border Classes="settings-connection-pill"
+                          Classes.success="{Binding OnlineLoginStatusIsOk}"
+                          Classes.error="{Binding OnlineLoginStatusNeedsAttention}"
+                          IsVisible="{Binding OnlineLoginStatusSummary, Converter={x:Static conv:StringNotEmptyConverter.Instance}}"
+                          HorizontalAlignment="Left"
+                          Margin="{DynamicResource MarginBottomXs}">
+                    <TextBlock Text="{Binding OnlineLoginStatusSummary}" TextTrimming="CharacterEllipsis" MaxWidth="{DynamicResource SettingsListMaxWidth}"/>
+                  </Border>
+                  <TextBlock Text="{Binding PlatformLoginDiagnoseResultText}" Classes="settings-field-caption" TextWrapping="Wrap"
+                             IsVisible="{Binding ShowPlatformLoginDiagnoseResult}" Margin="{DynamicResource MarginBottomXs}"/>
+                  <TextBlock Text="{Binding ApiProbeSummaryText}" Classes="settings-field-caption" TextWrapping="Wrap"
+                             IsVisible="{Binding ShowApiProbeResults}" Margin="{DynamicResource MarginBottomXs}"/>
+                  <ItemsControl ItemsSource="{Binding ApiProbeRows}" IsVisible="{Binding ShowApiProbeResults}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="pvm:SettingsApiProbeRowViewModel">
+                        <Grid ColumnDefinitions="168,*,Auto" Margin="{DynamicResource SectionSplitMargin}">
+                          <TextBlock Grid.Column="0" Text="{Binding Label}" Classes="text-caption" VerticalAlignment="Center"/>
+                          <TextBlock Grid.Column="1" Text="{Binding Url}" Classes="text-caption" TextTrimming="CharacterEllipsis"
+                                     Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                          <Border Grid.Column="2" Classes="settings-connection-pill"
+                                  Classes.success="{Binding Ok}" Classes.error="{Binding !Ok}" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Detail}" TextTrimming="CharacterEllipsis" MaxWidth="{DynamicResource ControlWidthStandard}"/>
+                          </Border>
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                    <TextBlock Grid.Column="0" Text="{Binding OnlineUnifiedApiLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                    <TextBox Grid.Column="2" Text="{Binding MusicApiBaseUrl}" Classes="settings-url-input settings-field-wide"/></Grid>
+                  <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                    <TextBlock Grid.Column="0" Text="{Binding OnlineRecognitionApiLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding MusicRecognitionSetupHint}"/>
+                    <StackPanel Grid.Column="2" Classes="settings-field-stack">
+                      <TextBox Text="{Binding MusicRecognitionApiUrl}" Classes="settings-url-input settings-field-wide" ToolTip.Tip="{Binding MusicRecognitionSetupHint}"/>
+                      <WrapPanel Classes="settings-field-actions" Orientation="Horizontal">
+                        <Button Content="{Binding OnlineConfigGuideLabel}" Classes="flat-btn btn-toolbar" Command="{Binding OpenMusicRecognitionGuideCommand}"/>
+                        <Button Content="{Binding OnlineTestRecognitionLabel}" Classes="flat-btn btn-toolbar settings-connection-test-btn" Command="{Binding TestMusicRecognitionCommand}"/>
+                        <Border Classes="settings-connection-pill" Classes.success="{Binding MusicRecognitionTestSucceeded}" Classes.error="{Binding MusicRecognitionTestFailed}" IsVisible="{Binding ShowMusicRecognitionTestResult}" VerticalAlignment="Center">
+                          <TextBlock Text="{Binding MusicRecognitionTestResultText}" TextTrimming="CharacterEllipsis" MaxWidth="{DynamicResource ControlWidthStandard}"/>
+                        </Border>
+                        <Button Content="{Binding OnlineUseNetEaseRecognitionLabel}" Classes="flat-btn btn-toolbar" Command="{Binding ApplyNetEaseRecognitionDefaultsCommand}" IsVisible="{Binding ShowNetEaseRecognitionSetup}"/>
+                      </WrapPanel>
+                    </StackPanel></Grid>
+                </StackPanel>
+                <StackPanel Classes="settings-group">
+                  <TextBlock Text="{Binding OnlineBundledServicesTitle}" Classes="settings-group-title"/>
+                  <Border Classes="ant-alert ant-alert-info" IsVisible="{Binding ShowBundledMusicApiUnsupportedHint}">
+                    <TextBlock Classes="ant-alert-message" Text="{Binding BundledMusicApiUnsupportedHint}" TextWrapping="Wrap"/>
+                  </Border>
+                  <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="108,8,Auto,*" IsVisible="{Binding IsBundledMusicApiFeatureAvailable}">
+                    <TextBlock Grid.Column="0" Text="{Binding OnlineAutoStartBundledApiLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                    <ToggleSwitch Grid.Column="2" IsChecked="{Binding AutoStartBundledMusicApi}" Classes="ant-switch"/></Grid>
+                  <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="108,8,Auto,*">
+                    <TextBlock Grid.Column="0" Text="{Binding OnlineAutoStartNetEaseApiLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                    <ToggleSwitch Grid.Column="2" IsChecked="{Binding AutoStartBundledNetEaseApi}" Classes="ant-switch"/></Grid>
+                  <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="108,8,Auto,*" IsVisible="{Binding IsBundledMusicApiFeatureAvailable}">
+                    <TextBlock Grid.Column="0" Text="{Binding OnlineAutoCheckLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding OnlineWeeklyBundledApiCheckCaption}"/>
+                    <ToggleSwitch Grid.Column="2" IsChecked="{Binding CheckBundledMusicApiUpdates}" Classes="ant-switch" ToolTip.Tip="{Binding OnlineWeeklyBundledApiCheckCaption}"/></Grid>
+                </StackPanel>
+                <StackPanel Classes="settings-group">
+                  <TextBlock Text="{Binding OnlinePlatformApisTitle}" Classes="settings-group-title"/>
+                  <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                    <TextBlock Grid.Column="0" Text="{Binding OnlineNetEaseLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                    <TextBox Grid.Column="2" Text="{Binding NetEaseApiUrl}" Classes="settings-url-input settings-field-wide"/></Grid>
+                  <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                    <TextBlock Grid.Column="0" Text="{Binding OnlineQQMusicLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                    <TextBox Grid.Column="2" Text="{Binding QqMusicApiUrl}" Classes="settings-url-input settings-field-wide"/></Grid>
+                  <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                    <TextBlock Grid.Column="0" Text="{Binding OnlineQuarkCookieLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                    <StackPanel Grid.Column="2" Classes="settings-control-inline" Orientation="Horizontal" Spacing="8">
+                      <TextBox Text="{Binding MyFreeMp3QuarkCookies}" Classes="settings-url-input settings-field-wide"/>
+                      <Border Classes="settings-connection-pill"
+                              Classes.success="{Binding HasQuarkCookieConfigured}"
+                              Classes.error="{Binding !HasQuarkCookieConfigured}"
+                              VerticalAlignment="Center">
+                        <TextBlock Text="{Binding QuarkCookieStatusText}"/>
+                      </Border>
+                    </StackPanel></Grid>
+                </StackPanel>
+                <StackPanel Classes="settings-group">
+                  <Grid ColumnDefinitions="*,Auto" Classes="settings-gatherer-header-row">
+                    <TextBlock Grid.Column="0" Text="{Binding OnlineGathererSourcesTitle}" Classes="settings-group-title"/>
+                    <Button Grid.Column="1" Content="{Binding OnlineTestAllGatherersLabel}" Classes="flat-btn btn-toolbar" Command="{Binding ProbeGatherersCommand}"/>
+                  </Grid>
+                  <ItemsControl ItemsSource="{Binding GathererItems}"
+                                Classes="settings-gatherer-list"
+                                Margin="{DynamicResource MarginTopXs}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <UniformGrid Columns="3"/>
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="pvm:GathererItemViewModel">
+                        <Grid Classes="settings-gatherer-cell"
+                              ColumnDefinitions="*,Auto"
+                              Classes.gatherer-row-disabled="{Binding !IsEnabled}"
+                              ToolTip.Tip="{Binding StatusText}"
+                              ToolTip.ShowDelay="300">
+                          <TextBlock Grid.Column="0"
+                                     Text="{Binding DisplayName}"
+                                     Classes="text-label settings-gatherer-cell-label"
+                                     TextTrimming="CharacterEllipsis"
+                                     VerticalAlignment="Center"
+                                     Margin="{DynamicResource MarginToolbarBtnGap}"/>
+                          <ToggleSwitch Grid.Column="1"
+                                        IsChecked="{Binding IsEnabled}"
+                                        Classes="ant-switch"
+                                        VerticalAlignment="Center"/>
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </StackPanel>
+            </StackPanel>
+
+            <!-- ====== UpdateDiagnostics ====== -->
+            <StackPanel Classes="settings-section settings-update-page" IsVisible="{Binding ShowAdvancedUpdatePanel}">
+              <Border Classes="antd-card-tabs settings-update-diagnostics-tabs" HorizontalAlignment="Stretch"><Panel>
+                <Border Classes="antd-card-tab-content" Margin="{DynamicResource AntdCardTabContentMargin}" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                  <StackPanel Classes="settings-group-body" Spacing="{DynamicResource SettingsGroupBodySpacing}">
+                    <TextBlock Text="{Binding UpdateDiagnosticsPersistHint}" Classes="settings-field-caption" IsVisible="{Binding ShowUpdateDiagnosticsPersistHint}" Margin="{DynamicResource MarginBottomXs}"/>
+                    <StackPanel IsVisible="{Binding IsUpdateDiagnosticsAppTabSelected}" Spacing="{DynamicResource SettingsGroupBodySpacing}">
+                      <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding UpdateCurrentVersionLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                        <StackPanel Grid.Column="2" Classes="settings-control-inline">
+                          <TextBlock Text="{Binding VersionText}" Classes="settings-field-value-text" VerticalAlignment="Center"/>
+                          <Button Content="{Binding UpdateCheckLabel}" Classes="flat-btn btn-toolbar" Command="{Binding CheckForUpdatesCommand}" IsEnabled="{Binding !IsCheckingAppUpdate}"/>
+                          <Border Classes="settings-update-pill" Classes.settings-update-status-new="{Binding AppUpdateStatusIsNew}" Classes.settings-update-status-ok="{Binding AppUpdateStatusIsOk}" Classes.settings-update-status-error="{Binding AppUpdateStatusIsError}" IsVisible="{Binding ShowAppUpdateStatus}">
+                            <TextBlock Text="{Binding AppUpdateStatusText}" Classes="settings-update-status-text"/>
+                          </Border>
+                        </StackPanel></Grid>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding UpdateFeedUrlLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding UpdateFeedAdvancedLabel}"/>
+                        <TextBox Grid.Column="2" Text="{Binding UpdateFeedUrl}" Watermark="{Binding UpdateFeedUrlPlaceholder}" Classes="discover-field field-input settings-field-wide"/></Grid>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding UpdateFrequencyFieldLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding UpdateFrequencyToolTip}"/>
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding UpdateFrequencyOptionLabels}" SelectedIndex="{Binding UpdateFrequencyIndex}" Classes="field-select settings-field-control settings-update-frequency-combo" VerticalAlignment="Center"/></Grid>
+                      <Border Classes="settings-update-info" IsVisible="{Binding HasPendingUpdate}">
+                        <StackPanel Classes="settings-control-inline">
+                          <TextBlock Text="{Binding UpdatePendingInstallLabel}" Classes="settings-update-info-text" VerticalAlignment="Center"/>
+                          <Button Content="{Binding UpdateRestartInstallLabel}" Classes="primary btn-toolbar" Command="{Binding ApplyUpdateAndRestartCommand}"/>
+                        </StackPanel></Border>
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding IsUpdateDiagnosticsBundledApiTabSelected}" Spacing="{DynamicResource SettingsGroupBodySpacing}">
+                      <Border Classes="ant-alert ant-alert-info" IsVisible="{Binding ShowBundledMusicApiUnsupportedHint}">
+                        <TextBlock Classes="ant-alert-message" Text="{Binding BundledMusicApiUnsupportedHint}" TextWrapping="Wrap"/>
+                      </Border>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*" IsVisible="{Binding IsBundledMusicApiFeatureAvailable}">
+                        <TextBlock Grid.Column="0" Text="{Binding OnlineBundledApiLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                        <StackPanel Grid.Column="2" Classes="settings-control-inline">
+                          <TextBlock Text="{Binding BundledMusicApiVersionText}" Classes="settings-field-value-text" VerticalAlignment="Center"/>
+                          <Button Content="{Binding UpdateCheckLabel}" Classes="flat-btn btn-toolbar" Command="{Binding CheckBundledMusicApiUpdateCommand}" IsEnabled="{Binding CanCheckBundledMusicApiUpdate}"/>
+                          <Button Content="{Binding UpdateDownloadInstallLabel}" Classes="primary btn-toolbar" Command="{Binding ApplyBundledMusicApiUpdateCommand}" IsVisible="{Binding HasPendingMusicApiUpdate}"/>
+                          <Border Classes="settings-update-pill" Classes.settings-update-status-new="{Binding MusicApiUpdateStatusIsNew}" Classes.settings-update-status-ok="{Binding MusicApiUpdateStatusIsOk}" Classes.settings-update-status-error="{Binding MusicApiUpdateStatusIsError}" IsVisible="{Binding ShowMusicApiUpdateStatus}">
+                            <TextBlock Text="{Binding MusicApiUpdateStatusText}" Classes="settings-update-status-text"/>
+                          </Border>
+                        </StackPanel></Grid>
+                      <Grid Classes="settings-field-row" ColumnDefinitions="108,8,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding OnlineBundledNetEaseLabel}" Classes="text-label metadata-field-label settings-field-label"/>
+                        <TextBlock Grid.Column="2" Text="{Binding BundledNetEaseApiVersionText}" Classes="settings-field-value-text" VerticalAlignment="Center"/></Grid>
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding IsUpdateDiagnosticsChangelogTabSelected}" Classes="settings-changelog-panel">
+                      <TextBlock Text="{Binding UpdateNoHistoryLabel}" Classes="settings-update-status-empty" IsVisible="{Binding !HasUpdateHistoryEntries}"/>
+                      <ScrollViewer Classes="settings-changelog-scroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" IsVisible="{Binding HasUpdateHistoryEntries}">
+                        <ItemsControl ItemsSource="{Binding UpdateHistoryEntries}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="pvm:ReleaseNoteDayViewModel">
+                          <StackPanel Classes="settings-release-day">
+                            <TextBlock Text="{Binding Header}" Classes="settings-release-header"/>
+                            <ItemsControl ItemsSource="{Binding Items}"><ItemsControl.ItemTemplate><DataTemplate>
+                              <Grid Classes="settings-release-bullet-row" ColumnDefinitions="Auto,*">
+                                <TextBlock Grid.Column="0" Text="•" Classes="settings-release-bullet-mark"/>
+                                <TextBlock Grid.Column="1" Text="{Binding}" Classes="settings-release-bullet" TextWrapping="Wrap"/>
+                              </Grid>
+                            </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                          </StackPanel>
+                        </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                      </ScrollViewer>
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding IsUpdateDiagnosticsTroubleshootTabSelected}">
+                      <Border Classes="settings-troubleshoot-panel"><StackPanel Spacing="12">
+                        <StackPanel Classes="settings-update-troubleshoot-section" Spacing="6">
+                          <TextBlock Text="{Binding DiagnosticsApiProbeTitle}" Classes="settings-group-title"/>
+                          <TextBlock Text="{Binding DiagnosticsApiProbeHint}" Classes="settings-field-caption" TextWrapping="Wrap"/>
+                          <WrapPanel Classes="settings-field-actions" Orientation="Horizontal">
+                            <Button Content="{Binding OnlineRunFullProbeLabel}" Classes="primary btn-toolbar"
+                                    Command="{Binding RunFullApiProbeCommand}" IsEnabled="{Binding !IsRunningApiProbe}"/>
+                          </WrapPanel>
+                          <TextBlock Text="{Binding ApiProbeSummaryText}" Classes="settings-field-caption" TextWrapping="Wrap"
+                                     IsVisible="{Binding ShowApiProbeResults}"/>
+                          <ItemsControl ItemsSource="{Binding ApiProbeRows}" IsVisible="{Binding ShowApiProbeResults}">
+                            <ItemsControl.ItemTemplate>
+                              <DataTemplate x:DataType="pvm:SettingsApiProbeRowViewModel">
+                                <Grid ColumnDefinitions="168,*,Auto" Margin="{DynamicResource SectionSplitMargin}">
+                                  <TextBlock Grid.Column="0" Text="{Binding Label}" Classes="text-caption" VerticalAlignment="Center"/>
+                                  <TextBlock Grid.Column="1" Text="{Binding Url}" Classes="text-caption" TextTrimming="CharacterEllipsis"
+                                             Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                  <Border Grid.Column="2" Classes="settings-connection-pill"
+                                          Classes.success="{Binding Ok}" Classes.error="{Binding !Ok}" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Detail}" TextTrimming="CharacterEllipsis" MaxWidth="{DynamicResource ControlWidthStandard}"/>
+                                  </Border>
+                                </Grid>
+                              </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                          </ItemsControl>
+                        </StackPanel>
+                        <WrapPanel Classes="settings-field-actions" Orientation="Horizontal">
+                          <Button Content="{Binding DiagnosticsExportPackageLabel}" Classes="flat-btn btn-toolbar" Command="{Binding ExportDiagnosticsCommand}"/>
+                          <Button Content="{Binding DiagnosticsExportSnapshotLabel}" Classes="flat-btn btn-toolbar" Command="{Binding ExportUsageInsightsCommand}"/>
+                          <controls:PopconfirmHost Title="{Binding ResetUsagePopconfirmTitle}" Description="{Binding ResetUsagePopconfirmDescription}" ConfirmText="{Binding ResetUsagePopconfirmConfirm}" ConfirmIsDanger="True" ConfirmedCommand="{Binding ResetUsageInsightsCommand}">
+                            <Button Content="{Binding DiagnosticsResetStatsLabel}" Classes="flat-btn btn-toolbar"/>
+                          </controls:PopconfirmHost>
+                        </WrapPanel>
+                        <StackPanel Classes="settings-update-troubleshoot-section" Spacing="6">
+                          <TextBlock Text="{Binding DiagnosticsUsageStatsTitle}" Classes="settings-group-title"/>
+                          <TextBlock Text="{Binding UsageInsightsHint}" Classes="settings-field-caption" TextWrapping="Wrap"/>
+                          <TextBlock Text="{Binding FunnelConversionText}" Classes="settings-usage-funnel" TextWrapping="Wrap"/>
+                          <TextBlock Text="{Binding UsageCountersUpdatedAtText}" Classes="settings-field-caption"/>
+                          <ItemsControl ItemsSource="{Binding UsageInsightRows}" Classes="settings-usage-kv-list"><ItemsControl.ItemTemplate><DataTemplate x:DataType="pvm:SettingsUsageInsightRowViewModel">
+                            <Grid Classes="settings-usage-kv-row" ColumnDefinitions="120,8,*">
+                              <TextBlock Grid.Column="0" Text="{Binding Label}" Classes="text-label metadata-field-label settings-field-label"/>
+                              <TextBlock Grid.Column="2"
+                                         Text="{Binding Value}"
+                                         Classes="settings-usage-kv-value"
+                                         Classes.settings-usage-kv-value-mono="{Binding IsMonospace}"
+                                         TextWrapping="Wrap"/>
+                            </Grid>
+                          </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                        </StackPanel>
+                        <StackPanel Classes="settings-update-troubleshoot-section" Spacing="6">
+                          <TextBlock Text="{Binding DiagnosticsRecentStatusTitle}" Classes="settings-group-title"/>
+                          <TextBlock Text="{Binding RecentStatusEmptyText}" Classes="settings-update-status-empty" IsVisible="{Binding !HasRecentStatusEvents}"/>
+                          <Border Classes="settings-update-status-list" IsVisible="{Binding HasRecentStatusEvents}"><ItemsControl ItemsSource="{Binding RecentStatusEvents}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="svc:ShellStatusEvent">
+                            <Grid Classes="settings-update-status-row" ColumnDefinitions="Auto,Auto,*">
+                              <TextBlock Grid.Column="0" Text="{Binding TimestampText}" Classes="text-caption settings-update-status-time" VerticalAlignment="Center"/>
+                              <Border Grid.Column="1" Width="3" Height="14" CornerRadius="1" Margin="{DynamicResource MarginTrailingSm}" VerticalAlignment="Center" Background="{Binding Level, Converter={x:Static conv:ShellStatusLevelToBrushConverter.Instance}}"/>
+                              <TextBlock Grid.Column="2" Text="{Binding Message}" Classes="text-caption" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                            </Grid>
+                          </DataTemplate></ItemsControl.ItemTemplate></ItemsControl></Border>
+                        </StackPanel>
+                      </StackPanel></Border>
+                    </StackPanel>
+                  </StackPanel></Border>
+                <Border Classes="antd-card-tab-rail" Margin="{DynamicResource AntdCardTabRailMargin}"/>
+                <ScrollViewer VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Classes="antd-card-tab-nav"><StackPanel Orientation="Horizontal" Spacing="8">
+                  <controls:AntdCardTab Title="{Binding UpdateDiagnosticsTabAppUpdateLabel}" IsSelected="{Binding IsUpdateDiagnosticsAppTabSelected}" SelectCommand="{Binding SelectUpdateDiagnosticsTabCommand}" CommandParameter="{x:Static pvm:UpdateDiagnosticsTabKind.AppUpdate}"/>
+                  <controls:AntdCardTab Title="{Binding UpdateDiagnosticsTabBundledApiLabel}" IsSelected="{Binding IsUpdateDiagnosticsBundledApiTabSelected}" SelectCommand="{Binding SelectUpdateDiagnosticsTabCommand}" CommandParameter="{x:Static pvm:UpdateDiagnosticsTabKind.BundledApi}"/>
+                  <controls:AntdCardTab Title="{Binding UpdateDiagnosticsTabChangelogLabel}" IsSelected="{Binding IsUpdateDiagnosticsChangelogTabSelected}" SelectCommand="{Binding SelectUpdateDiagnosticsTabCommand}" CommandParameter="{x:Static pvm:UpdateDiagnosticsTabKind.Changelog}"/>
+                  <controls:AntdCardTab Title="{Binding UpdateDiagnosticsTabTroubleshootLabel}" IsSelected="{Binding IsUpdateDiagnosticsTroubleshootTabSelected}" SelectCommand="{Binding SelectUpdateDiagnosticsTabCommand}" CommandParameter="{x:Static pvm:UpdateDiagnosticsTabKind.Troubleshoot}"/>
+                </StackPanel></ScrollViewer>
+              </Panel></Border>
+            </StackPanel>
+
+          </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
+      </DockPanel>
+    </Grid>
+  </DockPanel>
+</UserControl>

@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels"
+             xmlns:conv="using:MusicVault.App.Converters"
+             x:Class="MusicVault.App.Views.Overlays.CommandPaletteView"
+             x:DataType="vm:CommandPaletteViewModel"
+             KeyDown="OnKeyDown">
+
+  <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Border Classes="modal-scrim" PointerPressed="OnScrimPressed"/>
+    <Border Classes="command-palette-panel"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Margin="{DynamicResource CommandPalettePanelMargin}"
+            PointerPressed="OnPanelPressed">
+      <StackPanel Spacing="10">
+        <TextBox x:Name="SearchBox"
+                 Text="{Binding Query}"
+                 Watermark="{Binding SearchWatermark}"
+                 Classes="command-palette-search"/>
+
+        <Border Classes="command-palette-list-host">
+          <ListBox x:Name="ResultsList"
+                   ItemsSource="{Binding FilteredItems}"
+                   SelectedIndex="{Binding SelectedIndex}"
+                   Classes="command-palette-list"
+                   IsVisible="{Binding HasFilteredItems, Converter={x:Static conv:BoolToVisibilityConverter.Instance}}"
+                   DoubleTapped="OnResultDoubleTapped">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:CommandPaletteItemViewModel">
+                <Border Classes="command-palette-item">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Grid.Column="0" Spacing="2">
+                      <TextBlock Text="{Binding Title}" Classes="command-palette-item-title"/>
+                      <TextBlock Text="{Binding Subtitle}"
+                                 Classes="command-palette-item-subtitle"
+                                 IsVisible="{Binding HasSubtitle}"/>
+                    </StackPanel>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Group}"
+                               Classes="command-palette-item-group"
+                               VerticalAlignment="Center"/>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Border>
+
+        <TextBlock Text="{Binding EmptyHint}"
+                   Classes="command-palette-empty"
+                   IsVisible="{Binding HasFilteredItems, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"/>
+
+        <TextBlock Text="{Binding FooterHint}" Classes="command-palette-footer"/>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

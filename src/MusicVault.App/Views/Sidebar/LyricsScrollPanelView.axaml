@@ -1,0 +1,86 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Sidebar"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:controls="using:MusicVault.App.Controls"
+             x:Class="MusicVault.App.Views.Sidebar.LyricsScrollPanelView"
+             x:Name="Self"
+             x:DataType="vm:RightSidebarViewModel">
+  <Grid>
+    <ScrollViewer x:Name="LyricsScroll"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Hidden"
+                  VerticalAlignment="Stretch">
+      <StackPanel x:Name="LyricsPanel">
+        <Border x:Name="LyricsTopSpacer" Height="0"/>
+        <ItemsControl x:Name="LyricsItems" ItemsSource="{Binding LyricLines}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:LyricsLineViewModel">
+              <StackPanel HorizontalAlignment="Stretch" Spacing="0" Cursor="Hand"
+                          ToolTip.Tip="{Binding LyricsDoubleClickToolTip, RelativeSource={RelativeSource AncestorType=vm:RightSidebarViewModel}}">
+                <TextBlock Text="{Binding Text}" Classes="lyrics-line"
+                           TextWrapping="Wrap"
+                           Classes.active="{Binding IsActive}"
+                           Foreground="{DynamicResource TextPrimaryBrush}"
+                           Opacity="0.85"
+                           HorizontalAlignment="Stretch"
+                           TextAlignment="Center">
+                  <TextBlock.FontSize>
+                    <MultiBinding Converter="{x:Static conv:LyricsLineFontSizeConverter.Instance}">
+                      <Binding Path="IsActive"/>
+                      <Binding ElementName="Self" Path="BaseFontSize"/>
+                      <Binding ElementName="Self" Path="ActiveFontDelta"/>
+                    </MultiBinding>
+                  </TextBlock.FontSize>
+                  <TextBlock.Margin>
+                    <MultiBinding Converter="{x:Static conv:LyricsLineMarginConverter.Instance}">
+                      <Binding ElementName="Self" Path="BaseFontSize"/>
+                      <Binding ElementName="Self" Path="LineMarginVertical"/>
+                    </MultiBinding>
+                  </TextBlock.Margin>
+                  <TextBlock.Styles>
+                    <Style Selector="TextBlock.lyrics-line.active">
+                      <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                      <Setter Property="FontWeight" Value="SemiBold"/>
+                      <Setter Property="Opacity" Value="1"/>
+                    </Style>
+                  </TextBlock.Styles>
+                </TextBlock>
+                <TextBlock Text="{Binding TranslationText}"
+                           IsVisible="{Binding HasTranslation}"
+                           Classes="lyrics-line lyrics-line-translation"
+                           TextWrapping="Wrap"
+                           Classes.active="{Binding IsActive}"
+                           Foreground="{DynamicResource TextSecondaryBrush}"
+                           Opacity="0.75"
+                           HorizontalAlignment="Stretch"
+                           TextAlignment="Center">
+                  <TextBlock.FontSize>
+                    <MultiBinding Converter="{x:Static conv:LyricsLineFontSizeConverter.Instance}">
+                      <Binding Path="IsActive"/>
+                      <Binding ElementName="Self" Path="BaseFontSize"/>
+                      <Binding ElementName="Self" Path="TranslationFontDelta"/>
+                    </MultiBinding>
+                  </TextBlock.FontSize>
+                  <TextBlock.Styles>
+                    <Style Selector="TextBlock.lyrics-line-translation.active">
+                      <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                      <Setter Property="Opacity" Value="0.9"/>
+                    </Style>
+                  </TextBlock.Styles>
+                </TextBlock>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Border x:Name="LyricsBottomSpacer" Height="0"/>
+      </StackPanel>
+    </ScrollViewer>
+
+    <controls:EmptyStateView VerticalAlignment="Center" HorizontalAlignment="Center"
+                             IsVisible="{Binding !HasLyricLines}"
+                             Title="{Binding LyricsEmptyTitle}"
+                             Description="{Binding LyricsEmptyDescription}"
+                             ShowIcon="False"/>
+  </Grid>
+</UserControl>

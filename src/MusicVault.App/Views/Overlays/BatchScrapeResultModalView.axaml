@@ -1,0 +1,93 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             xmlns:controls="using:MusicVault.App.Controls"
+             x:Class="MusicVault.App.Views.Overlays.BatchScrapeResultModalView"
+             x:DataType="vm:BatchScrapeResultModalViewModel">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel" MinWidth="480" MaxWidth="640">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding DismissLabel}" Classes="primary app-dialog-btn" Command="{Binding DismissCommand}"/>
+        </StackPanel>
+      </Border>
+      <StackPanel Classes="app-dialog-body" Spacing="16">
+        <controls:ResultView Status="{Binding ResultStatus}"
+                             Title="{Binding TitleText}"
+                             Description="{Binding OutcomeText}"/>
+
+        <TextBlock Text="{Binding ProcessedSummaryText}" Classes="text-caption"
+                   Foreground="{DynamicResource TextSecondaryBrush}"
+                   HorizontalAlignment="Center"/>
+
+        <Grid ColumnDefinitions="*,*,*">
+          <Border Grid.Column="0" Background="{DynamicResource SearchFieldBrush}"
+                  BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1"
+                  CornerRadius="{DynamicResource RadiusControl}" Padding="10,8" Margin="{DynamicResource MarginBottomXs}">
+            <StackPanel Spacing="2" HorizontalAlignment="Center">
+              <TextBlock Text="{Binding Result.SuccessCount}" Classes="text-subtitle"
+                         HorizontalAlignment="Center"/>
+              <TextBlock Text="{Binding SuccessLabel}" Classes="text-caption"
+                         Foreground="{DynamicResource TextSecondaryBrush}"
+                         HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Border>
+          <Border Grid.Column="1" Background="{DynamicResource SearchFieldBrush}"
+                  BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1"
+                  CornerRadius="{DynamicResource RadiusControl}" Padding="10,8" Margin="{DynamicResource MarginBottomXs}">
+            <StackPanel Spacing="2" HorizontalAlignment="Center">
+              <TextBlock Text="{Binding Result.FailedCount}" Classes="text-subtitle"
+                         Foreground="{DynamicResource DangerBrush}"
+                         HorizontalAlignment="Center"/>
+              <TextBlock Text="{Binding FailedLabel}" Classes="text-caption"
+                         Foreground="{DynamicResource TextSecondaryBrush}"
+                         HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Border>
+          <Border Grid.Column="2" Background="{DynamicResource SearchFieldBrush}"
+                  BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1"
+                  CornerRadius="{DynamicResource RadiusControl}" Padding="10,8" Margin="{DynamicResource MarginBottomXs}">
+            <StackPanel Spacing="2" HorizontalAlignment="Center">
+              <TextBlock Text="{Binding Result.IgnoredCount}" Classes="text-subtitle"
+                         HorizontalAlignment="Center"/>
+              <TextBlock Text="{Binding IgnoredLabel}" Classes="text-caption"
+                         Foreground="{DynamicResource TextSecondaryBrush}"
+                         HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Border>
+        </Grid>
+
+        <TextBlock Text="{Binding ActionHint}" Classes="text-caption" TextWrapping="Wrap" LineHeight="18"
+                   Foreground="{DynamicResource TextSecondaryBrush}"
+                   IsVisible="{Binding ShowActionHint}"/>
+
+        <StackPanel Spacing="6" IsVisible="{Binding ShowFailureSection}">
+          <TextBlock Text="{Binding FailureSectionTitle}" Classes="text-label"/>
+          <Border Background="{DynamicResource SearchFieldBrush}"
+                  BorderBrush="{DynamicResource BorderSubtleBrush}"
+                  BorderThickness="1" CornerRadius="{DynamicResource RadiusControl}"
+                  MaxHeight="260">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+              <ItemsControl ItemsSource="{Binding Result.FailureEntries}" Margin="{DynamicResource FieldCaptionLeadingMargin}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:BatchScrapeFailureEntry">
+                    <Border BorderBrush="{DynamicResource BorderSubtleBrush}"
+                            BorderThickness="0,0,0,1" Padding="0,0,0,8" Margin="{DynamicResource MarginBottomSm}">
+                      <StackPanel Spacing="2">
+                        <TextBlock Text="{Binding TrackLabel}" Classes="text-label"
+                                   TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding Reason}" Classes="text-caption"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   TextWrapping="Wrap" LineHeight="18"/>
+                      </StackPanel>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Border>
+        </StackPanel>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</UserControl>

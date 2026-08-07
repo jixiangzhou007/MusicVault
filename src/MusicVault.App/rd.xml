@@ -1,0 +1,19 @@
+<!--
+  NativeAOT 裁剪保留清单（Avalonia + TagLibSharp + SQLite）
+  使用 -p:EnableAot=true 发布时生效
+-->
+<Directives>
+  <Application>
+    <Assembly Name="MusicVault.App" Dynamic="Required All" />
+    <Assembly Name="MusicVault.Core" Dynamic="Required All" />
+    <Assembly Name="MusicVault.Services" Dynamic="Required All" />
+    <Assembly Name="MusicVault.Data" Dynamic="Required All" />
+    <Assembly Name="Avalonia.Base" Dynamic="Required All" />
+    <Assembly Name="Avalonia.Controls" Dynamic="Required All" />
+    <Assembly Name="Avalonia.Themes.Fluent" Dynamic="Required All" />
+    <Assembly Name="TagLibSharp" Dynamic="Required All" />
+    <Assembly Name="Microsoft.Data.Sqlite" Dynamic="Required All" />
+    <Assembly Name="NAudio" Dynamic="Required All" />
+    <Assembly Name="Velopack" Dynamic="Required All" />
+  </Application>
+</Directives>

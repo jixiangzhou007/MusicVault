@@ -1,0 +1,327 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MusicVault.App.ViewModels"
+        xmlns:views="using:MusicVault.App.Views"
+        xmlns:player="using:MusicVault.App.Views.Player"
+        xmlns:eq="using:MusicVault.App.Views.Player"
+        xmlns:nowplaying="using:MusicVault.App.Views.Player"
+        xmlns:overlays="using:MusicVault.App.Views.Overlays"
+        xmlns:sidebar="using:MusicVault.App.Views.Sidebar"
+        xmlns:msg="using:MusicVault.App.Views.Controls"
+        xmlns:conv="using:MusicVault.App.Converters"
+        xmlns:core="using:MusicVault.Core.Enums"
+        xmlns:automation="using:Avalonia.Automation"
+        x:Class="MusicVault.App.Views.MainWindow"
+        x:Name="RootWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="MusicVault"
+        Width="1320" Height="860"
+        MinWidth="1024" MinHeight="700"
+        Background="{DynamicResource BackgroundBrush}">
+
+  <Border x:Name="WindowShell"
+          Classes="window-shell"
+          CornerRadius="{DynamicResource WindowShellCornerRadius}"
+          ClipToBounds="True"
+          Background="{DynamicResource SeparatorBrush}"
+          Padding="{DynamicResource WindowShellStrokePadding}">
+    <Border x:Name="WindowShellInner"
+            CornerRadius="{DynamicResource WindowShellInnerCornerRadius}"
+            ClipToBounds="True"
+            Background="{DynamicResource BackgroundBrush}">
+  <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+    <Border x:Name="TopNavBar" Grid.Row="0" Classes="top-nav-bar"
+            IsVisible="{Binding ShowFullShell}"
+            PointerPressed="OnTitleBarPointerPressed">
+      <Grid ColumnDefinitions="Auto,*,Auto" Height="{DynamicResource TopNavHeight}">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center"
+                    Margin="{DynamicResource WindowLogoMargin}" IsVisible="{Binding ShowFullShell}">
+          <Button Classes="top-logo-btn" ToolTip.Tip="{Binding NavHomeToolTip}"
+                  automation:AutomationProperties.Name="{Binding NavHomeToolTip}"
+                  Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Home}">
+            <Border Classes="top-logo">
+              <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-sm"
+                         Foreground="{DynamicResource IconOnAccentBrush}"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+          </Button>
+          <Button Content="{Binding NavHome}" Classes="nav-tab"
+                  Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=Home}"
+                  Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Home}"
+                  ToolTip.Tip="{Binding NavHomeToolTip}"
+                  automation:AutomationProperties.Name="{Binding NavHome}"/>
+        </StackPanel>
+        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center"
+                      IsVisible="{Binding ShowFullShell}">
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Content="{Binding NavLibrary}" Classes="nav-tab"
+                    Classes.selected="{Binding IsLibraryNavSelected}"
+                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.AllTracks}"
+                    ToolTip.Tip="{Binding NavLibraryToolTip}"
+                    automation:AutomationProperties.Name="{Binding NavLibrary}"/>
+            <Button Classes="nav-tab"
+                    Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=Search}"
+                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Search}"
+                    ToolTip.Tip="{Binding NavDiscoverToolTip}"
+                    automation:AutomationProperties.Name="{Binding NavDiscover}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{Binding NavDiscover}" VerticalAlignment="Center"/>
+                <Border Classes="ant-badge ant-badge-dot"
+                        Classes.ant-badge-dot-error="{Binding ApiHealthDotIsError}"
+                        Classes.ant-badge-dot-warning="{Binding ApiHealthDotIsWarning}"
+                        Classes.ant-badge-dot-processing="{Binding ApiHealthDotIsProcessing}"
+                        VerticalAlignment="Center"
+                        IsVisible="{Binding ShowApiHealthIndicator}"/>
+              </StackPanel>
+            </Button>
+            <Button Classes="nav-tab"
+                    Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=Downloads}"
+                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Downloads}"
+                    ToolTip.Tip="{Binding NavTransfersToolTip}"
+                    automation:AutomationProperties.Name="{Binding NavTransfers}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{Binding NavTransfers}" VerticalAlignment="Center"/>
+                <Border Classes="ant-badge ant-badge-count"
+                        VerticalAlignment="Center"
+                        IsVisible="{Binding ActiveDownloadCount, Converter={x:Static conv:IntToVisibilityConverter.Instance}}">
+                  <TextBlock Text="{Binding ActiveDownloadCount}" Classes="text-caption"/>
+                </Border>
+              </StackPanel>
+            </Button>
+            <Button Content="{Binding NavTools}" Classes="nav-tab"
+                    Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=AudioTools}"
+                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.AudioTools}"
+                    automation:AutomationProperties.Name="{Binding NavTools}"/>
+            <Button Content="{Binding NavSettings}" Classes="nav-tab"
+                    Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=Settings}"
+                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Settings}"
+                    automation:AutomationProperties.Name="{Binding NavSettings}"/>
+          </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4"
+                    VerticalAlignment="Center" Margin="{DynamicResource WindowNavLeadingMargin}">
+          <Button Classes="top-icon-btn"
+                  Command="{Binding OpenOnlineApiSettingsCommand}"
+                  ToolTip.Tip="{Binding ApiHealthToolTip}"
+                  automation:AutomationProperties.Name="{Binding ApiHealthToolTip}"
+                  IsVisible="{Binding ShowApiHealthIndicator}"
+                  VerticalAlignment="Center">
+            <Border Classes="ant-badge ant-badge-dot"
+                    Classes.ant-badge-dot-error="{Binding ApiHealthDotIsError}"
+                    Classes.ant-badge-dot-warning="{Binding ApiHealthDotIsWarning}"
+                    Classes.ant-badge-dot-processing="{Binding ApiHealthDotIsProcessing}"
+                    Width="10" Height="10" MinWidth="10" MinHeight="10" CornerRadius="5"/>
+          </Button>
+          <Button Classes="top-icon-btn"
+                  Command="{Binding ToggleCompactPlayerCommand}"
+                  ToolTip.Tip="{Binding CompactPlayerToggleToolTip}"
+                  automation:AutomationProperties.Name="{Binding CompactPlayerToggleToolTip}"
+                  IsVisible="{Binding ShowFullShell}"
+                  VerticalAlignment="Center">
+            <TextBlock Text="{StaticResource IconGlyphCompactPlayer}" Classes="icon-sm"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          </Button>
+          <Button Classes="top-icon-btn" ToolTip.Tip="{Binding NavThemeToolTip}"
+                  automation:AutomationProperties.Name="{Binding NavThemeToolTip}"
+                  Command="{Binding CycleThemeCommand}" VerticalAlignment="Center"
+                  IsVisible="{Binding ShowFullShell}">
+            <TextBlock Text="{StaticResource IconGlyphTheme}" Classes="icon-sm"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          </Button>
+          <Button Classes="top-icon-btn" ToolTip.Tip="{Binding NavAboutToolTip}"
+                  automation:AutomationProperties.Name="{Binding NavAboutToolTip}"
+                  Command="{Binding ShowAboutCommand}" VerticalAlignment="Center"
+                  IsVisible="{Binding ShowFullShell}">
+            <TextBlock Text="{StaticResource IconGlyphInfo}" Classes="icon-sm"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          </Button>
+          <Border x:Name="WindowChromeDivider" Width="1" Margin="{DynamicResource MarginBottomXs}"
+                  Background="{DynamicResource SeparatorBrush}"
+                  IsVisible="False"/>
+          <StackPanel x:Name="WindowChromePanel" Orientation="Horizontal" Spacing="0"
+                      IsVisible="False">
+            <Button Classes="window-chrome-btn" ToolTip.Tip="{Binding WindowMinimizeToolTip}"
+                    Click="OnWindowMinimizeClick">
+              <TextBlock Text="{StaticResource IconGlyphMinimize}" Classes="icon-xs"/>
+            </Button>
+            <Button x:Name="MaximizeChromeButton" Classes="window-chrome-btn"
+                    ToolTip.Tip="{Binding WindowMaximizeToolTip}" Click="OnWindowMaximizeClick">
+              <TextBlock x:Name="MaximizeChromeGlyph" Text="{StaticResource IconGlyphMaximize}" Classes="icon-xs"/>
+            </Button>
+            <Button Classes="window-chrome-btn window-chrome-close" ToolTip.Tip="{Binding WindowCloseToolTip}"
+                    Click="OnWindowCloseClick">
+              <TextBlock Text="{StaticResource IconGlyphClose}" Classes="icon-xs"/>
+            </Button>
+          </StackPanel>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Border Grid.Row="1" Classes="music-browse-bar" IsVisible="{Binding ShowMusicBrowseBar}">
+      <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center"
+                    Margin="{DynamicResource WindowLogoMargin}">
+          <StackPanel Orientation="Horizontal" Spacing="0">
+            <Button Content="{Binding NavBrowseTracks}" Classes="music-browse-tab"
+                    Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=AllTracks}"
+                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.AllTracks}"/>
+            <Button Content="{Binding NavBrowseArtists}" Classes="music-browse-tab"
+                    Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=Artists}"
+                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Artists}"/>
+            <Button Content="{Binding NavBrowseAlbums}" Classes="music-browse-tab"
+                    Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=Albums}"
+                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Albums}"/>
+            <Button Content="{Binding NavBrowsePlaylists}" Classes="music-browse-tab"
+                    Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=Playlists}"
+                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Playlists}"/>
+          </StackPanel>
+      </ScrollViewer>
+    </Border>
+
+  <!-- 主内容区：完整 / 精简二选一（同占一行，不叠 Panel） -->
+    <Grid Grid.Row="2" x:Name="MainBodyHost" ClipToBounds="True">
+      <Grid x:Name="ContentRoot" ClipToBounds="True"
+            IsVisible="{Binding ShowFullShell}"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+      <Grid x:Name="MainContentGrid" RowDefinitions="Auto,Auto,*"
+            Classes="main-content-grid"
+            HorizontalAlignment="Stretch">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="{DynamicResource PageHeaderBlockMargin}"
+              IsVisible="{Binding ShowPageHeader}">
+          <StackPanel Spacing="6">
+            <Button Classes="page-back-btn"
+                    IsVisible="{Binding CurrentPage.ShowPageBackButton}"
+                    Command="{Binding CurrentPage.PageBackCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="&#xE72B;" Classes="icon-sm"/>
+                <TextBlock Text="{Binding CurrentPage.PageBackButtonLabel}" Classes="text-label"/>
+              </StackPanel>
+            </Button>
+            <TextBlock Text="{Binding CurrentPage.PageTitle}" Classes="page-title"
+                       IsVisible="{Binding CurrentPage.PageTitle, Converter={x:Static conv:StringNotEmptyConverter.Instance}}"/>
+            <TextBlock Text="{Binding CurrentPage.PageSubtitle}" Classes="page-subtitle"
+                       IsVisible="{Binding CurrentPage.ShowPageSubtitle}"/>
+          </StackPanel>
+          <Border Grid.Column="1" Background="{DynamicResource NavHoverBrush}" Padding="10,8" VerticalAlignment="Top" MaxWidth="300"
+                  IsVisible="{Binding ShowHeaderStatusBadge}">
+            <StackPanel Spacing="6" MinWidth="120">
+              <TextBlock Text="{Binding StatusMessage}" Classes="text-label"
+                         Foreground="{DynamicResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+              <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding ShowHeaderScanProgress}">
+                <ProgressBar Grid.Column="0" Value="{Binding LibraryScanProgress}" Maximum="100"
+                             Classes="ant-progress-line-small"/>
+                <TextBlock Grid.Column="1" Text="{Binding LibraryScanProgress, StringFormat={}{0:F0}%}"
+                           Classes="ant-progress-percent"/>
+              </Grid>
+            </StackPanel>
+          </Border>
+        </Grid>
+        <Border Grid.Row="1" Classes="page-header-divider"
+                IsVisible="{Binding ShowPageHeaderDivider}"/>
+        <views:PageContentHost Grid.Row="2" DataContext="{Binding}"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"/>
+      </Grid>
+      </Grid>
+
+      <Grid IsVisible="{Binding IsCompactPlayerMode}"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="{DynamicResource PlayerChromeBaseBrush}">
+        <player:CompactPlayerView x:Name="CompactPlayerHost"
+                                  DataContext="{Binding CompactPlayer}"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Top"/>
+      </Grid>
+    </Grid>
+
+    <Panel Grid.Row="3" ZIndex="160" IsVisible="{Binding ShowFullShell}">
+      <player:PlayerBarView DataContext="{Binding Player}"/>
+    </Panel>
+
+    <!-- 右侧 Drawer：歌词 / 元数据 / 播放队列 -->
+    <Grid Grid.Row="0" Grid.RowSpan="3"
+          Classes="ant-drawer-host"
+          Classes.drawer-open="{Binding RightSidebar.IsOpen}"
+          IsHitTestVisible="{Binding RightSidebar.IsOpen}"
+          ZIndex="165">
+      <Border Classes="modal-scrim" PointerPressed="OnDrawerScrimPressed"/>
+      <Border Classes="ant-drawer-panel"
+              Classes.drawer-open="{Binding RightSidebar.IsOpen}"
+              Width="{Binding RightSidebar.PanelWidth}"
+              MinWidth="220" MaxWidth="560"
+              PointerPressed="OnDrawerPanelPressed">
+        <sidebar:RightSidebarView DataContext="{Binding RightSidebar}"/>
+      </Border>
+    </Grid>
+
+    <!-- Form Drawer：大表单（歌词编辑 / 组合标签搜索 / 平台登录） -->
+    <Grid Grid.Row="0" Grid.RowSpan="3"
+          Classes="ant-drawer-host"
+          Classes.drawer-open="{Binding FormDrawer.IsOpen}"
+          IsHitTestVisible="{Binding FormDrawer.IsOpen}"
+          ZIndex="170">
+      <Border Classes="modal-scrim" PointerPressed="OnFormDrawerScrimPressed"/>
+      <Border Classes="ant-drawer-panel"
+              Classes.drawer-open="{Binding FormDrawer.IsOpen}"
+              Classes.form-drawer-wide="{Binding FormDrawer.IsWidePanel}"
+              Width="{Binding FormDrawer.PanelWidth}"
+              MinWidth="220" MaxWidth="{Binding FormDrawer.PanelMaxWidth}"
+              PointerPressed="OnFormDrawerPanelPressed">
+        <overlays:FormDrawerOverlayView DataContext="{Binding FormDrawer}"/>
+      </Border>
+    </Grid>
+
+    <!-- 全屏正在播放（保留底部播放栏；顶栏拖动手势层在最上层） -->
+    <Grid Grid.Row="0" Grid.RowSpan="3"
+          IsVisible="{Binding IsNowPlayingFullscreenOpen}"
+          IsHitTestVisible="{Binding IsNowPlayingFullscreenOpen}"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          ZIndex="150">
+      <nowplaying:NowPlayingFullscreenView DataContext="{Binding NowPlayingFullscreen}"
+                                           HorizontalAlignment="Stretch"
+                                           VerticalAlignment="Stretch"/>
+    </Grid>
+
+    <!-- 命令面板 Ctrl+K -->
+    <Grid Grid.Row="0" Grid.RowSpan="4"
+          IsVisible="{Binding CommandPalette.IsOpen}"
+          IsHitTestVisible="{Binding CommandPalette.IsOpen}"
+          ZIndex="205">
+      <overlays:CommandPaletteView DataContext="{Binding CommandPalette}"/>
+    </Grid>
+
+    <!-- 均衡器模态层：打开时覆盖全窗（含播放栏） -->
+    <Grid Grid.Row="0" Grid.RowSpan="4"
+          IsVisible="{Binding IsEqualizerOpen}"
+          IsHitTestVisible="{Binding IsEqualizerOpen}"
+          ZIndex="200">
+      <Border Classes="modal-scrim" PointerPressed="OnEqualizerScrimPressed"/>
+      <eq:EqualizerOverlayView DataContext="{Binding Equalizer}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               PointerPressed="OnEqualizerPanelPressed"/>
+    </Grid>
+
+    <!-- 统一确认模态层：遮罩 + 居中卡片（与均衡器同级视觉语言） -->
+    <Grid Grid.Row="0" Grid.RowSpan="4"
+          IsVisible="{Binding AppModal.IsOpen}"
+          IsHitTestVisible="{Binding AppModal.IsOpen}"
+          ZIndex="210">
+      <Border Classes="modal-scrim" PointerPressed="OnAppModalScrimPressed"/>
+      <overlays:AppModalOverlayView DataContext="{Binding AppModal}"
+                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    </Grid>
+
+    <!-- 顶栏 Message：轻量成功/错误/信息反馈 -->
+    <msg:TopMessageHost Grid.Row="0" Grid.RowSpan="4"
+                        ZIndex="220"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"/>
+  </Grid>
+    </Border>
+  </Border>
+</Window>

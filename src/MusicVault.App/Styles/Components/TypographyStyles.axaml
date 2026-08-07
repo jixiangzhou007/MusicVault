@@ -1,0 +1,131 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- 全局文字渲染 -->
+  <Style Selector="Window">
+    <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+  </Style>
+  <Style Selector="TextBlock">
+    <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+  </Style>
+  <Style Selector="TextBox">
+    <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+  </Style>
+  <Style Selector="Button">
+    <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+  </Style>
+  <Style Selector="ComboBox">
+    <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+  </Style>
+
+  <!-- ===== P2：排版 text-* / 图标 icon-* ===== -->
+  <Style Selector="TextBlock.text-micro">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeMicro}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.text-caption">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.text-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.text-body">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.text-subtitle">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle3}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.text-lead">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLead}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.text-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle2}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.text-display">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLargeTitle}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.text-page-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizePageTitle}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <!-- ===== WinUI 图标（Segoe Fluent Icons） ===== -->
+  <Style Selector="TextBlock.fluent-icon">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.icon-xs">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeXs}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.icon-sm">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.icon-md">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeMd}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.icon-lg">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeLg}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.icon-xl">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeXl}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.icon-2xl">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSize2xl}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.icon-hero">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeHero}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.icon-muted">
+    <Setter Property="Foreground" Value="{DynamicResource IconSecondaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.icon-accent">
+    <Setter Property="Foreground" Value="{DynamicResource IconAccentBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.icon-on-accent">
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+  </Style>
+
+  <Style Selector="Border.ds-section">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusMd}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Padding" Value="16"/>
+    <Setter Property="Margin" Value="0,0,0,12"/>
+  </Style>
+  <Style Selector="TextBlock.ds-section-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle3}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="Margin" Value="0,0,0,12"/>
+  </Style>
+</Styles>

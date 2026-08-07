@@ -1,0 +1,151 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- 图标按钮体系：尺寸 Token + 统一 hover/pressed；随 TypographyScale 与主题切换联动 -->
+
+  <Style Selector="Button TextBlock.fluent-icon,
+                   Button TextBlock.icon-xs,
+                   Button TextBlock.icon-sm,
+                   Button TextBlock.icon-md,
+                   Button TextBlock.icon-lg,
+                   Button TextBlock.icon-xl,
+                   Button TextBlock.track-row-glyph">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+
+  <!-- 列表行：28×28，icon-sm -->
+  <Style Selector="Button.row-action-btn,
+                   Button.btn-icon-row">
+    <Setter Property="Width" Value="{DynamicResource RowActionButtonSize}"/>
+    <Setter Property="Height" Value="{DynamicResource RowActionButtonSize}"/>
+    <Setter Property="MinWidth" Value="{DynamicResource RowActionButtonSize}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource RowActionButtonSize}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.row-action-btn:pointerover,
+                   Button.btn-icon-row:pointerover">
+    <Setter Property="Background" Value="{DynamicResource ButtonIconHoverBrush}"/>
+  </Style>
+  <Style Selector="Button.row-action-btn:pressed,
+                   Button.btn-icon-row:pressed">
+    <Setter Property="Background" Value="{DynamicResource ButtonIconPressedBrush}"/>
+  </Style>
+
+  <!-- 紧凑工具栏图标：22×22（侧栏 +/刷新） -->
+  <Style Selector="Button.icon-toolbar-btn,
+                   Button.icon-more-btn,
+                   Button.library-pane-icon-btn">
+    <Setter Property="Width" Value="{DynamicResource IconToolbarButtonSize}"/>
+    <Setter Property="Height" Value="{DynamicResource IconToolbarButtonSize}"/>
+    <Setter Property="MinWidth" Value="{DynamicResource IconToolbarButtonSize}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource IconToolbarButtonSize}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconSecondaryBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.icon-toolbar-btn:pointerover,
+                   Button.icon-more-btn:pointerover,
+                   Button.library-pane-icon-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource ButtonIconHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Button.icon-toolbar-btn:pressed,
+                   Button.icon-more-btn:pressed,
+                   Button.library-pane-icon-btn:pressed">
+    <Setter Property="Background" Value="{DynamicResource ButtonIconPressedBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Button.icon-toolbar-btn TextBlock.icon-xs,
+                   Button.icon-more-btn TextBlock.icon-xs,
+                   Button.library-pane-icon-btn TextBlock.icon-xs">
+    <Setter Property="Foreground" Value="{DynamicResource IconSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Button.icon-toolbar-btn:pointerover TextBlock.icon-xs,
+                   Button.icon-more-btn:pointerover TextBlock.icon-xs,
+                   Button.library-pane-icon-btn:pointerover TextBlock.icon-xs,
+                   Button.icon-toolbar-btn:pressed TextBlock.icon-xs,
+                   Button.icon-more-btn:pressed TextBlock.icon-xs,
+                   Button.library-pane-icon-btn:pressed TextBlock.icon-xs">
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+
+  <!-- 标准工具栏图标：32×32（顶栏、侧栏关闭） -->
+  <Style Selector="Button.icon-btn,
+                   Button.btn-icon-toolbar,
+                   Button.top-icon-btn">
+    <Setter Property="Width" Value="{DynamicResource IconButtonSizeMd}"/>
+    <Setter Property="Height" Value="{DynamicResource IconButtonSizeMd}"/>
+    <Setter Property="MinWidth" Value="{DynamicResource IconButtonSizeMd}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource IconButtonSizeMd}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconSecondaryBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.icon-btn:pointerover,
+                   Button.btn-icon-toolbar:pointerover,
+                   Button.top-icon-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource ButtonIconHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Button.icon-btn:pressed,
+                   Button.btn-icon-toolbar:pressed,
+                   Button.top-icon-btn:pressed">
+    <Setter Property="Background" Value="{DynamicResource ButtonIconPressedBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Button.top-icon-btn TextBlock,
+                   Button.icon-btn TextBlock,
+                   Button.btn-icon-toolbar TextBlock">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+
+  <!-- 侧栏折叠：28×28 点击区 -->
+  <Style Selector="Button.library-pane-toggle-btn">
+    <Setter Property="Width" Value="{DynamicResource RowActionButtonSize}"/>
+    <Setter Property="Height" Value="{DynamicResource RowActionButtonSize}"/>
+    <Setter Property="MinWidth" Value="{DynamicResource RowActionButtonSize}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource RowActionButtonSize}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconSecondaryBrush}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="ToolTip.ShowDelay" Value="300"/>
+  </Style>
+  <Style Selector="Button.library-pane-toggle-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource ButtonIconHoverBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Button.library-pane-toggle-btn:pressed">
+    <Setter Property="Background" Value="{DynamicResource ButtonIconPressedBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
+
+</Styles>

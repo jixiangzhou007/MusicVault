@@ -1,0 +1,412 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MusicVault.App.Controls">
+  <Style Selector="TextBlock.track-col-cell">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Margin" Value="{DynamicResource TrackColCellMargin}"/>
+  </Style>
+
+  <Style Selector="TextBlock.track-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.track-col-cell.track-artist,
+                   TextBlock.track-col-cell.track-album">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.track-row-glyph">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
+    <Setter Property="LineHeight" Value="{DynamicResource IconSizeSm}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.library-list-row">
+    <Setter Property="Height" Value="34"/>
+    <Setter Property="MinHeight" Value="34"/>
+    <Setter Property="MaxHeight" Value="34"/>
+    <Setter Property="Padding" Value="12,0,12,0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Border.library-list-row.library-list-row-child">
+    <Setter Property="Padding" Value="{DynamicResource LibraryListRowChildPadding}"/>
+  </Style>
+  <Style Selector="Border.library-list-row.library-list-row-muted TextBlock.text-label">
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+
+  <Style Selector="Border.track-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Grid.track-row-content">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="{DynamicResource TrackRowHorizontalMargin}"/>
+    <Setter Property="Height" Value="{DynamicResource TrackRowHeight}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Border.track-row-divider">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="MinHeight" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="Margin" Value="{DynamicResource TrackRowHorizontalMargin}"/>
+  </Style>
+  <Style Selector="Grid.queue-sidebar-row > TextBlock.track-col-cell">
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+  <Style Selector="Grid.batch-scrape-row">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Grid.batch-scrape-row TextBlock.track-col-cell">
+    <Setter Property="MinWidth" Value="0"/>
+  </Style>
+  <Style Selector="TextBlock.batch-scrape-col-check">
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.batch-scrape-check">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.batch-scrape-check.success">
+    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.batch-scrape-check-skip">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+  <Style Selector="Grid.batch-scrape-check-cell">
+    <Setter Property="Width" Value="40"/>
+    <Setter Property="MinWidth" Value="40"/>
+    <Setter Property="MaxWidth" Value="40"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Grid.batch-scrape-check-cell > Border">
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Grid.batch-scrape-check-cell > TextBlock">
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.track-col-header.track-col-header-index,
+                   TextBlock.track-col-header.track-col-header-meta">
+    <Setter Property="Margin" Value="{DynamicResource TrackColHeaderIndexMargin}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.track-col-cell.track-col-cell-leading,
+                   TextBlock.track-col-cell.track-col-cell-meta">
+    <Setter Property="Margin" Value="{DynamicResource TrackColHeaderIndexMargin}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+  <Style Selector="TextBlock.track-col-cell.track-col-cell-leading">
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.track-col-cell.track-col-cell-meta">
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+  </Style>
+  <Style Selector="Grid.track-col-title-host">
+    <Setter Property="Margin" Value="{DynamicResource TrackColCellMargin}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Grid.track-col-title-host > TextBlock.track-col-cell">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="Grid.track-row-content Button.row-action-btn">
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Grid.track-row-content TextBlock.track-col-cell:not(.track-col-cell-leading)">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+  </Style>
+  <Style Selector="Grid.track-table-header TextBlock.track-col-header:not(.track-col-header-index)">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+  </Style>
+
+  <!-- 首页扁平分区 -->
+  <Style Selector="DockPanel.pane-library">
+    <Setter Property="Background" Value="{DynamicResource LibraryPaneBrush}"/>
+  </Style>
+  <Style Selector="DockPanel.pane-play">
+    <Setter Property="Background" Value="{DynamicResource PlayPaneBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Grid.home-playing-split">
+    <Setter Property="Background" Value="{DynamicResource PlayPaneBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="DockPanel.home-history-pane">
+    <Setter Property="Margin" Value="{DynamicResource HomeHistoryPaneMargin}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.home-track-section">
+    <Setter Property="Spacing" Value="0"/>
+  </Style>
+  <Style Selector="DockPanel.home-section-header,
+                   Grid.home-section-header">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="{DynamicResource HomeSectionHeaderMargin}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="DockPanel.home-section-header StackPanel.home-section-actions,
+                   Grid.home-section-header StackPanel.home-section-actions">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Spacing" Value="6"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="DockPanel.home-section-header Button,
+                   Grid.home-section-header Button">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="controls|EmptyStateView.home-table-empty">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="Margin" Value="{DynamicResource HomeTableEmptyMargin}"/>
+  </Style>
+  <Style Selector="controls|EmptyStateView.home-table-empty StackPanel.ant-empty">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Grid.home-onboarding,
+                   StackPanel.home-onboarding">
+    <Setter Property="MaxWidth" Value="{DynamicResource ContentWidthWide}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="StackPanel.home-onboarding-immersive">
+    <Setter Property="MaxWidth" Value="420"/>
+  </Style>
+  <Style Selector="Grid.home-onboarding TextBlock.ant-empty-title,
+                   Grid.home-onboarding TextBlock.ant-empty-desc,
+                   Grid.home-onboarding TextBlock.text-caption">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+  </Style>
+  <Style Selector="TextBlock.home-empty-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle2}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Margin" Value="0,8,0,0"/>
+  </Style>
+  <Style Selector="TextBlock.home-empty-hint">
+    <Setter Property="Opacity" Value="0.85"/>
+  </Style>
+  <Style Selector="Button.home-empty-primary">
+    <Setter Property="Margin" Value="0,8,0,0"/>
+  </Style>
+  <Style Selector="controls|StepsIndicator.home-onboarding-steps StackPanel.ant-steps-row">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+  </Style>
+  <Style Selector="WrapPanel.home-onboarding-actions">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="Margin" Value="0,4,0,0"/>
+  </Style>
+  <Style Selector="WrapPanel.home-empty-secondary">
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="0,4,0,0"/>
+  </Style>
+  <Style Selector="WrapPanel.home-empty-secondary > Button.flat-btn">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Opacity" Value="0.9"/>
+  </Style>
+  <Style Selector="WrapPanel.home-onboarding-actions > Button">
+    <Setter Property="Margin" Value="0,0,8,8"/>
+  </Style>
+
+  <Style Selector="Button.flat-btn, Button.btn-ghost">
+    <Setter Property="Background" Value="{DynamicResource ControlFillDefaultBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeDefaultBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Padding" Value="10,8"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.flat-btn:pointerover:not(.primary), Button.btn-ghost:pointerover:not(.primary)">
+    <Setter Property="Background" Value="{DynamicResource ButtonGhostHoverBrush}"/>
+  </Style>
+  <Style Selector="Button.flat-btn:pressed:not(.primary), Button.btn-ghost:pressed:not(.primary)">
+    <Setter Property="Background" Value="{DynamicResource ControlFillSecondaryBrush}"/>
+  </Style>
+
+  <!-- 侧栏折叠：尺寸见 IconButton.axaml（library-pane-toggle-btn） -->
+  <Style Selector="Border.library-pane-toolbar-sep">
+    <Setter Property="Width" Value="1"/>
+    <Setter Property="Height" Value="16"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="2,0,0,0"/>
+  </Style>
+
+  <Style Selector="ListBox.music-library-list">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.music-library-list ListBoxItem">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Height" Value="34"/>
+    <Setter Property="MinHeight" Value="34"/>
+    <Setter Property="MaxHeight" Value="34"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="ListBox.music-library-list ListBoxItem /template/ ContentPresenter">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="CornerRadius" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.music-library-list ListBoxItem:selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="CornerRadius" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.music-library-list ListBoxItem:selected">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ListBox.music-library-list ListBoxItem:selected Border.library-list-row">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="3,0,0,0"/>
+  </Style>
+  <Style Selector="ListBox.music-library-list ListBoxItem:selected Border.library-list-row TextBlock.text-label">
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+  </Style>
+  <Style Selector="ListBox.music-library-list ListBoxItem:selected Border.library-list-row TextBlock.text-caption">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.music-library-list ListBoxItem:not(:selected) Border.library-list-row TextBlock.text-label">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.music-library-list ListBoxItem:pointerover:not(:selected) /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+
+  <Style Selector="Border.splitter-v">
+    <Setter Property="Width" Value="1"/>
+    <Setter Property="MinWidth" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+  </Style>
+  <Style Selector="Border.splitter-h">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="MinHeight" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+  </Style>
+  <!-- 列表区顶部分割线：与页面内容同宽，避免仅对齐表头列导致左右断开 -->
+  <Style Selector="Border.list-section-divider">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="MinHeight" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <!-- 统计/按钮工具栏上方的通栏分割线（页内区块；页头 Hero 请用 page-hero-divider） -->
+  <Style Selector="Border.page-toolbar-divider">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="MinHeight" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="{DynamicResource PageHeroDividerMargin}"/>
+  </Style>
+  <Style Selector="Border.library-pane-split">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="MinHeight" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="Margin" Value="12,0"/>
+  </Style>
+
+  <Style Selector="GridSplitter.splitter-v">
+    <Setter Property="Width" Value="4"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Width="1" HorizontalAlignment="Center"
+                Background="{DynamicResource SeparatorBrush}"/>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="Button.row-action-btn TextBlock.track-row-glyph">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
+    <Setter Property="LineHeight" Value="{DynamicResource IconSizeSm}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource IconSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Button.track-favorite-btn TextBlock.track-row-glyph">
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeMd}"/>
+    <Setter Property="LineHeight" Value="{DynamicResource IconSizeMd}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.track-delete-btn:pointerover TextBlock.track-row-glyph">
+    <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.track-favorite-glyph-off,
+                   TextBlock.track-row-glyph.track-favorite-glyph-off">
+    <Setter Property="Foreground" Value="{DynamicResource IconSecondaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.track-favorite-glyph-on,
+                   TextBlock.track-row-glyph.track-favorite-glyph-on">
+    <Setter Property="Foreground" Value="{DynamicResource FavoriteBrush}"/>
+  </Style>
+  <Style Selector="Button.track-favorite-btn:pointerover TextBlock.track-favorite-glyph-off,
+                   Button.track-favorite-btn:pointerover TextBlock.track-row-glyph.track-favorite-glyph-off">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <Style Selector="Button.row-action-labeled">
+    <Setter Property="MinWidth" Value="40"/>
+    <Setter Property="Height" Value="40"/>
+    <Setter Property="Padding" Value="2,0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.row-action-labeled:pointerover">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+
+  <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+</Styles>

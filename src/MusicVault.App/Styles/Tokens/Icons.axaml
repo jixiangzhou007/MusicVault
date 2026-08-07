@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- WinUI / Segoe Fluent Icons（与系统设置、文件资源管理器一致） -->
+  <FontFamily x:Key="IconFontFamily">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+
+  <!-- 播放控制 -->
+  <x:String x:Key="IconGlyphPlay">&#xE768;</x:String>
+  <x:String x:Key="IconGlyphPause">&#xE769;</x:String>
+  <x:String x:Key="IconGlyphPrevious">&#xE892;</x:String>
+  <x:String x:Key="IconGlyphNext">&#xE893;</x:String>
+  <x:String x:Key="IconGlyphStop">&#xE71A;</x:String>
+  <x:String x:Key="IconGlyphVolume">&#xE767;</x:String>
+  <x:String x:Key="IconGlyphVolumeMute">&#xE74F;</x:String>
+  <x:String x:Key="IconGlyphFullscreen">&#xE740;</x:String>
+
+  <!-- 导航 -->
+  <x:String x:Key="IconGlyphMusic">&#xE8D6;</x:String>
+  <x:String x:Key="IconGlyphSearch">&#xE721;</x:String>
+  <x:String x:Key="IconGlyphSettings">&#xE713;</x:String>
+  <x:String x:Key="IconGlyphTheme">&#xE793;</x:String>
+  <x:String x:Key="IconGlyphBack">&#xE72B;</x:String>
+  <x:String x:Key="IconGlyphInfo">&#xE946;</x:String>
+  <x:String x:Key="IconGlyphMore">&#xE712;</x:String>
+  <x:String x:Key="IconGlyphClose">&#xE8BB;</x:String>
+  <x:String x:Key="IconGlyphMinimize">&#xE921;</x:String>
+  <x:String x:Key="IconGlyphMaximize">&#xE922;</x:String>
+  <x:String x:Key="IconGlyphRestore">&#xE923;</x:String>
+
+  <!-- 操作 -->
+  <x:String x:Key="IconGlyphDownload">&#xE896;</x:String>
+  <x:String x:Key="IconGlyphHeart">&#xE006;</x:String>
+  <x:String x:Key="IconGlyphHeartFill">&#xE007;</x:String>
+  <x:String x:Key="IconGlyphAdd">&#xE710;</x:String>
+  <x:String x:Key="IconGlyphDelete">&#xE74D;</x:String>
+  <x:String x:Key="IconGlyphEdit">&#xE70F;</x:String>
+  <x:String x:Key="IconGlyphRefresh">&#xE72C;</x:String>
+  <x:String x:Key="IconGlyphCopy">&#xE8C8;</x:String>
+
+  <!-- 侧栏 / 面板 -->
+  <x:String x:Key="IconGlyphLyrics">&#xE8AB;</x:String>
+  <x:String x:Key="IconGlyphQueue">&#xE8CB;</x:String>
+  <x:String x:Key="IconGlyphEqualizer">&#xE793;</x:String>
+  <x:String x:Key="IconGlyphRepeatAll">&#xE8EE;</x:String>
+  <x:String x:Key="IconGlyphRepeatOne">&#xE8ED;</x:String>
+  <x:String x:Key="IconGlyphShuffle">&#xE8B1;</x:String>
+  <x:String x:Key="IconGlyphCompactPlayer">&#xE923;</x:String>
+
+</ResourceDictionary>

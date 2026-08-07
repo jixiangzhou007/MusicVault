@@ -1,0 +1,250 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="ListBox.combined-labels-list">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.combined-labels-list > ListBoxItem">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="MinHeight" Value="{DynamicResource TrackTableRowHeight}"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+  </Style>
+  <Style Selector="ListBox.combined-labels-list > ListBoxItem /template/ ContentPresenter">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="ListBox.combined-labels-list > ListBoxItem:pointerover:not(:selected) Grid.combined-labels-table-row-grid">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="ListBox.combined-labels-list > ListBoxItem:selected Grid.combined-labels-table-row-grid">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+  <Style Selector="ListBox.combined-labels-list > ListBoxItem:selected Border.combined-labels-table-row">
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="3,0,0,0"/>
+  </Style>
+  <Style Selector="ListBox.combined-labels-list > ListBoxItem:focus-visible Grid.combined-labels-table-row-grid">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+  </Style>
+  <Style Selector="ListBox.combined-labels-list TextBlock.track-col-cell">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="ListBox.combined-labels-list TextBlock.combined-labels-text-muted">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Border.combined-labels-table-header">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+  <Style Selector="Border.combined-labels-table-row">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+  </Style>
+  <Style Selector="Grid.combined-labels-table-grid">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="Grid.combined-labels-table-row-grid">
+    <Setter Property="Margin" Value="{DynamicResource TrackTableRowPairedMargin}"/>
+  </Style>
+
+  <!-- 组合标签表：表头/行单元格对齐（避免 track-row-content / 全局表头规则覆盖 meta 列居中） -->
+  <Style Selector="Grid.combined-labels-table-grid.track-table-header TextBlock.track-col-header.track-col-header-index,
+                   Grid.combined-labels-table-grid.track-table-header TextBlock.track-col-header.track-col-header-meta">
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Grid.combined-labels-table-grid.track-table-header TextBlock.track-col-header:not(.track-col-header-index):not(.track-col-header-meta)">
+    <Setter Property="Margin" Value="{DynamicResource TrackColHeaderMargin}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+  </Style>
+  <Style Selector="Grid.combined-labels-table-row-grid TextBlock.track-col-cell.track-col-cell-meta">
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Grid.combined-labels-table-row-grid TextBlock.track-col-cell:not(.track-col-cell-meta)">
+    <Setter Property="Margin" Value="{DynamicResource TrackColCellMargin}"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="TextAlignment" Value="Left"/>
+  </Style>
+
+  <Style Selector="TextBlock.metadata-editor-row-margin,
+                   TextBox.metadata-editor-row-margin,
+                   ComboBox.metadata-editor-row-margin,
+                   Button.metadata-editor-row-margin,
+                   CheckBox.metadata-editor-row-margin,
+                   Grid.metadata-editor-row-margin,
+                   StackPanel.metadata-editor-row-margin">
+    <Setter Property="Margin" Value="0,6,0,0"/>
+  </Style>
+
+  <!-- 标签与输入框上沿对齐：统一 top + 相同行间距 -->
+  <Style Selector="TextBlock.metadata-editor-row-top">
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Margin" Value="0,6,0,0"/>
+  </Style>
+  <Style Selector="Grid.metadata-editor-row-top,
+                   TextBox.metadata-editor-row-top,
+                   StackPanel.metadata-editor-row-top,
+                   Button.metadata-editor-row-top">
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Margin" Value="0,6,0,0"/>
+  </Style>
+  <Style Selector="TextBox.metadata-editor-nested-input">
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <Style Selector="Button.metadata-field-tool-btn">
+    <Setter Property="Width" Value="28"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="MinWidth" Value="28"/>
+    <Setter Property="MaxWidth" Value="28"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="{DynamicResource SearchFieldBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.metadata-field-tool-btn.metadata-editor-row-top,
+                   Button.metadata-field-tool-btn.metadata-editor-align-top">
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+  <Style Selector="Button.metadata-field-tool-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+  </Style>
+
+  <Style Selector="TextBlock.metadata-field-tool-wrench-glyph">
+    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets"/>
+    <Setter Property="Text" Value="&#xE90F;"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.metadata-field-encoding-btn">
+    <Setter Property="Width" Value="28"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="MinWidth" Value="28"/>
+    <Setter Property="MaxWidth" Value="28"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="ToolTip.Tip" Value="编码修正"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.metadata-field-encoding-btn.metadata-editor-row-top">
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+  <Style Selector="Button.metadata-field-encoding-btn:pointerover">
+    <Setter Property="Opacity" Value="0.88"/>
+  </Style>
+
+  <Style Selector="TextBlock.metadata-field-encoding-glyph">
+    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets"/>
+    <!-- LocaleLanguage：表示字符集/编码，避免 E992 在部分字体下显示为扬声器 -->
+    <Setter Property="Text" Value="&#xE9D5;"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.metadata-field-search-btn">
+    <Setter Property="Width" Value="28"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="MinWidth" Value="28"/>
+    <Setter Property="MaxWidth" Value="28"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="ToolTip.Tip" Value="组合标签搜索"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.metadata-field-search-btn:pointerover">
+    <Setter Property="Opacity" Value="0.88"/>
+  </Style>
+
+  <Style Selector="TextBlock.metadata-field-search-glyph">
+    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets"/>
+    <Setter Property="Text" Value="&#xE721;"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.metadata-field-write-btn">
+    <Setter Property="Width" Value="28"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="MinWidth" Value="28"/>
+    <Setter Property="MaxWidth" Value="28"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="{DynamicResource SearchFieldBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="ToolTip.Tip" Value="将此字段写入文件"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.metadata-field-write-btn:pointerover">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentMutedBrush}"/>
+  </Style>
+
+  <Style Selector="Button.metadata-field-write-btn.metadata-editor-align-top">
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <Style Selector="TextBlock.metadata-field-write-glyph">
+    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets"/>
+    <Setter Property="Text" Value="&#xE74E;"/>
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBox.metadata-field-input-compact">
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="MaxHeight" Value="28"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.metadata-content-indent, Button.metadata-content-indent">
+    <Setter Property="Margin" Value="{DynamicResource FieldContentMargin}"/>
+  </Style>
+
+  <Style Selector="TextBlock.combined-labels-text">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.combined-labels-text-muted">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+</Styles>

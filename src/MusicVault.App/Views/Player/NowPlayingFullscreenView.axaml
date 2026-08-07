@@ -1,0 +1,120 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:sidebar="using:MusicVault.App.Views.Sidebar"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Player"
+             x:Class="MusicVault.App.Views.Player.NowPlayingFullscreenView"
+             x:Name="FullscreenRoot"
+             x:DataType="pvm:NowPlayingFullscreenViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             Background="{DynamicResource FullscreenCanvasBrush}">
+
+  <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <!-- 专辑背景（无 Blur，避免全屏卡顿）；强化封面氛围 + 遮罩 -->
+    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsHitTestVisible="False">
+      <Border Background="{DynamicResource FullscreenCanvasBrush}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"/>
+      <Image Source="{Binding Player.CoverImageLarge, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+             Stretch="UniformToFill" Opacity="0.48" IsVisible="{Binding Player.HasCoverLarge}"
+             IsHitTestVisible="False"/>
+      <Image Source="{Binding Player.CoverImage, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+             Stretch="UniformToFill" Opacity="0.48"
+             IsVisible="{Binding Player.HasCoverLarge, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"
+             IsHitTestVisible="False"/>
+      <Border Background="{DynamicResource FullscreenScrimBrush}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              IsHitTestVisible="False"/>
+    </Panel>
+
+    <Grid RowDefinitions="Auto,*" Margin="{DynamicResource FullscreenContentMargin}">
+      <!-- 顶栏：返回 + 弱化的字号（菜单感，少抢戏） -->
+      <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Top"
+            Height="{DynamicResource TopNavHeight}"
+            PointerPressed="OnWindowDragPointerPressed">
+        <Border Grid.Column="1" Background="Transparent"
+                ToolTip.Tip="{Binding DragToolTip}"
+                PointerPressed="OnWindowDragPointerPressed"/>
+        <Button Grid.Column="0" Classes="fullscreen-back-btn" Command="{Binding CloseCommand}"
+                ToolTip.Tip="{Binding BackToolTip}"
+                Opacity="0.72">
+          <TextBlock Text="&#xE72B;" Classes="icon-lg"
+                     Foreground="{DynamicResource TextSecondaryBrush}"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Button>
+
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" VerticalAlignment="Center"
+                    Opacity="0.55">
+          <Button Classes="fullscreen-font-btn" Command="{Binding DecreaseLyricsFontCommand}"
+                  IsEnabled="{Binding CanDecreaseLyricsFont}" ToolTip.Tip="{Binding DecreaseLyricsFontToolTip}">
+            <TextBlock Text="A-" Classes="fullscreen-font-label"/>
+          </Button>
+          <Button Classes="fullscreen-font-btn" Command="{Binding IncreaseLyricsFontCommand}"
+                  IsEnabled="{Binding CanIncreaseLyricsFont}" ToolTip.Tip="{Binding IncreaseLyricsFontToolTip}">
+            <TextBlock Text="A+" Classes="fullscreen-font-label"/>
+          </Button>
+        </StackPanel>
+      </Grid>
+
+      <!-- 主内容：左栏居中封面 + 右栏歌词 -->
+      <Grid Grid.Row="1" ColumnDefinitions="2*,3*" VerticalAlignment="Stretch">
+        <Grid Grid.Column="0"
+              VerticalAlignment="Stretch"
+              HorizontalAlignment="Stretch"
+              Margin="{DynamicResource FullscreenCoverPaneMargin}">
+          <StackPanel VerticalAlignment="Center"
+                      HorizontalAlignment="Center"
+                      Spacing="24"
+                      MaxWidth="420">
+            <Button x:Name="CoverCloseButton" Classes="fullscreen-cover-btn"
+                    Command="{Binding CloseCommand}"
+                    ToolTip.Tip="{Binding CoverCloseToolTip}"
+                    HorizontalAlignment="Center"
+                    PointerPressed="OnCoverPointerPressed" Tapped="OnCoverTapped">
+              <Border Width="{DynamicResource FullscreenCoverSize}"
+                      Height="{DynamicResource FullscreenCoverSize}"
+                      CornerRadius="8" ClipToBounds="True"
+                      Background="{DynamicResource PlayerCoverPlaceholderBrush}"
+                      IsHitTestVisible="False">
+                <Panel IsHitTestVisible="False">
+                  <Image Source="{Binding Player.CoverImageLarge, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                         Stretch="UniformToFill" IsVisible="{Binding Player.HasCoverLarge}"
+                         IsHitTestVisible="False"/>
+                  <Image Source="{Binding Player.CoverImage, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                         Stretch="UniformToFill"
+                         IsVisible="{Binding Player.HasCoverLarge, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"
+                         IsHitTestVisible="False"/>
+                  <TextBlock Text="&#xE8D6;" Classes="icon-hero icon-accent"
+                             HorizontalAlignment="Center" VerticalAlignment="Center"
+                             IsHitTestVisible="False"
+                             IsVisible="{Binding !Player.HasCover}"/>
+                </Panel>
+              </Border>
+            </Button>
+            <StackPanel Spacing="8" HorizontalAlignment="Center" MaxWidth="380">
+              <TextBlock Text="{Binding Player.Title}" Classes="fullscreen-song-title"
+                         TextWrapping="Wrap" TextAlignment="Center"/>
+              <TextBlock Text="{Binding Player.Artist}" Classes="fullscreen-song-artist"
+                         TextWrapping="Wrap" TextAlignment="Center"/>
+            </StackPanel>
+          </StackPanel>
+        </Grid>
+
+        <Grid Grid.Column="1"
+              VerticalAlignment="Stretch"
+              HorizontalAlignment="Stretch"
+              Margin="{DynamicResource FullscreenLyricsPaneMargin}">
+          <sidebar:LyricsScrollPanelView x:Name="FullscreenLyricsPanel"
+                                         Classes="lyrics-scroll-fullscreen"
+                                         DataContext="{Binding Lyrics}"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Stretch"
+                                         MaxHeight="{DynamicResource FullscreenLyricsMaxHeight}"
+                                         MinWidth="280"/>
+        </Grid>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

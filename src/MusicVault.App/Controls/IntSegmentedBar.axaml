@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MusicVault.App.Controls.IntSegmentedBar"
+             x:Name="Root"
+             x:CompileBindings="False"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Center">
+  <Border Classes="ant-segmented"
+          HorizontalAlignment="Left"
+          VerticalAlignment="Center">
+    <StackPanel x:Name="SegmentHost" Orientation="Horizontal" Spacing="0"/>
+  </Border>
+</UserControl>

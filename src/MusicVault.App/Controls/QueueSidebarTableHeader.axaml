@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:layout="using:MusicVault.App.Layout"
+             x:Class="MusicVault.App.Controls.QueueSidebarTableHeader"
+             HorizontalAlignment="Stretch">
+  <StackPanel Spacing="0">
+    <Grid x:Name="HeaderGrid"
+          Classes="track-table-header ant-table-header"
+          ColumnDefinitions="{x:Static layout:TrackTableLayout.SidebarQueueColumns}"
+          HorizontalAlignment="Stretch">
+      <TextBlock x:Name="HColIndex" Grid.Column="0" Text="#" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
+      <TextBlock x:Name="HColTitle" Grid.Column="1" Text="歌曲" Classes="track-col-header track-col-header-muted"/>
+      <TextBlock x:Name="HColArtist" Grid.Column="2" Text="艺术家" Classes="track-col-header"/>
+      <TextBlock x:Name="HColDuration" Grid.Column="3" Text="时长" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
+      <TextBlock x:Name="HColFavorite" Grid.Column="4" Text="收藏" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
+    </Grid>
+    <Grid x:Name="HeaderGridBatch"
+          Classes="track-table-header ant-table-header"
+          ColumnDefinitions="{x:Static layout:TrackTableLayout.SidebarQueueColumns}"
+          HorizontalAlignment="Stretch"
+          IsVisible="False">
+      <TextBlock x:Name="HBatchColSelect" Grid.Column="0" Text="选择" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
+      <TextBlock x:Name="HBatchColTitle" Grid.Column="1" Text="歌曲" Classes="track-col-header track-col-header-muted"/>
+      <TextBlock x:Name="HBatchColArtist" Grid.Column="2" Text="艺术家" Classes="track-col-header"/>
+      <TextBlock x:Name="HBatchColDuration" Grid.Column="3" Text="时长" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
+    </Grid>
+    <Border x:Name="HeaderDivider" Classes="track-row-divider"/>
+  </StackPanel>
+</UserControl>

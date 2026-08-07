@@ -1,0 +1,345 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Pages"
+             xmlns:vm="using:MusicVault.App.ViewModels"
+             xmlns:controls="using:MusicVault.App.Controls"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:layout="using:MusicVault.App.Layout"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="MusicVault.App.Views.Pages.AudioToolsPageView"
+             x:Name="OrganizeRoot"
+             x:DataType="pvm:AudioToolsPageViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             HorizontalContentAlignment="Stretch"
+             VerticalContentAlignment="Stretch">
+  <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <DockPanel Classes="pane-play transfers-page"
+               Margin="{DynamicResource PageHeroToolbarInsetMargin}"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               LastChildFill="True">
+
+      <!-- 工具带：无背景，紧凑排版 -->
+      <StackPanel DockPanel.Dock="Top" Classes="organize-toolbar" Grid.IsSharedSizeScope="True">
+
+        <StackPanel Classes="organize-toolbar-row transfers-toolbar-flow">
+          <TextBlock Text="{Binding LibraryLabel}" Classes="organize-field-label"/>
+          <ComboBox MaxWidth="{DynamicResource ControlWidthLibraryPicker}"
+                    ItemsSource="{Binding Libraries}"
+                    SelectedItem="{Binding SelectedLibraryItem}"
+                    Classes="field-select batch-toolbar-field batch-toolbar-select organize-browse-combo">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:LibraryListItemViewModel">
+                <TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" MaxLines="1"/>
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <Button Content="{Binding LoadButtonLabel}" Classes="primary btn-toolbar"
+                  Command="{Binding LoadWorkingSetCommand}"
+                  MinWidth="{DynamicResource DialogButtonMinWidth}"/>
+          <Border Classes="transfers-toolbar-group-sep"/>
+          <TextBlock Text="{Binding FormatLabel}" Classes="organize-field-label"/>
+          <ComboBox MaxWidth="{DynamicResource ControlWidthOrganizeWide}"
+                    ItemsSource="{Binding FileNameTemplateOptions}"
+                    SelectedItem="{Binding SelectedFileNameTemplateOption}"
+                    IsEnabled="{Binding CanOperateOnWorkSet}"
+                    Classes="field-select batch-toolbar-field batch-toolbar-select organize-browse-combo">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="pvm:OrganizeTemplateOption">
+                <TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" MaxLines="1"/>
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <Button Content="{Binding RenameFilesButtonLabel}" Classes="flat-btn btn-toolbar"
+                  Command="{Binding RenameFilesCommand}"
+                  IsEnabled="{Binding CanRenameFilesFromToolbar}"
+                  MinWidth="{DynamicResource DialogButtonMinWidth}"/>
+          <Border Classes="transfers-toolbar-group-sep"/>
+          <Button Content="{Binding DedupeButtonLabel}" Classes="flat-btn btn-toolbar"
+                  Command="{Binding OpenSongDeduplicateCommand}"
+                  IsEnabled="{Binding CanOperateOnWorkSet}"
+                  MinWidth="{DynamicResource DialogButtonMinWidth}"/>
+        </StackPanel>
+
+        <StackPanel Classes="organize-toolbar-row transfers-toolbar-flow">
+          <TextBlock Text="{Binding DataSourceLabel}" Classes="organize-field-label"/>
+          <ComboBox Width="{DynamicResource ControlWidthCompact}"
+                    ItemsSource="{Binding ScrapePlatformLabels}"
+                    SelectedIndex="{Binding ScrapePlatformIndex}"
+                    IsEnabled="{Binding HasWorkingSet}"
+                    Classes="field-select batch-toolbar-field batch-toolbar-select"/>
+          <controls:IntSegmentedBar SegmentLabels="{Binding ScrapePresetSegmentLabels}"
+                                    SelectedIndex="{Binding ScrapePresetIndex}"
+                                    IsEnabled="{Binding HasWorkingSet}"/>
+          <Border Classes="transfers-toolbar-group-sep"/>
+          <TextBlock Text="{Binding ScopeLabel}" Classes="organize-field-label"/>
+          <controls:IntSegmentedBar SegmentLabels="{Binding WorkSetScopeSegmentLabels}"
+                                    SelectedIndex="{Binding WorkSetScopeIndex}"
+                                    IsEnabled="{Binding HasWorkingSet}"/>
+          <Button Classes="flat-btn batch-toolbar-flat"
+                  Command="{Binding CancelBatchScrapeCommand}"
+                  IsVisible="{Binding IsBatchScrapeRunning}">
+            <TextBlock Text="{Binding CancelScrapeLabel}" Classes="text-label"/>
+          </Button>
+          <Button Classes="primary batch-toolbar-accent" MinWidth="{DynamicResource DialogButtonMinWidth}"
+                  Command="{Binding StartBatchScrapeCommand}" IsEnabled="{Binding CanStartBatchScrape}">
+            <TextBlock Text="{Binding StartScrapeLabel}" Classes="batch-toolbar-btn-text"/>
+          </Button>
+        </StackPanel>
+
+        <Grid Classes="organize-form-row">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="OrganizeFieldAlign"/>
+            <ColumnDefinition Width="8"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Text="{Binding ScrapeGroupBasicLabel}" Classes="organize-field-label"
+                     VerticalAlignment="Top"/>
+          <WrapPanel Grid.Column="2" Classes="organize-scrape-fields-wrap" IsEnabled="{Binding HasWorkingSet}">
+            <CheckBox Content="{Binding FieldTitleLabel}" IsChecked="{Binding ScrapeUpdateTitle}" Classes="choice-check"/>
+            <CheckBox Content="{Binding FieldArtistLabel}" IsChecked="{Binding ScrapeUpdateArtist}" Classes="choice-check"/>
+            <CheckBox Content="{Binding FieldAlbumLabel}" IsChecked="{Binding ScrapeUpdateAlbum}" Classes="choice-check"/>
+            <CheckBox Content="{Binding FieldAlbumArtistLabel}" IsChecked="{Binding ScrapeUpdateAlbumArtist}" Classes="choice-check"/>
+            <CheckBox Content="{Binding FieldYearLabel}" IsChecked="{Binding ScrapeUpdateYear}" Classes="choice-check"/>
+            <CheckBox Content="{Binding FieldGenreLabel}" IsChecked="{Binding ScrapeUpdateGenre}" Classes="choice-check"/>
+            <CheckBox Content="{Binding FieldTrackNumberLabel}" IsChecked="{Binding ScrapeUpdateTrackNumber}" Classes="choice-check"/>
+            <CheckBox Content="{Binding FieldComposerLabel}" IsChecked="{Binding ScrapeUpdateComposer}" Classes="choice-check"/>
+            <CheckBox Content="{Binding FieldCoverLabel}" IsChecked="{Binding ScrapeEmbedCover}" Classes="choice-check"/>
+            <CheckBox Content="{Binding FieldLyricsLabel}" IsChecked="{Binding ScrapeEmbedLyrics}" Classes="choice-check"/>
+          </WrapPanel>
+        </Grid>
+
+        <StackPanel Spacing="2" IsVisible="{Binding IsBatchScrapeRunning}">
+          <ProgressBar IsIndeterminate="True" Classes="ant-progress-line"/>
+          <TextBlock Text="{Binding BatchScrapeProgressDisplay}" Classes="ant-progress-caption"
+                     IsVisible="{Binding BatchScrapeProgressDisplay, Converter={x:Static conv:StringNotEmptyConverter.Instance}}"/>
+        </StackPanel>
+      </StackPanel>
+
+      <Border DockPanel.Dock="Top" Classes="organize-section-divider"/>
+
+      <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" MinHeight="28" Margin="{DynamicResource MarginBottomXs}"
+            IsVisible="{Binding ShowWorkSetQueueChrome}">
+        <TextBlock Grid.Column="0" Text="{Binding WorkingSetSummary}"
+                   Classes="discover-results-summary" VerticalAlignment="Center"
+                   TextTrimming="CharacterEllipsis"/>
+        <StackPanel Grid.Column="1" Classes="transfers-toolbar-flow"
+                    HorizontalAlignment="Right" VerticalAlignment="Center">
+          <Button Content="{Binding SelectAllLabel}" Classes="flat-btn btn-toolbar"
+                  Command="{Binding SelectAllBatchScrapeCommand}"
+                  IsEnabled="{Binding HasWorkingSet}"
+                  automation:AutomationProperties.Name="{Binding SelectAllLabel}"/>
+          <Button Content="{Binding ClearSelectionLabel}" Classes="flat-btn btn-toolbar"
+                  Command="{Binding ClearBatchScrapeSelectionCommand}"
+                  IsEnabled="{Binding HasWorkingSet}"
+                  automation:AutomationProperties.Name="{Binding ClearSelectionLabel}"/>
+          <Button Content="{Binding ClearQueueLabel}" Classes="flat-btn btn-toolbar"
+                  Command="{Binding ClearWorkingSetCommand}"
+                  IsEnabled="{Binding HasWorkingSet}"
+                  automation:AutomationProperties.Name="{Binding ClearQueueLabel}"/>
+        </StackPanel>
+      </Grid>
+
+      <TextBlock DockPanel.Dock="Top" Text="{Binding WorkSetPagingHint}" Classes="discover-results-summary"
+                 Margin="{DynamicResource MarginBottomXs}" IsVisible="{Binding HasMoreWorkSetItems}"/>
+
+      <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="{DynamicResource MarginBottomXs}" MinHeight="24"
+            IsVisible="{Binding HasStatusMessage}">
+        <TextBlock Text="{Binding StatusMessage}" Classes="text-label"
+                   Foreground="{DynamicResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+        <Button Grid.Column="1" Content="{Binding LoadMoreLabel}" Classes="flat-btn btn-toolbar"
+                Command="{Binding LoadMoreWorkSetItemsCommand}"
+                IsVisible="{Binding HasMoreWorkSetItems}"/>
+      </Grid>
+
+      <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" MinHeight="28" Margin="{DynamicResource MarginBottomXs}"
+            IsVisible="{Binding ShowDuplicateReviewList}">
+        <TextBlock Grid.Column="0" Text="{Binding DuplicateScanSummary}"
+                   Classes="discover-results-summary" VerticalAlignment="Center"
+                   TextWrapping="Wrap"/>
+        <StackPanel Grid.Column="1" Classes="transfers-toolbar-flow"
+                    HorizontalAlignment="Right" VerticalAlignment="Center">
+          <Button Content="{Binding RemoveDupIndexLabel}" Classes="primary btn-toolbar"
+                  Command="{Binding RemoveDuplicatesFromLibraryCommand}"
+                  IsEnabled="{Binding CanRemoveDuplicates}"
+                  ToolTip.Tip="{Binding RemoveDupIndexToolTip}"
+                  automation:AutomationProperties.Name="{Binding RemoveDupIndexToolTip}"/>
+          <Button Content="{Binding RemoveDupWithFileLabel}" Classes="flat-btn btn-toolbar"
+                  Command="{Binding RemoveDuplicatesWithFilesCommand}"
+                  IsEnabled="{Binding CanRemoveDuplicates}"
+                  ToolTip.Tip="{Binding RemoveDupWithFileToolTip}"
+                  automation:AutomationProperties.Name="{Binding RemoveDupWithFileToolTip}"/>
+          <Button Content="{Binding BackToQueueLabel}" Classes="flat-btn btn-toolbar"
+                  Command="{Binding ExitDuplicateReviewCommand}"/>
+        </StackPanel>
+      </Grid>
+
+      <Grid x:Name="BatchScrapeHeaderGrid" DockPanel.Dock="Top"
+            Classes="ant-table-header track-table-header track-table-header-paired batch-scrape-table-header"
+            ColumnDefinitions="{x:Static layout:TrackTableLayout.BatchScrapeColumns}"
+            HorizontalAlignment="Stretch"
+            IsVisible="{Binding ShowWorkSetTableChrome}">
+        <TextBlock Grid.Column="0" Text="#" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Column="1" Text="{Binding ColumnSelectLabel}" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Column="2" Text="{Binding ColumnTitleLabel}" Classes="track-col-header track-col-header-muted"/>
+        <TextBlock Grid.Column="3" Text="{Binding ColumnArtistLabel}" Classes="track-col-header"/>
+        <TextBlock Grid.Column="4" Text="{Binding ColumnAlbumLabel}" Classes="track-col-header"/>
+        <TextBlock Grid.Column="5" Text="{Binding ColumnYearLabel}" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Column="6" Text="{Binding ColumnTagsLabel}" Classes="track-col-header batch-scrape-col-check track-col-header-index"
+                   HorizontalAlignment="Center"/>
+        <TextBlock Grid.Column="7" Text="{Binding ColumnCoverLabel}" Classes="track-col-header batch-scrape-col-check track-col-header-index"
+                   HorizontalAlignment="Center"/>
+        <TextBlock Grid.Column="8" Text="{Binding ColumnLyricsLabel}" Classes="track-col-header batch-scrape-col-check track-col-header-index"
+                   HorizontalAlignment="Center"/>
+        <TextBlock Grid.Column="9" Text="{Binding ColumnActionsLabel}" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
+      </Grid>
+
+      <Border DockPanel.Dock="Top" Classes="track-row-divider track-table-divider-paired"
+              IsVisible="{Binding ShowWorkSetTableChrome}"/>
+
+      <Grid MinHeight="220" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <ListBox ItemsSource="{Binding DuplicateGroups}"
+                 Classes="virtual-list"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 IsVisible="{Binding ShowDuplicateReviewList}">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="pvm:DuplicateGroupItemViewModel">
+              <Border Padding="0,8" Margin="{DynamicResource MarginBottomXs}">
+                <StackPanel Spacing="4">
+                  <TextBlock Text="{Binding HeaderText}" Classes="text-label" TextWrapping="Wrap"/>
+                  <TextBlock Text="{Binding KeeperHint}" Classes="text-caption"
+                             Foreground="{DynamicResource TextTertiaryBrush}"/>
+                  <ItemsControl ItemsSource="{Binding MemberLines}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="pvm:DuplicateMemberLineViewModel">
+                        <TextBlock Text="{Binding DisplayLine}" Classes="text-caption"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   TextTrimming="CharacterEllipsis" Margin="{DynamicResource FieldCaptionLeadingMargin}"/>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+
+        <ListBox x:Name="BatchScrapeItems"
+                 ItemsSource="{Binding BatchScrapeDisplayed}"
+                 Classes="virtual-list batch-scrape-list track-table-scroll-list"
+                 IsEnabled="{Binding !IsBatchScrapeRunning}"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 IsVisible="{Binding ShowWorkSetList}">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="pvm:BatchScrapeQueueItemViewModel">
+              <Border Classes="track-row batch-scrape-item" HorizontalAlignment="Stretch"
+                      ToolTip.Tip="{Binding LocalizedStatusText}" ToolTip.ShowOnDisabled="True">
+                <DockPanel HorizontalAlignment="Stretch">
+                  <Grid DockPanel.Dock="Top" Classes="track-row-content batch-scrape-row"
+                        ColumnDefinitions="{x:Static layout:TrackTableLayout.BatchScrapeColumns}"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <TextBlock Grid.Column="0" Text="{Binding LaunchNumberText}" Classes="track-col-cell"
+                               HorizontalAlignment="Center" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                    <CheckBox Grid.Column="1" IsChecked="{Binding IsSelected}" Classes="choice-check-icon"
+                              HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0"
+                              automation:AutomationProperties.Name="{Binding RowCheckboxAccessibilityName}"
+                              automation:AutomationProperties.HelpText="{Binding RowCheckboxAccessibilityHelp}"/>
+                    <TextBlock Grid.Column="2" Text="{Binding Title}" Classes="track-col-cell track-title"
+                               Margin="{DynamicResource TrackColCellMargin}" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Grid.Column="3" Text="{Binding Artist}" Classes="track-col-cell track-artist"
+                               Margin="{DynamicResource TrackColCellMargin}" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Grid.Column="4" Text="{Binding Album}" Classes="track-col-cell track-album"
+                               Margin="{DynamicResource TrackColCellMargin}" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Grid.Column="5" Text="{Binding YearText}" Classes="track-col-cell"
+                               HorizontalAlignment="Center" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                    <Grid Grid.Column="6" Classes="batch-scrape-check-cell">
+                      <Border Classes="batch-scrape-status-badge batch-scrape-status-badge-success"
+                              IsVisible="{Binding TagsCheckIsSuccess}">
+                        <TextBlock Text="✓" Classes="batch-scrape-status-glyph"/>
+                      </Border>
+                      <Border Classes="batch-scrape-status-badge batch-scrape-status-badge-failed"
+                              IsVisible="{Binding TagsCheckIsFailed}">
+                        <TextBlock Text="✕" Classes="batch-scrape-status-glyph"/>
+                      </Border>
+                      <TextBlock Text="—" Classes="batch-scrape-check-skip" IsVisible="{Binding TagsCheckIsSkipped}"/>
+                    </Grid>
+                    <Grid Grid.Column="7" Classes="batch-scrape-check-cell">
+                      <Border Classes="batch-scrape-status-badge batch-scrape-status-badge-success"
+                              IsVisible="{Binding CoverCheckIsSuccess}">
+                        <TextBlock Text="✓" Classes="batch-scrape-status-glyph"/>
+                      </Border>
+                      <Border Classes="batch-scrape-status-badge batch-scrape-status-badge-failed"
+                              IsVisible="{Binding CoverCheckIsFailed}">
+                        <TextBlock Text="✕" Classes="batch-scrape-status-glyph"/>
+                      </Border>
+                      <TextBlock Text="—" Classes="batch-scrape-check-skip" IsVisible="{Binding CoverCheckIsSkipped}"/>
+                    </Grid>
+                    <Grid Grid.Column="8" Classes="batch-scrape-check-cell">
+                      <Border Classes="batch-scrape-status-badge batch-scrape-status-badge-success"
+                              IsVisible="{Binding LyricsCheckIsSuccess}">
+                        <TextBlock Text="✓" Classes="batch-scrape-status-glyph"/>
+                      </Border>
+                      <Border Classes="batch-scrape-status-badge batch-scrape-status-badge-failed"
+                              IsVisible="{Binding LyricsCheckIsFailed}">
+                        <TextBlock Text="✕" Classes="batch-scrape-status-glyph"/>
+                      </Border>
+                      <TextBlock Text="—" Classes="batch-scrape-check-skip" IsVisible="{Binding LyricsCheckIsSkipped}"/>
+                    </Grid>
+                    <Button Grid.Column="9" Classes="row-action-btn track-delete-btn" Tag="{Binding}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            ToolTip.Tip="{Binding $parent[UserControl].((pvm:AudioToolsPageViewModel)DataContext).RemoveTrackButtonToolTip}"
+                            automation:AutomationProperties.Name="{Binding $parent[UserControl].((pvm:AudioToolsPageViewModel)DataContext).RemoveTrackButtonToolTip}">
+                      <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+                    </Button>
+                  </Grid>
+                  <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True"
+                               Classes="ant-progress-line-small batch-scrape-item-progress"
+                               IsVisible="{Binding IsRunning}"/>
+                  <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
+                </DockPanel>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+
+        <controls:EmptyStateView IsVisible="{Binding ShowWorkSetEmptyState}"
+                                 Title="{Binding WorkSetEmptyTitle}"
+                                 Description="{Binding WorkSetEmptyDescription}"
+                                 ShowAction="{Binding ShowWorkSetEmptyAction}"
+                                 IconGlyph="&#xE8D6;"/>
+
+        <Border Background="{DynamicResource SurfaceBrush}" Opacity="0.55"
+                IsHitTestVisible="False"
+                IsVisible="{Binding ShowWorkSetLoadingState}"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+          <TextBlock Text="{Binding LoadingQueueLabel}" Classes="text-label"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+
+        <Button x:Name="WorkSetScrollTopBtn" Content="&#xE70E;"
+                Classes="list-scroll-top-btn"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
+                IsHitTestVisible="True"
+                Click="OnWorkSetScrollTopClick"/>
+      </Grid>
+    </DockPanel>
+
+    <controls:PopconfirmHost x:Name="RemoveTrackPopconfirm"
+                             Title="{Binding RemoveTrackPopconfirmTitle}"
+                             Description="{Binding RemoveTrackPopconfirmDescription}"
+                             ConfirmText="{Binding RemoveTrackIndexOnlyText}"
+                             AlternateConfirmText="{Binding RemoveTrackDeleteWithFileText}"
+                             ShowAlternateConfirm="{Binding ShowRemoveTrackAlternateConfirm}"
+                             AlternateConfirmIsDanger="True"
+                             ConfirmedCommand="{Binding RemoveTrackIndexOnlyCommand}"
+                             AlternateConfirmedCommand="{Binding RemoveTrackWithFileCommand}">
+      <Button Width="0" Height="0" Opacity="0" IsHitTestVisible="False"/>
+    </controls:PopconfirmHost>
+  </Grid>
+</UserControl>

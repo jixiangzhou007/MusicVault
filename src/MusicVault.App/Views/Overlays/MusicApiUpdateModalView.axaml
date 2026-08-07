@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             xmlns:controls="using:MusicVault.App.Controls"
+             x:Class="MusicVault.App.Views.Overlays.MusicApiUpdateModalView"
+             x:DataType="vm:MusicApiUpdateModalViewModel">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel" MinWidth="420" MaxWidth="520">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding SkipButtonText}" Classes="flat-btn app-dialog-btn"
+                  IsEnabled="{Binding CanSkip}" Command="{Binding SkipCommand}"/>
+          <Button Content="{Binding UpdateButtonText}" Classes="primary app-dialog-btn"
+                  IsVisible="{Binding ShowPromptActions}"
+                  IsEnabled="{Binding CanUpdate}" Command="{Binding UpdateCommand}"/>
+        </StackPanel>
+      </Border>
+      <StackPanel Classes="app-dialog-body" Spacing="12">
+        <controls:ResultView Status="{Binding DisplayStatus}"
+                             Title="{Binding TitleText}"
+                             Description="{Binding DetailText}"
+                             IsVisible="{Binding !ShowProgress}"/>
+        <ProgressBar Minimum="0" Maximum="100"
+                     Classes="ant-progress-line-modal"
+                     Value="{Binding DownloadProgress}"
+                     IsVisible="{Binding ShowProgress}"/>
+        <TextBlock Text="{Binding StageText}" Classes="text-caption"
+                   HorizontalAlignment="Center"
+                   IsVisible="{Binding ShowProgress}"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</UserControl>

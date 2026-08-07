@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             x:Class="MusicVault.App.Views.Overlays.PreviewLoadingModalView"
+             x:DataType="vm:PreviewLoadingModalViewModel">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel" MinWidth="420" MaxWidth="520">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding CancelLabel}" Classes="flat-btn app-dialog-btn" Command="{Binding CancelCommand}"/>
+        </StackPanel>
+      </Border>
+      <StackPanel Classes="app-dialog-body" Spacing="12">
+        <TextBlock Text="{Binding ModalTitle}" Classes="text-title"/>
+        <TextBlock Text="{Binding Title}" Classes="text-body" TextWrapping="Wrap" MaxLines="2"/>
+        <TextBlock Text="{Binding Artist}" Classes="text-caption"
+                   Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+        <TextBlock Text="{Binding StatusText}" Classes="text-body app-dialog-status"
+                   TextWrapping="Wrap" LineHeight="22"/>
+        <Grid ColumnDefinitions="*,Auto">
+          <ProgressBar Grid.Column="0" Minimum="0" Maximum="100"
+                       Value="{Binding ProgressValue}"
+                       IsIndeterminate="{Binding IsProgressIndeterminate}"
+                       Classes="ant-progress-line-modal"/>
+          <TextBlock Grid.Column="1" Text="{Binding ProgressPercentText}"
+                     Classes="ant-progress-percent"
+                     IsVisible="{Binding ShowProgressPercent}"/>
+        </Grid>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</UserControl>

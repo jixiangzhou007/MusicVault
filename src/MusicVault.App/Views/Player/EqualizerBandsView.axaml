@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Player"
+             x:Class="MusicVault.App.Views.Player.EqualizerBandsView"
+             x:DataType="pvm:EqualizerViewModel">
+
+  <Grid ColumnDefinitions="Auto,*">
+    <StackPanel Grid.Column="0" Width="36" VerticalAlignment="Center" Spacing="48" Margin="{DynamicResource EqualizerRowGap}">
+      <TextBlock Text="+20 dB" Classes="eq-modal-caption"/>
+      <TextBlock Text="+0 dB" Classes="eq-modal-caption"/>
+      <TextBlock Text="-20 dB" Classes="eq-modal-caption"/>
+    </StackPanel>
+
+    <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Disabled">
+      <ItemsControl ItemsSource="{Binding Bands}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="pvm:EqualizerBandViewModel">
+            <StackPanel Width="40" Spacing="4" HorizontalAlignment="Center">
+              <Border Width="28" Height="156" Background="Transparent" Cursor="Hand"
+                      Tag="{Binding BandIndex}"
+                      PointerPressed="OnEqBandPointerPressed"
+                      PointerMoved="OnEqBandPointerMoved">
+                <Panel>
+                  <Border Classes="eq-band-track" Width="3" Height="156"
+                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                          IsHitTestVisible="False"/>
+                  <Border Classes="eq-band-fill" Width="3"
+                          VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                          IsHitTestVisible="False"
+                          Height="{Binding Gain, Converter={x:Static conv:EqGainToBarHeightConverter.Instance}, ConverterParameter=156}"/>
+                </Panel>
+              </Border>
+              <TextBlock Text="{Binding Label}" Classes="eq-modal-caption"
+                         HorizontalAlignment="Center"/>
+              <TextBlock Text="{Binding GainText}" Classes="eq-modal-caption eq-band-value"
+                         HorizontalAlignment="Center"/>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

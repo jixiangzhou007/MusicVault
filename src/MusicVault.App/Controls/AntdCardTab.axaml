@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="MusicVault.App.Controls.AntdCardTab"
+             x:Name="Root"
+             Classes="antd-card-tab"
+             Height="{DynamicResource AntdCardTabStripHeight}"
+             MinHeight="{DynamicResource AntdCardTabStripHeight}"
+             VerticalAlignment="Top">
+  <Grid Height="{DynamicResource AntdCardTabStripHeight}">
+    <Border Classes="antd-card-tab-mask"
+            Classes.selected="{Binding #Root.IsSelected}"
+            Height="1"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Stretch"/>
+    <Border Classes="antd-card-tab-chrome"
+            Classes.selected="{Binding #Root.IsSelected}"
+            Height="{DynamicResource AntdCardTabChromeHeight}"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Stretch">
+      <Button Classes="antd-card-tab-inner"
+              Content="{Binding #Root.Title}"
+              Command="{Binding #Root.SelectCommand}"
+              CommandParameter="{Binding #Root.CommandParameter}"
+              automation:AutomationProperties.Name="{Binding #Root.Title}"/>
+    </Border>
+  </Grid>
+</UserControl>

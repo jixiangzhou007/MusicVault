@@ -1,0 +1,177 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Player"
+             x:Class="MusicVault.App.Views.Player.CompactPlayerView"
+             x:DataType="pvm:CompactPlayerViewModel"
+             x:Name="Root"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Top"
+             ClipToBounds="True"
+             Background="{DynamicResource PlayerChromeBaseBrush}"
+             SizeChanged="OnRootSizeChanged">
+
+  <!-- 封面(正方=窗宽) + 底栏52；信息区仅叠在封面 Row0 内 -->
+  <Grid x:Name="LayoutRoot" RowDefinitions="Auto,52" Background="{DynamicResource PlayerChromeBaseBrush}" VerticalAlignment="Top">
+
+    <Border x:Name="CoverSquare" Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            ClipToBounds="True"
+            Background="{DynamicResource PlayerChromeCoverBrush}"
+            PointerPressed="OnCoverPointerPressed">
+      <Grid x:Name="CoverHost">
+        <Image x:Name="CoverImageLarge"
+               Source="{Binding Player.CoverImageLarge, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+               Stretch="UniformToFill"
+               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+               IsVisible="{Binding Player.HasCoverLarge}"/>
+        <Image x:Name="CoverImageSmall"
+               Source="{Binding Player.CoverImage, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+               Stretch="UniformToFill"
+               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+               IsVisible="{Binding Player.HasCoverLarge, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"/>
+        <TextBlock Text="&#xE8D6;" Classes="icon-hero icon-accent"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   IsVisible="{Binding !Player.HasCover}"/>
+
+        <Border VerticalAlignment="Bottom" Height="96" HorizontalAlignment="Stretch" ClipToBounds="True"
+                Background="{DynamicResource PlayerChromeCoverFadeBrush}">
+          <StackPanel Spacing="6" Margin="{DynamicResource CompactPlayerOverlayMargin}" VerticalAlignment="Bottom">
+            <TextBlock Text="{Binding Player.Title}" Classes="compact-player-overlay-title"
+                       TextWrapping="Wrap" MaxLines="1" TextTrimming="CharacterEllipsis"/>
+            <TextBlock Text="{Binding Player.Artist}" Classes="compact-player-overlay-artist"
+                       TextTrimming="CharacterEllipsis" MaxLines="1"/>
+            <Border x:Name="CompactProgressHost" Height="10" Cursor="Hand" Margin="{DynamicResource MarginTopXs}"
+                    PointerPressed="OnProgressPointerPressed"
+                    PointerReleased="OnProgressPointerReleased"
+                    PointerMoved="OnProgressPointerMoved"
+                    PointerCaptureLost="OnProgressCaptureLost"
+                    SizeChanged="OnProgressHostSizeChanged">
+              <Panel VerticalAlignment="Center">
+                <Border Background="{DynamicResource PlayerChromeProgressTrackBrush}" Height="3" CornerRadius="2" HorizontalAlignment="Stretch"/>
+                <Border Background="{DynamicResource AccentBrush}" Height="3" CornerRadius="2"
+                        HorizontalAlignment="Left">
+                  <Border.Width>
+                    <MultiBinding Converter="{x:Static conv:PlaybackProgressToFillWidthConverter.Instance}">
+                      <Binding Path="Player.Position"/>
+                      <Binding Path="Player.Duration"/>
+                      <Binding ElementName="CompactProgressHost" Path="Bounds.Width"/>
+                    </MultiBinding>
+                  </Border.Width>
+                </Border>
+              </Panel>
+            </Border>
+          </StackPanel>
+        </Border>
+
+        <StackPanel Orientation="Horizontal" Spacing="0"
+                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Margin="{DynamicResource CompactPlayerChromeMargin}" ZIndex="4">
+          <Button Classes="compact-cover-chrome-btn"
+                  Background="Transparent"
+                  ToolTip.Tip="{Binding WindowMinimizeToolTip}"
+                  Click="OnChromeMinimizeClick">
+            <TextBlock Text="&#xE921;" Classes="compact-cover-chrome-icon"/>
+          </Button>
+          <Button Classes="compact-cover-chrome-btn"
+                  Background="Transparent"
+                  Command="{Binding ExitCompactCommand}"
+                  ToolTip.Tip="{Binding WindowRestoreToolTip}">
+            <TextBlock Text="&#xE923;" Classes="compact-cover-chrome-icon"/>
+          </Button>
+          <Button Classes="compact-cover-chrome-btn compact-cover-chrome-close"
+                  Background="Transparent"
+                  ToolTip.Tip="{Binding WindowCloseToolTip}"
+                  Click="OnChromeCloseClick">
+            <TextBlock Text="&#xE8BB;" Classes="compact-cover-chrome-icon"/>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Border Grid.Row="1" Height="52" MinHeight="52" MaxHeight="52"
+            Classes="compact-player-controls-bar">
+      <Grid ColumnDefinitions="*,*,*,*,*,*,*" VerticalAlignment="Center">
+        <Button Grid.Column="0" Classes="compact-player-bar-btn" Background="Transparent"
+                Command="{Binding Player.ToggleQueueCommand}"
+                IsEnabled="{Binding Player.CanToggleQueue}"
+                ToolTip.Tip="{Binding Player.QueueToolTip}">
+          <TextBlock Text="&#xE8FD;" Classes="compact-player-bar-icon"/>
+        </Button>
+        <Button Grid.Column="1" Classes="compact-player-bar-btn" Background="Transparent"
+                Command="{Binding Player.CycleRepeatModeCommand}"
+                ToolTip.Tip="{Binding Player.RepeatToolTip}">
+          <TextBlock Text="{Binding Player.RepeatIconGlyph}"
+                     Classes="compact-player-bar-icon"
+                     Classes.active="{Binding Player.IsRepeatActive}"/>
+        </Button>
+        <Button Grid.Column="2" Classes="compact-player-bar-btn" Background="Transparent"
+                Command="{Binding Player.PreviousCommand}"
+                ToolTip.Tip="{Binding Player.PreviousToolTip}">
+          <TextBlock Text="&#xE892;" Classes="compact-player-bar-icon"/>
+        </Button>
+        <Button Grid.Column="3" Classes="compact-player-bar-btn" Background="Transparent"
+                Command="{Binding Player.TogglePlayPauseCommand}"
+                ToolTip.Tip="{Binding Player.PlayPauseToolTip}">
+          <Panel Width="18" Height="18">
+            <TextBlock Text="&#xE768;" Classes="compact-player-bar-icon compact-player-bar-icon-play"
+                       IsVisible="{Binding !Player.IsPlaying}"/>
+            <TextBlock Text="&#xE769;" Classes="compact-player-bar-icon compact-player-bar-icon-play"
+                       IsVisible="{Binding Player.IsPlaying}"/>
+          </Panel>
+        </Button>
+        <Button Grid.Column="4" Classes="compact-player-bar-btn" Background="Transparent"
+                Command="{Binding Player.NextCommand}"
+                ToolTip.Tip="{Binding Player.NextToolTip}">
+          <TextBlock Text="&#xE893;" Classes="compact-player-bar-icon"/>
+        </Button>
+        <Button Grid.Column="5" Classes="compact-player-bar-btn" Background="Transparent"
+                Command="{Binding Player.ToggleShuffleCommand}"
+                ToolTip.Tip="{Binding Player.ShuffleToolTip}">
+          <TextBlock Text="{Binding Player.ShuffleIconGlyph}"
+                     Classes="compact-player-bar-icon"
+                     Classes.active="{Binding Player.IsShuffleOn}"/>
+        </Button>
+        <Button x:Name="CompactVolumeFlyoutButton" Grid.Column="6"
+                Classes="compact-player-bar-btn" Background="Transparent"
+                ToolTip.Tip="{Binding Player.VolumeToolTip}">
+          <TextBlock Text="&#xE767;" Classes="compact-player-bar-icon"/>
+          <Button.Flyout>
+            <Flyout Placement="Top" ShowMode="Transient" VerticalOffset="-6">
+              <Border Classes="ant-popover ant-popover-inline volume-popover-card">
+                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                  <Border Classes="volume-popover-icon">
+                    <TextBlock Text="&#xE767;" Classes="icon-xs"
+                               Foreground="{DynamicResource IconOnAccentBrush}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                  </Border>
+                  <TextBlock Text="{Binding Player.VolumeLabel}" Classes="volume-popover-label" VerticalAlignment="Center"/>
+                  <Border Width="{DynamicResource VolumeSliderWidth}" Height="20" Classes="volume-slider-host"
+                          Background="Transparent" Cursor="Hand"
+                          PointerPressed="OnVolumeSliderPointerPressed"
+                          PointerMoved="OnVolumeSliderPointerMoved">
+                    <Panel>
+                      <Border Classes="volume-slider-track"
+                              VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                              IsHitTestVisible="False"/>
+                      <Border Classes="volume-slider-fill"
+                              VerticalAlignment="Center" HorizontalAlignment="Left"
+                              IsHitTestVisible="False"
+                              Width="{Binding Player.Volume, Converter={x:Static conv:VolumeToSliderWidthConverter.Instance}, ConverterParameter=108}"/>
+                      <Ellipse Classes="volume-slider-thumb"
+                               VerticalAlignment="Center" HorizontalAlignment="Left"
+                               IsHitTestVisible="False"
+                               Margin="{Binding Player.Volume, Converter={x:Static conv:VolumeToThumbMarginConverter.Instance}, ConverterParameter=108}"/>
+                    </Panel>
+                  </Border>
+                  <TextBlock Text="{Binding Player.VolumePercent, StringFormat={}{0}%}"
+                             Classes="volume-popover-value" VerticalAlignment="Center"/>
+                </StackPanel>
+              </Border>
+            </Flyout>
+          </Button.Flyout>
+        </Button>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

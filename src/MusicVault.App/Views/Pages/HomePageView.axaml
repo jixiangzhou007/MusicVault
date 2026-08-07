@@ -1,0 +1,212 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pvm="using:MusicVault.App.ViewModels.Pages"
+             xmlns:sidebar="using:MusicVault.App.Views.Sidebar"
+             xmlns:controls="using:MusicVault.App.Controls"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:layout="using:MusicVault.App.Layout"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="MusicVault.App.Views.Pages.HomePageView"
+             x:Name="HomeRoot"
+             x:DataType="pvm:HomePageViewModel">
+
+  <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <Grid x:Name="PlayingSplitGrid" ColumnDefinitions="360,6,*"
+          Classes="home-playing-split pane-play"
+          VerticalAlignment="Stretch"
+          HorizontalAlignment="Stretch"
+          IsVisible="{Binding ShowMainHomeContent}">
+
+      <!-- 左：封面 + 歌名 + 歌词 -->
+      <Grid Grid.Column="0" Classes="pane-play"
+            RowDefinitions="Auto,Auto,20,*"
+            x:Name="LeftPane">
+        <controls:VinylRecordCoverView Grid.Row="0" Margin="{DynamicResource PageHeaderMargin}"
+                                       IsPlaying="{Binding Player.IsPlaying}"
+                                       CoverImageLarge="{Binding Player.CoverImageLarge}"
+                                       CoverImage="{Binding Player.CoverImage}"
+                                       HasCover="{Binding Player.HasCover}"
+                                       HasCoverLarge="{Binding Player.HasCoverLarge}"/>
+
+        <StackPanel Grid.Row="1" Spacing="4" HorizontalAlignment="Stretch"
+                    Margin="{DynamicResource PageHeaderMargin}">
+          <TextBlock Text="{Binding NowPlayingTitle}"
+                     Classes="now-playing-track-title"
+                     TextWrapping="Wrap" TextAlignment="Center"
+                     TextTrimming="CharacterEllipsis"/>
+          <TextBlock Text="{Binding NowPlayingMeta}"
+                     Classes="now-playing-track-meta"
+                     IsVisible="{Binding HasNowPlayingMeta}"
+                     TextWrapping="Wrap" TextAlignment="Center"
+                     TextTrimming="CharacterEllipsis"/>
+        </StackPanel>
+
+        <sidebar:LyricsScrollPanelView x:Name="HomeLyricsPanel" Grid.Row="3"
+                                       Classes="lyrics-home"
+                                       CenterActiveLine="False"
+                                       DataContext="{Binding Lyrics}"
+                                       Margin="{DynamicResource MarginBottomLg}"
+                                       MinHeight="80"/>
+      </Grid>
+
+      <controls:VerticalPaneSplitter x:Name="PlayingPaneSplitter" Grid.Column="1"/>
+
+      <!-- 右栏：最近 / 常听 / 推荐（Tab 切换） -->
+      <DockPanel Grid.Column="2"
+                 Classes="pane-play home-history-pane">
+        <StackPanel DockPanel.Dock="Top" Classes="home-track-section" Spacing="0">
+          <DockPanel Classes="home-section-header" LastChildFill="True">
+            <StackPanel DockPanel.Dock="Right" Classes="home-section-actions">
+              <Button Content="{Binding HistoryLoadMoreText}" Classes="flat-btn btn-toolbar"
+                      Command="{Binding LoadMoreHistoryRowsCommand}"
+                      IsVisible="{Binding ShowLoadMoreButton}"
+                      automation:AutomationProperties.Name="{Binding HistoryLoadMoreText}"/>
+              <Button Content="{Binding HistoryClearText}" Classes="flat-btn btn-toolbar"
+                      Command="{Binding ClearPlayHistoryCommand}"
+                      IsVisible="{Binding ShowClearHistoryButton}"
+                      IsEnabled="{Binding HasQueueRows}"
+                      ToolTip.Tip="{Binding HistoryClearToolTip}"
+                      automation:AutomationProperties.Name="{Binding HistoryClearToolTip}"/>
+              <Button Content="{Binding FrequentPlayAllLabel}" Classes="flat-btn btn-toolbar"
+                      Command="{Binding PlayAllFrequentCommand}"
+                      IsVisible="{Binding ShowFrequentPlayActions}"
+                      automation:AutomationProperties.Name="{Binding FrequentPlayAllLabel}"/>
+              <Button Content="{Binding FrequentShuffleLabel}" Classes="flat-btn btn-toolbar"
+                      Command="{Binding ShuffleFrequentCommand}"
+                      IsVisible="{Binding ShowFrequentPlayActions}"
+                      automation:AutomationProperties.Name="{Binding FrequentShuffleLabel}"/>
+              <Button Content="{Binding RecommendPlayAllLabel}" Classes="flat-btn btn-toolbar"
+                      Command="{Binding PlayAllRecommendCommand}"
+                      IsVisible="{Binding ShowRecommendPlayActions}"
+                      automation:AutomationProperties.Name="{Binding RecommendPlayAllLabel}"/>
+              <Button Content="{Binding RecommendShuffleLabel}" Classes="flat-btn btn-toolbar"
+                      Command="{Binding ShuffleRecommendCommand}"
+                      IsVisible="{Binding ShowRecommendPlayActions}"
+                      automation:AutomationProperties.Name="{Binding RecommendShuffleLabel}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+              <controls:IntSegmentedBar VerticalAlignment="Center"
+                                        SegmentLabels="{Binding ListTabSegmentLabels}"
+                                        SelectedIndex="{Binding ListTabSegmentIndex}"
+                                        ToolTip.Tip="{Binding ListTabToolTip}"
+                                        automation:AutomationProperties.Name="{Binding ListTabToolTip}"/>
+              <TextBlock Text="{Binding ActiveTabSummary}" Classes="text-caption"
+                         Foreground="{DynamicResource TextSecondaryBrush}"
+                         VerticalAlignment="Center"
+                         TextTrimming="CharacterEllipsis"
+                         IsVisible="{Binding IsRecentTabActive}"/>
+            </StackPanel>
+          </DockPanel>
+          <controls:CompactSixColumnTrackTableHeader
+              LeadingColumnHeader="{Binding ActiveLeadingColumnHeader}"
+              TitleColumnHeader="{Binding HistoryColTitle}"
+              ArtistColumnHeader="{Binding HistoryColArtist}"
+              AlbumColumnHeader="{Binding HistoryColAlbum}"
+              DurationColumnHeader="{Binding HistoryColDuration}"
+              FavoriteColumnHeader="{Binding HistoryColFavorite}"/>
+        </StackPanel>
+
+        <Panel>
+          <ListBox x:Name="TrackListBox" Classes="virtual-list track-table-scroll-list"
+                   ItemsSource="{Binding ActiveListRows}"
+                   SelectedItem="{Binding SelectedQueueRow, Mode=TwoWay}"
+                   DoubleTapped="OnTrackListDoubleTapped"
+                   ItemTemplate="{StaticResource FrequentTrackRowTemplate}"
+                   IsVisible="{Binding HasActiveListRows}"/>
+          <Button x:Name="HistoryScrollTopBtn" Content="&#xE70E;"
+                  Classes="list-scroll-top-btn"
+                  HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                  Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
+                  Click="OnHistoryScrollTopClick"/>
+
+          <Border VerticalAlignment="Bottom" Margin="{DynamicResource TrackTableHeaderPairedMargin}" Padding="0,4,0,0"
+                  IsVisible="{Binding ShowHistoryLoadMoreSkeleton}">
+            <Grid ColumnDefinitions="{x:Static layout:TrackTableLayout.CompactSixColumns}"
+                  Height="{x:Static layout:TrackTableLayout.RowHeight}">
+              <controls:SkeletonLine Grid.Column="0" LineWidth="20" LineHorizontalAlignment="Center"/>
+              <controls:SkeletonLine Grid.Column="1" Margin="{DynamicResource TrackColCellMargin}"/>
+              <controls:SkeletonLine Grid.Column="2" Margin="{DynamicResource TrackColCellMargin}" LineWidth="80"/>
+              <controls:SkeletonLine Grid.Column="3" Margin="{DynamicResource TrackColCellMargin}" LineWidth="100"/>
+              <controls:SkeletonLine Grid.Column="4" LineWidth="32" LineHorizontalAlignment="Center"/>
+              <controls:SkeletonLine Grid.Column="5" LineWidth="24" LineHorizontalAlignment="Center"/>
+            </Grid>
+          </Border>
+
+          <controls:EmptyStateView Classes="home-table-empty"
+                                   VerticalAlignment="Top"
+                                   IsVisible="{Binding ShowActiveTabEmpty}"
+                                   Title="{Binding ActiveTabEmptyTitle}"
+                                   Description="{Binding ActiveTabEmptyDescription}"
+                                   ShowIcon="False"/>
+        </Panel>
+      </DockPanel>
+    </Grid>
+
+    <Grid Margin="{DynamicResource PageContentMargin}"
+          IsVisible="{Binding ShowEmptyOnboarding}"
+          VerticalAlignment="Stretch">
+      <StackPanel Classes="home-onboarding home-onboarding-immersive"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Spacing="{DynamicResource SpaceMd}">
+        <Border Classes="home-empty-hero"
+                Width="{DynamicResource OnboardingHeroSize}"
+                Height="{DynamicResource OnboardingHeroSize}"
+                HorizontalAlignment="Center"
+                CornerRadius="{DynamicResource RadiusLg}"
+                Background="{DynamicResource PlayerCoverPlaceholderBrush}">
+          <Panel>
+            <Border Background="{DynamicResource AccentSoftBrush}" Opacity="0.55"
+                    CornerRadius="{DynamicResource RadiusLg}"/>
+            <TextBlock Text="&#xE8D6;" Classes="icon-hero icon-accent"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          </Panel>
+        </Border>
+        <TextBlock Text="{Binding EmptyTitle}" Classes="ant-empty-title home-empty-title"
+                   HorizontalAlignment="Center" TextAlignment="Center"/>
+        <TextBlock Text="{Binding EmptyHint}"
+                   Classes="ant-empty-desc home-empty-hint"
+                   HorizontalAlignment="Center" TextAlignment="Center"
+                   MaxWidth="{DynamicResource ContentWidthList}"/>
+        <Button Content="{Binding EmptyActionDiscoverText}"
+                Classes="primary btn-toolbar home-empty-primary"
+                Height="{DynamicResource ToolbarButtonHeight}"
+                MinWidth="{DynamicResource ControlWidthFilterMin}"
+                HorizontalAlignment="Center"
+                Command="{Binding OpenOnlineSourcesCommand}"
+                automation:AutomationProperties.Name="{Binding EmptyActionDiscoverText}"/>
+        <Button Content="{Binding EmptyActionLibraryListsText}"
+                Classes="flat-btn btn-toolbar"
+                Height="{DynamicResource ToolbarButtonHeight}"
+                HorizontalAlignment="Center"
+                Command="{Binding OpenLibraryListsCommand}"
+                IsVisible="{Binding ShowOpenLibraryListsAction}"
+                automation:AutomationProperties.Name="{Binding EmptyActionLibraryListsText}"/>
+        <WrapPanel Classes="home-onboarding-actions home-empty-secondary"
+                   HorizontalAlignment="Center">
+          <Button Content="{Binding EmptyActionLibraryText}"
+                  Classes="flat-btn btn-toolbar"
+                  Height="{DynamicResource ToolbarButtonHeight}"
+                  Command="{Binding OpenAllTracksCommand}"
+                  automation:AutomationProperties.Name="{Binding EmptyActionLibraryText}"/>
+          <Button Content="{Binding EmptyActionAddLibraryText}"
+                  Classes="flat-btn btn-toolbar"
+                  Height="{DynamicResource ToolbarButtonHeight}"
+                  Command="{Binding OpenLibrariesCommand}"
+                  ToolTip.Tip="{Binding EmptyActionAddLibraryToolTip}"
+                  automation:AutomationProperties.Name="{Binding EmptyActionAddLibraryToolTip}"/>
+          <Button Content="{Binding EmptyActionDownloadsText}"
+                  Classes="flat-btn btn-toolbar"
+                  Height="{DynamicResource ToolbarButtonHeight}"
+                  Command="{Binding OpenDownloadsCommand}"
+                  automation:AutomationProperties.Name="{Binding EmptyActionDownloadsText}"/>
+          <Button Content="{Binding EmptyActionSettingsText}"
+                  Classes="flat-btn btn-toolbar"
+                  Height="{DynamicResource ToolbarButtonHeight}"
+                  Command="{Binding OpenSettingsCommand}"
+                  automation:AutomationProperties.Name="{Binding EmptyActionSettingsText}"/>
+        </WrapPanel>
+      </StackPanel>
+    </Grid>
+  </Grid>
+</UserControl>

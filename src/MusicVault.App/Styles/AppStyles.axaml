@@ -1,0 +1,40 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- P3：按组件拆分，本文件仅聚合引用 -->
+  <StyleInclude Source="avares://MusicVault/Styles/WinUiControlStyles.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/TypographyStyles.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Navigation.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Organize.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Forms.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/MetadataSearch.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/LibraryTrack.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/PageLayout.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/PaneSplitter.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Browse.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/NowPlayingDashboard.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Sidebar.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Card.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Button.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/IconButton.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Dialog.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Menu.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/List.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/DiscoverDownloads.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Player.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/SettingsAccent.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Settings.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Message.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Feedback.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Badge.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Popover.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Tooltip.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Drawer.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Progress.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Popconfirm.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Result.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Steps.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/CommandPalette.axaml"/>
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Skeleton.axaml"/>
+
+</Styles>

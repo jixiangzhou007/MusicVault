@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shell="using:MusicVault.App.ViewModels"
+             xmlns:vm="using:MusicVault.App.ViewModels.Pages"
+             xmlns:views="using:MusicVault.App.Views.Pages"
+             x:Class="MusicVault.App.Views.PageContentHost"
+             x:DataType="shell:MainWindowViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             HorizontalContentAlignment="Stretch"
+             VerticalContentAlignment="Stretch">
+  <ContentControl x:Name="PageHost"
+                  Content="{Binding CurrentPage}"
+                  Classes="page-content"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch"
+                  VerticalContentAlignment="Stretch">
+    <ContentControl.DataTemplates>
+      <DataTemplate DataType="vm:HomePageViewModel"><views:HomePageView/></DataTemplate>
+      <DataTemplate DataType="vm:SearchPageViewModel"><views:SearchPageView/></DataTemplate>
+      <DataTemplate DataType="vm:DownloadsPageViewModel"><views:DownloadsPageView/></DataTemplate>
+      <DataTemplate DataType="vm:TracksPageViewModel"><views:TracksPageView/></DataTemplate>
+      <DataTemplate DataType="vm:AlbumsPageViewModel"><views:AlbumsPageView/></DataTemplate>
+      <DataTemplate DataType="vm:ArtistsPageViewModel"><views:ArtistsPageView/></DataTemplate>
+      <DataTemplate DataType="vm:LibrariesPageViewModel"><views:LibrariesPageView/></DataTemplate>
+      <DataTemplate DataType="vm:PlaylistsPageViewModel"><views:PlaylistsPageView/></DataTemplate>
+      <DataTemplate DataType="vm:AudioToolsPageViewModel"><views:AudioToolsPageView/></DataTemplate>
+      <DataTemplate DataType="vm:SettingsPageViewModel"><views:SettingsPageView/></DataTemplate>
+    </ContentControl.DataTemplates>
+  </ContentControl>
+</UserControl>

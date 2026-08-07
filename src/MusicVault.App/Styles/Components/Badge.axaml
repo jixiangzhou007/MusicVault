@@ -1,0 +1,95 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Ant Badge：与 Tag / Alert / Progress 共用四套语义色（Info / Success / Warning / Error） -->
+
+  <Style Selector="Border.ant-badge">
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+
+  <!-- 数字角标（顶栏传输 ActiveDownloadCount 等） -->
+  <Style Selector="Border.ant-badge-count">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="Padding" Value="5,1"/>
+    <Setter Property="MinWidth" Value="16"/>
+    <Setter Property="MinHeight" Value="16"/>
+  </Style>
+  <Style Selector="Border.ant-badge-count TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource IconOnAccentBrush}"/>
+    <Setter Property="FontWeight" Value="Bold"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="LineHeight" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+  </Style>
+
+  <!-- 小圆点 -->
+  <Style Selector="Border.ant-badge-dot">
+    <Setter Property="Width" Value="6"/>
+    <Setter Property="Height" Value="6"/>
+    <Setter Property="MinWidth" Value="6"/>
+    <Setter Property="MinHeight" Value="6"/>
+    <Setter Property="CornerRadius" Value="3"/>
+  </Style>
+  <Style Selector="Border.ant-badge-dot-success">
+    <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-badge-dot-error">
+    <Setter Property="Background" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-badge-dot-processing">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-badge-dot-warning">
+    <Setter Property="Background" Value="{DynamicResource WarningTextBrush}"/>
+  </Style>
+
+  <!-- 状态块（18×18 圆形，传输列表 / 刮削结果等） -->
+  <Style Selector="Border.ant-badge-status, Border.download-status-badge, Border.batch-scrape-status-badge">
+    <Setter Property="Width" Value="18"/>
+    <Setter Property="Height" Value="18"/>
+    <Setter Property="MinWidth" Value="18"/>
+    <Setter Property="MinHeight" Value="18"/>
+    <Setter Property="CornerRadius" Value="9"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+  <Style Selector="Border.ant-badge-status-success, Border.download-status-badge-success, Border.batch-scrape-status-badge-success">
+    <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-badge-status-error, Border.download-status-badge-failed, Border.batch-scrape-status-badge-failed">
+    <Setter Property="Background" Value="{DynamicResource DangerBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-badge-status-processing, Border.download-status-badge-active">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+  <Style Selector="Border.ant-badge-status-warning">
+    <Setter Property="Background" Value="{DynamicResource WarningSoftBrush}"/>
+  </Style>
+  <Style Selector="TextBlock.ant-badge-status-glyph, TextBlock.download-status-badge-glyph, TextBlock.batch-scrape-status-glyph">
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeXs}"/>
+    <Setter Property="LineHeight" Value="{DynamicResource IconSizeXs}"/>
+    <Setter Property="Height" Value="{DynamicResource IconSizeXs}"/>
+    <Setter Property="FontWeight" Value="Bold"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="Border.ant-badge-status-error TextBlock.ant-badge-status-glyph, Border.download-status-badge-failed TextBlock.download-status-badge-glyph, Border.batch-scrape-status-badge-failed TextBlock.batch-scrape-status-glyph">
+    <Setter Property="Margin" Value="0,-1,0,0"/>
+  </Style>
+  <Style Selector="TextBlock.ant-badge-status-glyph-processing, TextBlock.download-status-badge-glyph-active">
+    <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+  </Style>
+
+</Styles>

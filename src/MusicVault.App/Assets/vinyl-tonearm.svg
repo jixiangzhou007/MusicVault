@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- NetEase-style tonearm layout (original art). Pivot at screw (~24,22) for rotation. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92 138" width="92" height="138">
+  <defs>
+    <linearGradient id="screwGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D8D8E2"/>
+      <stop offset="45%" stop-color="#A8A8B4"/>
+      <stop offset="100%" stop-color="#686870"/>
+    </linearGradient>
+    <linearGradient id="armGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ECECF2"/>
+      <stop offset="35%" stop-color="#B8B8C4"/>
+      <stop offset="100%" stop-color="#787880"/>
+    </linearGradient>
+    <linearGradient id="shellGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F4F4FA"/>
+      <stop offset="100%" stop-color="#9898A4"/>
+    </linearGradient>
+    <filter id="armShadow" x="-15%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="1.2" stdDeviation="1.4" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- pivot screw (rotation origin) -->
+  <circle cx="24" cy="22" r="11" fill="#2A2A32"/>
+  <circle cx="24" cy="22" r="9.5" fill="url(#screwGrad)" stroke="#585860" stroke-width="0.6"/>
+  <circle cx="21.5" cy="19.5" r="2.2" fill="#FFFFFF" opacity="0.45"/>
+
+  <!-- arm tube -->
+  <path filter="url(#armShadow)"
+        fill="url(#armGrad)" stroke="#585860" stroke-width="0.55" stroke-linejoin="round"
+        d="M 22 30 C 26 52, 34 78, 44 98 C 52 114, 58 122, 62 126
+           L 58 130 C 54 126, 48 118, 40 102 C 30 80, 24 56, 20 34 Z"/>
+
+  <!-- headshell -->
+  <g transform="translate(52 118) rotate(32)">
+    <path fill="url(#shellGrad)" stroke="#585860" stroke-width="0.55" stroke-linejoin="round"
+          d="M 0 4 L 22 7 L 20 18 L 3 15 Z"/>
+    <rect x="17" y="8" width="4.5" height="7" rx="1" fill="#707078" stroke="#484850" stroke-width="0.4"/>
+    <circle cx="19" cy="16.5" r="1.2" fill="#D0D0DA" stroke="#686870" stroke-width="0.35"/>
+    <path d="M 19 17.6 L 19.2 21" stroke="#B0B0BA" stroke-width="0.85" stroke-linecap="round"/>
+  </g>
+</svg>

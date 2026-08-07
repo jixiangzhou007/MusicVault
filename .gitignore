@@ -1,0 +1,43 @@
+bin/
+obj/
+publish/
+releases/
+*.nupkg
+.vs/
+*.user
+*.suo
+.DS_Store
+Thumbs.db
+
+# npm / Node (created under publish/ by bundle scripts)
+**/node_modules/
+
+# Local probes and agent temp
+tmp-probe/
+tmp-*/
+tmp-*.txt
+tmp-*.bin
+agent-tools/
+.superpowers/
+.cursor/
+agent-transcripts/
+
+# Test dumps / results
+**/TestResults/
+*.dmp
+*.hangdump
+
+# Local tool caches / scratch assets (do not ship)
+tools/ffmpeg-cache/
+tools/_tmp*
+tools/_freesvg*
+tools/_oc-*
+tools/_svgrepo*
+tools/_tabler*
+tools/_test*
+
+# User secrets (never commit)
+*.pfx
+secrets.json
+.env
+.env.*

@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:MusicVault.App.Converters"
+             x:Class="MusicVault.App.Controls.VinylRecordCoverView"
+             x:Name="Root"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Top">
+
+  <Canvas Width="340" Height="368" IsHitTestVisible="False">
+
+    <!-- 底盘柔影（不旋转） -->
+    <Ellipse Canvas.Left="30" Canvas.Top="56" Width="280" Height="280"
+             Fill="{DynamicResource VinylDiscShadowBrush}" Opacity="0.85"/>
+
+    <!-- 转盘：固定画布槽位，绕盘面几何中心旋转 -->
+    <Grid x:Name="DiscHost"
+          Canvas.Left="22" Canvas.Top="48"
+          Width="296" Height="296"
+          RenderTransformOrigin="50%,50%">
+
+      <Ellipse Width="296" Height="296"
+               HorizontalAlignment="Center" VerticalAlignment="Center"
+               Fill="{DynamicResource VinylDiscBrush}"
+               Stroke="{DynamicResource VinylDiscEdgeBrush}" StrokeThickness="1"/>
+
+      <Grid x:Name="GroovePanel" Width="296" Height="296"
+            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+      <Ellipse Width="296" Height="296" Opacity="0.22"
+               HorizontalAlignment="Center" VerticalAlignment="Center"
+               Fill="{DynamicResource VinylDiscSheenBrush}"/>
+
+      <Border Width="222" Height="222"
+              CornerRadius="111"
+              ClipToBounds="True"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Background="{DynamicResource PlayerCoverPlaceholderBrush}"
+              BorderBrush="{DynamicResource VinylLabelRingBrush}"
+              BorderThickness="1.5"
+              BoxShadow="0 0 0 1 #30FFFFFF, 0 2 12 0 #50000000">
+        <Panel>
+          <Image Source="{Binding CoverImageLarge, ElementName=Root, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                 Stretch="UniformToFill"
+                 IsVisible="{Binding HasCoverLarge, ElementName=Root}"/>
+          <Image Source="{Binding CoverImage, ElementName=Root, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                 Stretch="UniformToFill"
+                 IsVisible="{Binding HasCoverLarge, ElementName=Root, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"/>
+          <TextBlock Text="&#xE8D6;" Classes="icon-hero icon-muted"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                     IsVisible="{Binding !HasCover, ElementName=Root}"/>
+        </Panel>
+      </Border>
+
+      <Ellipse Width="10" Height="10"
+               HorizontalAlignment="Center" VerticalAlignment="Center"
+               Fill="{DynamicResource VinylSpindleBrush}"
+               Stroke="{DynamicResource VinylSpindleRingBrush}" StrokeThickness="1"/>
+    </Grid>
+
+    <!-- 唱臂（网易云式：PNG 唱针 + 螺丝枢轴旋转，见 VinylRecordCoverView.axaml.cs） -->
+    <Panel x:Name="TonearmHost" Canvas.Left="196" Canvas.Top="0"
+           Width="92" Height="138"
+           ZIndex="4">
+      <Image Width="92" Height="138"
+             Source="avares://MusicVault/Assets/vinyl-tonearm.png"
+             Stretch="Uniform"/>
+    </Panel>
+  </Canvas>
+</UserControl>

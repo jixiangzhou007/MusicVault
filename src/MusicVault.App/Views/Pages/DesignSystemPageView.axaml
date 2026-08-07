@@ -1,0 +1,706 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MusicVault.App.Controls"
+             xmlns:vm="using:MusicVault.App.ViewModels.Pages"
+             x:Class="MusicVault.App.Views.Pages.DesignSystemPageView"
+             x:DataType="vm:DesignSystemPageViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="{DynamicResource DesignSystemPageMargin}" MaxWidth="{DynamicResource ContentWidthPreview}" Spacing="0">
+
+      <TextBlock Text="{Binding PageTitle}" Classes="text-title"/>
+      <TextBlock Classes="text-caption" Margin="{DynamicResource MarginTopXs}"
+                 Text="{Binding AccentLabelText}"/>
+      <TextBlock Classes="text-caption" Margin="{DynamicResource MarginBottomLg}"
+                 Text="{Binding ThemeLabelText}"/>
+      <TextBlock Classes="text-caption" Margin="{DynamicResource MarginBottomLg}" TextWrapping="Wrap"
+                 Foreground="{DynamicResource TextTertiaryBrush}"
+                 Text="{Binding DocNote}"/>
+
+      <!-- 阶段 0：反馈分层 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding FeedbackTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap" Foreground="{DynamicResource TextTertiaryBrush}"
+                     Text="{Binding FeedbackIntro}"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap"
+                     Text="{Binding FeedbackSceneTip}"/>
+          <Border Background="{DynamicResource ContainerBrush}" CornerRadius="6" Padding="10,8">
+            <Grid ColumnDefinitions="100,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+              <TextBlock Grid.Row="0" Grid.Column="0" Text="Message" Classes="text-label"/>
+              <TextBlock Grid.Row="0" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding MessageDesc}"/>
+              <TextBlock Grid.Row="1" Grid.Column="0" Text="Alert" Classes="text-label"/>
+              <TextBlock Grid.Row="1" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding AlertDesc}"/>
+              <TextBlock Grid.Row="2" Grid.Column="0" Text="Empty" Classes="text-label"/>
+              <TextBlock Grid.Row="2" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding EmptyDesc}"/>
+              <TextBlock Grid.Row="3" Grid.Column="0" Text="Modal" Classes="text-label"/>
+              <TextBlock Grid.Row="3" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding ModalDesc}"/>
+              <TextBlock Grid.Row="4" Grid.Column="0" Text="Drawer" Classes="text-label"/>
+              <TextBlock Grid.Row="4" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding DrawerDesc}"/>
+              <TextBlock Grid.Row="5" Grid.Column="0" Text="Tooltip" Classes="text-label"/>
+              <TextBlock Grid.Row="5" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding TooltipDesc}"/>
+              <TextBlock Grid.Row="6" Grid.Column="0" Text="Progress" Classes="text-label"/>
+              <TextBlock Grid.Row="6" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding ProgressDesc}"/>
+              <TextBlock Grid.Row="7" Grid.Column="0" Text="Result" Classes="text-label"/>
+              <TextBlock Grid.Row="7" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding ResultDesc}"/>
+              <TextBlock Grid.Row="8" Grid.Column="0" Text="Skeleton" Classes="text-label"/>
+              <TextBlock Grid.Row="8" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding SkeletonDesc}"/>
+              <TextBlock Grid.Row="9" Grid.Column="0" Text="Popconfirm" Classes="text-label"/>
+              <TextBlock Grid.Row="9" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding PopconfirmDesc}"/>
+            </Grid>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- 阶段 0：语义状态色 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding SemanticColorsTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap"
+                     Text="{Binding SemanticColorsIntro}"/>
+          <UniformGrid Columns="2" Margin="{DynamicResource SettingsOverviewCardMargin}">
+            <Border Margin="{DynamicResource ChipGridItemMargin}" Padding="10,8" CornerRadius="6"
+                    Background="{DynamicResource AccentSoftBrush}"
+                    BorderBrush="{DynamicResource AccentMutedBrush}" BorderThickness="1">
+              <StackPanel Spacing="4">
+                <TextBlock Text="Info" Classes="text-label" Foreground="{DynamicResource AccentBrush}"/>
+                <TextBlock Text="{Binding InfoCaption}" Classes="text-caption"/>
+              </StackPanel>
+            </Border>
+            <Border Margin="{DynamicResource ChipGridItemMargin}" Padding="10,8" CornerRadius="6"
+                    Background="#1E3D28" BorderBrush="#6634C759" BorderThickness="1">
+              <StackPanel Spacing="4">
+                <TextBlock Text="Success" Classes="text-label" Foreground="{DynamicResource SuccessBrush}"/>
+                <TextBlock Text="{Binding SuccessCaption}" Classes="text-caption"/>
+              </StackPanel>
+            </Border>
+            <Border Margin="{DynamicResource ChipGridItemMargin}" Padding="10,8" CornerRadius="6"
+                    Background="{DynamicResource WarningSoftBrush}"
+                    BorderBrush="{DynamicResource WarningBorderBrush}" BorderThickness="1">
+              <StackPanel Spacing="4">
+                <TextBlock Text="Warning" Classes="text-label" Foreground="{DynamicResource WarningTextBrush}"/>
+                <TextBlock Text="{Binding WarningCaption}" Classes="text-caption"/>
+              </StackPanel>
+            </Border>
+            <Border Margin="{DynamicResource ChipGridItemMargin}" Padding="10,8" CornerRadius="6"
+                    Background="#3D1F1C" BorderBrush="#66FF453A" BorderThickness="1">
+              <StackPanel Spacing="4">
+                <TextBlock Text="Error" Classes="text-label" Foreground="{DynamicResource DangerBrush}"/>
+                <TextBlock Text="{Binding ErrorCaption}" Classes="text-caption"/>
+              </StackPanel>
+            </Border>
+          </UniformGrid>
+        </StackPanel>
+      </Border>
+
+      <!-- 阶段 0：动效 Token -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding MotionTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap"
+                     Text="{Binding MotionIntro}"/>
+          <Border Background="{DynamicResource ContainerBrush}" CornerRadius="6" Padding="10,8">
+            <StackPanel Spacing="6">
+              <TextBlock Classes="text-body" Text="{Binding MotionFastLine}"/>
+              <TextBlock Classes="text-body" Text="{Binding MotionBaseLine}"/>
+              <TextBlock Classes="text-body" Text="{Binding MotionDrawerLine}"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- 阶段 0：不适配清单 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding NotAdaptTitle}" Classes="ds-section-title"/>
+          <Border Classes="ant-alert ant-alert-warning" Padding="10,8">
+            <TextBlock TextWrapping="Wrap">
+              <Run Classes="ant-alert-message" Text="{Binding NotAdaptMessage}"/>
+              <Run Text=" · " Classes="ant-alert-description"/>
+              <Run Classes="ant-alert-description" Text="{Binding NotAdaptDescription}"/>
+            </TextBlock>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- 色板 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding PaletteTitle}" Classes="ds-section-title"/>
+          <UniformGrid Columns="4">
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource AccentBrush}"/>
+              <TextBlock Text="Accent" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource AccentSoftBrush}">
+                <TextBlock Text="{Binding AccentSoftSample}" Classes="text-caption"
+                           Foreground="{DynamicResource OnAccentSoftForegroundBrush}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              </Border>
+              <TextBlock Text="{Binding OnAccentSoftLabel}" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource AccentMutedBrush}"/>
+              <TextBlock Text="AccentMuted" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource FocusRingBrush}"/>
+              <TextBlock Text="FocusRing" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource StatPurpleBrush}"/>
+              <TextBlock Text="{Binding StatPurpleFixed}" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource StatOrangeBrush}"/>
+              <TextBlock Text="{Binding StatOrangeFixed}" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource SurfaceBrush}"/>
+              <TextBlock Text="Surface" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource TextPrimaryBrush}"/>
+              <TextBlock Text="TextPrimary" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource DangerBrush}"/>
+              <TextBlock Text="Danger" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource CoverPlaceholderBrush}"/>
+              <TextBlock Text="CoverPlaceholder" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource WarningSoftBrush}"
+                      BorderBrush="{DynamicResource WarningBorderBrush}" BorderThickness="1"/>
+              <TextBlock Text="WarningSoft" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource StatPinkBrush}"/>
+              <TextBlock Text="{Binding StatPinkFixed}" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource ModalScrimBrush}"/>
+              <TextBlock Text="ModalScrim" Classes="text-caption"/>
+            </StackPanel>
+            <StackPanel Margin="{DynamicResource ChipGridItemMargin}" Spacing="4">
+              <Border Height="32" CornerRadius="6" Background="{DynamicResource FullscreenScrimBrush}"/>
+              <TextBlock Text="FullscreenScrim" Classes="text-caption"/>
+            </StackPanel>
+          </UniformGrid>
+          <Border Background="{DynamicResource WarningSoftBrush}"
+                  BorderBrush="{DynamicResource WarningBorderBrush}" BorderThickness="1"
+                  CornerRadius="8" Padding="12,8" Margin="{DynamicResource SettingsOverviewCardMargin}">
+            <TextBlock Text="{Binding WarningSample}"
+                       Classes="text-body" Foreground="{DynamicResource WarningTextBrush}"/>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- 排版 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{Binding TypographyTitle}" Classes="ds-section-title"/>
+          <TextBlock Text="{Binding TypeMicroCaption}" Classes="text-micro"/>
+          <TextBlock Text="caption 11px" Classes="text-caption"/>
+          <TextBlock Text="label 12px" Classes="text-label"/>
+          <TextBlock Text="body 13px" Classes="text-body"/>
+          <TextBlock Text="subtitle 15px" Classes="text-subtitle"/>
+          <TextBlock Text="{Binding TypeLeadCaption}" Classes="text-lead"/>
+          <TextBlock Text="title 22px" Classes="text-title"/>
+          <TextBlock Text="display 28px" Classes="text-display"/>
+          <TextBlock Text="stat 34px" Classes="stat-value" Margin="{DynamicResource MarginTopSm}"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 图标（Segoe Fluent Icons / WinUI） -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding IconsTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption"
+                     Text="{Binding IconsIntro}"/>
+          <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+            <TextBlock Text="&#xE8D6;" Classes="icon-xs icon-muted"/>
+            <TextBlock Text="&#xE8D6;" Classes="icon-sm icon-muted"/>
+            <TextBlock Text="&#xE768;" Classes="icon-md icon-accent"/>
+            <TextBlock Text="&#xE721;" Classes="icon-lg icon-accent"/>
+            <TextBlock Text="&#xE896;" Classes="icon-2xl icon-accent"/>
+            <TextBlock Text="&#xE8D6;" Classes="icon-hero icon-muted"/>
+          </StackPanel>
+          <TextBlock Classes="text-caption" Text="{Binding IconsSizes}"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 默认控件（WinUI ControlTheme） -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding DefaultControlsTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" Text="{Binding DefaultControlsIntro}"/>
+          <Button Content="{Binding DefaultButtonLabel}" HorizontalAlignment="Left"/>
+          <TextBox Watermark="{Binding DefaultTextBoxWatermark}" MaxWidth="320"/>
+          <ComboBox MaxWidth="320" SelectedIndex="0">
+            <ComboBoxItem Content="{Binding DefaultComboBoxLabel}"/>
+            <ComboBoxItem Content="{Binding DefaultComboBoxOptionB}"/>
+          </ComboBox>
+          <CheckBox Content="{Binding DefaultCheckBoxLabel}" IsChecked="True"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 间距 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding SpacingTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption"
+                     Text="SpaceXs=4 · SpaceSm=8 · SpaceMd=12 · SpaceLg=16 · SpaceXl=20"/>
+          <TextBlock Classes="text-caption"
+                     Text="{Binding SpacingControlHeightTokens}"/>
+          <TextBlock Classes="text-caption"
+                     Text="LabelColumnWidth=60 · FieldScrollGutter=24"/>
+          <StackPanel Orientation="Horizontal" Spacing="8" Margin="{DynamicResource MarginTopSm}">
+            <Border Width="{DynamicResource ControlHeightSm}" Height="{DynamicResource ControlHeightSm}"
+                    Background="{DynamicResource AccentBrush}" CornerRadius="4"/>
+            <Border Width="{DynamicResource ControlHeightMd}" Height="{DynamicResource ControlHeightMd}"
+                    Background="{DynamicResource AccentSoftBrush}" CornerRadius="4"/>
+            <Border Width="{DynamicResource ControlHeightLg}" Height="{DynamicResource ControlHeightLg}"
+                    Background="{DynamicResource NavHoverBrush}" CornerRadius="4"/>
+          </StackPanel>
+          <TextBlock Classes="text-caption" Text="{Binding ControlHeightLegend}"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 按钮 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding ButtonsTitle}" Classes="ds-section-title"/>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="primary" Classes="primary"/>
+            <Button Content="btn-primary" Classes="btn-primary"/>
+            <Button Content="flat-btn" Classes="flat-btn"/>
+            <Button Content="secondary" Classes="secondary"/>
+            <Button Content="danger" Classes="danger"/>
+          </StackPanel>
+          <TextBlock Classes="text-caption" Text="{Binding ButtonsPrimaryCaption}"/>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="discover-action" Classes="primary discover-action"/>
+            <Button Content="browse-search" Classes="browse-search"/>
+            <Button Content="btn-toolbar" Classes="btn-toolbar"/>
+            <Button Content="flat+toolbar" Classes="flat-btn btn-toolbar"/>
+            <Button Content="{Binding PrimaryToolbarButton}" Classes="primary btn-toolbar"/>
+          </StackPanel>
+          <TextBlock Classes="text-caption" Text="{Binding ButtonsToolbarCaption}"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap" Foreground="{DynamicResource TextTertiaryBrush}"
+                     Text="{Binding ButtonsIconCaption}"/>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="app-dialog-btn" Classes="flat-btn app-dialog-btn"/>
+            <Button Content="{Binding PrimaryDialogButton}" Classes="primary app-dialog-btn"/>
+          </StackPanel>
+          <TextBlock Classes="text-caption" Text="{Binding ButtonsDialogCaption}"/>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Classes="row-action-btn" ToolTip.Tip="row-action-btn / btn-icon-row">
+              <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph icon-sm"/>
+            </Button>
+            <Button Classes="icon-btn" ToolTip.Tip="icon-btn / btn-icon-toolbar">
+              <TextBlock Text="&#xE711;" Classes="icon-sm icon-muted"/>
+            </Button>
+            <Button Classes="top-icon-btn" ToolTip.Tip="top-icon-btn">
+              <TextBlock Text="&#xE793;" Classes="icon-sm"/>
+            </Button>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 搜索 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding SearchTitle}" Classes="ds-section-title"/>
+          <Grid ColumnDefinitions="*,Auto" MaxWidth="360">
+            <TextBox Grid.Column="0" Classes="top-search browse-search"
+                     Watermark="{Binding SearchWatermark}"/>
+            <Button Grid.Column="1" Content="{Binding SearchButton}" Classes="browse-search" Margin="{DynamicResource MarginLeadingSm}"/>
+          </Grid>
+          <TextBlock Classes="text-caption" Text="{Binding SearchClassCaption}"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 表单 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding FormTitle}" Classes="ds-section-title"/>
+          <StackPanel Spacing="8">
+            <Grid ColumnDefinitions="80,*">
+              <TextBlock Grid.Column="0" Text="{Binding FormRadioLabel}" Classes="text-label" VerticalAlignment="Center"/>
+              <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" Margin="{DynamicResource WindowNavLeadingMargin}">
+                <RadioButton Content="{Binding FormOptionA}" GroupName="DsPreview" Classes="choice-inline" IsChecked="True"/>
+                <RadioButton Content="{Binding FormOptionB}" GroupName="DsPreview" Classes="choice-inline"/>
+              </StackPanel>
+            </Grid>
+            <Grid ColumnDefinitions="80,*">
+              <TextBlock Grid.Column="0" Text="{Binding FormCheckLabel}" Classes="text-label" VerticalAlignment="Center"/>
+              <CheckBox Grid.Column="1" Content="{Binding FormAutoCoverLyrics}" Classes="choice-check" IsChecked="True" Margin="{DynamicResource WindowNavLeadingMargin}"/>
+            </Grid>
+            <Grid ColumnDefinitions="80,*">
+              <TextBlock Grid.Column="0" Text="{Binding FormInputLabel}" Classes="text-label" VerticalAlignment="Center"/>
+              <TextBox Grid.Column="1" Classes="discover-field field-input" Watermark="{Binding FormInputWatermark}" Margin="{DynamicResource WindowNavLeadingMargin}"/>
+            </Grid>
+            <Grid ColumnDefinitions="80,*">
+              <TextBlock Grid.Column="0" Text="{Binding FormSelectLabel}" Classes="text-label" VerticalAlignment="Center"/>
+              <controls:PlatformComboBox Grid.Column="1" Classes="field-select" Width="200"
+                                         SelectedPlatformIndex="0" Margin="{DynamicResource WindowNavLeadingMargin}"/>
+            </Grid>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Popconfirm -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding PopconfirmTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap"
+                     Text="{Binding PopconfirmIntro}"/>
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <controls:PopconfirmHost Title="{Binding PopconfirmDeleteTitle}"
+                                     Description="{Binding PopconfirmDeleteDescription}"
+                                     ConfirmText="{Binding PopconfirmDeleteConfirm}"
+                                     ConfirmIsDanger="True">
+              <Button Content="{Binding PopconfirmDeleteButton}" Classes="danger ant-btn-danger btn-toolbar"/>
+            </controls:PopconfirmHost>
+            <controls:PopconfirmHost Title="{Binding PopconfirmClearTitle}"
+                                     Description="{Binding PopconfirmClearDescription}"
+                                     ConfirmText="{Binding PopconfirmClearConfirm}"
+                                     AlternateConfirmText="{Binding PopconfirmClearAlternate}"
+                                     ShowAlternateConfirm="True">
+              <Button Content="{Binding PopconfirmClearButton}" Classes="flat-btn btn-toolbar"/>
+            </controls:PopconfirmHost>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 模态浮层 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding ModalOverlayTitle}" Classes="ds-section-title"/>
+          <Border Height="220" CornerRadius="8" ClipToBounds="True">
+            <Panel>
+              <Border Classes="modal-scrim"/>
+              <Border Classes="ant-popover player-elevated-popover app-modal-panel"
+                      HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="400">
+                <DockPanel>
+                  <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+                    <StackPanel Classes="app-dialog-actions">
+                      <Button Content="{Binding ModalCancel}" Classes="flat-btn app-dialog-btn"/>
+                      <Button Content="{Binding ModalConfirm}" Classes="primary app-dialog-btn"/>
+                    </StackPanel>
+                  </Border>
+                  <StackPanel Classes="app-dialog-body">
+                    <TextBlock Text="{Binding ModalDialogTitle}" Classes="text-title"/>
+                    <TextBlock Text="{Binding ModalDialogBody}"
+                               Classes="text-body" TextWrapping="Wrap"/>
+                  </StackPanel>
+                </DockPanel>
+              </Border>
+            </Panel>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- 列表行 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding ListRowTitle}" Classes="ds-section-title"/>
+          <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="8" Padding="4">
+            <StackPanel Spacing="2">
+              <Grid Classes="track-row-content" ColumnDefinitions="*,Auto,Auto" Height="40" Margin="{DynamicResource MarginBottomXs}">
+                <TextBlock Text="{Binding ListRowNormal}" Classes="text-body" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Classes="row-action-btn">
+                  <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph icon-sm icon-muted"/>
+                </Button>
+                <Button Grid.Column="2" Classes="row-action-btn">
+                  <TextBlock Text="&#xE8F1;" Classes="track-row-glyph icon-sm icon-muted"/>
+                </Button>
+              </Grid>
+              <Grid Classes="track-row-content" ColumnDefinitions="*,Auto,Auto" Height="40" Margin="{DynamicResource MarginBottomXs}"
+                    Background="{DynamicResource AccentSoftBrush}">
+                <TextBlock Text="{Binding ListRowSelected}" Classes="text-body"
+                           Foreground="{DynamicResource OnAccentSoftForegroundBrush}"
+                           VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Classes="row-action-btn">
+                  <TextBlock Text="{StaticResource IconGlyphHeartFill}" Classes="track-row-glyph icon-sm icon-accent"/>
+                </Button>
+                <Button Grid.Column="2" Classes="row-action-btn">
+                  <TextBlock Text="&#xE8F1;" Classes="track-row-glyph icon-sm icon-accent"/>
+                </Button>
+              </Grid>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- Ant Tooltip -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding TooltipSectionTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption"
+                     Text="{Binding TooltipSectionIntro}"/>
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <Button Content="{Binding TooltipHoverButton}" Classes="primary btn-toolbar"
+                    ToolTip.Tip="{Binding TooltipHoverTip}"/>
+            <Button Classes="row-action-btn"
+                    ToolTip.Tip="{Binding TooltipIconTip}">
+              <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph icon-sm"/>
+            </Button>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Ant Progress -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding ProgressSectionTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption"
+                     Text="{Binding ProgressSectionIntro}"/>
+          <StackPanel Spacing="12" MaxWidth="480">
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding ProgressDefaultLabel}" Classes="text-label"/>
+              <ProgressBar Value="65" Maximum="100" Classes="ant-progress-line"/>
+            </StackPanel>
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding ProgressSmallLabel}" Classes="text-label"/>
+              <ProgressBar Value="40" Maximum="100" Classes="ant-progress-line-small"/>
+            </StackPanel>
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding ProgressModalLabel}" Classes="text-label"/>
+              <Grid ColumnDefinitions="*,Auto">
+                <ProgressBar Grid.Column="0" Value="72" Maximum="100" Classes="ant-progress-line-modal"/>
+                <TextBlock Grid.Column="1" Text="72%" Classes="ant-progress-percent"/>
+              </Grid>
+            </StackPanel>
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding ProgressActiveLabel}" Classes="text-label"/>
+              <ProgressBar IsIndeterminate="True" Classes="ant-progress-line"/>
+            </StackPanel>
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding ProgressStatusLabel}" Classes="text-label"/>
+              <ProgressBar Value="100" Maximum="100" Classes="ant-progress-line ant-progress-line-success"/>
+              <ProgressBar Value="35" Maximum="100" Classes="ant-progress-line ant-progress-line-exception"/>
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Result -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding ResultSectionTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap"
+                     Text="{Binding ResultSectionIntro}"/>
+          <StackPanel Spacing="20">
+            <controls:ResultView Status="{x:Static controls:ResultStatus.Success}" Title="{Binding ResultSuccessTitle}"
+                                 Description="{Binding ResultSuccessDescription}"/>
+            <controls:ResultView Status="{x:Static controls:ResultStatus.Warning}" Title="{Binding ResultWarningTitle}"
+                                 Description="{Binding ResultWarningDescription}"/>
+            <controls:ResultView Status="{x:Static controls:ResultStatus.Error}" Title="{Binding ResultErrorTitle}"
+                                 Description="{Binding ResultErrorDescription}"/>
+            <controls:ResultView Status="{x:Static controls:ResultStatus.Info}" Title="{Binding ResultInfoTitle}"
+                                 Description="{Binding ResultInfoDescription}"
+                                 ShowActions="True" ShowPrimaryButton="True" ShowSecondaryButton="True"
+                                 PrimaryButtonText="{Binding ResultUpdateNow}" SecondaryButtonText="{Binding ResultUpdateLater}"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Skeleton -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding SkeletonSectionTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap"
+                     Text="{Binding SkeletonSectionIntro}"/>
+          <StackPanel Spacing="16">
+            <StackPanel Spacing="8">
+              <TextBlock Text="{Binding SkeletonBasicLabel}" Classes="text-label"/>
+              <StackPanel Orientation="Horizontal" Spacing="12">
+                <controls:SkeletonBlock BlockWidth="120" BlockHeight="32"/>
+                <controls:SkeletonLine LineWidth="200" IsTitle="True"/>
+              </StackPanel>
+            </StackPanel>
+            <StackPanel Spacing="8">
+              <TextBlock Text="{Binding SkeletonCompositeLabel}" Classes="text-label"/>
+              <controls:SkeletonPlaceholder ShowAvatar="True" ShowParagraph="True" MaxWidth="{DynamicResource ControlWidthWide}"/>
+            </StackPanel>
+            <StackPanel Spacing="8">
+              <TextBlock Text="{Binding SkeletonBrowseLabel}" Classes="text-label"/>
+              <controls:SkeletonBrowseListView MaxWidth="480"/>
+            </StackPanel>
+            <StackPanel Spacing="8">
+              <TextBlock Text="{Binding SkeletonDiscoverLabel}" Classes="text-label"/>
+              <controls:SkeletonDiscoverResultsView MaxWidth="{DynamicResource ContentWidthForm}"/>
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Form Drawer -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding FormDrawerTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap"
+                     Text="{Binding FormDrawerIntro}"/>
+          <Border Classes="ant-alert ant-alert-info" Padding="10,8">
+            <TextBlock TextWrapping="Wrap">
+              <Run Classes="ant-alert-message" Text="{Binding FormDrawerAlertMessage}"/>
+              <Run Text=" · " Classes="ant-alert-description"/>
+              <Run Classes="ant-alert-description" Text="{Binding FormDrawerAlertDescription}"/>
+            </TextBlock>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- Steps -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding StepsTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap"
+                     Text="{Binding StepsIntro}"/>
+          <controls:StepsIndicator Items="{Binding DemoWizardSteps}"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Badge -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding BadgeTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap"
+                     Text="{Binding BadgeIntro}"/>
+          <StackPanel Spacing="12">
+            <StackPanel Spacing="6">
+              <TextBlock Text="{Binding BadgeCountLabel}" Classes="text-label"/>
+              <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <TextBlock Text="{Binding BadgeTransferLabel}" Classes="text-body" VerticalAlignment="Center"/>
+                <Border Classes="ant-badge ant-badge-count">
+                  <TextBlock Text="3"/>
+                </Border>
+              </StackPanel>
+            </StackPanel>
+            <StackPanel Spacing="6">
+              <TextBlock Text="{Binding BadgeStatusLabel}" Classes="text-label"/>
+              <StackPanel Orientation="Horizontal" Spacing="16">
+                <Border Classes="ant-badge ant-badge-status ant-badge-status-success">
+                  <TextBlock Text="✓" Classes="ant-badge-status-glyph"/>
+                </Border>
+                <Border Classes="ant-badge ant-badge-status ant-badge-status-error">
+                  <TextBlock Text="✕" Classes="ant-badge-status-glyph"/>
+                </Border>
+                <Border Classes="ant-badge ant-badge-status ant-badge-status-processing">
+                  <TextBlock Text="&#xE895;" Classes="ant-badge-status-glyph ant-badge-status-glyph-processing"/>
+                </Border>
+              </StackPanel>
+            </StackPanel>
+            <StackPanel Spacing="6">
+              <TextBlock Text="{Binding BadgeDotLabel}" Classes="text-label"/>
+              <StackPanel Orientation="Horizontal" Spacing="12">
+                <Border Classes="ant-badge ant-badge-dot ant-badge-dot-success"/>
+                <Border Classes="ant-badge ant-badge-dot ant-badge-dot-processing"/>
+                <Border Classes="ant-badge ant-badge-dot ant-badge-dot-warning"/>
+                <Border Classes="ant-badge ant-badge-dot ant-badge-dot-error"/>
+              </StackPanel>
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Popover -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding PopoverTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap"
+                     Text="{Binding PopoverIntro}"/>
+          <Border Background="{DynamicResource ContainerBrush}" CornerRadius="8" Padding="16" MaxWidth="360">
+            <StackPanel Spacing="8">
+              <Border Classes="ant-popover ant-popover-flyout player-flyout-panel" HorizontalAlignment="Left">
+                <StackPanel Spacing="4">
+                  <TextBlock Text="{Binding PopoverRefresh}" Classes="text-body"/>
+                  <TextBlock Text="{Binding PopoverClearOverview}" Classes="text-body"/>
+                  <TextBlock Text="{Binding PopoverClearAll}" Classes="text-body" Foreground="{DynamicResource DangerBrush}"/>
+                </StackPanel>
+              </Border>
+              <TextBlock Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding PopoverHint}"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- ds-batch-a-theme-player -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding ThemePlayerTitle}" Classes="ds-section-title"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap" Foreground="{DynamicResource TextTertiaryBrush}"
+                     Text="{Binding ThemePlayerIntro}"/>
+          <Border Background="{DynamicResource ContainerBrush}" CornerRadius="6" Padding="10,8">
+            <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+              <TextBlock Grid.Row="0" Grid.Column="0" Text="BackgroundBrush" Classes="text-label"/>
+              <Border Grid.Row="0" Grid.Column="1" Height="28" CornerRadius="4"
+                      Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1"/>
+              <TextBlock Grid.Row="1" Grid.Column="0" Text="PlayerBarBrush" Classes="text-label"/>
+              <Border Grid.Row="1" Grid.Column="1" Height="28" CornerRadius="4"
+                      Background="{DynamicResource PlayerBarBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1"/>
+              <TextBlock Grid.Row="2" Grid.Column="0" Text="AccentBrush" Classes="text-label"/>
+              <Border Grid.Row="2" Grid.Column="1" Height="28" CornerRadius="4"
+                      Background="{DynamicResource AccentBrush}"/>
+              <TextBlock Grid.Row="3" Grid.Column="0" Text="PlayerChromeBase" Classes="text-label"/>
+              <Border Grid.Row="3" Grid.Column="1" Height="28" CornerRadius="4"
+                      Background="{DynamicResource PlayerChromeBaseBrush}" BorderBrush="{DynamicResource PlayerChromeBorderSubtleBrush}" BorderThickness="1"/>
+              <TextBlock Grid.Row="4" Grid.Column="0" Text="InputFieldBrush" Classes="text-label"/>
+              <Border Grid.Row="4" Grid.Column="1" Height="28" CornerRadius="4"
+                      Background="{DynamicResource InputFieldBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1"/>
+              <TextBlock Grid.Row="5" Grid.Column="0" Text="{Binding ThemeLightThemeLabel}" Classes="text-label"/>
+              <TextBlock Grid.Row="5" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding ThemeLightThemeDesc}"/>
+              <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding ThemeAuditLabel}" Classes="text-label"/>
+              <TextBlock Grid.Row="6" Grid.Column="1" Classes="text-caption" TextWrapping="Wrap"
+                         Text="{Binding ThemeAuditDesc}"/>
+            </Grid>
+          </Border>
+          <Border Background="{DynamicResource PlayerChromeBaseBrush}" CornerRadius="8" Padding="12,10" MaxWidth="{DynamicResource ControlWidthWide}" HorizontalAlignment="Left">
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding ThemePlayerChromeSample}" Classes="text-caption"
+                         Foreground="{DynamicResource PlayerChromeForegroundTertiaryBrush}"/>
+              <TextBlock Text="{Binding ThemePlayerChromeControls}" Classes="text-label"
+                         Foreground="{DynamicResource PlayerChromeCoverIconBrush}"/>
+              <Border Height="4" CornerRadius="2" Background="{DynamicResource PlayerChromeProgressTrackBrush}" Margin="{DynamicResource SettingsOverviewCardMargin}"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- Ant 反馈组件 -->
+      <Border Classes="ds-section">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding AntFeedbackTitle}" Classes="ds-section-title"/>
+          <Border Classes="ant-alert ant-alert-info" Padding="10,8">
+            <TextBlock TextWrapping="Wrap">
+              <Run Classes="ant-alert-message" Text="{Binding AntFeedbackAlertMessage}"/>
+              <Run Text=" · " Classes="ant-alert-description"/>
+              <Run Classes="ant-alert-description" Text="{Binding AntFeedbackAlertDescription}"/>
+            </TextBlock>
+          </Border>
+          <controls:EmptyStateView Title="{Binding EmptyStateTitle}"
+                                   Description="{Binding EmptyStateDescription}"
+                                   IconGlyph="&#xE721;"/>
+          <TextBlock Classes="text-caption" Text="{Binding SegmentedNote}"/>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:svc="using:MusicVault.App.Services"
+             xmlns:conv="using:MusicVault.App.Converters"
+             x:Class="MusicVault.App.Views.Controls.TopMessageHost"
+             Classes="top-message-host">
+  <ItemsControl ItemsSource="{Binding Source={x:Static svc:MessageService.Instance}, Path=Messages}">
+    <ItemsControl.ItemsPanel>
+      <ItemsPanelTemplate>
+        <StackPanel Classes="top-message-stack"/>
+      </ItemsPanelTemplate>
+    </ItemsControl.ItemsPanel>
+    <ItemsControl.ItemTemplate>
+      <DataTemplate x:DataType="svc:ToastMessage">
+        <Border Classes="top-message-item">
+          <StackPanel Orientation="Horizontal" Spacing="0">
+            <TextBlock Classes="top-message-icon icon-sm"
+                       Text="{Binding Level, Converter={x:Static conv:MessageLevelToGlyphConverter.Instance}}"
+                       Foreground="{Binding Level, Converter={x:Static conv:MessageLevelToBrushConverter.Instance}}"/>
+            <TextBlock Classes="top-message-text" Text="{Binding Text}"/>
+          </StackPanel>
+        </Border>
+      </DataTemplate>
+    </ItemsControl.ItemTemplate>
+  </ItemsControl>
+</UserControl>

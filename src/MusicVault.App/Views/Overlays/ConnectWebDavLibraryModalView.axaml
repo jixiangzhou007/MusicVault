@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             x:Class="MusicVault.App.Views.Overlays.ConnectWebDavLibraryModalView"
+             x:DataType="vm:ConnectWebDavLibraryModalViewModel">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding CancelLabel}" Classes="flat-btn app-dialog-btn" Command="{Binding CancelCommand}"/>
+          <Button Content="{Binding TestLabel}" Classes="flat-btn app-dialog-btn"
+                  Command="{Binding TestConnectionCommand}" IsEnabled="{Binding !IsBusy}"/>
+          <Button Content="{Binding ConnectLabel}" Classes="primary app-dialog-btn"
+                  Command="{Binding ConnectCommand}" IsEnabled="{Binding !IsBusy}"/>
+        </StackPanel>
+      </Border>
+      <StackPanel Classes="app-dialog-body">
+        <TextBlock Text="{Binding Title}" Classes="text-title"/>
+        <TextBlock Classes="app-dialog-intro" Text="{Binding Intro}" TextWrapping="Wrap"/>
+        <TextBox Watermark="{Binding DisplayNameWatermark}" Text="{Binding DisplayName}" Classes="app-dialog-field"/>
+        <Grid ColumnDefinitions="*,80">
+          <TextBox Grid.Column="0" Watermark="{Binding HostWatermark}" Text="{Binding Host}"
+                   Classes="app-dialog-field" Margin="{DynamicResource MarginTrailingSm}"/>
+          <TextBox Grid.Column="1" Watermark="{Binding PortWatermark}" Text="{Binding Port, Mode=TwoWay}"
+                   Classes="app-dialog-field" ToolTip.Tip="{Binding PortWatermark}"/>
+        </Grid>
+        <TextBox Watermark="{Binding SubPathWatermark}" Text="{Binding SubPath}" Classes="app-dialog-field"/>
+        <TextBox Watermark="{Binding UsernameWatermark}" Text="{Binding Username}" Classes="app-dialog-field"/>
+        <TextBox Watermark="{Binding PasswordWatermark}" Text="{Binding Password}" PasswordChar="●"
+                 Classes="app-dialog-field"/>
+        <Grid Classes="settings-field-row settings-switch-row">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Text="{Binding UseTlsLabel}" Classes="text-label" VerticalAlignment="Center"/>
+          <ToggleSwitch Grid.Column="1" Classes="ant-switch" IsChecked="{Binding UseTls}"/>
+        </Grid>
+        <Grid Classes="settings-field-row settings-switch-row">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <StackPanel Grid.Column="0" Spacing="2">
+            <TextBlock Text="{Binding RememberCredentialsLabel}" Classes="text-label"/>
+            <TextBlock Text="{Binding RememberCredentialsCaption}" Classes="settings-field-caption" TextWrapping="Wrap"/>
+          </StackPanel>
+          <ToggleSwitch Grid.Column="1" Classes="ant-switch" IsChecked="{Binding RememberCredentials}"/>
+        </Grid>
+        <TextBlock Text="{Binding StatusMessage}" Classes="app-dialog-status" TextWrapping="Wrap"
+                   IsVisible="{Binding HasStatusMessage}"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</UserControl>

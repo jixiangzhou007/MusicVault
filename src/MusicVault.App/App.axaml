@@ -1,0 +1,31 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MusicVault.App.App"
+             RequestedThemeVariant="Dark">
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://MusicVault/Styles/Tokens/Typography.axaml" />
+        <ResourceInclude Source="avares://MusicVault/Styles/Tokens/Spacing.axaml" />
+        <ResourceInclude Source="avares://MusicVault/Styles/Tokens/WinUiShape.axaml" />
+        <ResourceInclude Source="avares://MusicVault/Styles/Tokens/Icons.axaml" />
+        <ResourceInclude Source="avares://MusicVault/Styles/Tokens/Motion.axaml" />
+        <ResourceInclude Source="avares://MusicVault/Styles/ThemeResources.axaml" />
+        <ResourceInclude Source="avares://MusicVault/Resources/SharedDataTemplates.axaml" />
+        <ResourceInclude Source="avares://MusicVault/Styles/ButtonControlThemes.axaml" />
+        <ResourceInclude Source="avares://MusicVault/Styles/ToolTipControlThemes.axaml" />
+        <ResourceInclude Source="avares://MusicVault/Styles/PopconfirmControlThemes.axaml" />
+        <ResourceInclude Source="avares://MusicVault/Styles/MetadataControlThemes.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Application.Resources>
+  <Application.Styles>
+    <FluentTheme>
+      <FluentTheme.Palettes>
+        <ColorPaletteResources x:Key="Light" Accent="#007AFF"/>
+        <ColorPaletteResources x:Key="Dark" Accent="#007AFF"/>
+      </FluentTheme.Palettes>
+    </FluentTheme>
+    <StyleInclude Source="avares://MusicVault/Styles/AppStyles.axaml" />
+  </Application.Styles>
+</Application>

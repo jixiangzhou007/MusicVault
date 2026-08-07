@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MusicVault.App.Controls.StepItemView"
+             x:Name="Root"
+             x:CompileBindings="False">
+  <StackPanel Orientation="Horizontal" Spacing="0">
+    <StackPanel Spacing="4" MinWidth="80" MaxWidth="120" HorizontalAlignment="Center">
+      <Border x:Name="IconBorder" Classes="ant-steps-icon" HorizontalAlignment="Center">
+        <TextBlock x:Name="IconGlyph" Classes="ant-steps-icon-glyph"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Border>
+      <TextBlock Text="{Binding Title, ElementName=Root}" Classes="ant-steps-title"
+                 TextAlignment="Center" TextWrapping="Wrap" MaxWidth="120"/>
+    </StackPanel>
+    <Border x:Name="Connector" Classes="ant-steps-tail"
+            IsVisible="{Binding ShowConnector, ElementName=Root}"
+            VerticalAlignment="Top" Margin="0,11,0,0"/>
+  </StackPanel>
+</UserControl>

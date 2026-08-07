@@ -1,0 +1,19 @@
+using Avalonia;
+using Avalonia.Controls;
+
+namespace MusicVault.App.Controls;
+
+/// <summary>导航区块标题</summary>
+public partial class SectionHeader : UserControl
+{
+    public static readonly StyledProperty<string> TitleProperty =
+        AvaloniaProperty.Register<SectionHeader, string>(nameof(Title), string.Empty);
+
+    public string Title
+    {
+        get => GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
+    public SectionHeader() => InitializeComponent();
+}

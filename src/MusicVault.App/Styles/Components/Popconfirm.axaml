@@ -1,0 +1,66 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MusicVault.App.Controls">
+
+  <!-- ControlTheme 见 PopconfirmControlThemes.axaml（App.Resources）；勿在此 StaticResource 引用，否则启动失败 -->
+
+  <Style Selector="controls|PopconfirmHost">
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.ant-popconfirm">
+    <Setter Property="Padding" Value="12,10"/>
+    <Setter Property="Background" Value="{DynamicResource ContainerBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="BoxShadow" Value="{DynamicResource PopoverShadow}"/>
+  </Style>
+
+  <Style Selector="Border.ant-popconfirm TextBlock.text-label">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+  </Style>
+
+  <Style Selector="Border.ant-popconfirm TextBlock.text-caption">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+  </Style>
+
+  <Style Selector="StackPanel.ant-popconfirm-actions">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+    <Setter Property="Spacing" Value="8"/>
+  </Style>
+
+  <Style Selector="Button.ant-popconfirm-btn">
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Padding" Value="10,0"/>
+  </Style>
+
+  <!-- ant-btn-danger：与 danger 同义，供设计系统与 Popconfirm 危险主按钮 -->
+  <Style Selector="Button.ant-btn-danger">
+    <Setter Property="Background" Value="{DynamicResource DangerBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusButton}"/>
+    <Setter Property="Padding" Value="{DynamicResource ButtonPaddingStandard}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="FontWeight" Value="Normal"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.ant-btn-danger.app-dialog-btn, Button.ant-btn-danger.ant-popconfirm-btn">
+    <Setter Property="Padding" Value="{DynamicResource ToolbarButtonPadding}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource DialogButtonHeight}"/>
+    <Setter Property="Height" Value="{DynamicResource DialogButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource DialogButtonHeight}"/>
+  </Style>
+
+  <Style Selector="Button.ant-btn-danger:pointerover">
+    <Setter Property="Opacity" Value="0.92"/>
+  </Style>
+
+</Styles>

@@ -1,0 +1,46 @@
+<Window xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dvm="using:MusicVault.App.ViewModels.Dialogs"
+             x:Class="MusicVault.App.Views.Dialogs.BatchMetadataWindow"
+             x:DataType="dvm:BatchMetadataViewModel"
+             Classes="app-dialog"
+             Title="{Binding WindowTitle}"
+             Width="480"
+             SizeToContent="Height"
+             MinHeight="380"
+             MaxWidth="520"
+             WindowStartupLocation="CenterOwner">
+  <Border Classes="app-dialog-shell">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding CloseButtonText}" Classes="flat-btn app-dialog-btn" Click="OnClose"/>
+        </StackPanel>
+      </Border>
+
+      <StackPanel Classes="app-dialog-body" Spacing="12">
+        <TextBlock Text="{Binding SelectedTracksText}" Classes="text-body"/>
+        <TextBlock Text="{Binding FindReplaceTitle}" Classes="text-subtitle"/>
+        <ComboBox ItemsSource="{Binding FieldOptions}" SelectedItem="{Binding SelectedFieldOption}"
+                  Width="200" Classes="field-select">
+          <ComboBox.ItemTemplate>
+            <DataTemplate x:DataType="dvm:BatchMetadataFieldOption">
+              <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" MaxLines="1"/>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBox Watermark="{Binding FindWatermark}" Text="{Binding FindText}" Classes="field-input discover-field"/>
+        <TextBox Watermark="{Binding ReplaceWatermark}" Text="{Binding ReplaceText}" Classes="field-input discover-field"/>
+        <Button Content="{Binding ApplyFindReplaceLabel}" Command="{Binding ApplyFindReplaceCommand}" Classes="flat-btn btn-toolbar"/>
+        <Separator Opacity="0.2"/>
+        <TextBlock Text="{Binding ScrapeSectionTitle}" Classes="text-subtitle"/>
+        <CheckBox Content="{Binding EmbedCoverLabel}" IsChecked="{Binding EmbedCover}" Classes="choice-check"/>
+        <CheckBox Content="{Binding EmbedLyricsLabel}" IsChecked="{Binding EmbedLyrics}" Classes="choice-check"/>
+        <Button Content="{Binding StartScrapeLabel}" Classes="primary btn-toolbar" Command="{Binding BatchScrapeCommand}"/>
+        <TextBlock Text="{Binding StatusMessage}"
+                   Classes="text-body app-dialog-status"
+                   Classes.success="{Binding IsStatusSuccess}"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</Window>

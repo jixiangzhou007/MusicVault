@@ -1,0 +1,44 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Ant Popover：就近锚定浮层（音量 Flyout、传输页菜单等）；Modal / Popconfirm 仍用居中卡片 -->
+
+  <Style Selector="Border.ant-popover, Border.player-elevated-popover">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="10"/>
+    <Setter Property="BoxShadow" Value="{DynamicResource PopoverShadow}"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+
+  <Style Selector="Border.ant-popover-flyout, Border.player-flyout-panel">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="10"/>
+    <Setter Property="Padding" Value="12,10"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="BoxShadow" Value="{DynamicResource PopoverShadow}"/>
+  </Style>
+
+  <!-- FlyoutPresenter 外壳（音量等由系统 Flyout 承载时） -->
+  <Style Selector="FlyoutPresenter">
+    <Setter Property="Background" Value="{DynamicResource FlyoutSurfaceBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource FlyoutBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="CornerRadius" Value="10"/>
+    <Setter Property="Opacity" Value="1"/>
+  </Style>
+
+  <!-- Flyout 内透明内容区（外壳由 FlyoutPresenter 提供） -->
+  <Style Selector="Border.ant-popover-inline, Border.volume-popover-card">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <!-- Avalonia 不接受 BoxShadow 的 {x:Null}；内层用透明阴影，外壳由 FlyoutPresenter 承担 -->
+    <Setter Property="BoxShadow" Value="{DynamicResource ShadowSm}"/>
+    <Setter Property="Padding" Value="10,8"/>
+  </Style>
+
+</Styles>

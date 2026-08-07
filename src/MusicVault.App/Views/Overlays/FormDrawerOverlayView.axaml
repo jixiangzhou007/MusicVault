@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             xmlns:overlays="using:MusicVault.App.Views.Overlays"
+             x:Class="MusicVault.App.Views.Overlays.FormDrawerOverlayView"
+             x:DataType="vm:FormDrawerHostViewModel">
+  <UserControl.DataTemplates>
+    <DataTemplate DataType="vm:MusicApiAccountModalViewModel">
+      <overlays:MusicApiAccountModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:CombinedLabelsSearchViewModel">
+      <overlays:CombinedLabelsSearchModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:MetadataLyricsEditorModalViewModel">
+      <overlays:MetadataLyricsEditorModalView/>
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <ContentControl Content="{Binding Content}"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"/>
+</UserControl>

@@ -1,0 +1,19 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- 显示节奏：接近 Ant Design（Fluent 默认 ShowDelay 400ms 偏慢） -->
+  <Style Selector="Button,
+                 ToggleButton,
+                 TextBox,
+                 ComboBox,
+                 Slider,
+                 CheckBox,
+                 RadioButton,
+                 Expander,
+                 ListBoxItem,
+                 MenuItem,
+                 TabItem">
+    <Setter Property="ToolTip.ShowDelay" Value="150"/>
+  </Style>
+
+</Styles>

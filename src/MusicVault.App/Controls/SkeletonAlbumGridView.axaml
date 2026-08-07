@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MusicVault.App.Controls"
+             x:Class="MusicVault.App.Controls.SkeletonAlbumGridView">
+  <StackPanel Orientation="Horizontal" Spacing="10">
+    <StackPanel Spacing="6" Width="124">
+      <controls:SkeletonBlock BlockWidth="120" BlockHeight="120" BlockCornerRadius="8"/>
+      <controls:SkeletonLine LineWidth="100" LineHorizontalAlignment="Center"/>
+      <controls:SkeletonLine LineWidth="60" LineHeight="12" LineHorizontalAlignment="Center"/>
+    </StackPanel>
+    <StackPanel Spacing="6" Width="124">
+      <controls:SkeletonBlock BlockWidth="120" BlockHeight="120" BlockCornerRadius="8"/>
+      <controls:SkeletonLine LineWidth="90" LineHorizontalAlignment="Center"/>
+      <controls:SkeletonLine LineWidth="50" LineHeight="12" LineHorizontalAlignment="Center"/>
+    </StackPanel>
+    <StackPanel Spacing="6" Width="124">
+      <controls:SkeletonBlock BlockWidth="120" BlockHeight="120" BlockCornerRadius="8"/>
+      <controls:SkeletonLine LineWidth="110" LineHorizontalAlignment="Center"/>
+      <controls:SkeletonLine LineWidth="55" LineHeight="12" LineHorizontalAlignment="Center"/>
+    </StackPanel>
+    <StackPanel Spacing="6" Width="124">
+      <controls:SkeletonBlock BlockWidth="120" BlockHeight="120" BlockCornerRadius="8"/>
+      <controls:SkeletonLine LineWidth="80" LineHorizontalAlignment="Center"/>
+      <controls:SkeletonLine LineWidth="48" LineHeight="12" LineHorizontalAlignment="Center"/>
+    </StackPanel>
+    <StackPanel Spacing="6" Width="124">
+      <controls:SkeletonBlock BlockWidth="120" BlockHeight="120" BlockCornerRadius="8"/>
+      <controls:SkeletonLine LineWidth="105" LineHorizontalAlignment="Center"/>
+      <controls:SkeletonLine LineWidth="52" LineHeight="12" LineHorizontalAlignment="Center"/>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

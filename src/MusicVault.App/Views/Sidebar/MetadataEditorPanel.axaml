@@ -1,0 +1,377 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Sidebar"
+             xmlns:conv="using:MusicVault.App.Converters"
+             xmlns:controls="using:MusicVault.App.Controls"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="MusicVault.App.Views.Sidebar.MetadataEditorPanel"
+             x:DataType="vm:MetadataEditorViewModel"
+             Focusable="True"
+             Background="Transparent">
+  <!-- 统一行结构：标签 | 输入 | 扳手子菜单(28) | 保存/搜索(28) -->
+  <ScrollViewer x:Name="EditorScroll" VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Disabled"
+                Background="Transparent"
+                PointerPressed="OnEditorBackgroundPressed">
+    <StackPanel Margin="{DynamicResource SidebarEditorMargin}" Spacing="0">
+
+      <TextBlock Text="{Binding IntroText}" Classes="text-caption"
+                 TextWrapping="Wrap"
+                 IsVisible="{Binding !HasTrack}"/>
+
+      <ProgressBar Margin="{DynamicResource MarginBottomSm}" IsIndeterminate="True" Classes="ant-progress-line"
+                   IsVisible="{Binding IsBusy}"/>
+
+      <Grid IsVisible="{Binding HasTrack}"
+            ColumnDefinitions="72,8,*,6,28,6,28"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+
+        <!-- 获取方式：标签与单选在同一行 Grid 内，保证文字水平对齐 -->
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7"
+              ColumnDefinitions="72,8,Auto,12,Auto"
+              Height="{DynamicResource ControlHeightSm}">
+          <TextBlock Grid.Column="0" Text="{Binding SourceModeLabel}"
+                     Classes="text-label metadata-field-label"/>
+          <RadioButton Grid.Column="2" Content="{Binding SourceOnlineLabel}" GroupName="MetadataSource" Classes="metadata-option"
+                       IsChecked="{Binding IsOnlineSourceMode, Mode=TwoWay}"
+                       IsEnabled="{Binding !IsBusy}"/>
+          <RadioButton Grid.Column="4" Content="{Binding SourceFileLabel}" GroupName="MetadataSource" Classes="metadata-option"
+                       IsChecked="{Binding IsFromFileSourceMode, Mode=TwoWay}"
+                       IsEnabled="{Binding !IsBusy}"/>
+        </Grid>
+
+        <!-- 在线：数据源 + 搜索(末列) -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding DataSourceLabel}" Classes="text-label metadata-field-label metadata-editor-row-margin"
+                   IsVisible="{Binding IsOnlineSourceMode}"/>
+        <controls:PlatformComboBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3"
+                                   Classes="field-select metadata-platform-combo metadata-editor-row-margin"
+                                   SelectedPlatformIndex="{Binding MatchPlatformIndex}"
+                                   IsEnabled="{Binding !IsBusy}"
+                                   IsVisible="{Binding IsOnlineSourceMode}"/>
+        <Button Grid.Row="1" Grid.Column="6" Classes="metadata-field-search-btn metadata-editor-row-margin"
+                Command="{Binding IdentifyOnlineCommand}" IsEnabled="{Binding !IsBusy}"
+                IsVisible="{Binding IsOnlineSourceMode}">
+          <TextBlock Classes="metadata-field-search-glyph"/>
+        </Button>
+
+        <!-- 从文件：路径 + 扳手子菜单 -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding FileLabel}" Classes="text-label metadata-field-label metadata-editor-row-margin"
+                   IsVisible="{Binding IsFromFileSourceMode}"/>
+        <TextBox Grid.Row="1" Grid.Column="2"
+                 Classes="discover-field metadata-field field-input metadata-input metadata-field-input-compact metadata-editor-row-margin"
+                 Text="{Binding MetadataSourceFilePath}"
+                 IsReadOnly="True" TextWrapping="NoWrap"
+                 ToolTip.Tip="{Binding MetadataSourceFilePath}"
+                 IsVisible="{Binding IsFromFileSourceMode}"/>
+        <Button Grid.Row="1" Grid.Column="4" Classes="metadata-field-tool-btn metadata-editor-row-margin"
+                IsVisible="{Binding IsFromFileSourceMode}" IsEnabled="{Binding !IsBusy}">
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft">
+              <MenuItem Header="{Binding BrowseFileMenu}" Command="{Binding PickMetadataSourceFileCommand}"/>
+              <MenuItem Header="{Binding ReadTagsMenu}" Command="{Binding ReadFromSourceFileCommand}"/>
+            </MenuFlyout>
+          </Button.Flyout>
+          <TextBlock Classes="metadata-field-tool-wrench-glyph"/>
+        </Button>
+
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="7"
+              ColumnDefinitions="72,8,*"
+              Height="{DynamicResource ControlHeightSm}"
+              Classes="metadata-editor-row-margin"
+              IsVisible="{Binding ShowFetchMediaOnIdentify}">
+          <CheckBox Grid.Column="2"
+                    Classes="metadata-fetch-media"
+                    Content="{Binding FetchMediaOnIdentifyLabel}"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding FetchMediaOnIdentify}"
+                    IsEnabled="{Binding !IsBusy}"/>
+        </Grid>
+
+        <!-- 歌名 -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding TitleFieldLabel}" Classes="text-label metadata-field-label metadata-editor-row-margin"/>
+        <TextBox Grid.Row="3" Grid.Column="2"
+                 Classes="discover-field metadata-field field-input metadata-input metadata-field-input-compact metadata-editor-row-margin"
+                 Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="3" Grid.Column="4" Classes="metadata-field-encoding-btn metadata-editor-row-margin"
+                Command="{Binding FixEncodingCommand}" CommandParameter="Title"
+                IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-encoding-glyph"/>
+        </Button>
+        <Button Grid.Row="3" Grid.Column="6" Classes="metadata-field-write-btn metadata-editor-row-margin"
+                Command="{Binding SyncFieldCommand}" CommandParameter="Title" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-write-glyph"/>
+        </Button>
+
+        <!-- 歌手 -->
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding ArtistFieldLabel}" Classes="text-label metadata-field-label metadata-editor-row-margin"/>
+        <TextBox Grid.Row="4" Grid.Column="2"
+                 Classes="discover-field metadata-field field-input metadata-input metadata-field-input-compact metadata-editor-row-margin"
+                 Text="{Binding Artist, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="4" Grid.Column="4" Classes="metadata-field-encoding-btn metadata-editor-row-margin"
+                Command="{Binding FixEncodingCommand}" CommandParameter="Artist"
+                IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-encoding-glyph"/>
+        </Button>
+        <Button Grid.Row="4" Grid.Column="6" Classes="metadata-field-write-btn metadata-editor-row-margin"
+                Command="{Binding SyncFieldCommand}" CommandParameter="Artist" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-write-glyph"/>
+        </Button>
+
+        <!-- 专辑 -->
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="{Binding AlbumFieldLabel}" Classes="text-label metadata-field-label metadata-editor-row-margin"/>
+        <TextBox Grid.Row="5" Grid.Column="2"
+                 Classes="discover-field metadata-field field-input metadata-input metadata-field-input-compact metadata-editor-row-margin"
+                 Text="{Binding Album, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="5" Grid.Column="4" Classes="metadata-field-encoding-btn metadata-editor-row-margin"
+                Command="{Binding FixEncodingCommand}" CommandParameter="Album"
+                IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-encoding-glyph"/>
+        </Button>
+        <Button Grid.Row="5" Grid.Column="6" Classes="metadata-field-write-btn metadata-editor-row-margin"
+                Command="{Binding SyncFieldCommand}" CommandParameter="Album" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-write-glyph"/>
+        </Button>
+
+        <!-- 年份 -->
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding YearFieldLabel}" Classes="text-label metadata-field-label metadata-editor-row-margin"/>
+        <TextBox Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="3"
+                 Classes="discover-field metadata-field field-input metadata-input metadata-field-input-compact metadata-editor-row-margin"
+                 Text="{Binding YearText, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="6" Grid.Column="6" Classes="metadata-field-write-btn metadata-editor-row-margin"
+                Command="{Binding SyncFieldCommand}" CommandParameter="Year" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-write-glyph"/>
+        </Button>
+
+        <!-- 音轨号 / 碟片号（整行包裹，标签与输入框上沿对齐） -->
+        <Grid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="7"
+              Margin="{DynamicResource MarginTopSm}"
+              ColumnDefinitions="72,8,*,8,*">
+          <TextBlock Grid.Column="0" Text="{Binding TrackNumberFieldLabel}" VerticalAlignment="Top"
+                     Classes="text-label metadata-field-label"/>
+          <Grid Grid.Column="2" ColumnDefinitions="*,6,28" VerticalAlignment="Top">
+            <TextBox Grid.Column="0"
+                     Classes="discover-field field-input metadata-input metadata-field-input-compact"
+                     Watermark="{Binding TrackNumberWatermark}"
+                     Text="{Binding TrackNumberText, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Grid.Column="2" Classes="metadata-field-write-btn" VerticalAlignment="Top"
+                    Command="{Binding SyncFieldCommand}" CommandParameter="TrackNumber" IsEnabled="{Binding !IsBusy}">
+              <TextBlock Classes="metadata-field-write-glyph"/>
+            </Button>
+          </Grid>
+          <Grid Grid.Column="4" ColumnDefinitions="*,6,28" VerticalAlignment="Top">
+            <TextBox Grid.Column="0"
+                     Classes="discover-field field-input metadata-input metadata-field-input-compact"
+                     Watermark="{Binding DiscNumberWatermark}"
+                     Text="{Binding DiscNumberText, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Grid.Column="2" Classes="metadata-field-write-btn" VerticalAlignment="Top"
+                    Command="{Binding SyncFieldCommand}" CommandParameter="Disc" IsEnabled="{Binding !IsBusy}">
+              <TextBlock Classes="metadata-field-write-glyph"/>
+            </Button>
+          </Grid>
+        </Grid>
+
+        <!-- 风格 -->
+        <TextBlock Grid.Row="8" Grid.Column="0" Text="{Binding GenreFieldLabel}" Classes="text-label metadata-field-label metadata-editor-row-margin"/>
+        <ComboBox Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="3"
+                  Classes="metadata-platform-combo metadata-genre-combo metadata-field-input-compact metadata-editor-row-margin"
+                  ItemsSource="{Binding GenreOptions}"
+                  SelectedItem="{Binding Genre, Mode=TwoWay}"
+                  PlaceholderText="{Binding GenrePlaceholder}"
+                  IsEnabled="{Binding !IsBusy}"/>
+        <Button Grid.Row="8" Grid.Column="6" Classes="metadata-field-write-btn metadata-editor-row-margin"
+                Command="{Binding SyncFieldCommand}" CommandParameter="Genre" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-write-glyph"/>
+        </Button>
+
+        <!-- 专辑歌手 -->
+        <TextBlock Grid.Row="9" Grid.Column="0" Text="{Binding AlbumArtistFieldLabel}" Classes="text-label metadata-field-label metadata-editor-row-margin"/>
+        <TextBox Grid.Row="9" Grid.Column="2"
+                 Classes="discover-field metadata-field field-input metadata-input metadata-field-input-compact metadata-editor-row-margin"
+                 Text="{Binding AlbumArtist, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="9" Grid.Column="4" Classes="metadata-field-encoding-btn metadata-editor-row-margin"
+                Command="{Binding FixEncodingCommand}" CommandParameter="AlbumArtist"
+                IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-encoding-glyph"/>
+        </Button>
+        <Button Grid.Row="9" Grid.Column="6" Classes="metadata-field-write-btn metadata-editor-row-margin"
+                Command="{Binding SyncFieldCommand}" CommandParameter="AlbumArtist" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-write-glyph"/>
+        </Button>
+
+        <!-- 作曲家 -->
+        <TextBlock Grid.Row="10" Grid.Column="0" Text="{Binding ComposerFieldLabel}" Classes="text-label metadata-field-label metadata-editor-row-margin"/>
+        <TextBox Grid.Row="10" Grid.Column="2"
+                 Classes="discover-field metadata-field field-input metadata-input metadata-field-input-compact metadata-editor-row-margin"
+                 Text="{Binding Composer, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="10" Grid.Column="4" Classes="metadata-field-encoding-btn metadata-editor-row-margin"
+                Command="{Binding FixEncodingCommand}" CommandParameter="Composer"
+                IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-encoding-glyph"/>
+        </Button>
+        <Button Grid.Row="10" Grid.Column="6" Classes="metadata-field-write-btn metadata-editor-row-margin"
+                Command="{Binding SyncFieldCommand}" CommandParameter="Composer" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-write-glyph"/>
+        </Button>
+
+        <!-- 作词家 -->
+        <TextBlock Grid.Row="11" Grid.Column="0" Text="{Binding LyricistFieldLabel}" Classes="text-label metadata-field-label metadata-editor-row-margin"/>
+        <TextBox Grid.Row="11" Grid.Column="2"
+                 Classes="discover-field metadata-field field-input metadata-input metadata-field-input-compact metadata-editor-row-margin"
+                 Text="{Binding Lyricist, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="11" Grid.Column="4" Classes="metadata-field-encoding-btn metadata-editor-row-margin"
+                Command="{Binding FixEncodingCommand}" CommandParameter="Lyricist"
+                IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-encoding-glyph"/>
+        </Button>
+        <Button Grid.Row="11" Grid.Column="6" Classes="metadata-field-write-btn metadata-editor-row-margin"
+                Command="{Binding SyncFieldCommand}" CommandParameter="Lyricist" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-write-glyph"/>
+        </Button>
+
+        <!-- 备注（整行包裹，标签与输入框上沿对齐） -->
+        <Grid Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="7"
+              Margin="{DynamicResource MarginTopSm}"
+              ColumnDefinitions="72,8,*,6,28,6,28">
+          <TextBlock Grid.Column="0" Text="{Binding CommentFieldLabel}" VerticalAlignment="Top"
+                     Classes="text-label metadata-field-label"/>
+          <TextBox Grid.Column="2"
+                   Classes="discover-field field-input metadata-input metadata-lyrics-field metadata-lyrics-field-compact"
+                   Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"/>
+          <Button Grid.Column="4" VerticalAlignment="Top"
+                  Classes="metadata-field-encoding-btn metadata-editor-row-top"
+                  Command="{Binding FixEncodingCommand}" CommandParameter="Comment"
+                  IsEnabled="{Binding !IsBusy}">
+            <TextBlock Classes="metadata-field-encoding-glyph"/>
+          </Button>
+          <Button Grid.Column="6" VerticalAlignment="Top"
+                  Classes="metadata-field-write-btn"
+                  Command="{Binding SyncFieldCommand}" CommandParameter="Comment" IsEnabled="{Binding !IsBusy}">
+            <TextBlock Classes="metadata-field-write-glyph"/>
+          </Button>
+        </Grid>
+
+        <!-- 歌词：预览框 + 扳手子菜单 -->
+        <TextBlock Grid.Row="13" Grid.Column="0" Text="{Binding LyricsFieldLabel}" Classes="text-label metadata-field-label metadata-editor-row-margin"/>
+        <TextBox Grid.Row="13" Grid.Column="2"
+                 Classes="discover-field metadata-field field-input metadata-input metadata-field-input-compact metadata-editor-row-margin"
+                 Text="{Binding LyricsPreviewText}"
+                 IsReadOnly="True"
+                 ToolTip.Tip="{Binding LyricsText}"/>
+        <Button Grid.Row="13" Grid.Column="4" Classes="metadata-field-tool-btn metadata-editor-row-margin">
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft">
+              <MenuItem Header="{Binding EditLyricsMenu}" Command="{Binding EditLyricsCommand}"/>
+              <MenuItem Header="{Binding FetchLyricsOnlineMenu}" Command="{Binding FetchLyricsOnlineCommand}"
+                        IsVisible="{Binding IsOnlineSourceMode}"/>
+              <MenuItem Header="{Binding ReadLyricsFromTagsMenu}" Command="{Binding ReadLyricsFromTagsCommand}"/>
+              <MenuItem Header="{Binding FixEncodingMenu}" Command="{Binding FixEncodingCommand}" CommandParameter="Lyrics"/>
+            </MenuFlyout>
+          </Button.Flyout>
+          <TextBlock Classes="metadata-field-tool-wrench-glyph"/>
+        </Button>
+        <Button Grid.Row="13" Grid.Column="6" Classes="metadata-field-write-btn metadata-editor-row-margin"
+                Command="{Binding SyncFieldCommand}" CommandParameter="Lyrics" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-write-glyph"/>
+        </Button>
+
+        <!-- 封面：预览 + 扳手子菜单 -->
+        <TextBlock Grid.Row="14" Grid.Column="0" Text="{Binding CoverFieldLabel}"
+                   Classes="text-label metadata-field-label metadata-editor-row-top"/>
+        <StackPanel Grid.Row="14" Grid.Column="2" Spacing="4" Classes="metadata-editor-row-top">
+          <Border Width="100" Height="100" CornerRadius="6"
+                  Background="{DynamicResource SearchFieldBrush}"
+                  BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1"
+                  ClipToBounds="True">
+            <Border.ContextMenu>
+              <ContextMenu>
+                <MenuItem Header="{Binding AddCoverMenu}">
+                  <MenuItem Header="{Binding PickCoverFileMenu}" Command="{Binding PickCoverFromFileCommand}"/>
+                  <MenuItem Header="{Binding FetchCoverOnlineMenu}" Command="{Binding FetchCoverOnlineCommand}"
+                            IsVisible="{Binding IsOnlineSourceMode}"/>
+                  <MenuItem Header="{Binding ReadCoverFromTagsMenu}" Command="{Binding ReadCoverFromTagsCommand}"/>
+                </MenuItem>
+                <MenuItem Header="{Binding DeleteCoverMenu}" Command="{Binding ClearCoverPreviewCommand}"/>
+                <MenuItem Header="{Binding OpenCoverMenu}" Command="{Binding OpenCoverCommand}"/>
+                <MenuItem Header="{Binding ExportCoverMenu}" Command="{Binding ExportCoverCommand}"/>
+              </ContextMenu>
+            </Border.ContextMenu>
+            <Panel>
+              <Image Source="{Binding CoverImage, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                     Stretch="UniformToFill" IsVisible="{Binding HasCover}"/>
+              <TextBlock Text="{Binding NoCoverText}" Classes="text-caption" HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Foreground="{DynamicResource TextTertiaryBrush}" IsVisible="{Binding !HasCover}"/>
+            </Panel>
+          </Border>
+          <TextBlock Text="{Binding CoverInfoText}" Classes="text-caption"
+                     TextWrapping="Wrap"
+                     Foreground="{DynamicResource TextTertiaryBrush}"
+                     IsVisible="{Binding HasCover}"/>
+        </StackPanel>
+        <Button Grid.Row="14" Grid.Column="4"
+                Classes="metadata-field-tool-btn metadata-editor-row-top">
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft">
+              <MenuItem Header="{Binding AddCoverMenu}">
+                <MenuItem Header="{Binding PickCoverFileMenu}" Command="{Binding PickCoverFromFileCommand}"/>
+                <MenuItem Header="{Binding FetchCoverOnlineMenu}" Command="{Binding FetchCoverOnlineCommand}"
+                          IsVisible="{Binding IsOnlineSourceMode}"/>
+                <MenuItem Header="{Binding ReadCoverFromTagsMenu}" Command="{Binding ReadCoverFromTagsCommand}"/>
+              </MenuItem>
+              <MenuItem Header="{Binding DeleteCoverMenu}" Command="{Binding ClearCoverPreviewCommand}"/>
+              <MenuItem Header="{Binding OpenCoverMenu}" Command="{Binding OpenCoverCommand}"/>
+              <MenuItem Header="{Binding ExportCoverMenu}" Command="{Binding ExportCoverCommand}"/>
+            </MenuFlyout>
+          </Button.Flyout>
+          <TextBlock Classes="metadata-field-tool-wrench-glyph"/>
+        </Button>
+        <Button Grid.Row="14" Grid.Column="6"
+                Classes="metadata-field-write-btn metadata-editor-row-top"
+                Command="{Binding SyncFieldCommand}" CommandParameter="Cover" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="metadata-field-write-glyph"/>
+        </Button>
+
+      </Grid>
+
+      <StackPanel Spacing="8" IsVisible="{Binding HasTrack}" Margin="{DynamicResource MarginTopSm}">
+
+        <TextBlock Text="{Binding StatusMessage}" Classes="text-caption" MinHeight="14"
+                   TextWrapping="Wrap"/>
+
+        <Grid ColumnDefinitions="*,Auto">
+          <Button Grid.Column="0" Content="{Binding SaveAllButtonText}" Classes="primary"
+                  HorizontalAlignment="Stretch" Margin="{DynamicResource MarginTrailingSm}"
+                  Command="{Binding SaveCommand}" IsEnabled="{Binding !IsBusy}"
+                  automation:AutomationProperties.Name="{Binding SaveAllButtonText}"/>
+          <Button Grid.Column="1" Classes="row-action-btn track-favorite-btn"
+                  VerticalAlignment="Center"
+                  Command="{Binding ToggleFavoriteCommand}"
+                  IsEnabled="{Binding CanToggleFavorite}"
+                  ToolTip.Tip="{Binding AddToFavoritesToolTip}"
+                  automation:AutomationProperties.Name="{Binding AddToFavoritesToolTip}">
+            <Panel>
+              <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph track-favorite-glyph-off"
+                         IsVisible="{Binding !IsFavorite}"/>
+              <TextBlock Text="{StaticResource IconGlyphHeartFill}" Classes="track-row-glyph track-favorite-glyph-on"
+                         IsVisible="{Binding IsFavorite}"/>
+            </Panel>
+          </Button>
+        </Grid>
+        <TextBlock Text="{Binding FooterHintText}"
+                   Classes="text-caption" TextWrapping="Wrap"
+                   Foreground="{DynamicResource TextTertiaryBrush}"/>
+
+        <Button Content="{Binding OpenFolderButtonText}" Classes="flat-btn"
+                HorizontalAlignment="Left"
+                Command="{Binding OpenFileLocationCommand}"
+                automation:AutomationProperties.Name="{Binding OpenFolderButtonText}"/>
+
+        <TextBlock Text="{Binding FilePathDisplay}" Classes="text-caption" TextWrapping="Wrap"
+                   Foreground="{DynamicResource TextTertiaryBrush}"/>
+        <TextBlock Text="{Binding SaveHintText}"
+                   Classes="text-caption" TextWrapping="Wrap"
+                   Foreground="{DynamicResource TextTertiaryBrush}"
+                   IsVisible="{Binding IsFromFileSourceMode}"/>
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

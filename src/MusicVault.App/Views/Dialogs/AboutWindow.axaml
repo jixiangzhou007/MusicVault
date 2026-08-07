@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MusicVault.App.Views.Dialogs.AboutWindow"
+        Classes="app-dialog"
+        Width="440"
+        SizeToContent="Height"
+        MinHeight="320"
+        MaxWidth="480"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+  <Border Classes="app-dialog-shell">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button x:Name="CloseButton" Classes="flat-btn app-dialog-btn" Click="OnClose"/>
+        </StackPanel>
+      </Border>
+
+      <StackPanel Classes="app-dialog-body" Spacing="12" HorizontalAlignment="Center">
+        <TextBlock Text="MusicVault" Classes="text-display" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="VersionText" Text="v1.0.0" Classes="text-caption" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="AuthorText" Classes="text-caption" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="TaglineText" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="360" LineHeight="22" Classes="text-body"/>
+        <Border Background="{DynamicResource WarningSoftBrush}"
+                BorderBrush="{DynamicResource WarningBorderBrush}" BorderThickness="1"
+                CornerRadius="10" Padding="16" MaxWidth="360">
+          <TextBlock x:Name="ComplianceText" TextWrapping="Wrap" TextAlignment="Center" Classes="text-body"
+                     Foreground="{DynamicResource WarningTextBrush}"/>
+        </Border>
+        <TextBlock x:Name="PlatformNoteText" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="360"
+                   Classes="text-caption" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="StackText" Classes="text-caption" HorizontalAlignment="Center"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</Window>

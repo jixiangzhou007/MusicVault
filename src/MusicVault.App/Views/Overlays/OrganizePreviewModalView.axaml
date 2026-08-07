@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             x:Class="MusicVault.App.Views.Overlays.OrganizePreviewModalView"
+             x:DataType="vm:OrganizePreviewModalViewModel">
+  <Border Classes="ant-popover player-elevated-popover app-modal-panel" MinWidth="520" MaxWidth="720">
+    <DockPanel>
+      <Border DockPanel.Dock="Bottom" Classes="app-dialog-footer">
+        <StackPanel Classes="app-dialog-actions">
+          <Button Content="{Binding CloseLabel}" Classes="primary app-dialog-btn" Command="{Binding CloseCommand}"/>
+        </StackPanel>
+      </Border>
+
+      <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="360">
+        <StackPanel Classes="app-dialog-body" Spacing="16">
+          <TextBlock Text="{Binding ModalTitle}" Classes="text-subtitle"/>
+          <TextBlock Text="{Binding SummaryText}" Classes="text-caption"
+                     Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+
+          <ItemsControl ItemsSource="{Binding Sections}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:OrganizePreviewSection">
+                <StackPanel Spacing="8" Margin="{DynamicResource MarginBottomXs}">
+                  <TextBlock Text="{Binding DimensionTitle}" Classes="text-label"/>
+                  <Grid Classes="ant-table-header" ColumnDefinitions="*,Auto,*" Height="27">
+                    <TextBlock Grid.Column="0" Text="{Binding BeforeLabel}"
+                               Classes="track-col-header track-col-header-muted"/>
+                    <TextBlock Grid.Column="2" Text="{Binding AfterLabel}"
+                               Classes="track-col-header track-col-header-muted"/>
+                  </Grid>
+                  <Border Classes="track-row" HorizontalAlignment="Stretch">
+                    <Grid ColumnDefinitions="*,Auto,*" Margin="{DynamicResource PageContentHorizontalMarginSm}" MinHeight="34" VerticalAlignment="Center">
+                      <TextBlock Grid.Column="0" Text="{Binding Before}" Classes="track-col-cell"
+                                 TextTrimming="CharacterEllipsis"
+                                 Foreground="{DynamicResource TextSecondaryBrush}"/>
+                      <TextBlock Grid.Column="1" Text="→" Classes="track-col-cell" Margin="{DynamicResource TrackColHeaderLastMargin}"
+                                 Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                      <TextBlock Grid.Column="2" Text="{Binding After}" Classes="track-col-cell track-title"
+                                 TextTrimming="CharacterEllipsis"/>
+                    </Grid>
+                  </Border>
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </ScrollViewer>
+    </DockPanel>
+  </Border>
+</UserControl>

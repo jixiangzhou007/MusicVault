@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MusicVault.App.ViewModels.Dialogs"
+             xmlns:overlays="using:MusicVault.App.Views.Overlays"
+             x:Class="MusicVault.App.Views.Overlays.AppModalOverlayView"
+             x:DataType="vm:AppModalHostViewModel">
+  <UserControl.DataTemplates>
+    <DataTemplate DataType="vm:ConfirmSimpleModalViewModel">
+      <overlays:ConfirmSimpleModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:ConfirmRemoveDownloadModalViewModel">
+      <overlays:ConfirmRemoveDownloadModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:MusicApiUpdateModalViewModel">
+      <overlays:MusicApiUpdateModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:ConfirmBatchEnqueueModalViewModel">
+      <overlays:ConfirmBatchEnqueueModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:ConfirmAlbumCatalogRefreshModalViewModel">
+      <overlays:ConfirmBatchEnqueueModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:ConnectNasLibraryModalViewModel">
+      <overlays:ConnectNasLibraryModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:ConnectWebDavLibraryModalViewModel">
+      <overlays:ConnectWebDavLibraryModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:BatchScrapeConfirmModalViewModel">
+      <overlays:BatchScrapeConfirmModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:BatchScrapeProgressModalViewModel">
+      <overlays:BatchScrapeProgressModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:PreviewLoadingModalViewModel">
+      <overlays:PreviewLoadingModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:OnlineTrackDownloadPickerModalViewModel">
+      <overlays:OnlineTrackDownloadPickerModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:BatchScrapeResultModalViewModel">
+      <overlays:BatchScrapeResultModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:MetadataEncodingFixModalViewModel">
+      <overlays:MetadataEncodingFixModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:FirstRunWizardModalViewModel">
+      <overlays:FirstRunWizardModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:PlaylistEditModalViewModel">
+      <overlays:PlaylistEditModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:OrganizePreviewModalViewModel">
+      <overlays:OrganizePreviewModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:OpenSourceDetailModalViewModel">
+      <overlays:OpenSourceDetailModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:MusicRecognitionGuideModalViewModel">
+      <overlays:MusicRecognitionGuideModalView/>
+    </DataTemplate>
+    <DataTemplate DataType="vm:GathererUrlModalViewModel">
+      <overlays:GathererUrlModalView/>
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <ContentControl Content="{Binding Content}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+  </Grid>
+</UserControl>

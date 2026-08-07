@@ -1,0 +1,264 @@
+<Window xmlns="https://github.com/avaloniaui"
+
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+        xmlns:conv="using:MusicVault.App.Converters"
+
+        xmlns:pvm="using:MusicVault.App.ViewModels.Player"
+
+        x:Class="MusicVault.App.Views.Player.DesktopLyricsWindow"
+
+        x:DataType="pvm:DesktopLyricsViewModel"
+
+        Title="{Binding WindowTitle}"
+
+        Width="840"
+
+        SizeToContent="Height"
+
+        MinHeight="72"
+
+        MinWidth="720"
+
+        MaxWidth="960"
+
+        CanResize="False"
+
+        ShowInTaskbar="False"
+
+        Topmost="True"
+
+        SystemDecorations="None"
+
+        Background="Transparent"
+
+        TransparencyLevelHint="Transparent"
+
+        WindowStartupLocation="Manual"
+
+        PointerEntered="OnPointerEntered"
+
+        PointerExited="OnPointerExited">
+
+  <Border x:Name="DragRoot" Classes="desktop-lyrics-root"
+
+          Background="Transparent"
+
+          BorderThickness="0"
+
+          PointerPressed="OnDragPointerPressed">
+
+    <Panel>
+
+      <!-- 悬浮时半透明底板（非悬浮完全透明） -->
+
+      <Border Classes="desktop-lyrics-chrome"
+
+              IsVisible="{Binding IsToolbarVisible}"
+
+              IsHitTestVisible="False"/>
+
+
+
+      <StackPanel Spacing="0" MinWidth="720">
+
+        <!-- 工具栏：歌名/歌手 + 播放控制 + 锁定/设置/关闭 -->
+
+        <Border Classes="desktop-lyrics-toolbar"
+
+                IsVisible="{Binding IsToolbarVisible}"
+
+                Padding="12,10,12,6">
+
+          <StackPanel Spacing="6">
+
+            <Grid ColumnDefinitions="*,Auto">
+
+              <TextBlock Grid.Column="0" Text="{Binding SongTitle}"
+
+                         Classes="desktop-lyrics-toolbar-title"
+
+                         TextTrimming="CharacterEllipsis"/>
+
+              <TextBlock Grid.Column="1" Text="{Binding SongArtist}"
+
+                         Classes="desktop-lyrics-toolbar-artist"
+
+                         TextTrimming="CharacterEllipsis"
+
+                         MaxWidth="200"
+
+                         Margin="{DynamicResource WindowNavLeadingMargin}"/>
+
+            </Grid>
+
+            <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+
+              <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+
+                <Border Width="28" Height="28" CornerRadius="14" ClipToBounds="True"
+
+                        Classes="desktop-lyrics-cover"
+
+                        Background="{DynamicResource PlayerCoverPlaceholderBrush}">
+
+                  <Panel>
+
+                    <Image Source="{Binding CoverImage, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+
+                           Stretch="UniformToFill" IsVisible="{Binding HasCover}"/>
+
+                    <TextBlock Text="&#xE8D6;" Classes="icon-sm icon-accent"
+
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+
+                               IsVisible="{Binding !HasCover}"/>
+
+                  </Panel>
+
+                </Border>
+
+                <Button Classes="desktop-lyrics-tool-btn" Command="{Binding DecreaseFontCommand}"
+
+                        ToolTip.Tip="{Binding DecreaseFontToolTip}">
+
+                  <TextBlock Text="A-" Classes="desktop-lyrics-tool-label"/>
+
+                </Button>
+
+                <Button Classes="desktop-lyrics-tool-btn" Command="{Binding IncreaseFontCommand}"
+
+                        ToolTip.Tip="{Binding IncreaseFontToolTip}">
+
+                  <TextBlock Text="A+" Classes="desktop-lyrics-tool-label"/>
+
+                </Button>
+
+              </StackPanel>
+
+
+
+              <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4"
+
+                          HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                <Button Classes="desktop-lyrics-transport" Command="{Binding PreviousCommand}"
+
+                        ToolTip.Tip="{Binding PreviousToolTip}">
+
+                  <TextBlock Text="&#xE892;" Classes="desktop-lyrics-transport-icon"/>
+
+                </Button>
+
+                <Button Classes="desktop-lyrics-transport" Command="{Binding TogglePlayPauseCommand}"
+
+                        ToolTip.Tip="{Binding PlayPauseToolTip}">
+
+                  <Panel Width="16" Height="16">
+
+                    <TextBlock Text="&#xE768;" Classes="desktop-lyrics-transport-icon"
+
+                               IsVisible="{Binding !IsPlaying}"/>
+
+                    <TextBlock Text="&#xE769;" Classes="desktop-lyrics-transport-icon"
+
+                               IsVisible="{Binding IsPlaying}"/>
+
+                  </Panel>
+
+                </Button>
+
+                <Button Classes="desktop-lyrics-transport" Command="{Binding NextCommand}"
+
+                        ToolTip.Tip="{Binding NextToolTip}">
+
+                  <TextBlock Text="&#xE893;" Classes="desktop-lyrics-transport-icon"/>
+
+                </Button>
+
+              </StackPanel>
+
+
+
+              <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2"
+
+                          HorizontalAlignment="Right" VerticalAlignment="Center">
+
+                <Button Classes="desktop-lyrics-tool-btn"
+
+                        Classes.active="{Binding IsLocked}"
+
+                        Command="{Binding ToggleLockCommand}"
+
+                        ToolTip.Tip="{Binding LockToolTip}">
+
+                  <TextBlock Text="{Binding LockIconGlyph}" Classes="desktop-lyrics-tool-icon"/>
+
+                </Button>
+
+                <Button Classes="desktop-lyrics-tool-btn" Command="{Binding OpenSettingsCommand}"
+
+                        ToolTip.Tip="{Binding SettingsToolTip}">
+
+                  <TextBlock Text="&#xE713;" Classes="desktop-lyrics-tool-icon"/>
+
+                </Button>
+
+                <Button Classes="desktop-lyrics-tool-btn" Command="{Binding CloseCommand}"
+
+                        ToolTip.Tip="{Binding CloseToolTip}">
+
+                  <TextBlock Text="&#xE711;" Classes="desktop-lyrics-tool-icon"/>
+
+                </Button>
+
+              </StackPanel>
+
+            </Grid>
+
+          </StackPanel>
+
+        </Border>
+
+
+
+        <Border Padding="20,8,20,14" Background="Transparent">
+
+          <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*">
+
+            <TextBlock Grid.Row="0" Text="{Binding CurrentLine}" Classes="desktop-lyrics-current"
+
+                       FontSize="{Binding FontSize}"
+
+                       Opacity="{Binding WindowOpacity}"
+
+                       HorizontalAlignment="Left"
+
+                       TextWrapping="Wrap" TextAlignment="Left"/>
+
+            <TextBlock Grid.Row="1" Text="{Binding NextLine}" Classes="desktop-lyrics-next"
+
+                       FontSize="{Binding NextFontSize}"
+
+                       Opacity="{Binding WindowOpacity}"
+
+                       IsVisible="{Binding HasNextLine}"
+
+                       HorizontalAlignment="Right"
+
+                       TextWrapping="Wrap" TextAlignment="Right"
+
+                       Margin="{DynamicResource EqualizerSectionGap}"/>
+
+          </Grid>
+
+        </Border>
+
+      </StackPanel>
+
+    </Panel>
+
+  </Border>
+
+</Window>
+
