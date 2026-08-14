@@ -27,7 +27,7 @@
       <!-- Hero 搜索壳（浏览态居中） -->
       <Border Classes="discover-search-shell discover-search-hero"
               IsVisible="{Binding UseHeroSearch}">
-        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" MinHeight="{DynamicResource ControlHeightLg}">
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto" MinHeight="{DynamicResource ControlHeightLg}">
           <TextBlock Grid.Column="0" Text="{StaticResource IconGlyphSearch}"
                      Classes="icon-sm icon-muted discover-search-leading-icon"
                      VerticalAlignment="Center" Margin="{DynamicResource FieldCaptionLeadingMargin}"/>
@@ -46,13 +46,19 @@
                   automation:AutomationProperties.Name="{Binding SearchButtonToolTip}">
             <TextBlock Text="{Binding SearchButtonText}" Classes="text-label" VerticalAlignment="Center"/>
           </Button>
-          <Button Grid.Column="4" Classes="icon-toolbar-btn discover-search-icon-btn"
+          <Button Grid.Column="4" Classes="flat-btn btn-toolbar discover-parse-entry"
+                  Content="{Binding ParseEntryButtonText}"
+                  Command="{Binding EnterParseModeCommand}"
+                  IsVisible="{Binding IsSearchMode}"
+                  ToolTip.Tip="{Binding ParseEntryToolTip}"
+                  automation:AutomationProperties.Name="{Binding ParseEntryToolTip}"/>
+          <Button Grid.Column="5" Classes="icon-toolbar-btn discover-search-icon-btn"
                   Command="{Binding ClearSearchCriteriaCommand}"
                   ToolTip.Tip="{Binding ClearSearchToolTip}"
                   automation:AutomationProperties.Name="{Binding ClearSearchToolTip}">
             <TextBlock Text="{StaticResource IconGlyphClose}" Classes="icon-xs"/>
           </Button>
-          <Button Grid.Column="5" Classes="icon-toolbar-btn discover-search-icon-btn"
+          <Button Grid.Column="6" Classes="icon-toolbar-btn discover-search-icon-btn"
                   Command="{Binding ToggleDiscoverAdvancedCommand}"
                   ToolTip.Tip="{Binding DiscoverAdvancedToggleToolTip}"
                   automation:AutomationProperties.Name="{Binding DiscoverAdvancedToggleToolTip}">
@@ -64,7 +70,7 @@
       <!-- Compact 搜索壳（搜索态吸顶） -->
       <Border Classes="discover-search-shell discover-search-compact"
               IsVisible="{Binding UseCompactSearch}">
-        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" MinHeight="{DynamicResource ControlHeightLg}">
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto" MinHeight="{DynamicResource ControlHeightLg}">
           <TextBlock Grid.Column="0" Text="{StaticResource IconGlyphSearch}"
                      Classes="icon-sm icon-muted discover-search-leading-icon"
                      VerticalAlignment="Center" Margin="{DynamicResource FieldCaptionLeadingMargin}"/>
@@ -83,13 +89,19 @@
                   automation:AutomationProperties.Name="{Binding SearchButtonToolTip}">
             <TextBlock Text="{Binding SearchButtonText}" Classes="text-label" VerticalAlignment="Center"/>
           </Button>
-          <Button Grid.Column="4" Classes="icon-toolbar-btn discover-search-icon-btn"
+          <Button Grid.Column="4" Classes="flat-btn btn-toolbar discover-parse-entry"
+                  Content="{Binding ParseEntryButtonText}"
+                  Command="{Binding EnterParseModeCommand}"
+                  IsVisible="{Binding IsSearchMode}"
+                  ToolTip.Tip="{Binding ParseEntryToolTip}"
+                  automation:AutomationProperties.Name="{Binding ParseEntryToolTip}"/>
+          <Button Grid.Column="5" Classes="icon-toolbar-btn discover-search-icon-btn"
                   Command="{Binding ClearSearchCriteriaCommand}"
                   ToolTip.Tip="{Binding ClearSearchToolTip}"
                   automation:AutomationProperties.Name="{Binding ClearSearchToolTip}">
             <TextBlock Text="{StaticResource IconGlyphClose}" Classes="icon-xs"/>
           </Button>
-          <Button Grid.Column="5" Classes="icon-toolbar-btn discover-search-icon-btn"
+          <Button Grid.Column="6" Classes="icon-toolbar-btn discover-search-icon-btn"
                   Command="{Binding ToggleDiscoverAdvancedCommand}"
                   ToolTip.Tip="{Binding DiscoverAdvancedToggleToolTip}"
                   automation:AutomationProperties.Name="{Binding DiscoverAdvancedToggleToolTip}">
@@ -248,7 +260,7 @@
       <Border Grid.Row="1" Classes="page-hero-divider" Margin="{DynamicResource MarginTopXsBottomSm}"
               IsVisible="{Binding ShowSearchResultsPane}"/>
 
-      <!-- 浏览中枢：热门榜单 + 推荐歌单 -->
+      <!-- 浏览中枢：热门榜单（网易云）+ 我的歌单 -->
       <ScrollViewer Grid.Row="2"
                     Classes="scroll-clear-player-progress discover-browse-hub"
                     IsVisible="{Binding ShowBrowseHub}">

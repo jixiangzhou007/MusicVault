@@ -300,6 +300,8 @@ public partial class SearchPageViewModel : PageViewModelBase
     public string PlatformToolTip => _l10n.Get("Discover.Platform.ToolTip");
     public string SearchButtonText => _l10n.Get("Discover.Button.Search");
     public string ParseButtonText => _l10n.Get("Discover.Button.Parse");
+    public string ParseEntryButtonText => _l10n.Get("Discover.Button.ParseEntry");
+    public string ParseEntryToolTip => _l10n.Get("Discover.ToolTip.ParseEntry");
     public string ClearButtonText => _l10n.Get("Common.Clear");
     public string SelectButtonText => _l10n.Get("Common.SelectFile");
     public string RerecognizeButtonText => _l10n.Get("Discover.Button.Rerecognize");
@@ -425,6 +427,13 @@ public partial class SearchPageViewModel : PageViewModelBase
 
     [RelayCommand]
     private void ToggleDiscoverAdvanced() => IsDiscoverAdvancedOpen = !IsDiscoverAdvancedOpen;
+
+    [RelayCommand]
+    private void EnterParseMode()
+    {
+        DiscoverModeIndex = 1;
+        IsDiscoverAdvancedOpen = true;
+    }
 
     [RelayCommand]
     private void DismissQuickGuide()
@@ -1698,6 +1707,8 @@ public partial class SearchPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(PlatformToolTip));
         OnPropertyChanged(nameof(SearchButtonText));
         OnPropertyChanged(nameof(ParseButtonText));
+        OnPropertyChanged(nameof(ParseEntryButtonText));
+        OnPropertyChanged(nameof(ParseEntryToolTip));
         OnPropertyChanged(nameof(ClearButtonText));
         OnPropertyChanged(nameof(SelectButtonText));
         OnPropertyChanged(nameof(RerecognizeButtonText));
