@@ -13,21 +13,23 @@
 
 ## 一次性：把仓库推上 GitHub
 
+当前默认仓库：`https://github.com/jixiangzhou007/MusicVault`
+
 ```powershell
 # 1) 初始化并做首次提交（若尚未是 git 仓库）
 .\scripts\github-bootstrap.ps1
 
-# 2) 在 GitHub 网页新建空仓库 MusicVault（不要勾选自动加 README）
-#    推荐公开仓库名：guohuiyuan/MusicVault
-#    （与 AppUpdateDefaults.DefaultGithubRepoUrl 一致；若不同请改该常量）
+# 2) 绑定远程并推送（仓库已在 GitHub 创建好时）
+git remote add origin https://github.com/jixiangzhou007/MusicVault.git
+git push -u origin main
 
-# 3) 安装 GitHub CLI 后登录并推送（或网页创建后按脚本打印的 git remote 命令）
-#    https://cli.github.com/
-gh auth login
-gh repo create MusicVault --public --source=. --remote=origin --push
+# 或安装 GitHub CLI 后：
+# https://cli.github.com/
+# gh auth login
+# gh repo create MusicVault --public --source=. --remote=origin --push
 ```
 
-若仓库地址不是 `https://github.com/guohuiyuan/MusicVault`，请修改：
+若仓库地址变更，请同步修改：
 
 - `src/MusicVault.App/Services/AppUpdateDefaults.cs` 中的 `DefaultGithubRepoUrl`
 - 下文所有示例 URL
@@ -53,7 +55,7 @@ dotnet tool install -g vpk
 1. 确保已有 `releases/`（必要时调用 `velopack-release.ps1`）
 2. 创建 `vX.Y.Z` tag / Release（若不存在）
 3. 上传 Velopack 产物（`*.nupkg`、`RELEASES`、`releases.json`、Setup 等）
-4. 打印用户应使用的更新源：`https://github.com/<owner>/MusicVault`
+4. 打印用户应使用的更新源：`https://github.com/jixiangzhou007/MusicVault`
 
 可选：同时把便携 zip（`publish\win-x64-vol`）作为附件上传，方便新用户首次安装。
 
@@ -72,15 +74,15 @@ Workflow 会 `dotnet publish` → `vpk pack` → 把产物挂到该 tag 的 GitH
 
 1. 使用 Release 里的 **Setup.exe**（Velopack）安装，不要只用便携 zip 指望自动更新。
 2. 设置 → 软件更新：
-   - **更新源 URL** 可留空（已内置 GitHub 默认仓库），或填 `https://github.com/guohuiyuan/MusicVault`
+   - **更新源 URL** 可留空（已内置 GitHub 默认仓库），或填 `https://github.com/jixiangzhou007/MusicVault`
    - 检查频率：每日 / 每周 / 每月
-3. 也可设环境变量：`MUSICVAULT_UPDATE_URL=https://github.com/guohuiyuan/MusicVault`
+3. 也可设环境变量：`MUSICVAULT_UPDATE_URL=https://github.com/jixiangzhou007/MusicVault`
 
 ## 更新源 URL 两种写法
 
 | 写法 | 示例 | 说明 |
 |------|------|------|
-| GitHub 仓库 | `https://github.com/guohuiyuan/MusicVault` | 推荐；应用走 Velopack `GithubSource` |
+| GitHub 仓库 | `https://github.com/jixiangzhou007/MusicVault` | 推荐；应用走 Velopack `GithubSource` |
 | 静态目录 | `https://cdn.example.com/musicvault` | 目录内需有 `releases.json` / `RELEASES` |
 
 ## 发版检查清单

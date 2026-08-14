@@ -11,7 +11,7 @@ $root = Split-Path -Parent $PSScriptRoot
 Set-Location $root
 
 $defaultsPath = Join-Path $root "src\MusicVault.App\Services\AppUpdateDefaults.cs"
-$defaultRepo = "https://github.com/guohuiyuan/MusicVault"
+$defaultRepo = "https://github.com/jixiangzhou007/MusicVault"
 if (Test-Path $defaultsPath) {
     $m = Select-String -Path $defaultsPath -Pattern 'DefaultGithubRepoUrl\s*=\s*"([^"]+)"' | Select-Object -First 1
     if ($m) { $defaultRepo = $m.Matches[0].Groups[1].Value }

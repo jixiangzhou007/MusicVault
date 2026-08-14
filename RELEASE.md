@@ -53,7 +53,7 @@ Windows 上可跑结构校验（不替代真机构建）：
 
 用户侧更新源填写 GitHub 仓库根 URL（设置可留空，已内置默认）：
 
-`https://github.com/guohuiyuan/MusicVault`
+`https://github.com/jixiangzhou007/MusicVault`
 
 也可用环境变量 `MUSICVAULT_UPDATE_URL`。
 

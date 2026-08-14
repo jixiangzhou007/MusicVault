@@ -83,7 +83,7 @@ Write-Host "  .\scripts\publish-github-release.ps1 -SkipPack" -ForegroundColor W
 Write-Host "或推送 tag 走 Actions: git tag v$Version; git push origin v$Version" -ForegroundColor White
 Write-Host ""
 Write-Host "用户更新源（GitHub 仓库根 URL）:" -ForegroundColor Yellow
-Write-Host "  https://github.com/guohuiyuan/MusicVault" -ForegroundColor White
+Write-Host "  https://github.com/jixiangzhou007/MusicVault" -ForegroundColor White
 Write-Host "详见 docs\ONLINE_UPDATE.md" -ForegroundColor DarkGray
 if (Test-Path $releasesJson) {
     Write-Host "本地清单: $releasesJson" -ForegroundColor DarkGray

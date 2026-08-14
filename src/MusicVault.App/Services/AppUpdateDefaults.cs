@@ -8,10 +8,10 @@ public static class AppUpdateDefaults
 {
     /// <summary>
     /// Velopack GitHub 更新源（仓库根 URL，不是 releases 子路径）。
-    /// 例：https://github.com/guohuiyuan/MusicVault
+    /// 例：https://github.com/jixiangzhou007/MusicVault
     /// 留空表示不内置默认源，必须由用户/环境变量配置。
     /// </summary>
-    public const string DefaultGithubRepoUrl = "https://github.com/guohuiyuan/MusicVault";
+    public const string DefaultGithubRepoUrl = "https://github.com/jixiangzhou007/MusicVault";
 
     /// <summary>是否检查预发布版（GitHub prerelease）。</summary>
     public const bool IncludePrerelease = false;

@@ -19,8 +19,8 @@ public class AppUpdateDefaultsTests
     }
 
     [Theory]
-    [InlineData("https://github.com/guohuiyuan/MusicVault", true)]
-    [InlineData("https://github.com/guohuiyuan/MusicVault/", true)]
+    [InlineData("https://github.com/jixiangzhou007/MusicVault", true)]
+    [InlineData("https://github.com/jixiangzhou007/MusicVault/", true)]
     [InlineData("https://www.github.com/a/b", true)]
     [InlineData("https://cdn.example.com/musicvault", false)]
     [InlineData("https://github.com/only-one", false)]

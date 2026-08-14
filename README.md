@@ -112,7 +112,7 @@ chmod +x scripts/publish-macos.sh
 ./scripts/publish-macos.sh osx-arm64
 ```
 
-更新源默认指向 `https://github.com/guohuiyuan/MusicVault`（可在设置页覆盖，或设 `MUSICVAULT_UPDATE_URL`）。首次推送仓库：`.\scripts\github-bootstrap.ps1`。
+更新源默认指向 `https://github.com/jixiangzhou007/MusicVault`（可在设置页覆盖，或设 `MUSICVAULT_UPDATE_URL`）。首次推送仓库：`.\scripts\github-bootstrap.ps1`。
 
 ## 项目结构
 

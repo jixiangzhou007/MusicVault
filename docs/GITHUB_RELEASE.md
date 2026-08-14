@@ -64,13 +64,13 @@ Get-FileHash .\MusicVault-X.Y.Z-win-x64-vol.zip -Algorithm SHA256
 
 ## 变更详情
 
-见 [CHANGELOG.md](https://github.com/guohuiyuan/MusicVault/blob/main/CHANGELOG.md#xyz---YYYY-MM-DD)
+见 [CHANGELOG.md](https://github.com/jixiangzhou007/MusicVault/blob/main/CHANGELOG.md#xyz---YYYY-MM-DD)
 
 ## 法律声明
 
 - 请仅下载与管理您拥有合法权利的音乐内容。
 - 本软件与各大音乐平台无隶属关系。
-- 使用即表示您已阅读 [docs/LEGAL.md](https://github.com/guohuiyuan/MusicVault/blob/main/docs/LEGAL.md)。
+- 使用即表示您已阅读 [docs/LEGAL.md](https://github.com/jixiangzhou007/MusicVault/blob/main/docs/LEGAL.md)。
 ```
 
 ## 发布资产清单
@@ -83,7 +83,7 @@ Get-FileHash .\MusicVault-X.Y.Z-win-x64-vol.zip -Algorithm SHA256
 
 ## 在线更新
 
-见 [ONLINE_UPDATE.md](ONLINE_UPDATE.md)。更新源 URL 使用仓库根地址：`https://github.com/guohuiyuan/MusicVault`。
+见 [ONLINE_UPDATE.md](ONLINE_UPDATE.md)。更新源 URL 使用仓库根地址：`https://github.com/jixiangzhou007/MusicVault`。
 
 ## 发布前检查
 
