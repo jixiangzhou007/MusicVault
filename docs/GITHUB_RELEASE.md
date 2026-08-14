@@ -25,10 +25,20 @@ vX.Y.Z
 
 ## 安装方式
 
+### A. Velopack 安装版（支持应用内更新）
+
+1. 下载 Release 中的 **Setup.exe**（或安装器产物）
+2. 安装后从开始菜单启动 MusicVault
+3. 首次启动阅读并同意版权声明
+4. 之后可在 **设置 → 更新与诊断** 检查更新（需联网访问本仓库 Release）
+
+### B. 便携 zip（不解压更新）
+
 1. 下载 `MusicVault-X.Y.Z-win-x64-vol.zip`
 2. 解压到**不含中文或特殊字符**的路径（可选，减少部分杀毒误报）
 3. 运行 `MusicVault.exe`
 4. 首次启动阅读并同意版权声明
+5. **便携版不能应用内自动更新**，请手动下载新 zip 覆盖；见 [ONLINE_UPDATE.md](ONLINE_UPDATE.md)
 
 **不要只复制单个 exe**，完整包需包含 `api/` 目录（若使用自带 go-music-api / 网易 API）。
 
@@ -42,9 +52,10 @@ vX.Y.Z
 
 ## 已知限制
 
-- **macOS**：可编译运行，但**内置播放器当前为占位**，无法正常出声；详见 README。
+- **macOS**：可编译运行；本地播放缺省优先 **LibVLC**（发布时建议捆绑自 VLC.app），否则回退 AVFoundation（需 `libMusicVaultPlayer.dylib`）。**无**内置 go-music-api，在线能力需外部统一 API。详见 README / RELEASE.md。
 - **QQ / 酷狗 / 酷我 / 咪咕**：多为实验性支持，完整体验依赖自建 API 或环境变量。
 - **百度百科 / 平台抓取**：仅供个人学习研究；请遵守 [docs/LEGAL.md](docs/LEGAL.md)。
+- **曲库来源**：本地 / NAS(SMB) / WebDAV 已可用；网络库需本机可达对应共享或 URL。
 
 ## 杀毒软件
 

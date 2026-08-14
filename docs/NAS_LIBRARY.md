@@ -1,15 +1,20 @@
-# 远程 NAS 音乐库设计
+# 远程 NAS / WebDAV 音乐库
 
-本文档描述 MusicVault 网络音乐库（NAS / SMB）的产品与技术方案。首期（v1）已实现**连接配置 + UNC 路径注册 + 连接测试**；挂载、扫描、远程下载分阶段交付。
+本文档描述 MusicVault 网络音乐库（NAS / SMB / WebDAV）的产品与技术方案。
+
+**当前状态（与 [ROADMAP.md](ROADMAP.md) 对齐）：N1–N5 均已落地。**  
+曲库来源可注册本地文件夹、SMB/NAS（UNC）与 WebDAV；支持扫描、播放缓存、下载到本地库。
+
+相关入口：顶栏 **曲库 → 来源**（或设置中的库管理）；歌曲页「更多」可重连 / 整库下载。
 
 ---
 
 ## 1. 产品目标
 
-- 与本地文件夹一样，把 NAS 共享注册为**音乐库来源**
-- 左侧来源列表统一展示：本地 / NAS（`· NAS` 后缀标识）
-- 歌曲页搜索、我喜欢、库筛选对 NAS 库同样生效
-- 后续支持：保存凭据自动挂载、索引远程文件、按需下载到本地库
+- 与本地文件夹一样，把 NAS / WebDAV 注册为**音乐库来源**
+- 来源列表统一展示：本地 / NAS（`· NAS`）/ WebDAV（`· WebDAV`）
+- 歌曲页搜索、我喜欢、库筛选对远程库同样生效
+- 保存凭据后可自动挂载（SMB）或复用会话（WebDAV）；索引远程文件；按需下载到本地库
 
 ---
 
@@ -17,34 +22,34 @@
 
 ```
 添加来源 (+)
-├── 本地文件夹          → 文件夹选择器（已有）
-└── 远程 NAS / 网络路径  → 连接对话框（首期）
+├── 本地文件夹     → 文件夹选择器
+├── 远程 NAS/SMB   → 连接对话框（主机 / 共享 / 凭据）
+└── WebDAV         → 连接对话框（URL / 用户名密码）
 ```
 
-**音乐库设置页**（浏览条 → 音乐库）继续承担：名称、模板、扫描、删除等完整管理。
+**库来源 / 库设置页**继续承担：名称、模板、扫描、删除等完整管理。
 
 ---
 
-## 3. 数据模型（已实现）
+## 3. 数据模型
 
 ### Libraries 表扩展
 
 | 列 | 类型 | 说明 |
 |----|------|------|
-| `SourceType` | INTEGER | `0=Local`, `1=NetworkNas` |
+| `SourceType` | INTEGER | `0=Local`, `1=NetworkNas`, `2=NetworkWebDav` |
 | `RemoteEndpointJson` | TEXT | `NetworkLibraryEndpoint` JSON |
 
 ### NetworkLibraryEndpoint
 
 | 字段 | 说明 |
 |------|------|
-| Host | IP 或主机名 |
-| Port | 默认 445（SMB） |
-| ShareName | 共享名，如 `music` |
-| SubPath | 可选子目录 |
-| Username / Password | 可选（v1 存 JSON，v2 改凭据保险库） |
+| Protocol | `Smb` / `WebDav` |
+| Host / Port / ShareName / SubPath | SMB 用；WebDAV 用 BaseUrl |
+| Username | 可选显示名 |
+| CredentialKey | N2 起：密码在本机凭据保险库，库内不存明文 |
 
-**RootPath** 存 UNC：`\\192.168.1.10\music\Albums`
+**RootPath**：SMB 为 UNC（`\\host\share\...`）；WebDAV 为规范化 URL 路径。
 
 ---
 
@@ -52,23 +57,19 @@
 
 | 组件 | 职责 |
 |------|------|
-| `NasLibraryService` | 连接测试、`AddOrGetNasLibraryAsync`、可达性状态 |
-| `NasTrackCacheService` | 播放时后台缓存 NAS 音频到本地 |
-| `NasLibraryDownloadService` | 将 NAS 曲目复制到本地音乐库（经传输队列） |
-| `LibraryScanService` | 与本地相同，对可达 UNC 递归扫描 |
-
-### v1 连接测试
-
-- 调用 `Directory.Exists(unc)` 检测 SMB 是否已被系统访问
-- 失败时提示：检查 SMB、网络、账户权限
+| `NasLibraryService` | SMB 连接测试、注册、可达性、挂载/重连 |
+| WebDAV 客户端 / 路径助手 | WebDAV 连接、列举、下载片段读标签 |
+| `NasTrackCacheService` | 播放时后台缓存远程音频到本地（NAS 与 WebDAV 共用） |
+| `NasLibraryDownloadService` | 将远程曲目复制到本地音乐库（经传输队列） |
+| `LibraryScanService` | 对可达 UNC / WebDAV 递归扫描（大文件可 Range 读标签） |
 
 ---
 
-## 5. UI（已实现）
+## 5. UI
 
-- **ConnectNasLibraryModalView**：主机、共享名、子路径、账号密码、测试连接、添加
-- 左侧列表：`DisplayName · NAS`
-- 与 `AppModalHost` 集成，与现有应用内模态一致
+- **ConnectNasLibraryModalView** / WebDAV 连接对话框
+- 来源列表：`DisplayName · NAS` / `· WebDAV` + 在线/离线
+- 与 `AppModalHost` 集成
 
 ---
 
@@ -77,7 +78,7 @@
 与二级浏览条搜索控件同族，固定 **28px 高 / 5px 圆角**：
 
 | Class | 控件 | 状态 |
-|-------|------|------|
+|------|------|------|
 | `browse-search`（TextBox） | 搜索框 | 输入底 `SearchFieldBrush` |
 | `browse-search`（Button） | 搜索 | 实心 `AccentBrush` |
 | `browse-filter`（ToggleButton） | 我喜欢 | 未选 `SearchFieldBrush`；选中 `AccentSoftBrush` + 白字 |
@@ -86,47 +87,40 @@
 
 ---
 
-## 7. 路线图
+## 7. 路线图状态
 
-| 阶段 | 内容 |
-|------|------|
-| **N1（当前）** | 模型、迁移、连接对话框、UNC 注册、列表标识 |
-| **N2（当前）** | 凭据 DPAPI 安全存储 + SMB 自动挂载 + 启动重连；旧明文密码自动迁移 |
-| **N3（当前）** | 可达性状态（在线/离线）、离线索引展示、重连 NAS、启动挂载失败提示 |
-| **N4（当前）** | 边播边缓存、下载到本地库、传输页 NAS 任务 |
-| **N5** | WebDAV 可选；多协议 `LibrarySourceType` 扩展 |
+| 阶段 | 内容 | 状态 |
+|------|------|------|
+| **N1** | 模型、迁移、连接对话框、UNC 注册、列表标识 | **已完成** |
+| **N2** | 凭据 DPAPI + SMB 自动挂载 + 启动重连；旧明文迁移 | **已完成** |
+| **N3** | 在线/离线、离线索引、重连、启动挂载失败提示 | **已完成** |
+| **N4** | 边播边缓存、下载到本地库、整库下载、传输页 NAS 筛选 | **已完成** |
+| **N5** | WebDAV 连接/扫描/播放缓存/下载；`LibrarySourceType.NetworkWebDav` | **已完成** |
 
 ---
 
 ## 8. 安全说明
 
-- v1 密码曾写入 `RemoteEndpointJson`（SQLite）
-- **N2 起**：密码存入 `%LocalAppData%\MusicVault\nas-credentials\`（DPAPI 加密），库内仅保留 `CredentialKey`；启动时 `WNetAddConnection2` 自动挂载
+- 早期密码曾写入 `RemoteEndpointJson`（SQLite）
+- **N2 起**：密码存入 `%LocalAppData%\MusicVault\nas-credentials\`（Windows DPAPI），库内仅保留 `CredentialKey`；SMB 启动时 `WNetAddConnection2` 自动挂载
 
 ---
 
-## 9. 验收（N1）
+## 9. 验收清单（回归用）
 
-- [ ] 「添加来源 → 远程 NAS」打开对话框
-- [ ] 测试连接对可达 UNC 返回成功
-- [ ] 添加后左侧出现 `xxx · NAS` 条目
-- [ ] 歌曲页搜索 / 我喜欢 / 库筛选对该库生效
-- [ ] 歌曲页「搜索 + 我喜欢」与搜索框视觉同高同圆角
+### N1–N2
 
-## 10. 验收（N3）
+- [x] 「添加来源 → 远程 NAS」打开对话框；测试连接；左侧出现 `xxx · NAS`
+- [x] 凭据可保存；重启后自动重连（可达时）
 
-- [ ] NAS 库列表显示「在线 / 离线」状态标签
-- [ ] NAS 不可达时仍显示库内已索引曲目数与 DB 容量
-- [ ] 扫描不可达 NAS 时提示保留缓存索引，而非仅「路径不存在」
-- [ ] 库来源页与歌曲页「更多」可重连 NAS
-- [ ] 启动时挂载失败在 Shell 状态栏提示
+### N3–N4
 
-## 11. 验收（N4）
+- [x] 在线/离线状态；离线仍显示已索引曲目
+- [x] 边播边缓存；下载到本地库；整库下载；传输页 NAS 筛选
 
-- [ ] 设置 → 播放：可开关「NAS 边播边缓存」
-- [ ] 播放 NAS 曲目时后台写入 `%LocalAppData%\MusicVault\nas-playback-cache\`
-- [ ] 再次播放同一 NAS 曲目时优先使用本地缓存
-- [ ] 歌曲页右键 NAS 曲目 →「下载到本地库…」加入传输队列
-- [ ] 传输页平台筛选出现「NAS」，任务完成后本地库可扫描到新文件
-- [ ] 设置 → 播放：可选择 NAS 下载目标本地库
-- [ ] 库来源页 / 歌曲页「更多」：NAS 库可「整库下载到本地」
+### N5（WebDAV）
+
+- [x] 可添加 WebDAV 来源并扫描入库
+- [x] 播放走远程缓存策略（与 NAS 共用缓存管线）
+- [x] 可下载/复制到本地库；歌曲页与库来源页菜单可用
+- [x] `WebDavClientTests` 等单元测试覆盖核心路径

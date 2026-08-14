@@ -27,7 +27,8 @@
 
 - [x] `LICENSE`（MIT）、`NOTICE`、`THIRD_PARTY_LICENSES.md`
 - [x] `docs/LEGAL.md`、`CHANGELOG.md`、`docs/GITHUB_RELEASE.md`、`docs/REPOSITORY.md`
-- [x] README 功能分级与 macOS 播放限制说明
+- [x] README 功能分级与 macOS 播放说明（LibVLC / AVFoundation，非占位）
+- [x] NAS N1–N5 与 README / `docs/NAS_LIBRARY.md` / Release 模板口径对齐
 
 ## 阶段 4 / P5（进行中）
 
