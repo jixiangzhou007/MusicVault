@@ -8,7 +8,11 @@ namespace MusicVault.Services.Api;
 /// <summary>通过捆绑 Node + 网易云 /audio/match 听歌识曲。</summary>
 public static class NetEaseAudioRecognitionClient
 {
+#if WINDOWS
     public const int DefaultClipSeconds = NetEaseRecognizeClipExtractor.DefaultDurationSeconds;
+#else
+    public const int DefaultClipSeconds = 8;
+#endif
 
     public static bool IsSupported =>
 #if WINDOWS

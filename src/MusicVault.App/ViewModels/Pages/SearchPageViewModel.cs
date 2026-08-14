@@ -811,7 +811,11 @@ public partial class SearchPageViewModel : PageViewModelBase
                     .ConfigureAwait(true);
             }
 
+#if WINDOWS
             var clipSeconds = NetEaseRecognizeClipExtractor.ResolveClipSeconds(path, RecognizeAutoSubmitSeconds);
+#else
+            var clipSeconds = NetEaseAudioRecognitionClient.DefaultClipSeconds;
+#endif
             return await NetEaseAudioRecognitionClient
                 .RecognizeAsync(neteaseUrl, path, clipSeconds)
                 .ConfigureAwait(true);

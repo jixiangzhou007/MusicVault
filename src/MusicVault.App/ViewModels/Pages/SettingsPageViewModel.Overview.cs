@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using MusicVault.App.Localization;
 using MusicVault.App.Views.Dialogs;
+using MusicVault.Services.Audio;
 
 namespace MusicVault.App.ViewModels.Pages;
 
