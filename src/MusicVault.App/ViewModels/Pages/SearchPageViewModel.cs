@@ -184,6 +184,7 @@ public partial class SearchPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(IsSearchMode));
         OnPropertyChanged(nameof(IsParseMode));
         OnPropertyChanged(nameof(IsRecognizeMode));
+        OnPropertyChanged(nameof(ShowRecognizeExperimentalBanner));
         OnPropertyChanged(nameof(ShowDiscoverAdvanced));
         OnPropertyChanged(nameof(SearchShortcutHint));
         OnPropertyChanged(nameof(QuickStartGuideTitle));
@@ -297,6 +298,9 @@ public partial class SearchPageViewModel : PageViewModelBase
     public string ArtistWatermark => _l10n.Get("Discover.Watermark.Artist");
     public string LinkWatermark => _l10n.Get("Discover.Watermark.Link");
     public string RecognizeWatermark => _l10n.Get("Discover.Watermark.Recognize");
+    public string RecognizeExperimentalBannerText => _l10n.Get("Discover.Recognize.ExperimentalBanner");
+    public string RecognizeUseSearchInsteadLabel => _l10n.Get("Discover.Recognize.UseSearchInstead");
+    public bool ShowRecognizeExperimentalBanner => IsRecognizeMode;
     public string PlatformToolTip => _l10n.Get("Discover.Platform.ToolTip");
     public string SearchButtonText => _l10n.Get("Discover.Button.Search");
     public string ParseButtonText => _l10n.Get("Discover.Button.Parse");
@@ -432,6 +436,13 @@ public partial class SearchPageViewModel : PageViewModelBase
     private void EnterParseMode()
     {
         DiscoverModeIndex = 1;
+        IsDiscoverAdvancedOpen = true;
+    }
+
+    [RelayCommand]
+    private void EnterSearchModeFromRecognize()
+    {
+        DiscoverModeIndex = 0;
         IsDiscoverAdvancedOpen = true;
     }
 
@@ -1704,6 +1715,8 @@ public partial class SearchPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(ArtistWatermark));
         OnPropertyChanged(nameof(LinkWatermark));
         OnPropertyChanged(nameof(RecognizeWatermark));
+        OnPropertyChanged(nameof(RecognizeExperimentalBannerText));
+        OnPropertyChanged(nameof(RecognizeUseSearchInsteadLabel));
         OnPropertyChanged(nameof(PlatformToolTip));
         OnPropertyChanged(nameof(SearchButtonText));
         OnPropertyChanged(nameof(ParseButtonText));

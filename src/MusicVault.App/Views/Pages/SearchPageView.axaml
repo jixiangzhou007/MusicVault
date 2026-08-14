@@ -158,29 +158,40 @@
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding FieldRecognizeLabel}" Classes="discover-field-label"
                    IsVisible="{Binding IsRecognizeMode}"/>
-        <Grid Grid.Row="2" Grid.Column="2" ColumnDefinitions="*,Auto,Auto,Auto,Auto,72"
-              IsVisible="{Binding IsRecognizeMode}">
-          <TextBox Grid.Column="0" Classes="discover-field"
-                   Text="{Binding RecognizeFilePath}" IsReadOnly="True"
-                   Watermark="{Binding RecognizeWatermark}"/>
-          <Button Grid.Column="1" Content="{Binding RecognizeRecordButtonText}"
-                  Classes="primary discover-action" Margin="{DynamicResource FieldCaptionLeadingMargin}"
-                  Command="{Binding ToggleRecognizeRecordingCommand}"
-                  IsEnabled="{Binding CanToggleRecognizeRecording}"
-                  ToolTip.Tip="{Binding RecognizeRecordButtonToolTip}"
-                  automation:AutomationProperties.Name="{Binding RecognizeRecordButtonToolTip}"/>
-          <Button Grid.Column="2" Content="{Binding SelectButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
-                  Command="{Binding PickRecognizeAudioCommand}"
-                  automation:AutomationProperties.Name="{Binding SelectButtonText}"/>
-          <Button Grid.Column="3" Content="{Binding ClearButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
-                  Command="{Binding ClearRecognizeAudioCommand}"
-                  automation:AutomationProperties.Name="{Binding ClearButtonText}"/>
-          <Button Grid.Column="4" Content="{Binding RerecognizeButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
-                  Command="{Binding RecognizeAudioCommand}"
-                  IsEnabled="{Binding CanRecognize}"
-                  ToolTip.Tip="{Binding RecognizeButtonToolTip}"
-                  automation:AutomationProperties.Name="{Binding RecognizeButtonToolTip}"/>
-        </Grid>
+        <StackPanel Grid.Row="2" Grid.Column="2" Spacing="8" IsVisible="{Binding IsRecognizeMode}">
+          <Border Classes="ant-alert ant-alert-info" IsVisible="{Binding ShowRecognizeExperimentalBanner}">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0" Classes="ant-alert-message"
+                         Text="{Binding RecognizeExperimentalBannerText}" TextWrapping="Wrap"/>
+              <Button Grid.Column="1" Content="{Binding RecognizeUseSearchInsteadLabel}"
+                      Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
+                      Command="{Binding EnterSearchModeFromRecognizeCommand}"
+                      automation:AutomationProperties.Name="{Binding RecognizeUseSearchInsteadLabel}"/>
+            </Grid>
+          </Border>
+          <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,72">
+            <TextBox Grid.Column="0" Classes="discover-field"
+                     Text="{Binding RecognizeFilePath}" IsReadOnly="True"
+                     Watermark="{Binding RecognizeWatermark}"/>
+            <Button Grid.Column="1" Content="{Binding RecognizeRecordButtonText}"
+                    Classes="primary discover-action" Margin="{DynamicResource FieldCaptionLeadingMargin}"
+                    Command="{Binding ToggleRecognizeRecordingCommand}"
+                    IsEnabled="{Binding CanToggleRecognizeRecording}"
+                    ToolTip.Tip="{Binding RecognizeRecordButtonToolTip}"
+                    automation:AutomationProperties.Name="{Binding RecognizeRecordButtonToolTip}"/>
+            <Button Grid.Column="2" Content="{Binding SelectButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
+                    Command="{Binding PickRecognizeAudioCommand}"
+                    automation:AutomationProperties.Name="{Binding SelectButtonText}"/>
+            <Button Grid.Column="3" Content="{Binding ClearButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
+                    Command="{Binding ClearRecognizeAudioCommand}"
+                    automation:AutomationProperties.Name="{Binding ClearButtonText}"/>
+            <Button Grid.Column="4" Content="{Binding RerecognizeButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
+                    Command="{Binding RecognizeAudioCommand}"
+                    IsEnabled="{Binding CanRecognize}"
+                    ToolTip.Tip="{Binding RecognizeButtonToolTip}"
+                    automation:AutomationProperties.Name="{Binding RecognizeButtonToolTip}"/>
+          </Grid>
+        </StackPanel>
       </Grid>
 
       <Grid Margin="{DynamicResource DiscoverLoginBandMargin}"
