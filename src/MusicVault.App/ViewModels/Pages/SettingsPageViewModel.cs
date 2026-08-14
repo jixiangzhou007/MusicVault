@@ -294,6 +294,8 @@ public partial class SettingsPageViewModel : PageViewModelBase
     public string PlaybackLyricsFontSizeLabel => _l10n.Get("Settings.Playback.LyricsFontSize");
     public string PlaybackRestoreOnStartupLabel => _l10n.Get("Settings.Playback.RestoreOnStartup");
     public string PlaybackRestoreOnStartupCaption => _l10n.Get("Settings.Playback.RestoreOnStartupCaption");
+    public string PlaybackDensePlayerBarLabel => _l10n.Get("Settings.Playback.DensePlayerBar");
+    public string PlaybackDensePlayerBarCaption => _l10n.Get("Settings.Playback.DensePlayerBarCaption");
     public string NasCacheOnPlayLabel => _l10n.Get("Settings.Playback.NasCacheOnPlay");
     public string NasCacheOnPlayCaption => _l10n.Get("Settings.Playback.NasCacheOnPlayCaption");
     public string ExperimentalLibVlcEngineLabel => _l10n.Get("Settings.Playback.LibVlcEngine");
@@ -554,6 +556,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
     [ObservableProperty] private string _pendingMusicApiUpdateNotice = string.Empty;
     [ObservableProperty] private bool _enableHotkeys = true;
     [ObservableProperty] private bool _restorePlaybackOnStartup = true;
+    [ObservableProperty] private bool _preferDensePlayerBar;
     [ObservableProperty] private bool _useExperimentalLibVlcEngine;
     [ObservableProperty] private bool _nasCacheOnPlay = true;
     [ObservableProperty] private int _nasDownloadTargetLibraryIndex;
@@ -1104,6 +1107,8 @@ public partial class SettingsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(PlaybackLyricsFontSizeLabel));
         OnPropertyChanged(nameof(PlaybackRestoreOnStartupLabel));
         OnPropertyChanged(nameof(PlaybackRestoreOnStartupCaption));
+        OnPropertyChanged(nameof(PlaybackDensePlayerBarLabel));
+        OnPropertyChanged(nameof(PlaybackDensePlayerBarCaption));
         OnPropertyChanged(nameof(NasCacheOnPlayLabel));
         OnPropertyChanged(nameof(NasCacheOnPlayCaption));
         OnPropertyChanged(nameof(ExperimentalLibVlcEngineLabel));
@@ -1779,6 +1784,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
         HasPendingMusicApiUpdate = !string.IsNullOrEmpty(PendingMusicApiUpdateNotice);
         EnableHotkeys = s.EnableGlobalHotkeys;
         RestorePlaybackOnStartup = s.RestorePlaybackOnStartup;
+        PreferDensePlayerBar = s.PreferDensePlayerBar;
         _loadedUseExperimentalLibVlcEngine = s.UseExperimentalLibVlcEngine;
         UseExperimentalLibVlcEngine = s.UseExperimentalLibVlcEngine;
         OnPropertyChanged(nameof(ShowExperimentalLibVlcEngineRestartHint));
@@ -1981,6 +1987,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
         s.CheckBundledMusicApiUpdates = IsBundledMusicApiFeatureAvailable && CheckBundledMusicApiUpdates;
         s.EnableGlobalHotkeys = EnableHotkeys;
         s.RestorePlaybackOnStartup = RestorePlaybackOnStartup;
+        s.PreferDensePlayerBar = PreferDensePlayerBar;
         var libVlcEngineChanged = s.UseExperimentalLibVlcEngine != UseExperimentalLibVlcEngine;
         s.UseExperimentalLibVlcEngine = UseExperimentalLibVlcEngine;
         _loadedUseExperimentalLibVlcEngine = s.UseExperimentalLibVlcEngine;

@@ -246,6 +246,9 @@
                       <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="120,10,Auto,*">
                         <TextBlock Grid.Column="0" Text="{Binding PlaybackRestoreOnStartupLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding PlaybackRestoreOnStartupCaption}"/>
                         <ToggleSwitch Grid.Column="2" IsChecked="{Binding RestorePlaybackOnStartup}" Classes="ant-switch" ToolTip.Tip="{Binding PlaybackRestoreOnStartupCaption}"/></Grid>
+                      <Grid Classes="settings-field-row settings-switch-row" ColumnDefinitions="120,10,Auto,*">
+                        <TextBlock Grid.Column="0" Text="{Binding PlaybackDensePlayerBarLabel}" Classes="text-label metadata-field-label settings-field-label" ToolTip.Tip="{Binding PlaybackDensePlayerBarCaption}"/>
+                        <ToggleSwitch Grid.Column="2" IsChecked="{Binding PreferDensePlayerBar}" Classes="ant-switch" ToolTip.Tip="{Binding PlaybackDensePlayerBarCaption}"/></Grid>
                       <Grid Classes="settings-field-row" ColumnDefinitions="120,10,Auto,*">
                         <TextBlock Grid.Column="0" Text="{Binding ActivePlaybackEngineLabel}" Classes="text-label metadata-field-label settings-field-label"/>
                         <StackPanel Grid.Column="2" Classes="settings-control-inline">

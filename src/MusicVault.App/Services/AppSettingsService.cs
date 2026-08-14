@@ -136,6 +136,8 @@ public sealed class AppSettings
     public int DefaultRepeatModeIndex { get; set; }
     /// <summary>默认随机播放</summary>
     public bool DefaultShuffleOn { get; set; }
+    /// <summary>优先精简底栏：隐藏次要按钮（均衡器/桌面歌词等），窄窗下进一步折叠。</summary>
+    public bool PreferDensePlayerBar { get; set; }
     /// <summary>发现页默认下载音质：0=全部 / 1=128 / 2=320 / 3=FLAC</summary>
     public int DefaultDownloadQualityIndex { get; set; } = DownloadQualityPreference.AllQualitiesIndex;
 

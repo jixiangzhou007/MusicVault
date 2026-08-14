@@ -104,6 +104,7 @@ public partial class SettingsPageViewModel
     partial void OnEnableHotkeysChanged(bool value) => MarkPendingChanges();
 
     partial void OnRestorePlaybackOnStartupChanged(bool value) => MarkPendingChanges();
+    partial void OnPreferDensePlayerBarChanged(bool value) => MarkPendingChanges();
 
     partial void OnNasCacheOnPlayChanged(bool value) => MarkPendingChanges();
 
