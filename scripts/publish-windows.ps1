@@ -1,6 +1,6 @@
-# MusicVault Windows 发布脚本
-# 默认：自包含单文件 + Trim（推荐）
-# 可选：-Aot 启用 NativeAOT（需本机验证 Avalonia 兼容性）
+# MusicVault Windows publish script
+# Default: self-contained single-file
+# Optional: -Aot for NativeAOT
 param(
     [string]$Configuration = "Release",
     [string]$Runtime = "win-x64",
@@ -30,19 +30,20 @@ $publishArgs = @(
 
 if ($Aot) {
     $publishArgs += "-p:EnableAot=true"
-    Write-Host "发布模式: NativeAOT 单文件" -ForegroundColor Yellow
+    Write-Host "Publish mode: NativeAOT" -ForegroundColor Yellow
 } else {
-    Write-Host "发布模式: 自包含单文件 + PublishTrimmed（推荐）" -ForegroundColor Cyan
+    Write-Host "Publish mode: self-contained single-file" -ForegroundColor Cyan
 }
 
 Push-Location $root
 try {
     dotnet @publishArgs
+    if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed: $LASTEXITCODE" }
     $exe = Join-Path $OutputDir "MusicVault.exe"
     if (Test-Path $exe) {
-        Write-Host "发布完成: $exe" -ForegroundColor Green
+        Write-Host "Published: $exe" -ForegroundColor Green
     } else {
-        Write-Host "发布完成，输出目录: $OutputDir" -ForegroundColor Green
+        Write-Host "Published dir: $OutputDir" -ForegroundColor Green
     }
 
     if ($Restart -and -not $NoRestart -and (Test-Path $exeOut)) {
