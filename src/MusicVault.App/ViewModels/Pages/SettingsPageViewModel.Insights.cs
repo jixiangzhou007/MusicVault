@@ -2,6 +2,8 @@ using MusicVault.App.Localization;
 using MusicVault.App.Services;
 using MusicVault.Services.Audio;
 using MusicVault.Services.Platform;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace MusicVault.App.ViewModels.Pages;
 
@@ -140,4 +142,101 @@ public partial class SettingsPageViewModel
         return $"[{string.Join("|", bars)}]";
     }
 
+    // --- domain members (moved from main) ---
+
+    public ObservableCollection<SettingsUsageInsightRowViewModel> UsageInsightRows { get; } = [];
+
+    public ObservableCollection<PlatformCapabilityItemViewModel> PlatformCapabilities { get; } = [];
+
+    public string UsageInsightsHint => _l10n.Get("Settings.Diagnostics.UsageInsightsHint");
+    public string UsageCountersUpdatedAtText => _settings.Current.UsageCountersUpdatedAt is DateTime ts
+        ? string.Format(_l10n.Get("Settings.Diagnostics.UsageUpdatedAt"), ts.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"))
+        : _l10n.Get("Settings.Diagnostics.UsageUpdatedNever");
+    public string FunnelConversionText
+    {
+        get
+        {
+            var search = _insights.GetCount(UsageInsightKeys.SearchSuccess);
+            var download = _insights.GetCount(UsageInsightKeys.SearchToDownloads);
+            var play = _insights.GetCount(UsageInsightKeys.PlayFromDownloads);
+            var downloadRate = search <= 0 ? 0d : (double)download / search * 100d;
+            var playRate = download <= 0 ? 0d : (double)play / download * 100d;
+            return string.Format(
+                _l10n.Get("Settings.Diagnostics.FunnelFormat"),
+                search,
+                download,
+                downloadRate,
+                play,
+                playRate);
+        }
+    }
+
+    public string PlatformCapabilityTitle =>
+        string.Format(_l10n.Get("Settings.Capability.PlatformTitle"), _services.Platform.PlatformName);
+    public string LocalPlaybackCapabilityStatus => _l10n.Get(LocalPlaybackCapabilityKey);
+    public string OnlinePreviewCapabilityStatus => _l10n.Get(OnlinePreviewCapabilityKey);
+    public string EqualizerCapabilityStatus => _l10n.Get(EqualizerCapabilityKey);
+    public string BundledMusicApiCapabilityStatus => _l10n.Get(BundledMusicApiCapabilityKey);
+    public CapabilityStatusPresentation LocalPlaybackCapabilityTag => CapabilityStatusTag.Present(LocalPlaybackCapabilityKey);
+    public CapabilityStatusPresentation OnlinePreviewCapabilityTag => CapabilityStatusTag.Present(OnlinePreviewCapabilityKey);
+    public CapabilityStatusPresentation EqualizerCapabilityTag => CapabilityStatusTag.Present(EqualizerCapabilityKey);
+    public CapabilityStatusPresentation BundledMusicApiCapabilityTag => CapabilityStatusTag.Present(BundledMusicApiCapabilityKey);
+    private string LocalPlaybackCapabilityKey
+    {
+        get
+        {
+            if (PlaybackEngineSupport.IsLibVlcEngine(_services.Player))
+                return "Settings.Capability.FullLibVlc";
+            if (OperatingSystem.IsWindows())
+                return "Settings.Capability.Full";
+            if (OperatingSystem.IsMacOS())
+                return MacNativePlayerSupport.IsDylibPresent()
+                    ? "Settings.Capability.PartialMacPlayback"
+                    : "Settings.Capability.Unavailable";
+            return "Settings.Capability.Unavailable";
+        }
+    }
+
+    private string OnlinePreviewCapabilityKey => OperatingSystem.IsWindows()
+        ? "Settings.Capability.Full"
+        : OperatingSystem.IsMacOS()
+            ? "Settings.Capability.PartialNetwork"
+            : "Settings.Capability.Unavailable";
+
+    private string EqualizerCapabilityKey => IsEqualizerSupported
+        ? "Settings.Capability.Full"
+        : "Settings.Capability.Unavailable";
+
+    private string BundledMusicApiCapabilityKey => IsBundledMusicApiFeatureAvailable
+        ? "Settings.Capability.Full"
+        : "Settings.Capability.Unavailable";
+
+    public string PlatformCapabilityRecommendation
+    {
+        get
+        {
+            if (PlaybackEngineSupport.IsLibVlcEngine(_services.Player))
+                return _l10n.Get("Settings.Capability.Recommend.LibVlc");
+            if (OperatingSystem.IsMacOS())
+                return _l10n.Get("Settings.Capability.Recommend.Mac");
+            if (OperatingSystem.IsWindows())
+                return _l10n.Get("Settings.Capability.Recommend.Windows");
+            return _l10n.Get("Settings.Capability.Recommend.Other");
+        }
+    }
+
+    [RelayCommand]
+    private void ResetUsageInsights()
+    {
+        _insights.ResetAll();
+        SetLocalizedStatus("Settings.Status.StatsReset");
+    }
+
+    [RelayCommand]
+    private async Task ExportUsageInsightsAsync()
+    {
+        var outputDirectory = Path.Combine(_services.DataDirectory, "exports");
+        var snapshotPath = await _insights.ExportSnapshotAsync(outputDirectory).ConfigureAwait(true);
+        SetLocalizedStatus("Settings.Status.SnapshotExported", snapshotPath);
+    }
 }

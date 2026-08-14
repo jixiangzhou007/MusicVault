@@ -7,6 +7,8 @@ using MusicVault.App.Services;
 using MusicVault.Services;
 using MusicVault.Services.Audio;
 using Velopack;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MusicVault.App.ViewModels.Pages;
 
@@ -146,4 +148,77 @@ public partial class SettingsPageViewModel
         };
     }
 
+    // --- domain members (moved from main) ---
+
+    public string AdvancedTabOnlineSourcesLabel => _l10n.Get("Settings.Advanced.Tab.OnlineSources");
+    public string AdvancedTabUpdateDiagnosticsLabel => _l10n.Get("Settings.Advanced.Tab.UpdateDiagnostics");
+    public string UpdateDiagnosticsTabAppUpdateLabel => _l10n.Get("Settings.UpdateDiagnostics.Tab.AppUpdate");
+    public string UpdateDiagnosticsTabBundledApiLabel => _l10n.Get("Settings.UpdateDiagnostics.Tab.BundledApi");
+    public string UpdateDiagnosticsTabChangelogLabel => _l10n.Get("Settings.UpdateDiagnostics.Tab.Changelog");
+    public string UpdateDiagnosticsTabTroubleshootLabel => _l10n.Get("Settings.UpdateDiagnostics.Tab.Troubleshoot");
+
+    public bool IsUpdateDiagnosticsAppTabSelected =>
+        SelectedUpdateDiagnosticsTab == UpdateDiagnosticsTabKind.AppUpdate;
+
+    public bool IsUpdateDiagnosticsBundledApiTabSelected =>
+        SelectedUpdateDiagnosticsTab == UpdateDiagnosticsTabKind.BundledApi;
+
+    public bool IsUpdateDiagnosticsChangelogTabSelected =>
+        SelectedUpdateDiagnosticsTab == UpdateDiagnosticsTabKind.Changelog;
+
+    public bool IsUpdateDiagnosticsTroubleshootTabSelected =>
+        SelectedUpdateDiagnosticsTab == UpdateDiagnosticsTabKind.Troubleshoot;
+
+    public string UpdateFeedAdvancedLabel => _l10n.Get("Settings.Update.FeedAdvanced");
+
+    public string UpdateCurrentVersionLabel => _l10n.Get("Settings.Update.CurrentVersion");
+    public string UpdateCheckLabel => _l10n.Get("Settings.Update.Check");
+    public string UpdateCheckingAppLabel => _l10n.Get("Settings.Update.CheckingApp");
+    public string UpdateFeedUrlLabel => _l10n.Get("Settings.Update.FeedUrl");
+    public string UpdateFeedUrlPlaceholder => _l10n.Get("Settings.Update.FeedNotConfigured");
+    public string UpdateFrequencyFieldLabel => _l10n.Get("Settings.Update.Frequency");
+    public string UpdatePendingInstallLabel => _l10n.Get("Settings.Update.PendingInstall");
+    public string UpdateRestartInstallLabel => _l10n.Get("Settings.Update.RestartInstall");
+    public string UpdateCheckingBundledApiLabel => _l10n.Get("Settings.Update.CheckingBundledApi");
+    public string UpdateDownloadInstallLabel => _l10n.Get("Settings.Update.DownloadInstall");
+    public string UpdateNoHistoryLabel => _l10n.Get("Settings.Update.NoHistory");
+    public string UpdateFrequencyToolTip => _l10n.Get("Settings.Update.FrequencyToolTip");
+    public string DiagnosticsExportPackageLabel => _l10n.Get("Settings.Diagnostics.ExportPackage");
+    public string DiagnosticsPlatformLoginLabel => _l10n.Get("Settings.Diagnostics.PlatformLogin");
+    public string DiagnosticsPlatformLoginButtonLabel => _l10n.Get("Settings.Diagnostics.PlatformLoginButton");
+    public string DiagnosticsPlatformLoginHint => _l10n.Get("Settings.Diagnostics.PlatformLoginHint");
+    public string DiagnosticsRecentStatusTitle => _l10n.Get("Settings.Diagnostics.RecentStatus");
+    public string DiagnosticsUsageStatsTitle => _l10n.Get("Settings.Diagnostics.UsageStats");
+    public string DiagnosticsExportSnapshotLabel => _l10n.Get("Settings.Diagnostics.ExportSnapshot");
+    public string DiagnosticsResetStatsLabel => _l10n.Get("Settings.Diagnostics.ResetStats");
+    public string ResetUsagePopconfirmTitle => _l10n.Get("Settings.Diagnostics.ResetUsageTitle");
+    public string ResetUsagePopconfirmDescription => _l10n.Get("Settings.Diagnostics.ResetUsageDescription");
+    public string ResetUsagePopconfirmConfirm => _l10n.Get("Settings.Diagnostics.ResetUsageConfirm");
+
+    public IReadOnlyList<string> UpdateFrequencyOptionLabels =>
+    [
+        _l10n.Get("Settings.Update.Frequency.Daily"),
+        _l10n.Get("Settings.Update.Frequency.Weekly"),
+        _l10n.Get("Settings.Update.Frequency.Monthly"),
+        _l10n.Get("Settings.Update.Frequency.Off")
+    ];
+
+    [ObservableProperty] private int _updateFrequencyIndex = 2;
+
+    [ObservableProperty] private string _updateFeedUrl = string.Empty;
+
+    [ObservableProperty] private string _versionText = "v1.0.0";
+    [ObservableProperty] private bool _hasPendingUpdate;
+    [ObservableProperty] private string _appUpdateStatusText = string.Empty;
+    [ObservableProperty] private bool _showAppUpdateStatus;
+    [ObservableProperty] private bool _appUpdateStatusIsNew;
+    [ObservableProperty] private bool _appUpdateStatusIsError;
+    [ObservableProperty] private bool _appUpdateStatusIsOk;
+    [ObservableProperty] private bool _isCheckingAppUpdate;
+    [ObservableProperty] private string _musicApiUpdateStatusText = string.Empty;
+    [ObservableProperty] private bool _showMusicApiUpdateStatus;
+    [ObservableProperty] private bool _musicApiUpdateStatusIsNew;
+    [ObservableProperty] private bool _musicApiUpdateStatusIsError;
+    [ObservableProperty] private bool _musicApiUpdateStatusIsOk;
+    [ObservableProperty] private bool _isCheckingMusicApiUpdate;
 }

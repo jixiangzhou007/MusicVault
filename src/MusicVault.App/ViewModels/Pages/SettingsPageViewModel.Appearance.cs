@@ -5,6 +5,7 @@ using MusicVault.App.Localization;
 using MusicVault.App.Services;
 using MusicVault.App.Views.Dialogs;
 using MusicVault.Core.Enums;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MusicVault.App.ViewModels.Pages;
 
@@ -122,4 +123,51 @@ public partial class SettingsPageViewModel
         RefreshNavIndicators();
     }
 
+    // --- domain members (moved from main) ---
+
+    public string AppearanceInstantHint => _l10n.Get("Settings.Appearance.InstantHint");
+
+    public bool ShowAppearanceInstantHint =>
+        SelectedSection == SettingsSectionKind.Appearance;
+
+#if DEBUG
+    public bool ShowDesignSystemPreview => true;
+#else
+    public bool ShowDesignSystemPreview => false;
+#endif
+
+    [ObservableProperty] private int _themeIndex;
+    [ObservableProperty] private int _cultureIndex;
+    [ObservableProperty] private int _uiFontScaleIndex;
+
+    public string AppearanceResetDefaultLabel => _l10n.Get("Settings.Appearance.ResetDefault");
+    public string AppearanceResetDefaultButtonLabel => _l10n.Get("Settings.Appearance.ResetDefaultButton");
+
+    public string AppearanceSectionIntro => _l10n.Get("Settings.Appearance.Intro");
+    public string AppearanceThemeLabel => _l10n.Get("Settings.Appearance.Theme");
+    public string AppearanceFontScaleLabel => _l10n.Get("Settings.Appearance.FontScale");
+    public string AppearanceAccentLabel => _l10n.Get("Settings.Appearance.Accent");
+    public string AppearanceAccentHint => _l10n.Get("Settings.Appearance.Accent.Hint");
+    public string AppearanceLanguageLabel => _l10n.Get("Settings.Appearance.Language");
+
+    public IReadOnlyList<string> ThemeOptionLabels =>
+    [
+        _l10n.Get("Settings.Theme.Light"),
+        _l10n.Get("Settings.Theme.Dark"),
+        _l10n.Get("Settings.Theme.System")
+    ];
+
+    public IReadOnlyList<string> FontScaleOptionLabels =>
+    [
+        _l10n.Get("Settings.FontScale.Standard"),
+        _l10n.Get("Settings.FontScale.Large"),
+        _l10n.Get("Settings.FontScale.XLarge")
+    ];
+
+    public IReadOnlyList<string> LanguageOptionLabels =>
+    [
+        _l10n.Get("Settings.Language.zh-CN"),
+        _l10n.Get("Settings.Language.en-US")
+    ];
+    [ObservableProperty] private string _accentColor = AccentPalette.DefaultAccentHex;
 }
