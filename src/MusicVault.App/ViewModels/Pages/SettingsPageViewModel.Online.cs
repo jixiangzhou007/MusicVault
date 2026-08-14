@@ -8,6 +8,8 @@ using MusicVault.Services;
 using MusicVault.Services.Api;
 using MusicVault.Services.Gatherers;
 using MusicVault.Services.Platform;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MusicVault.App.ViewModels.Pages;
 
@@ -494,5 +496,181 @@ public partial class SettingsPageViewModel
                 : _l10n.Get("Settings.Update.UpToDate");
     }
 
-}
+    // --- domain members (moved from main) ---
 
+    public string OnlineConnectionHealthTitle => _l10n.Get("Settings.Online.ConnectionHealth");
+    public string OnlineConnectionTestLabel => _l10n.Get("Settings.Online.ConnectionTest");
+    public string OnlineTestUnifiedApiLabel => _l10n.Get("Settings.Online.TestUnifiedApi");
+    public string OnlineTestNetEaseLabel => _l10n.Get("Settings.Online.TestNetEase");
+    public string OnlineTestRecognitionLabel => _l10n.Get("Settings.Online.TestRecognition");
+    public string OnlinePlatformLoginLabel => _l10n.Get("Settings.Online.PlatformLogin");
+    public string OnlineDiagnoseLoginLabel => _l10n.Get("Settings.Diagnostics.PlatformLoginButton");
+    public string OnlineTroubleshootLabel => _l10n.Get("Settings.Online.Troubleshoot");
+    public string OnlineUnifiedApiLabel => _l10n.Get("Settings.Online.UnifiedApi");
+    public string OnlineRecognitionApiLabel => _l10n.Get("Settings.Online.RecognitionApi");
+    public string OnlineUseNetEaseRecognitionLabel => _l10n.Get("Settings.Online.UseNetEaseRecognition");
+    public string OnlineConfigGuideLabel => _l10n.Get("Settings.Online.ConfigGuide");
+    public string OnlineBundledServicesTitle => _l10n.Get("Settings.Online.BundledServices");
+    public string OnlineBundledApiLabel => _l10n.Get("Settings.Online.BundledApi");
+    public string OnlineAutoStartBundledApiLabel => _l10n.Get("Settings.Online.AutoStartBundledApi");
+    public string OnlineAutoCheckLabel => _l10n.Get("Settings.Online.AutoCheck");
+    public string OnlineWeeklyBundledApiCheckCaption => _l10n.Get("Settings.Online.WeeklyBundledApiCheck");
+    public string OnlinePlatformApisTitle => _l10n.Get("Settings.Online.PlatformApis");
+    public string OnlineNetEaseLabel => _l10n.Get("Settings.Online.NetEase");
+    public string OnlineBundledNetEaseLabel => _l10n.Get("Settings.Online.BundledNetEase");
+    public string OnlineAutoStartNetEaseApiLabel => _l10n.Get("Settings.Online.AutoStartNetEaseApi");
+    public string OnlineQQMusicLabel => _l10n.Get("Settings.Online.QQMusic");
+    public string OnlineQuarkCookieLabel => _l10n.Get("Settings.Online.QuarkCookie");
+    public bool HasQuarkCookieConfigured => !string.IsNullOrWhiteSpace(MyFreeMp3QuarkCookies);
+    public string QuarkCookieStatusText => HasQuarkCookieConfigured
+        ? _l10n.Get("Settings.Online.QuarkCookieFilled")
+        : _l10n.Get("Settings.Online.QuarkCookieEmpty");
+    public string OnlineGathererSourcesTitle => _l10n.Get("Settings.Online.GathererSources");
+    public string OnlineTestAllGatherersLabel => _l10n.Get("Settings.Online.TestAllGatherers");
+
+    [ObservableProperty] private string _netEaseApiUrl = string.Empty;
+    [ObservableProperty] private string _qqMusicApiUrl = string.Empty;
+    [ObservableProperty] private string _musicApiBaseUrl = string.Empty;
+    [ObservableProperty] private string _musicRecognitionApiUrl = string.Empty;
+    [ObservableProperty] private bool _autoStartBundledMusicApi = true;
+    [ObservableProperty] private bool _autoStartBundledNetEaseApi = true;
+    [ObservableProperty] private bool _checkBundledMusicApiUpdates;
+    private bool _bundledMusicApiHasBundled;
+    private string? _bundledMusicApiRawVersion;
+    private string? _bundledMusicApiUpgradeLatest;
+    private bool _bundledMusicApiShowUpdatedLabel;
+    private bool _bundledNetEaseApiHasBundled;
+    private string? _bundledNetEaseApiRawVersion;
+
+    [ObservableProperty] private string _bundledMusicApiVersionText = string.Empty;
+    [ObservableProperty] private string _bundledNetEaseApiVersionText = string.Empty;
+    [ObservableProperty] private bool _hasPendingMusicApiUpdate;
+    [ObservableProperty] private string _pendingMusicApiUpdateNotice = string.Empty;
+
+    [ObservableProperty] private string _myFreeMp3QuarkCookies = string.Empty;
+
+    [ObservableProperty] private string _unifiedApiTestResultText = string.Empty;
+
+    [ObservableProperty] private bool _showUnifiedApiTestResult;
+
+    [ObservableProperty] private bool _unifiedApiTestSucceeded;
+
+    [ObservableProperty] private string _netEaseApiTestResultText = string.Empty;
+
+    [ObservableProperty] private bool _showNetEaseApiTestResult;
+
+    [ObservableProperty] private bool _netEaseApiTestSucceeded;
+
+    [ObservableProperty] private string _musicRecognitionTestResultText = string.Empty;
+
+    [ObservableProperty] private bool _showMusicRecognitionTestResult;
+
+    [ObservableProperty] private bool _musicRecognitionTestSucceeded;
+
+    [ObservableProperty] private string _acoustIdTestResultText = string.Empty;
+
+    [ObservableProperty] private bool _showAcoustIdTestResult;
+
+    [ObservableProperty] private bool _acoustIdTestSucceeded;
+
+    [ObservableProperty] private string _platformLoginDiagnoseResultText = string.Empty;
+
+    [ObservableProperty] private bool _showPlatformLoginDiagnoseResult;
+
+    [ObservableProperty] private string _onlineLoginStatusSummary = string.Empty;
+
+    [ObservableProperty] private bool _onlineLoginStatusIsOk;
+
+    [ObservableProperty] private bool _onlineLoginStatusNeedsAttention;
+
+    public ObservableCollection<SettingsApiProbeRowViewModel> ApiProbeRows { get; } = [];
+
+    [ObservableProperty] private bool _isRunningApiProbe;
+
+    [ObservableProperty] private bool _showApiProbeResults;
+
+    [ObservableProperty] private string _apiProbeSummaryText = string.Empty;
+
+    public string OnlineRunFullProbeLabel => _l10n.Get("Settings.Online.RunFullProbe");
+
+    public string OnlineProbeRunningLabel => _l10n.Get("Settings.Online.ProbeRunning");
+
+    public string DiagnosticsApiProbeTitle => _l10n.Get("Settings.Diagnostics.ApiProbeTitle");
+
+    public string DiagnosticsApiProbeHint => _l10n.Get("Settings.Diagnostics.ApiProbeHint");
+
+    public bool UnifiedApiTestFailed => ShowUnifiedApiTestResult && !UnifiedApiTestSucceeded;
+
+    public bool NetEaseApiTestFailed => ShowNetEaseApiTestResult && !NetEaseApiTestSucceeded;
+
+    public bool UnifiedApiTestButtonOk => ShowUnifiedApiTestResult && UnifiedApiTestSucceeded;
+
+    public bool NetEaseApiTestButtonOk => ShowNetEaseApiTestResult && NetEaseApiTestSucceeded;
+
+    public bool MusicRecognitionTestFailed => ShowMusicRecognitionTestResult && !MusicRecognitionTestSucceeded;
+
+    public bool MusicRecognitionTestButtonOk => ShowMusicRecognitionTestResult && MusicRecognitionTestSucceeded;
+
+    public bool AcoustIdTestFailed => ShowAcoustIdTestResult && !AcoustIdTestSucceeded;
+
+    public bool AcoustIdTestButtonOk => ShowAcoustIdTestResult && AcoustIdTestSucceeded;
+
+    public bool ShowNetEaseRecognitionSetup => BundledNetEaseApiHost.Instance.HasBundledApi;
+
+    public string MusicRecognitionSetupHint =>
+        MusicRecognitionProviders.IsNetEaseProvider(MusicRecognitionApiUrl)
+            ? _l10n.Get("Settings.Online.MusicRecognition.NetEaseHint")
+            : _l10n.Get("Settings.Online.MusicRecognition.CustomHint");
+
+    public bool HasStatusMessage => !string.IsNullOrWhiteSpace(StatusMessage);
+    public string PendingChangesHint => _l10n.Get("Settings.Persist.Pending");
+
+    public bool IsBundledMusicApiFeatureAvailable =>
+        OperatingSystem.IsWindows() && BundledMusicApiHost.Instance.HasBundledExecutable;
+    public bool ShowBundledMusicApiUnsupportedHint => !IsBundledMusicApiFeatureAvailable;
+    public string BundledMusicApiUnsupportedHint => _l10n.Get("Settings.Online.BundledApiUnsupported");
+    public bool CanCheckBundledMusicApiUpdate => IsBundledMusicApiFeatureAvailable && !IsCheckingMusicApiUpdate;
+
+    public bool ShowOnlineDownloadAlert =>
+        SelectedSection == SettingsSectionKind.Advanced
+        && SelectedAdvancedTab == AdvancedTabKind.OnlineSources
+        && !string.IsNullOrWhiteSpace(PendingMusicApiUpdateNotice);
+
+    public bool HasOnlineSourcesNavAlert =>
+        !string.IsNullOrWhiteSpace(PendingMusicApiUpdateNotice)
+        || UnifiedApiTestFailed
+        || NetEaseApiTestFailed;
+
+    public bool ShowConnectionTestTroubleshootLink => UnifiedApiTestFailed || NetEaseApiTestFailed;
+
+    private void RefreshBundledVersionDisplays()
+    {
+        BundledMusicApiVersionText = FormatBundledMusicApiVersionText();
+        BundledNetEaseApiVersionText = FormatBundledNetEaseApiVersionText();
+    }
+
+    private string FormatBundledMusicApiVersionText()
+    {
+        if (!_bundledMusicApiHasBundled)
+            return _l10n.Get("Settings.Bundled.NotBundled");
+        if (_bundledMusicApiShowUpdatedLabel)
+            return _l10n.Get("Settings.Bundled.VersionUpdated");
+        if (!string.IsNullOrEmpty(_bundledMusicApiUpgradeLatest) && !string.IsNullOrEmpty(_bundledMusicApiRawVersion))
+            return string.Format(
+                _l10n.Get("Settings.Bundled.VersionUpgradeFormat"),
+                _bundledMusicApiRawVersion,
+                _bundledMusicApiUpgradeLatest);
+        if (string.IsNullOrEmpty(_bundledMusicApiRawVersion))
+            return _l10n.Get("Settings.Bundled.BundledUnknownVersion");
+        return _bundledMusicApiRawVersion;
+    }
+
+    private string FormatBundledNetEaseApiVersionText()
+    {
+        if (!_bundledNetEaseApiHasBundled)
+            return _l10n.Get("Settings.Bundled.NotBundled");
+        if (string.IsNullOrEmpty(_bundledNetEaseApiRawVersion))
+            return _l10n.Get("Settings.Bundled.BundledUnknownVersion");
+        return _bundledNetEaseApiRawVersion;
+    }
+}

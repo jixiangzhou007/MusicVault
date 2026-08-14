@@ -10,7 +10,8 @@ public sealed class ShellHeaderStateStore
         section is NavigationSection.AllTracks
             or NavigationSection.Albums
             or NavigationSection.Artists
-            or NavigationSection.Playlists;
+            or NavigationSection.Playlists
+            or NavigationSection.Libraries;
 
     public bool ShowMusicBrowseBar(NavigationSection section) =>
         IsLibraryBrowseSection(section);

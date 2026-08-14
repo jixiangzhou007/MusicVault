@@ -102,6 +102,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public string NavBrowseArtists => _l10n.Get("Nav.Browse.Artists");
     public string NavBrowseAlbums => _l10n.Get("Nav.Browse.Albums");
     public string NavBrowsePlaylists => _l10n.Get("Nav.Browse.Playlists");
+    public string NavBrowseSources => _l10n.Get("Nav.Browse.Sources");
 
     /// <summary>首页与曲库子页共用二级浏览条（正在播放 / 艺术家 / 专辑…）。</summary>
     public bool ShowMusicBrowseBar =>
@@ -551,6 +552,7 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(NavBrowseArtists));
         OnPropertyChanged(nameof(NavBrowseAlbums));
         OnPropertyChanged(nameof(NavBrowsePlaylists));
+        OnPropertyChanged(nameof(NavBrowseSources));
         OnPropertyChanged(nameof(NavThemeToolTip));
         OnPropertyChanged(nameof(NavAboutToolTip));
         OnPropertyChanged(nameof(CompactPlayerToggleToolTip));

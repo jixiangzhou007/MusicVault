@@ -76,6 +76,44 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
 
     public bool ShowPlaybackTime => _queueIndex >= 0 || _isOnlinePreview;
 
+    /// <summary>底栏右侧是否显示时间文字（窄窗/精简模式下隐藏，进度条仍可用）。</summary>
+    public bool ShowPlayerBarTimeText => ShowPlaybackTime && _showPlayerBarTimeText;
+
+    /// <summary>底栏是否显示循环/随机按钮。</summary>
+    public bool ShowPlayerBarModeButtons => _showPlayerBarModeButtons;
+
+    /// <summary>底栏是否显示均衡器与桌面歌词等次要入口。</summary>
+    public bool ShowPlayerBarSideExtras => _showPlayerBarSideExtras;
+
+    /// <summary>底栏是否显示桌面歌词按钮。</summary>
+    public bool ShowPlayerBarDesktopLyricsButton =>
+        IsDesktopLyricsSupported && _showPlayerBarSideExtras;
+
+    /// <summary>溢出菜单中的桌面歌词项（仅在侧栏次要入口折叠时）。</summary>
+    public bool ShowPlayerBarDesktopLyricsOverflowItem =>
+        IsDesktopLyricsSupported && !_showPlayerBarSideExtras;
+
+    /// <summary>底栏是否显示歌词按钮。</summary>
+    public bool ShowPlayerBarLyricsButton => _showPlayerBarLyricsButton;
+
+    /// <summary>次要控件已折叠时显示溢出菜单。</summary>
+    public bool ShowPlayerBarOverflow =>
+        !_showPlayerBarSideExtras || !_showPlayerBarLyricsButton || !_showPlayerBarModeButtons;
+
+    public string PlayerBarOverflowToolTip => _l10n.Get("Player.Bar.Overflow");
+    public double PlayerBarTitleMaxWidthPx => _playerBarTitleMaxWidth;
+
+    private const double PlayerBarWideWidth = 980;
+    private const double PlayerBarMediumWidth = 780;
+    private const double PlayerBarNarrowWidth = 640;
+    private double _playerBarWidth = PlayerBarWideWidth;
+    private bool _preferDensePlayerBar;
+    private bool _showPlayerBarTimeText = true;
+    private bool _showPlayerBarModeButtons = true;
+    private bool _showPlayerBarSideExtras = true;
+    private bool _showPlayerBarLyricsButton = true;
+    private double _playerBarTitleMaxWidth = 320;
+
     /// <summary>本地曲库队列或发现页在线试听/播放时均可打开全屏。</summary>
     public bool CanOpenNowPlayingFullscreen => CurrentTrack != null || _isOnlinePreview;
     public string FullscreenToolTip => CanOpenNowPlayingFullscreen ? _l10n.Get("Player.Fullscreen") : _l10n.Get("Player.FullscreenBlocked");
@@ -219,7 +257,60 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
         OnPropertyChanged(nameof(RepeatToolTip));
         OnPropertyChanged(nameof(ShuffleToolTip));
         OnPropertyChanged(nameof(ProgressAccessibilityName));
+        OnPropertyChanged(nameof(PlayerBarOverflowToolTip));
+        OnPropertyChanged(nameof(ShowPlayerBarTimeText));
         NotifyPlaybackSourceHintChanged();
+    }
+
+    /// <summary>主窗口底栏宽度变化时折叠次要控件。</summary>
+    public void UpdatePlayerBarWidth(double width)
+    {
+        if (width <= 0)
+            return;
+        if (Math.Abs(_playerBarWidth - width) < 8)
+            return;
+        _playerBarWidth = width;
+        RefreshPlayerBarDensity();
+    }
+
+    private void RefreshPlayerBarDensity()
+    {
+        var effectiveWidth = _preferDensePlayerBar
+            ? Math.Min(_playerBarWidth, PlayerBarMediumWidth)
+            : _playerBarWidth;
+
+        var showExtras = effectiveWidth >= PlayerBarWideWidth;
+        var showMode = effectiveWidth >= PlayerBarMediumWidth;
+        var showLyrics = effectiveWidth >= PlayerBarNarrowWidth;
+        var showTime = effectiveWidth >= PlayerBarMediumWidth;
+        var titleMax = effectiveWidth >= PlayerBarWideWidth
+            ? 320
+            : effectiveWidth >= PlayerBarMediumWidth
+                ? 220
+                : 160;
+
+        var changed = showExtras != _showPlayerBarSideExtras
+                      || showMode != _showPlayerBarModeButtons
+                      || showLyrics != _showPlayerBarLyricsButton
+                      || showTime != _showPlayerBarTimeText
+                      || Math.Abs(titleMax - _playerBarTitleMaxWidth) > 0.5;
+        if (!changed)
+            return;
+
+        _showPlayerBarSideExtras = showExtras;
+        _showPlayerBarModeButtons = showMode;
+        _showPlayerBarLyricsButton = showLyrics;
+        _showPlayerBarTimeText = showTime;
+        _playerBarTitleMaxWidth = titleMax;
+
+        OnPropertyChanged(nameof(ShowPlayerBarSideExtras));
+        OnPropertyChanged(nameof(ShowPlayerBarDesktopLyricsButton));
+        OnPropertyChanged(nameof(ShowPlayerBarDesktopLyricsOverflowItem));
+        OnPropertyChanged(nameof(ShowPlayerBarModeButtons));
+        OnPropertyChanged(nameof(ShowPlayerBarLyricsButton));
+        OnPropertyChanged(nameof(ShowPlayerBarTimeText));
+        OnPropertyChanged(nameof(ShowPlayerBarOverflow));
+        OnPropertyChanged(nameof(PlayerBarTitleMaxWidthPx));
     }
 
     public void BindAppModal(AppModalHostViewModel appModal) => _appModal = appModal;

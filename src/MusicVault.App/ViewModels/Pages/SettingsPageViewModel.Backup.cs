@@ -2,6 +2,8 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.Input;
 using MusicVault.App.Localization;
 using MusicVault.App.Services;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MusicVault.App.ViewModels.Pages;
 
@@ -137,4 +139,68 @@ public partial class SettingsPageViewModel
         if (bytes < 1024L * 1024 * 1024) return $"{bytes / 1024.0 / 1024:F1} MB";
         return $"{bytes / 1024.0 / 1024 / 1024:F1} GB";
     }
+
+    // --- domain members (moved from main) ---
+
+    public string BackupSectionTitle => _l10n.Get("Settings.Backup.SectionTitle");
+    public string BackupOperationsTitle => _l10n.Get("Settings.Backup.Operations");
+    public string BackupDescription => _l10n.Get("Settings.Backup.Description");
+    public string BackupNowLabel => _l10n.Get("Settings.Backup.Now");
+    public string BackupRefreshListLabel => _l10n.Get("Settings.Backup.RefreshList");
+    public string BackupOpenFolderLabel => _l10n.Get("Settings.Backup.OpenFolder");
+    public string BackupExportDiagnosticsLabel => _l10n.Get("Settings.Backup.ExportDiagnostics");
+    public string BackupHistoryTitle => _l10n.Get("Settings.Backup.History");
+    public string BackupEmptyLabel => _l10n.Get("Settings.Backup.Empty");
+    public string BackupEmptyHint => _l10n.Get("Settings.Backup.EmptyHint");
+
+    public string BackupColumnNameLabel => _l10n.Get("Settings.Backup.Column.Name");
+    public string BackupColumnDateLabel => _l10n.Get("Settings.Backup.Column.Date");
+    public string BackupColumnSizeLabel => _l10n.Get("Settings.Backup.Column.Size");
+    public string BackupColumnActionsLabel => _l10n.Get("Settings.Backup.Column.Actions");
+
+    public string BackupColumnMetaLabel => _l10n.Get("Settings.Backup.Column.Meta");
+
+
+    public string BackupRestoreLabel => _l10n.Get("Settings.Backup.Restore");
+    public string BackupRestoreConfirmTitle => _l10n.Get("Settings.Backup.RestoreConfirmTitle");
+    public string BackupRestoreConfirmDescription => _l10n.Get("Settings.Backup.RestoreConfirmDescription");
+    public string BackupPreviousPageLabel => _l10n.Get("Settings.Backup.PreviousPage");
+    public string BackupNextPageLabel => _l10n.Get("Settings.Backup.NextPage");
+
+    public const int BackupPageSize = 5;
+
+    private readonly List<SettingsBackupEntryViewModel> _backupEntriesAll = [];
+
+    public ObservableCollection<SettingsBackupEntryViewModel> BackupEntriesPage { get; } = [];
+
+    public bool HasBackupEntries => _backupEntriesAll.Count > 0;
+
+    public string BackupListSummary => _backupEntriesAll.Count switch
+    {
+        0 => _l10n.Get("Settings.Backup.SummaryNone"),
+        1 => _l10n.Get("Settings.Backup.SummaryOne"),
+        _ => string.Format(_l10n.Get("Settings.Backup.SummaryMany"), _backupEntriesAll.Count)
+    };
+
+    public int BackupPageCount =>
+        _backupEntriesAll.Count == 0
+            ? 0
+            : (int)Math.Ceiling(_backupEntriesAll.Count / (double)BackupPageSize);
+
+    public bool ShowBackupPagination => BackupPageCount > 1;
+
+    public bool CanBackupPreviousPage => BackupPageIndex > 0;
+
+    public bool CanBackupNextPage => BackupPageIndex < BackupPageCount - 1;
+
+    public string BackupPageInfoText =>
+        BackupPageCount <= 1
+            ? string.Empty
+            : string.Format(_l10n.Get("Settings.Backup.PageInfo"), BackupPageIndex + 1, BackupPageCount);
+
+    [ObservableProperty] private int _backupPageIndex;
+
+    public bool CanOpenBackupFolder =>
+        _backupEntriesAll.Count > 0
+        && Directory.Exists(Path.GetDirectoryName(_backupEntriesAll[0].FilePath) ?? string.Empty);
 }

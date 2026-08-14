@@ -22,6 +22,14 @@ public partial class PlayerBarView : UserControl
         if (VolumeFlyoutButton.Flyout is not { } flyout) return;
         flyout.Opened += (_, _) => VolumeFlyoutButton.Classes.Add("volume-active");
         flyout.Closed += (_, _) => VolumeFlyoutButton.Classes.Remove("volume-active");
+        if (DataContext is PlayerBarViewModel vm)
+            vm.UpdatePlayerBarWidth(Bounds.Width);
+    }
+
+    private void OnPlayerBarSizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        if (DataContext is PlayerBarViewModel vm)
+            vm.UpdatePlayerBarWidth(e.NewSize.Width);
     }
 
     private void OnProgressHostSizeChanged(object? sender, SizeChangedEventArgs e)

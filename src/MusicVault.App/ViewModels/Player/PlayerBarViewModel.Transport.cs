@@ -312,6 +312,9 @@ public partial class PlayerBarViewModel
         {
             _suppressPlaybackPersist = false;
         }
+
+        _preferDensePlayerBar = s.PreferDensePlayerBar;
+        RefreshPlayerBarDensity();
     }
 
     private void SchedulePersistVolume()
@@ -361,6 +364,7 @@ public partial class PlayerBarViewModel
         OnPropertyChanged(nameof(DurationText));
         OnPropertyChanged(nameof(ProgressAccessibilityHelp));
         OnPropertyChanged(nameof(ShowPlaybackTime));
+        OnPropertyChanged(nameof(ShowPlayerBarTimeText));
         NotifyProgressLayoutChanged();
     }
 
@@ -370,6 +374,7 @@ public partial class PlayerBarViewModel
         OnPropertyChanged(nameof(Duration));
         OnPropertyChanged(nameof(ProgressAccessibilityHelp));
         OnPropertyChanged(nameof(ShowPlaybackTime));
+        OnPropertyChanged(nameof(ShowPlayerBarTimeText));
     }
 
     public string PositionText => FormatTime(Position);

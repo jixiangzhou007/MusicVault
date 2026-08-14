@@ -3,9 +3,9 @@
 **下载即整理，整理即播放** — 跨平台个人数字音乐管理工具。
 
 基于 **Avalonia UI 11** + **.NET 8** + **C# 12**。  
-**推荐平台：Windows 10/11 x64**（完整播放 + 可选捆绑 API）。macOS 可编译运行，但播放与 API 捆绑见下方说明。
+**推荐平台：Windows 10/11 x64**（完整播放 + 可选捆绑 API）。macOS 可编译运行；本地播放与 API 能力见下方说明。
 
-> ⚠️ **macOS 用户**：当前版本内置播放器通过原生 AVAudioPlayer 实现（需编译 `libMusicVaultPlayer.dylib`）。播放功能需要 Xcode Command Line Tools 编译原生库，详见 [RELEASE.md](RELEASE.md)。
+> **macOS**：发布脚本缺省优先捆绑 **LibVLC**（建议本机已装 VLC.app）；关闭 LibVLC 时回退 **AVFoundation**（需 `libMusicVaultPlayer.dylib`）。**不捆绑**内置 go-music-api，在线搜索请配置外部统一 API。详见 [RELEASE.md](RELEASE.md)、[docs/NAS_LIBRARY.md](docs/NAS_LIBRARY.md)。
 
 ## 功能概览
 
@@ -19,11 +19,12 @@
 | P0 | 文件整理与重命名模板 | **完整** |
 | P0 | 网易云搜索与下载 | **完整**（建议自建 [Netease API](docs/DISTRIBUTION.md)） |
 | P0 | QQ / 酷狗 / 酷我 / 咪咕 | **实验** / **需配置** |
-| P1 | 内置播放器 | **完整**（仅 Windows）· macOS：**可用**（需原生库） |
-| P1 | 同步滚动歌词 | **完整**（Windows 播放时） |
+| P1 | 内置播放器 | **完整**（Windows：NAudio，可选 LibVLC）· macOS：**可用**（缺省 LibVLC，可回退 AVFoundation） |
+| P1 | 同步滚动歌词 | **完整**（本地播放时） |
 | P1 | 下载队列（暂停/继续/重试） | **完整** |
 | P1 | 主题（浅/深/跟随系统） | **完整** |
-| P1 | Velopack 自动更新 | **完整**（默认 GitHub 源，见 [ONLINE_UPDATE](docs/ONLINE_UPDATE.md)） |
+| P1 | Velopack 自动更新 | **完整**（仅 Setup 安装版；便携 zip 需手动更新，见 [ONLINE_UPDATE](docs/ONLINE_UPDATE.md)） |
+| P1 | NAS / SMB / WebDAV 曲库来源 | **完整**（连接、扫描、边播缓存、下载到本地；见 [NAS_LIBRARY](docs/NAS_LIBRARY.md)） |
 | P2 | 数据库备份（保留 7 份） | **完整** |
 | P2 | 艺术家百科简介 / 头像 | **完整**（百度百科 + 缓存，见 [LEGAL](docs/LEGAL.md)） |
 | P2 | 重复歌曲检测 | **完整** |
@@ -163,3 +164,5 @@ public sealed class MyPlatformProvider : IMusicSourceProvider { ... }
 - 版本历史：[CHANGELOG.md](CHANGELOG.md)
 - 发布检查清单：[docs/GITHUB_RELEASE.md](docs/GITHUB_RELEASE.md)
 - 仓库管理：[docs/REPOSITORY.md](docs/REPOSITORY.md)
+- NAS / WebDAV 曲库：[docs/NAS_LIBRARY.md](docs/NAS_LIBRARY.md)
+- 在线更新（Setup vs 便携）：[docs/ONLINE_UPDATE.md](docs/ONLINE_UPDATE.md)

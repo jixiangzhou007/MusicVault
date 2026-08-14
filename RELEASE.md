@@ -32,7 +32,10 @@ chmod +x scripts/publish-macos.sh
 # AOT: AOT=true ./scripts/publish-macos.sh osx-arm64
 ```
 
-脚本顺序：**先 `dotnet publish`，再编译 `libMusicVaultPlayer.dylib`**（避免 publish 清空输出目录导致 dylib 丢失）。需安装 Xcode Command Line Tools（`clang`）。
+脚本顺序：**先 `dotnet publish`，再编译 `libMusicVaultPlayer.dylib`（AVFoundation 回退），再旁路捆绑 LibVLC**。  
+缺省引擎优先 LibVLC：建议本机安装 [VLC](https://www.videolan.org/) 后执行（或设置 `VLC_APP=/path/to/VLC.app`）。未捆绑 LibVLC 时回退 AVFoundation（格式与均衡器能力较弱）。需 Xcode Command Line Tools（`clang`）。
+
+**注意**：macOS 包**不**捆绑 go-music-api；在线搜索/下载请在设置填写外部统一 API。
 
 Windows 上可跑结构校验（不替代真机构建）：
 

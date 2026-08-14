@@ -6,6 +6,10 @@ using MusicVault.App.Localization;
 using MusicVault.App.Services;
 using MusicVault.Services;
 using MusicVault.Services.Platform;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using MusicVault.App.ViewModels.Player;
+using MusicVault.Services.Audio;
 
 namespace MusicVault.App.ViewModels.Pages;
 
@@ -104,6 +108,7 @@ public partial class SettingsPageViewModel
     partial void OnEnableHotkeysChanged(bool value) => MarkPendingChanges();
 
     partial void OnRestorePlaybackOnStartupChanged(bool value) => MarkPendingChanges();
+    partial void OnPreferDensePlayerBarChanged(bool value) => MarkPendingChanges();
 
     partial void OnNasCacheOnPlayChanged(bool value) => MarkPendingChanges();
 
@@ -203,4 +208,167 @@ public partial class SettingsPageViewModel
         return _nasDownloadTargetLibraryIds[idx];
     }
 
+    // --- domain members (moved from main) ---
+
+    public string PlaybackTabPlaybackLabel => _l10n.Get("Settings.Playback.Tab.Playback");
+    public string PlaybackTabLyricsAndSoundLabel => _l10n.Get("Settings.Playback.Tab.LyricsAndSound");
+    public string PlaybackLyricsSectionTitle => _l10n.Get("Settings.Playback.Tab.Lyrics");
+    public string PlaybackSoundEffectsSectionTitle => _l10n.Get("Settings.Playback.Tab.SoundEffects");
+    public string PlaybackTabShortcutsLabel => _l10n.Get("Settings.Playback.Tab.Shortcuts");
+
+    public string PlaybackDesktopLyricsLabel => _l10n.Get("Settings.Playback.DesktopLyrics");
+    public string PlaybackDesktopLyricsCaption => _l10n.Get("Settings.Playback.DesktopLyricsCaption");
+    public string PlaybackLyricsOpacityLabel => _l10n.Get("Settings.Playback.LyricsOpacity");
+    public string PlaybackLyricsFontSizeLabel => _l10n.Get("Settings.Playback.LyricsFontSize");
+    public string PlaybackRestoreOnStartupLabel => _l10n.Get("Settings.Playback.RestoreOnStartup");
+    public string PlaybackRestoreOnStartupCaption => _l10n.Get("Settings.Playback.RestoreOnStartupCaption");
+    public string PlaybackDensePlayerBarLabel => _l10n.Get("Settings.Playback.DensePlayerBar");
+    public string PlaybackDensePlayerBarCaption => _l10n.Get("Settings.Playback.DensePlayerBarCaption");
+    public string NasCacheOnPlayLabel => _l10n.Get("Settings.Playback.NasCacheOnPlay");
+    public string NasCacheOnPlayCaption => _l10n.Get("Settings.Playback.NasCacheOnPlayCaption");
+    public string ExperimentalLibVlcEngineLabel => _l10n.Get("Settings.Playback.LibVlcEngine");
+    public string ExperimentalLibVlcEngineCaption => _l10n.Get("Settings.Playback.LibVlcEngineCaption");
+    public string ExperimentalLibVlcEngineRestartHint => _l10n.Get("Settings.Playback.LibVlcEngineRestartHint");
+    public bool ShowExperimentalLibVlcEngineToggle => PlaybackEngineSupport.ShowExperimentalLibVlcToggle;
+    public bool ShowExperimentalLibVlcEngineRestartHint =>
+        ShowExperimentalLibVlcEngineToggle
+        && UseExperimentalLibVlcEngine != _processStartedWithLibVlc;
+    public string ActivePlaybackEngineLabel => _l10n.Get("Settings.Playback.ActiveEngine");
+    public string ActivePlaybackEngineName =>
+        PlaybackEngineSupport.IsLibVlcEngine(_services.Player)
+            ? _l10n.Get("Settings.Playback.ActiveEngine.LibVlc")
+            : OperatingSystem.IsMacOS()
+                ? _l10n.Get("Settings.Playback.ActiveEngine.AvFoundation")
+                : _l10n.Get("Settings.Playback.ActiveEngine.NAudio");
+
+    public string ActivePlaybackEngineDetail
+    {
+        get
+        {
+            var snapshot = PlaybackEngineSupport.TryGetStartupSnapshot(_services.DataDirectory);
+            if (snapshot == null)
+                return string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(snapshot.Note))
+                return string.Format(
+                    _l10n.Get("Settings.Playback.ActiveEngine.DetailFallback"),
+                    snapshot.Note);
+
+            if (!string.Equals(
+                    snapshot.NativeRoot,
+                    PlaybackEngineSnapshot.NoneNativeRoot,
+                    StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(snapshot.NativeRoot))
+            {
+                return string.Format(
+                    _l10n.Get("Settings.Playback.ActiveEngine.DetailNative"),
+                    snapshot.NativeRoot);
+            }
+
+            return snapshot.PreferLibVlc
+                ? _l10n.Get("Settings.Playback.ActiveEngine.DetailPreferNoNative")
+                : string.Empty;
+        }
+    }
+
+    public bool ShowActivePlaybackEngineDetail =>
+        !string.IsNullOrWhiteSpace(ActivePlaybackEngineDetail);
+
+    public string NasDownloadTargetLibraryLabel => _l10n.Get("Settings.Playback.NasDownloadTargetLibrary");
+    public string NasDownloadTargetLibraryCaption => _l10n.Get("Settings.Playback.NasDownloadTargetLibraryCaption");
+    public string NasPlaybackCacheStatsLabel => _l10n.Get("Settings.Playback.NasPlaybackCacheStats");
+    public string NasPlaybackCacheClearLabel => _l10n.Get("Settings.Playback.NasPlaybackCacheClear");
+    public string NasPlaybackCacheStatsText =>
+        string.Format(
+            _l10n.Get("Settings.Playback.NasPlaybackCacheStatsFormat"),
+            _nasPlaybackCacheEntryCount,
+            LibraryListItemViewModel.FormatSizeGb(_nasPlaybackCacheTotalBytes));
+    public bool CanClearNasPlaybackCache => _nasPlaybackCacheEntryCount > 0;
+    public bool ShowNasDownloadTargetLibrary => NasDownloadTargetLibraryLabels.Count > 0;
+    public string PlaybackDefaultVolumeLabel => _l10n.Get("Settings.Playback.DefaultVolume");
+    public string PlaybackDefaultRepeatLabel => _l10n.Get("Settings.Playback.DefaultRepeat");
+    public string PlaybackDefaultShuffleLabel => _l10n.Get("Settings.Playback.DefaultShuffle");
+    public string PlaybackDefaultShuffleCaption => _l10n.Get("Settings.Playback.DefaultShuffleCaption");
+    public string PlaybackDefaultQualityLabel => _l10n.Get("Settings.Playback.DefaultQuality");
+    public string PlaybackDefaultQualityToolTip => _l10n.Get("Settings.Playback.DefaultQualityToolTip");
+    public string PlaybackDefaultQualityCaption => _l10n.Get("Settings.Playback.DefaultQualityCaption");
+    public string PlaybackGoToDownloadLabel => _l10n.Get("Settings.Playback.GoToDownload");
+    public string PlaybackEqualizerLabel => _l10n.Get("Settings.Playback.Equalizer");
+    public string PlaybackEqualizerEnableCaption => _l10n.Get("Settings.Playback.EqualizerEnable");
+    public string PlaybackEqualizerPresetLabel => _l10n.Get("Settings.Playback.EqualizerPreset");
+    public string PlaybackOpenEqualizerLabel => _l10n.Get("Settings.Playback.OpenEqualizer");
+    public string PlaybackEqualizerAdjustLabel => _l10n.Get("Settings.Playback.EqualizerAdjust");
+    public string PlaybackGoToTroubleshootLabel => _l10n.Get("Settings.Playback.GoToTroubleshoot");
+    public string PlaybackShortcutsGroupTitle => _l10n.Get("Settings.Playback.Shortcuts");
+    public string PlaybackShortcutsEnableCaption => _l10n.Get("Settings.Playback.ShortcutsEnable");
+
+    public string DefaultVolumePercentSummary => $"{DefaultVolumePercent}%";
+
+    public string DesktopLyricsOpacitySummary => $"{DesktopLyricsOpacityPercent}%";
+
+    public string DesktopLyricsFontSizeSummary => $"{DesktopLyricsFontSize}";
+    public string PlaybackGoToOnlineSourcesLabel => _l10n.Get("Settings.Playback.GoToOnlineSources");
+    public string PlaybackShortcutsTableLabel => _l10n.Get("Settings.Playback.ShortcutsTable");
+    public string ShortcutColumnKeyLabel => _l10n.Get("Settings.Shortcut.Column.Key");
+    public string ShortcutColumnActionLabel => _l10n.Get("Settings.Shortcut.Column.Action");
+    public string RestoreShortcutDefaultsLabel => _l10n.Get("Settings.Shortcut.RestoreDefaults");
+    public string ExportShortcutsLabel => _l10n.Get("Settings.Shortcut.Export");
+
+    public IReadOnlyList<string> RepeatModeOptionLabels =>
+    [
+        _l10n.Get("Settings.Playback.Repeat.Sequential"),
+        _l10n.Get("Settings.Playback.Repeat.All"),
+        _l10n.Get("Settings.Playback.Repeat.One")
+    ];
+
+    public IReadOnlyList<string> DefaultQualityOptionLabels =>
+    [
+        _l10n.Get("Settings.Playback.Quality.All"),
+        _l10n.Get("Settings.Playback.Quality.Mp3128"),
+        _l10n.Get("Settings.Playback.Quality.Mp3320"),
+        _l10n.Get("Settings.Playback.Quality.Flac")
+    ];
+
+    [ObservableProperty] private bool _enableHotkeys = true;
+    [ObservableProperty] private bool _restorePlaybackOnStartup = true;
+    [ObservableProperty] private bool _preferDensePlayerBar;
+    [ObservableProperty] private bool _useExperimentalLibVlcEngine;
+    [ObservableProperty] private bool _nasCacheOnPlay = true;
+    [ObservableProperty] private int _nasDownloadTargetLibraryIndex;
+
+    private readonly List<long> _nasDownloadTargetLibraryIds = [];
+    public ObservableCollection<string> NasDownloadTargetLibraryLabels { get; } = [];
+    [ObservableProperty] private bool _desktopLyricsEnabled;
+    [ObservableProperty] private int _desktopLyricsOpacityPercent = 88;
+    [ObservableProperty] private int _desktopLyricsFontSize = 24;
+    public bool IsDesktopLyricsSupported => OperatingSystem.IsWindows();
+    public string DesktopLyricsUnsupportedHint => _l10n.Get("Settings.Playback.DesktopLyricsUnsupported");
+    public bool ShowDesktopLyricsUnsupportedHint => !IsDesktopLyricsSupported;
+    [ObservableProperty] private int _defaultVolumePercent = 80;
+    [ObservableProperty] private int _defaultRepeatModeIndex;
+    [ObservableProperty] private bool _defaultShuffleOn;
+
+    [ObservableProperty] private bool _equalizerEnabled = true;
+    [ObservableProperty] private string _equalizerPresetSummary = string.Empty;
+    [ObservableProperty] private bool _normalizeVolume;
+
+    public EqualizerViewModel? Equalizer => _equalizer;
+
+    public bool IsEqualizerSupported => _isEqualizerSupported;
+
+    public bool ShowEqualizerCustomActions =>
+        IsEqualizerSupported && _equalizer != null && _equalizer.IsCustomPresetSelected;
+    public bool ShowEqualizerUnsupportedHint => !IsEqualizerSupported;
+    public string EqualizerUnsupportedHint => _l10n.Get("Settings.Playback.EqualizerUnsupported");
+
+    public bool ShowGoToTroubleshootFromPlayback =>
+        SelectedSection == SettingsSectionKind.PlaybackAudio
+        && SelectedPlaybackAudioTab == PlaybackAudioTabKind.LyricsAndSound
+        && !IsEqualizerSupported;
+
+    public bool ShowGoToOnlineSourcesFromPlayback =>
+        SelectedSection == SettingsSectionKind.PlaybackAudio
+        && (OnlinePreviewCapabilityTag.IsWarning
+            || OnlinePreviewCapabilityTag.IsError
+            || BundledMusicApiCapabilityTag.IsError);
 }

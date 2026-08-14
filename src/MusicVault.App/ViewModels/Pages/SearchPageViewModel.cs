@@ -184,6 +184,7 @@ public partial class SearchPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(IsSearchMode));
         OnPropertyChanged(nameof(IsParseMode));
         OnPropertyChanged(nameof(IsRecognizeMode));
+        OnPropertyChanged(nameof(ShowRecognizeExperimentalBanner));
         OnPropertyChanged(nameof(ShowDiscoverAdvanced));
         OnPropertyChanged(nameof(SearchShortcutHint));
         OnPropertyChanged(nameof(QuickStartGuideTitle));
@@ -297,9 +298,14 @@ public partial class SearchPageViewModel : PageViewModelBase
     public string ArtistWatermark => _l10n.Get("Discover.Watermark.Artist");
     public string LinkWatermark => _l10n.Get("Discover.Watermark.Link");
     public string RecognizeWatermark => _l10n.Get("Discover.Watermark.Recognize");
+    public string RecognizeExperimentalBannerText => _l10n.Get("Discover.Recognize.ExperimentalBanner");
+    public string RecognizeUseSearchInsteadLabel => _l10n.Get("Discover.Recognize.UseSearchInstead");
+    public bool ShowRecognizeExperimentalBanner => IsRecognizeMode;
     public string PlatformToolTip => _l10n.Get("Discover.Platform.ToolTip");
     public string SearchButtonText => _l10n.Get("Discover.Button.Search");
     public string ParseButtonText => _l10n.Get("Discover.Button.Parse");
+    public string ParseEntryButtonText => _l10n.Get("Discover.Button.ParseEntry");
+    public string ParseEntryToolTip => _l10n.Get("Discover.ToolTip.ParseEntry");
     public string ClearButtonText => _l10n.Get("Common.Clear");
     public string SelectButtonText => _l10n.Get("Common.SelectFile");
     public string RerecognizeButtonText => _l10n.Get("Discover.Button.Rerecognize");
@@ -425,6 +431,20 @@ public partial class SearchPageViewModel : PageViewModelBase
 
     [RelayCommand]
     private void ToggleDiscoverAdvanced() => IsDiscoverAdvancedOpen = !IsDiscoverAdvancedOpen;
+
+    [RelayCommand]
+    private void EnterParseMode()
+    {
+        DiscoverModeIndex = 1;
+        IsDiscoverAdvancedOpen = true;
+    }
+
+    [RelayCommand]
+    private void EnterSearchModeFromRecognize()
+    {
+        DiscoverModeIndex = 0;
+        IsDiscoverAdvancedOpen = true;
+    }
 
     [RelayCommand]
     private void DismissQuickGuide()
@@ -791,7 +811,11 @@ public partial class SearchPageViewModel : PageViewModelBase
                     .ConfigureAwait(true);
             }
 
+#if WINDOWS
             var clipSeconds = NetEaseRecognizeClipExtractor.ResolveClipSeconds(path, RecognizeAutoSubmitSeconds);
+#else
+            var clipSeconds = NetEaseAudioRecognitionClient.DefaultClipSeconds;
+#endif
             return await NetEaseAudioRecognitionClient
                 .RecognizeAsync(neteaseUrl, path, clipSeconds)
                 .ConfigureAwait(true);
@@ -1695,9 +1719,13 @@ public partial class SearchPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(ArtistWatermark));
         OnPropertyChanged(nameof(LinkWatermark));
         OnPropertyChanged(nameof(RecognizeWatermark));
+        OnPropertyChanged(nameof(RecognizeExperimentalBannerText));
+        OnPropertyChanged(nameof(RecognizeUseSearchInsteadLabel));
         OnPropertyChanged(nameof(PlatformToolTip));
         OnPropertyChanged(nameof(SearchButtonText));
         OnPropertyChanged(nameof(ParseButtonText));
+        OnPropertyChanged(nameof(ParseEntryButtonText));
+        OnPropertyChanged(nameof(ParseEntryToolTip));
         OnPropertyChanged(nameof(ClearButtonText));
         OnPropertyChanged(nameof(SelectButtonText));
         OnPropertyChanged(nameof(RerecognizeButtonText));

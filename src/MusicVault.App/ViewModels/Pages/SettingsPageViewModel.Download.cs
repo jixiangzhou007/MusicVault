@@ -7,12 +7,19 @@ using MusicVault.App.Localization;
 using MusicVault.App.Services;
 using MusicVault.Services;
 using MusicVault.Services.Metadata;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MusicVault.App.ViewModels.Pages;
 
 /// <summary>设置 · 下载目录、并发、默认音质与 AcoustId。</summary>
 public partial class SettingsPageViewModel
 {
+    public bool CanOpenDownloadDirectory =>
+        !string.IsNullOrWhiteSpace(DownloadDirectory) && Directory.Exists(DownloadDirectory.Trim());
+
+    public string DownloadDirectoryToolTip =>
+        string.IsNullOrWhiteSpace(DownloadDirectory) ? string.Empty : DownloadDirectory.Trim();
+
     private void RefreshDownloadDiskSpaceAlert()
     {
         ShowDownloadDiskSpaceAlert = false;
@@ -260,4 +267,63 @@ public partial class SettingsPageViewModel
 
     partial void OnDiscoverAutoOpenBatchEnqueueWizardChanged(bool value) => MarkPendingChanges();
 
+    // --- domain members (moved from main) ---
+
+    public string DownloadCacheGroupTitle => _l10n.Get("Settings.Download.CacheGroup");
+
+    [ObservableProperty] private bool _showDownloadDiskSpaceAlert;
+
+    [ObservableProperty] private string _downloadDiskSpaceAlertText = string.Empty;
+
+    private const long DownloadDiskSpaceWarningBytes = 500L * 1024 * 1024;
+
+    public string DownloadSaveDirLabel => _l10n.Get("Settings.Download.SaveDir");
+    public string DownloadConcurrencyLabel => _l10n.Get("Settings.Download.Concurrency");
+    public string DownloadOpenLabel => _l10n.Get("Settings.Download.Open");
+    public string DownloadCopyPathLabel => _l10n.Get("Settings.Download.CopyPath");
+    public string PickDownloadFolderLabel => _l10n.Get("Common.SelectFile");
+    public string DownloadConcurrencySummary => string.Format(_l10n.Get("Settings.Download.ConcurrencyFormat"), MaxDownloads);
+
+    public string AcoustIdLookupTitle => _l10n.Get("Settings.Data.AcoustId.Title");
+    public string AcoustIdLookupHint => _l10n.Get("Settings.Data.AcoustId.Hint");
+    public string AcoustIdEnableLabel => _l10n.Get("Settings.Data.AcoustId.Enable");
+    public string AcoustIdApiKeyLabel => _l10n.Get("Settings.Data.AcoustId.ApiKey");
+    public string AcoustIdApiKeyWatermark => _l10n.Get("Settings.Data.AcoustId.ApiKeyWatermark");
+    public string AcoustIdApiKeyToolTip => _l10n.Get("Settings.Data.AcoustId.ApiKeyToolTip");
+    public string AcoustIdPrerequisiteHint => _l10n.Get("Settings.Data.AcoustId.PrerequisiteHint");
+    public bool ShowAcoustIdDetails => EnableAcoustIdFingerprintLookup;
+    public bool ShowAcoustIdSetupWarning => EnableAcoustIdFingerprintLookup && !IsAcoustIdReady;
+    public string AcoustIdSetupWarningText => BuildAcoustIdSetupWarningText();
+    public string AcoustIdTestLabel => _l10n.Get("Settings.Data.AcoustId.Test");
+
+    public string DownloadPolicyAutoBatchWizardLabel => _l10n.Get("Settings.DownloadPolicy.AutoBatchWizard");
+    public string DownloadPolicyAutoBatchWizardCaption => _l10n.Get("Settings.DownloadPolicy.AutoBatchWizard.Caption");
+
+    [ObservableProperty] private int _maxDownloads = 3;
+    [ObservableProperty] private string _downloadDirectory = string.Empty;
+
+    [ObservableProperty] private int _defaultDownloadQualityIndex;
+
+    [ObservableProperty] private bool _enableAcoustIdFingerprintLookup;
+    [ObservableProperty] private string _acoustIdApiKey = string.Empty;
+
+    [ObservableProperty] private bool _discoverAutoOpenBatchEnqueueWizard = true;
+
+    private bool IsAcoustIdReady =>
+        HasAcoustIdApiKeyConfigured() && AcoustIdFingerprintLookup.IsFpcalcAvailable;
+
+    private bool HasAcoustIdApiKeyConfigured() =>
+        !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("MUSICVAULT_ACOUSTID_API_KEY"))
+        || !string.IsNullOrWhiteSpace(AcoustIdApiKey);
+
+    private string BuildAcoustIdSetupWarningText()
+    {
+        if (!HasAcoustIdApiKeyConfigured())
+            return _l10n.Get("Settings.Data.AcoustId.Status.NoKey");
+
+        if (!AcoustIdFingerprintLookup.IsFpcalcAvailable)
+            return _l10n.Get("Settings.Data.AcoustId.Status.NoFpcalc");
+
+        return string.Empty;
+    }
 }
