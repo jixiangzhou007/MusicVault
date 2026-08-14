@@ -722,7 +722,7 @@ internal static class LocalizationResources
         ["Copyright.Title"] = "版权声明",
         ["Copyright.Accept"] = "我已阅读并同意",
         ["Copyright.Decline"] = "退出",
-        ["Copyright.Body"] = "欢迎使用 MusicVault！\n\n本软件仅供个人学习研究使用，请勿用于商业用途。源代码采用 MIT 许可证发布。\n\n请遵守您所在地区的版权法律法规，仅下载、管理您拥有合法权利的音乐内容。本软件不提供任何受版权保护的音乐文件。\n\n在线搜索与下载依赖非官方音乐平台接口；艺术家/专辑简介可能来自百度百科等公开页面。相关风险由您自行承担，详见仓库 docs/LEGAL.md。\n\n本版本不包含内置遥测；曲库与设置默认保存在本机。macOS 上播放器可能无法出声，请以实际版本说明为准。\n\n使用本软件即表示您已理解并同意上述条款。",
+        ["Copyright.Body"] = "欢迎使用 MusicVault！\n\n本软件仅供个人学习研究使用，请勿用于商业用途。源代码采用 MIT 许可证发布。\n\n请遵守您所在地区的版权法律法规，仅下载、管理您拥有合法权利的音乐内容。本软件不提供任何受版权保护的音乐文件。\n\n在线搜索与下载依赖非官方音乐平台接口；艺术家/专辑简介可能来自百度百科等公开页面。相关风险由您自行承担，详见仓库 docs/LEGAL.md。\n\n本版本不包含内置遥测；曲库与设置默认保存在本机。macOS 本地播放缺省优先 LibVLC（可回退 AVFoundation）；在线能力需配置外部统一 API。\n\n使用本软件即表示您已理解并同意上述条款。",
         ["Shell.Window.Minimize"] = "最小化",
         ["Shell.Window.Maximize"] = "最大化",
         ["Shell.Window.Restore"] = "还原",
