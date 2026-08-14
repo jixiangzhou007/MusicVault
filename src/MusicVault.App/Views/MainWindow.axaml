@@ -177,6 +177,9 @@
             <Button Content="{Binding NavBrowsePlaylists}" Classes="music-browse-tab"
                     Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=Playlists}"
                     Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Playlists}"/>
+            <Button Content="{Binding NavBrowseSources}" Classes="music-browse-tab"
+                    Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=Libraries}"
+                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Libraries}"/>
           </StackPanel>
       </ScrollViewer>
     </Border>

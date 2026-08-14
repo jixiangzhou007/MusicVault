@@ -17,6 +17,7 @@ public sealed class ShellHeaderStateStoreTests
         Assert.True(_store.ShowMusicBrowseBar(NavigationSection.Artists));
         Assert.True(_store.ShowMusicBrowseBar(NavigationSection.Albums));
         Assert.True(_store.ShowMusicBrowseBar(NavigationSection.Playlists));
+        Assert.True(_store.ShowMusicBrowseBar(NavigationSection.Libraries));
         Assert.False(_store.ShowMusicBrowseBar(NavigationSection.Settings));
     }
 
