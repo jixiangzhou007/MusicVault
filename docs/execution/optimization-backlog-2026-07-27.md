@@ -64,8 +64,8 @@
 
 | # | 事项 | 类型 | 验收 | 状态 |
 |---|------|------|------|------|
-| 3.1 | SettingsPageViewModel 按域拆分 | 结构 | 单文件显著变短 | ⏳ 主 ~2079；Appearance ~125 / Playback ~205 / Download ~263 / Online ~498 / Updates ~147 / Backup ~140；LoadFromSettings 与标签串仍在主文件 |
-| 3.2 | 收窄 AppServices 扇出（页面注入 Facade/Application） | 结构 | 新页不再整包 `_services` | ⏳ 第一刀：`AppLibraryFacade`+WebDav；`LibrariesPageViewModel`/`EqualizerViewModel` 收窄；`NasLibraryUiHelper` 走 Facade；规则 `app-services-injection.mdc` |
+| 3.1 | SettingsPageViewModel 按域拆分 | 结构 | 单文件显著变短 | ⏳ 主 ~1446；Appearance / Playback / Download / Online / Updates / Backup + **Localization / Persistence / Insights / Overview**；属性与导航壳仍在主文件 |
+| 3.2 | 收窄 AppServices 扇出（页面注入 Facade/Application） | 结构 | 新页不再整包 `_services` | ✅ 第一刀：`AppLibraryFacade`+WebDav；`LibrariesPageViewModel`/`EqualizerViewModel` 收窄；`NasLibraryUiHelper` 走 Facade；约定见 [app-services-injection.md](../engineering/app-services-injection.md) |
 | 3.3 | LocalizationResources 按分区拆文件 | 结构 | 合并冲突下降 | ✅ 主表 ~1450；Settings/Discover/Library/Transfers/Metadata 独立文件 + TryGet 回退 |
 | 3.4 | 巨型页关键行为单测（入队确认、切歌等） | 测试 | 回归有网 | ✅ 入队确认弹窗、空搜 hint、静音纯逻辑、切歌边角、行级入队文案、预估体积 |
 

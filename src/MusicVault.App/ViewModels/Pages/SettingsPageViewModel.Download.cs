@@ -13,6 +13,12 @@ namespace MusicVault.App.ViewModels.Pages;
 /// <summary>设置 · 下载目录、并发、默认音质与 AcoustId。</summary>
 public partial class SettingsPageViewModel
 {
+    public bool CanOpenDownloadDirectory =>
+        !string.IsNullOrWhiteSpace(DownloadDirectory) && Directory.Exists(DownloadDirectory.Trim());
+
+    public string DownloadDirectoryToolTip =>
+        string.IsNullOrWhiteSpace(DownloadDirectory) ? string.Empty : DownloadDirectory.Trim();
+
     private void RefreshDownloadDiskSpaceAlert()
     {
         ShowDownloadDiskSpaceAlert = false;
