@@ -98,4 +98,5 @@
 ## 相关文档
 
 - 架构评价结论见对话 2026-07-27；路线图总览：`docs/ROADMAP.md`
+- AppServices 注入约定：`docs/engineering/app-services-injection.md`
 - 搜索韧性：`docs/superpowers/specs/2026-07-17-production-search-phase-a-design.md` / `phase-b-design.md`
