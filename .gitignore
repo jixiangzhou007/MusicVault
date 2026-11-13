@@ -2,6 +2,8 @@ bin/
 obj/
 publish/
 releases/
+MusicVault-*-win-x64-vol.zip
+MusicVault-*.zip
 *.nupkg
 .vs/
 *.user
