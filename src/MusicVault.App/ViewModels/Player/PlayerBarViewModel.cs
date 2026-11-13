@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MusicVault.App.Constants;
+using MusicVault.App.Icons;
 using MusicVault.App.Localization;
 using MusicVault.App.Services;
 using MusicVault.App.ViewModels.Dialogs;
@@ -48,6 +49,7 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
     private int _playSession;
     private bool _isOnlinePreview;
     private OnlineTrack? _onlinePreviewTrack;
+    private OnlinePreviewQueue _onlinePreviewQueue = OnlinePreviewQueue.Empty;
     private string _onlinePlaybackLabelKey = string.Empty;
     private volatile bool _exitSaveDone;
     private bool _suppressPlaybackPersist;
@@ -99,7 +101,7 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
         PlaybackEngineSupport.IsEqualizerSupported(_services.Player);
     public string EqualizerToolTip => IsEqualizerSupported ? _l10n.Get("Player.Equalizer") : _l10n.Get("Player.EqualizerUnsupported");
     public bool IsMuted => Volume <= 0.001f;
-    public string VolumeIconGlyph => IsMuted ? "\uE74F" : "\uE767";
+    public string VolumeIconGlyph => IsMuted ? IconGlyphs.VolumeMute : IconGlyphs.Volume;
     public string VolumeToolTip => IsMuted ? _l10n.Get("Player.Unmute") : _l10n.Get("Player.Volume");
     public string VolumeMuteToolTip => IsMuted ? _l10n.Get("Player.Unmute") : _l10n.Get("Player.Mute");
     public string VolumeLabel => _l10n.Get("Player.Volume");
@@ -107,10 +109,14 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
     public bool HasActivePlayback => CurrentTrack != null || _isOnlinePreview;
     public bool CanTogglePlayPause => !IsPlaybackBusy && (_queueIndex >= 0 || _isOnlinePreview);
     public bool CanGoPrevious =>
-        !IsPlaybackBusy && (HasActiveAutoplaySource || (!_isOnlinePreview && _queue.Count > 0));
+        !IsPlaybackBusy
+        && (HasActiveAutoplaySource
+            || (_isOnlinePreview && _onlinePreviewQueue.CanSkip)
+            || (!_isOnlinePreview && _queue.Count > 0));
     public bool CanGoNext =>
         !IsPlaybackBusy
         && (HasActiveAutoplaySource
+            || (_isOnlinePreview && _onlinePreviewQueue.CanSkip)
             || (!_isOnlinePreview
                 && _queue.Count > 0
                 && (IsShuffleOn
@@ -176,12 +182,7 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
         {
             if (_isOnlinePreview)
             {
-                Dispatcher.UIThread.Post(() =>
-                {
-                    ClearOnlinePreviewState();
-                    IsPlaying = false;
-                    _uiProgressTimer.Stop();
-                });
+                Dispatcher.UIThread.Post(() => _ = OnOnlinePreviewEndedOrAdvanceAsync());
                 return;
             }
 
@@ -230,6 +231,82 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
             return;
 
         await NextAsync();
+    }
+
+    private async Task OnOnlinePreviewEndedOrAdvanceAsync()
+    {
+        if (await TryPlayOnlinePreviewNeighborAsync(forward: true, restartCurrentIfNearStart: false))
+            return;
+
+        ClearOnlinePreviewState();
+        ClearOnlinePreviewQueue();
+        IsPlaying = false;
+        _uiProgressTimer.Stop();
+    }
+
+    private async Task<bool> TryPlayOnlinePreviewNeighborAsync(bool forward, bool restartCurrentIfNearStart)
+    {
+        if (!_isOnlinePreview || !_onlinePreviewQueue.CanSkip)
+            return false;
+
+        if (!forward && restartCurrentIfNearStart && Position > 3)
+        {
+            Seek(0);
+            return true;
+        }
+
+        Func<int, int, int>? pickRandom = IsShuffleOn
+            ? (cur, count) => ListPlaybackAdvance.PickRandomIndex(cur, count, Random.Shared)
+            : null;
+
+        int target;
+        if (forward)
+        {
+            if (!_onlinePreviewQueue.TryGetNext(RepeatMode, IsShuffleOn, pickRandom, out target))
+                return false;
+        }
+        else if (!_onlinePreviewQueue.TryGetPrevious(IsShuffleOn, pickRandom, out target))
+        {
+            return false;
+        }
+
+        var previous = _onlinePreviewTrack;
+        var previousIndex = _onlinePreviewQueue.CurrentIndex;
+        var track = _onlinePreviewQueue.Tracks[target];
+        _onlinePreviewQueue = _onlinePreviewQueue.WithIndex(target);
+        await PlayOnlinePreviewQueueItemAsync(track, previous, previousIndex).ConfigureAwait(true);
+        return true;
+    }
+
+    private async Task PlayOnlinePreviewQueueItemAsync(
+        OnlineTrack track,
+        OnlineTrack? previous,
+        int previousIndex)
+    {
+        try
+        {
+            IsPlaybackBusy = true;
+            await PlayOnlineStreamAsync(track).ConfigureAwait(true);
+        }
+        catch (Exception ex)
+        {
+            _onlinePreviewQueue = _onlinePreviewQueue.WithIndex(previousIndex);
+            if (previous != null)
+            {
+                BeginOnlinePreview(previous);
+                OnlinePreviewStarted?.Invoke(this, previous);
+            }
+
+            MessageService.Instance.ShowError(
+                string.Format(
+                    _l10n.Get("Player.Online.SkipFailed"),
+                    OnlinePlaybackStatusText.ResolveReason(_l10n, ex)));
+        }
+        finally
+        {
+            IsPlaybackBusy = false;
+            NotifyTransportCommandsChanged();
+        }
     }
 
     private void OnPlayerPositionChanged(object? sender, double pos)
@@ -498,12 +575,16 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
             return online.DirectDownloadUrl;
         }
 
-        progress?.ReportStage(_l10n.Get("Player.Online.Stage.TryingFallback"));
+        progress?.ReportStage(_l10n.Get("Player.Online.Stage.ResolvingLink"));
         var rotated = await GoMusicApiClient.TryResolveDownloadWithSourceRotationAsync(online, quality, ct, trace)
             .ConfigureAwait(false);
         if (rotated != null)
         {
-            progress?.ReportStage(_l10n.Get("Player.Online.Stage.FallbackLinkOk"));
+            var usedOriginal = rotated.Value.Track.Platform == online.Platform
+                               && string.Equals(rotated.Value.Track.Id, online.Id, StringComparison.Ordinal);
+            progress?.ReportStage(_l10n.Get(usedOriginal
+                ? "Player.Online.Stage.ResolvingLink"
+                : "Player.Online.Stage.FallbackLinkOk"));
             trace?.Invoke($"rotated={rotated.Value.Track.Platform}:{rotated.Value.Track.Id}");
             return rotated.Value.Url;
         }
@@ -600,10 +681,51 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
         return fallback;
     }
 
+    public void SetOnlinePreviewQueue(IReadOnlyList<OnlineTrack> tracks, OnlineTrack current)
+    {
+        _onlinePreviewQueue = OnlinePreviewQueue.FromVisibleList(tracks, current);
+        NotifyTransportCommandsChanged();
+    }
+
+    public void ClearOnlinePreviewQueue()
+    {
+        if (_onlinePreviewQueue.IsEmpty)
+            return;
+        _onlinePreviewQueue = OnlinePreviewQueue.Empty;
+        NotifyTransportCommandsChanged();
+    }
+
+    /// <summary>将在线曲目排到下一首；在线预览中且队列非空时仅插入不切歌；无播放时立即试听；本地播放时改为单首在线预览队列。</summary>
+    public async Task QueueOnlinePlayNext(OnlineTrack track)
+    {
+        if (track is null)
+            return;
+
+        if (_isOnlinePreview)
+        {
+            if (!_onlinePreviewQueue.IsEmpty)
+                _onlinePreviewQueue = _onlinePreviewQueue.WithInsertedAfterCurrent(track);
+            else if (_onlinePreviewTrack != null)
+                _onlinePreviewQueue = OnlinePreviewQueue.FromVisibleList([_onlinePreviewTrack, track], _onlinePreviewTrack);
+            NotifyTransportCommandsChanged();
+            return;
+        }
+
+        if (!HasActivePlayback)
+        {
+            await PlayOnlinePreviewAsync(track).ConfigureAwait(true);
+            return;
+        }
+
+        SetOnlinePreviewQueue([track], track);
+        await PlayOnlinePreviewAsync(track).ConfigureAwait(true);
+    }
+
     private void BeginOnlinePreview(OnlineTrack online)
     {
         _isOnlinePreview = true;
         _onlinePreviewTrack = online;
+        _onlinePreviewQueue = _onlinePreviewQueue.AlignToCurrent(online);
         OnPropertyChanged(nameof(IsOnlinePreview));
         OnPropertyChanged(nameof(HasActivePlayback));
         OnPropertyChanged(nameof(CanOpenNowPlayingFullscreen));
@@ -670,6 +792,7 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
         string? queueSourceLabel = null)
     {
         ClearOnlinePreviewState();
+        ClearOnlinePreviewQueue();
         _startFromBeginning = !resumePosition;
         ConfigureAutoplaySource(track, queue, queueSourceLabel);
         AppendToPlayHistory(track);
@@ -683,6 +806,7 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
         _autoplaySource = null;
         _autoplaySourceIndex = -1;
         ClearOnlinePreviewState();
+        ClearOnlinePreviewQueue();
         _startFromBeginning = !resumePosition;
         _queueIndex = index;
         await PlayCurrentAsync();
@@ -1796,6 +1920,7 @@ public partial class PlayerBarViewModel : ViewModelBase, IDisposable
     private void ApplyRestoredTrackUi(Track track, PlaybackSessionState session)
     {
         ClearOnlinePreviewState();
+        ClearOnlinePreviewQueue();
 
         var idx = FindQueueIndex(track);
         if (idx >= 0)

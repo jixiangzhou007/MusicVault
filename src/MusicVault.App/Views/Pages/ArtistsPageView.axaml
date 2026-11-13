@@ -25,7 +25,7 @@
           <Grid Width="48" Height="48">
             <Border Classes="browse-entity-avatar browse-entity-avatar-square"
                     IsVisible="{Binding !HasPhoto}">
-              <TextBlock Text="&#xE77B;"
+              <TextBlock Text="{StaticResource IconGlyphPerson}"
                          HorizontalAlignment="Center" VerticalAlignment="Center"
                          Foreground="{DynamicResource TextTertiaryBrush}"/>
             </Border>
@@ -55,9 +55,9 @@
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding BrowsePageTitle}" Classes="page-title"
-                   HorizontalAlignment="Right" VerticalAlignment="Top" Margin="{DynamicResource MarginBottomXs}"/>
-        <StackPanel Grid.Row="0" Grid.Column="2" Spacing="4" Margin="{DynamicResource MarginTrailingLg}">
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Spacing="4"
+                    Margin="{DynamicResource MarginBottomXs}">
+          <TextBlock Text="{Binding BrowsePageTitle}" Classes="page-title"/>
           <TextBlock Classes="page-intro" Text="{Binding PageHeaderText}" TextWrapping="Wrap"/>
           <TextBlock Classes="text-caption" Text="{Binding BrowseStatsLine}" TextWrapping="Wrap"
                      Foreground="{DynamicResource TextTertiaryBrush}"/>
@@ -127,7 +127,7 @@
                                    ActionText="{Binding EmptyFilterAction}"
                                    ShowAction="True"
                                    ActionCommand="{Binding ClearBrowseFiltersCommand}"
-                                   IconGlyph="&#xE721;"/>
+                                   IconGlyph="{StaticResource IconGlyphSearch}"/>
 
           <controls:EmptyStateView IsVisible="{Binding ShowLibraryEmpty}"
                                    Title="{Binding EmptyLibraryTitle}"
@@ -180,7 +180,7 @@
                 <Border CornerRadius="8" Background="{DynamicResource SurfaceElevatedBrush}" ClipToBounds="True"
                         IsVisible="{Binding !IsLoadingProfile}">
                   <Grid>
-                    <TextBlock Text="&#xE77B;" Classes="icon-2xl icon-muted"
+                    <TextBlock Text="{StaticResource IconGlyphPerson}" Classes="icon-2xl icon-muted"
                                HorizontalAlignment="Center" VerticalAlignment="Center"
                                IsVisible="{Binding !HasArtistPhoto}"/>
                     <Image Source="{Binding ArtistPhotoLarge, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
@@ -272,7 +272,7 @@
               <Grid x:Name="AlbumCarouselGrid" ColumnDefinitions="40,*,40">
                 <Button x:Name="AlbumScrollLeftBtn" Grid.Column="0" Classes="browse-album-scroll-btn"
                         VerticalAlignment="Top" Click="OnAlbumScrollLeft">
-                  <TextBlock Text="&#xE76B;" Classes="icon-sm"/>
+                  <TextBlock Text="{StaticResource IconGlyphChevronLeft}" Classes="icon-sm"/>
                 </Button>
                 <ScrollViewer x:Name="AlbumScroll" Grid.Column="1" Margin="{DynamicResource MarginLeadingSm}"
                               HorizontalScrollBarVisibility="Hidden"
@@ -297,7 +297,7 @@
                               <Border Width="120" Height="120" CornerRadius="8"
                                       Background="{DynamicResource SurfaceElevatedBrush}" ClipToBounds="True">
                                 <Grid>
-                                  <TextBlock Text="&#xE8D6;" Classes="icon-2xl icon-muted"
+                                  <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-2xl icon-muted"
                                              HorizontalAlignment="Center" VerticalAlignment="Center"
                                              IsVisible="{Binding !HasCover}"/>
                                   <Image Source="{Binding CoverThumb, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
@@ -323,7 +323,7 @@
                 </ScrollViewer>
                 <Button x:Name="AlbumScrollRightBtn" Grid.Column="2" Classes="browse-album-scroll-btn"
                         VerticalAlignment="Top" Click="OnAlbumScrollRight">
-                  <TextBlock Text="&#xE76C;" Classes="icon-sm"/>
+                  <TextBlock Text="{StaticResource IconGlyphChevronRight}" Classes="icon-sm"/>
                 </Button>
               </Grid>
             </StackPanel>
@@ -344,7 +344,7 @@
                        Classes="virtual-list" ItemTemplate="{StaticResource LibraryTrackRowTemplate}"
                        ScrollViewer.VerticalScrollBarVisibility="Disabled"
                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-              <Button x:Name="ArtistTracksScrollTopBtn" Content="&#xE70E;"
+              <Button x:Name="ArtistTracksScrollTopBtn" Content="{StaticResource IconGlyphChevronUp}"
                       Classes="list-scroll-top-btn"
                       HorizontalAlignment="Right" VerticalAlignment="Bottom"
                       Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
@@ -374,7 +374,7 @@
             <Button Classes="flat-btn btn-toolbar" HorizontalAlignment="Left" Padding="0,0,0,8"
                     Command="{Binding BackToArtistDetailCommand}">
               <StackPanel Orientation="Horizontal" Spacing="6">
-                <TextBlock Text="&#xE72B;" Classes="icon-sm"/>
+                <TextBlock Text="{StaticResource IconGlyphBack}" Classes="icon-sm"/>
                 <TextBlock Text="{Binding SelectedArtist.Name}" Classes="text-label"/>
               </StackPanel>
             </Button>
@@ -383,7 +383,7 @@
               <Border Width="96" Height="96" Margin="{DynamicResource MarginTrailingLg}" CornerRadius="8"
                       Background="{DynamicResource SurfaceElevatedBrush}" ClipToBounds="True">
                 <Grid>
-                  <TextBlock Text="&#xE8D6;" Classes="icon-2xl icon-muted"
+                  <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-2xl icon-muted"
                              HorizontalAlignment="Center" VerticalAlignment="Center"
                              IsVisible="{Binding !SelectedAlbum.HasCover}"/>
                   <Image Source="{Binding SelectedAlbum.CoverThumb, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
@@ -470,10 +470,12 @@
                           VerticalAlignment="Center"/>
                 <Button Content="{Binding DownloadSelectedLabel}" Classes="browse-artist-action-btn accent"
                         Command="{Binding DownloadSelectedAlbumTracksCommand}"
-                        IsEnabled="{Binding HasSelectedDownloadable}"/>
+                        IsEnabled="{Binding CanDownloadSelectedOnline}"
+                        ToolTip.Tip="{Binding DownloadSelectedToolTip}"/>
                 <Button Content="{Binding DownloadMissingLabel}" Classes="browse-artist-action-btn"
                         Command="{Binding DownloadMissingAlbumTracksCommand}"
-                        IsVisible="{Binding HasAlbumMissingTracks}"/>
+                        IsVisible="{Binding HasAlbumMissingTracks}"
+                        ToolTip.Tip="{Binding DownloadSelectedToolTip}"/>
                 <Button Content="{Binding SelectAllDownloadableLabel}" Classes="flat-btn btn-toolbar"
                         Command="{Binding SelectAllDownloadableTracksCommand}"
                         automation:AutomationProperties.Name="{Binding SelectAllDownloadableLabel}"/>
@@ -502,7 +504,7 @@
                 </ListBox.ItemsPanel>
               </ListBox>
 
-          <Button x:Name="ArtistAlbumDetailScrollTopBtn" Content="&#xE70E;"
+          <Button x:Name="ArtistAlbumDetailScrollTopBtn" Content="{StaticResource IconGlyphChevronUp}"
                   Classes="list-scroll-top-btn"
                   HorizontalAlignment="Right" VerticalAlignment="Bottom"
                   Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"

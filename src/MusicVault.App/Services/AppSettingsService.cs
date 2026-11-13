@@ -95,12 +95,19 @@ public sealed class AppSettings
     public string MusicApiBaseUrl { get; set; } = string.Empty;
     /// <summary>外部听歌识曲接口地址（POST 音频文件）。</summary>
     public string MusicRecognitionApiUrl { get; set; } = string.Empty;
+    /// <summary>听歌识曲采集源：0=系统回环，1=麦克风。</summary>
+    public int RecognizeCaptureSourceIndex { get; set; }
     /// <summary>若安装目录含 api/go-music-api.exe，启动时自动拉起（仅 localhost:8080）</summary>
     public bool AutoStartBundledMusicApi { get; set; } = true;
     /// <summary>若安装目录含 api/netease-cloud-music-api，启动时自动拉起（仅 localhost:3000）</summary>
     public bool AutoStartBundledNetEaseApi { get; set; } = true;
     /// <summary>每周后台检查 GitHub 是否有新版 go-music-api（仅提示，不自动下载）</summary>
     public bool CheckBundledMusicApiUpdates { get; set; }
+    /// <summary>
+    /// 内置 API 更新所盯的 GitHub 仓库（<c>owner/repo</c>）。留空 = <c>guohuiyuan/go-music-api</c>。
+    /// 亦可用环境变量 <c>MUSICVAULT_MUSIC_API_UPDATE_REPO</c> 覆盖。
+    /// </summary>
+    public string BundledMusicApiUpdateGithubRepo { get; set; } = string.Empty;
     public DateTime? LastBundledMusicApiCheckAt { get; set; }
     /// <summary>后台检查发现新版本时的提示文案（供设置页显示）</summary>
     public string? PendingMusicApiUpdateNotice { get; set; }
@@ -221,14 +228,22 @@ public sealed class AppSettings
     /// <summary>下载中心失败视图排序：0=时间↓，1=时间↑，2=标题。</summary>
     public int TransfersFailedSortIndex { get; set; }
 
-    /// <summary>是否已完成首次运行向导（曲库 / 下载 / API）。</summary>
+    /// <summary>是否已完成首次运行向导。</summary>
     public bool FirstRunWizardCompleted { get; set; }
+
+    /// <summary>首次向导选择的到达路径。缺省为 Unset（旧配置无此字段）。</summary>
+    public FirstRunOnboardingPath FirstRunOnboardingPath { get; set; }
 
     /// <summary>在线源页引导是否已消费（true=不再展示）。</summary>
     public bool DiscoverGuideDismissed { get; set; }
 
     /// <summary>链接解析歌单/专辑成功后自动弹出批量入队确认向导。</summary>
     public bool DiscoverAutoOpenBatchEnqueueWizard { get; set; } = true;
+
+    /// <summary>
+    /// 发现页 Hero 动态广告曲目源：0=新歌榜，1=猜你喜欢。
+    /// </summary>
+    public int DiscoverHeroPromoSourceIndex { get; set; }
 
     /// <summary>各页面竖向分栏宽度（像素），键见 <see cref="PaneSplitPageKeys"/>。</summary>
     public Dictionary<string, double> PaneSplitWidths { get; set; } = new(StringComparer.Ordinal);

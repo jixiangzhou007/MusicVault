@@ -33,7 +33,7 @@
             CornerRadius="4"
             IsVisible="False"
             Background="{DynamicResource NavHoverBrush}">
-      <TextBlock Text="&#xE784;"
+      <TextBlock Text="{StaticResource IconGlyphGripper}"
                  IsHitTestVisible="False"
                  Classes="icon-xs"
                  HorizontalAlignment="Center"

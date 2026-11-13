@@ -1,19 +1,19 @@
 #if !WINDOWS
-using MusicVault.Services;
-
 namespace MusicVault.Services.Audio;
 
 public sealed class MicrophoneWavRecorder : IDisposable
 {
-    public static bool IsSupported => false;
+    private readonly RecognizeWavRecorder _inner = new();
 
-    public bool IsRecording => false;
+    public static bool IsSupported => RecognizeWavRecorder.IsSupported;
+
+    public bool IsRecording => _inner.IsRecording;
 
     public void Start(string? outputDirectory = null) =>
-        throw new PlatformNotSupportedException(ServiceMessageCodec.Key("Recognition.MicWindowsOnly"));
+        _inner.Start(RecognizeCaptureSource.Microphone, outputDirectory);
 
-    public Task<string?> StopAsync() => Task.FromResult<string?>(null);
+    public Task<string?> StopAsync() => _inner.StopAsync();
 
-    public void Dispose() { }
+    public void Dispose() => _inner.Dispose();
 }
 #endif

@@ -1,165 +1,102 @@
 # MusicVault
 
-**下载即整理，整理即播放** — 跨平台个人数字音乐管理工具。
+**一个播放器，听本地和多个平台。**
 
-基于 **Avalonia UI 11** + **.NET 8** + **C# 12**。  
-**推荐平台：Windows 10/11 x64**（完整播放 + 可选捆绑 API）。macOS 可编译运行，但播放与 API 捆绑见下方说明。
+面向自己和朋友的跨平台桌面音乐应用：本地曲库 / NAS / WebDAV，加上多平台搜索、在线试听、歌单汇聚与尽力而为的下载。  
+基于 Avalonia 11 + .NET 8。开源协议 [MIT](LICENSE)。
 
-> ⚠️ **macOS 用户**：当前版本内置播放器通过原生 AVAudioPlayer 实现（需编译 `libMusicVaultPlayer.dylib`）。播放功能需要 Xcode Command Line Tools 编译原生库，详见 [RELEASE.md](RELEASE.md)。
+> **给朋友：** 下载 Windows 便携包 → 解压 → 运行 `MusicVault.exe`。不要只拷单个 exe（需带上 `api/`）。  
+> **macOS：** 合格线是本地能播、发现能搜能听；下载不作保证。详见 [docs/LEGAL.md](docs/LEGAL.md)。
 
-## 功能概览
+## 解决什么
 
-图例：**完整** = 默认可用 · **实验** = 可用但不保证稳定 · **需配置** = 依赖自建 API 或环境变量
-
-| 优先级 | 功能 | 状态 |
-|--------|------|------|
-| P0 | 本地曲库 + 增量扫描 | **完整** |
-| P0 | 元数据编辑（TagLib、封面、LRC） | **完整** |
-| P0 | 歌单 / M3U 导入导出 | **完整** |
-| P0 | 文件整理与重命名模板 | **完整** |
-| P0 | 网易云搜索与下载 | **完整**（建议自建 [Netease API](docs/DISTRIBUTION.md)） |
-| P0 | QQ / 酷狗 / 酷我 / 咪咕 | **实验** / **需配置** |
-| P1 | 内置播放器 | **完整**（仅 Windows）· macOS：**可用**（需原生库） |
-| P1 | 同步滚动歌词 | **完整**（Windows 播放时） |
-| P1 | 下载队列（暂停/继续/重试） | **完整** |
-| P1 | 主题（浅/深/跟随系统） | **完整** |
-| P1 | Velopack 自动更新 | **完整**（默认 GitHub 源，见 [ONLINE_UPDATE](docs/ONLINE_UPDATE.md)） |
-| P2 | 数据库备份（保留 7 份） | **完整** |
-| P2 | 艺术家百科简介 / 头像 | **完整**（百度百科 + 缓存，见 [LEGAL](docs/LEGAL.md)） |
-| P2 | 重复歌曲检测 | **完整** |
-
-## 环境要求
-
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- Windows 10/11 x64 或 macOS 12+
-
-## 第三步新增功能
-
-| 模块 | 功能 |
+| 痛点 | 做法 |
 |------|------|
-| 多音乐库 | 增删改、每库命名模板、文件夹选择器、单库扫描 |
-| 歌单 | 重命名/删除、M3U 导入导出、平台歌单解析、批量下载、失败重试 |
-| 设置 | 主题/强调色、并发下载、快捷键、备份恢复 |
-| 统计 | 曲目/专辑/艺术家/容量/播放统计 |
-| 平台 API | QQ/酷狗/酷我/咪咕 搜索（需配置环境变量） |
-| 备份 | 每日自动备份 + 完整 ZIP 打包 |
-| 动画 | 页面淡入、列表悬停高亮 |
+| 歌散在各平台 | 统一搜索 / 试听 / 平台登录（Cookie） |
+| 本地与 NAS 难管 | 多库扫描、标签、整理、歌词、自建歌单 |
+| 歌单割裂 | 导入平台歌单后在同一底栏播放 |
+| 下载不稳定 | **尽力而为**，不承诺替代会员；失败会说明 |
 
-### 平台 API 环境变量
+产品意图全文：[docs/PRODUCT_DESIGN.md](docs/PRODUCT_DESIGN.md)
+
+## 系统要求
+
+- **Windows 10/11 x64**（推荐；可捆绑统一音乐 API）
+- **macOS 12+ Apple Silicon**（本地播放 + 在线听；下载尽力）
+- 开发构建需 [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+
+## 朋友怎么装（Windows）
+
+1. 从 [Releases](https://github.com/jixiangzhou007/MusicVault/releases) 下载 `MusicVault-*-win-x64-vol.zip`
+2. 解压到路径尽量不含奇怪字符
+3. 运行 `MusicVault.exe`（首次同意声明并选「已有歌曲」或「在线听」）
+
+作者本机打朋友包：
 
 ```powershell
-$env:MUSICVAULT_NETEASE_API = "http://localhost:3000"
-$env:MUSICVAULT_QQ_API = "https://api.qq.jsososo.com"
-$env:MUSICVAULT_KUGOU_API = ""   # 留空使用酷狗公开搜索
-$env:MUSICVAULT_KUWO_API = ""
-$env:MUSICVAULT_MIGU_API = ""
+.\scripts\publish-with-api.ps1 -Restart
+# 将 publish\win-x64-vol 打成 zip 即可分发
 ```
 
-## 第二步新增服务（Core/Services）
+说明：[docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) · Release 模板：[docs/GITHUB_RELEASE.md](docs/GITHUB_RELEASE.md)
 
-| 模块 | 类 | 说明 |
-|------|-----|------|
-| 元数据 | `BatchMetadataService` | 批量编辑、查找替换、批量刮削 |
-| 元数据 | `LrcParser` / `LyricsReader` | LRC 解析、内嵌封面读取 |
-| 扫描 | `LibraryScanService` | 增量扫描、删除失效索引、后台扫描 |
-| 整理 | `BatchOrganizeService` | 批量重命名预览与执行 |
-| 下载 | `DownloadQueueService` | 实时进度、去重、完成后入库 |
-| 数据 | `TrackRepository` | 专辑/艺术家分组、播放状态 |
+## 功能一览
 
-## 快速开始
+| 能力 | 状态 |
+|------|------|
+| 本地曲库、增量扫描、元数据 / 歌词 | 完整 |
+| NAS / WebDAV | 完整（Windows 凭据等能力见能力矩阵） |
+| 发现：搜索、试听、浏览、平台登录 | 完整（依赖统一 API；Windows 可随包自启） |
+| 多平台歌单导入后在线听 | 完整 |
+| 下载队列 | 尽力（可断、可失败） |
+| 内置播放器 / 歌词 / 均衡器 | Windows 完整；macOS 视引擎 |
+| Velopack 应用内更新 | 完整（安装版；便携包需换 zip） |
+
+更细的平台差异：[docs/execution/platform-capability-matrix.md](docs/execution/platform-capability-matrix.md)
+
+## 开发者快速开始
 
 ```powershell
-# 克隆后进入项目目录
-cd MusicVault
-
-# 还原依赖并编译
 dotnet restore
 dotnet build
-
-# 运行（开发模式）
+dotnet test
 dotnet run --project src\MusicVault.App\MusicVault.App.csproj
 ```
 
-### 网易云 API 配置
-
-网易音乐搜索/下载依赖 NeteaseCloudMusicApi 兼容服务。可设置环境变量指向自建实例：
+可选环境变量（一般朋友包不需要手动配）：
 
 ```powershell
-$env:MUSICVAULT_NETEASE_API = "http://localhost:3000"
+$env:MUSICVAULT_MUSIC_API = "http://localhost:8080"   # 统一 API
+$env:MUSICVAULT_NETEASE_API = "http://localhost:3000" # 网易兼容 API
+$env:MUSICVAULT_UPDATE_URL = "https://github.com/jixiangzhou007/MusicVault"
 ```
 
-默认使用公共演示端点（稳定性不保证，**生产环境请自建 API**）。
+扩展统一 API / fork：[docs/GO_MUSIC_API_EXTENSION.md](docs/GO_MUSIC_API_EXTENSION.md)
 
-## 发布单文件 EXE / APP
-
-详见 [RELEASE.md](RELEASE.md) 与 [TESTING.md](TESTING.md)。
-
-```powershell
-# Windows（推荐：Trimmed 单文件）
-.\scripts\publish-windows.ps1
-# 输出: publish\win-x64\MusicVault.exe
-
-# 可选 NativeAOT
-.\scripts\publish-windows.ps1 -Aot
-
-# Velopack 安装包 + GitHub 在线更新（见 docs/ONLINE_UPDATE.md）
-.\scripts\velopack-release.ps1
-.\scripts\publish-github-release.ps1
-```
-
-```bash
-chmod +x scripts/publish-macos.sh
-./scripts/publish-macos.sh osx-arm64
-```
-
-更新源默认指向 `https://github.com/jixiangzhou007/MusicVault`（可在设置页覆盖，或设 `MUSICVAULT_UPDATE_URL`）。首次推送仓库：`.\scripts\github-bootstrap.ps1`。
-
-## 项目结构
+## 仓库结构
 
 ```
-MusicVault/
-├── src/
-│   ├── MusicVault.App/       # Avalonia UI、ViewModel、主题
-│   ├── MusicVault.Core/      # 模型、枚举、接口
-│   ├── MusicVault.Data/      # SQLite 数据库与仓储
-│   └── MusicVault.Services/  # 业务逻辑、平台提供者、播放器
-├── scripts/                  # 发布与 Velopack 脚本
-├── tests/MusicVault.Tests/   # 单元测试
-├── .github/workflows/        # CI
-├── RELEASE.md
-├── TESTING.md
-└── README.md
+src/MusicVault.App|Core|Data|Services
+tests/MusicVault.Tests
+scripts/          # 发布、冒烟、API 捆绑
+docs/             # 产品 / 架构 / 发版（见 docs/README.md）
 ```
 
-## 数据目录
+## 文档索引
 
-用户数据默认存储在：
+| 文档 | 用途 |
+|------|------|
+| [docs/README.md](docs/README.md) | 文档导航 |
+| [CHANGELOG.md](CHANGELOG.md) | 版本变更 |
+| [RELEASE.md](RELEASE.md) | 构建与发版命令 |
+| [TESTING.md](TESTING.md) | 回归清单 |
+| [docs/FRIEND_RELEASE.md](docs/FRIEND_RELEASE.md) | **1.1 朋友包 + GitHub 发布检查单** |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | 贡献方式 |
+| [docs/LEGAL.md](docs/LEGAL.md) | 法律与合规 |
 
-- **Windows**: `%LOCALAPPDATA%\MusicVault\`
-- **macOS**: `~/Library/Application Support/MusicVault/`（可通过代码调整）
+## 法律声明
 
-包含：`musicvault.db`、下载目录、`backups/`。
-
-## 扩展其他音乐平台
-
-实现 `IMusicSourceProvider` 接口并在 `AppServices` 中注册：
-
-```csharp
-public sealed class MyPlatformProvider : IMusicSourceProvider { ... }
-```
-
-## 法律声明与合规
-
-- 请仅下载、存储、播放您拥有**合法权利**的音乐内容。
-- 各音乐平台接口均为**非官方**实现；使用风险由用户自行承担。
-- 百度百科等在线资料抓取仅供**个人学习研究**，详见 [docs/LEGAL.md](docs/LEGAL.md)。
-- 本软件**不包含**内置遥测；用户数据默认保存在本机。
-
-## 许可证与第三方组件
-
-- 源代码：[MIT License](LICENSE)
-- 归属说明：[NOTICE](NOTICE)
-- 依赖摘要：[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)
-- 版本历史：[CHANGELOG.md](CHANGELOG.md)
-- 发布检查清单：[docs/GITHUB_RELEASE.md](docs/GITHUB_RELEASE.md)
-- 仓库管理：[docs/REPOSITORY.md](docs/REPOSITORY.md)
+- 请仅下载、存储、播放你拥有合法权利的音乐。
+- 各平台接口为非官方实现，可能随时失效；风险自负。
+- 无内置遥测；用户数据默认仅本机。
+- 许可证：[LICENSE](LICENSE) · [NOTICE](NOTICE) · [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)

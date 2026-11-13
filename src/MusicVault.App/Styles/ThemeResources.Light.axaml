@@ -135,6 +135,24 @@
     <GradientStop Color="#90101014" Offset="0.35"/>
     <GradientStop Color="#F0101014" Offset="1"/>
   </LinearGradientBrush>
+  <LinearGradientBrush x:Key="DiscoverHeroScrimBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+    <GradientStop Color="#30FFFFFF" Offset="0"/>
+    <GradientStop Color="#90F5F5F7" Offset="0.45"/>
+    <GradientStop Color="#F0F5F5F7" Offset="0.82"/>
+    <GradientStop Color="#FFF5F5F7" Offset="1"/>
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="DiscoverHeroSideScrimBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+    <GradientStop Color="#D0F5F5F7" Offset="0"/>
+    <GradientStop Color="#00F5F5F7" Offset="0.55"/>
+    <GradientStop Color="#00F5F5F7" Offset="1"/>
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="DiscoverHeroPromoFadeBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+    <GradientStop Color="#00FFFFFF" Offset="0"/>
+    <GradientStop Color="#00FFFFFF" Offset="0.22"/>
+    <GradientStop Color="#66FFFFFF" Offset="0.42"/>
+    <GradientStop Color="#B3FFFFFF" Offset="0.62"/>
+    <GradientStop Color="#E6FFFFFF" Offset="1"/>
+  </LinearGradientBrush>
   <LinearGradientBrush x:Key="PlayerChromeCoverFadeBrush" StartPoint="0%,0%" EndPoint="0%,100%">
     <GradientStop Color="#00000000" Offset="0"/>
     <GradientStop Color="#B0101014" Offset="0.45"/>

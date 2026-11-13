@@ -66,19 +66,15 @@
                   VerticalAlignment="Center"
                   HorizontalAlignment="Left"
                   ClipToBounds="True">
-            <Viewbox Width="10"
-                     Height="10"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Center">
-              <Path x:Name="CheckMark"
-                    Data="M2.5,8 L6,11.5 L13.5,4"
-                    Stroke="{DynamicResource AccentForegroundBrush}"
-                    StrokeThickness="1.8"
-                    StrokeLineCap="Round"
-                    StrokeJoin="Round"
-                    Stretch="Uniform"
-                    IsVisible="False"/>
-            </Viewbox>
+            <TextBlock x:Name="CheckMark"
+                       Text="{StaticResource IconGlyphCheckMark}"
+                       FontFamily="{DynamicResource IconFontFamily}"
+                       FontSize="11"
+                       Foreground="{DynamicResource AccentForegroundBrush}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       IsVisible="False"/>
           </Border>
           <ContentPresenter Grid.Column="2"
                             Content="{TemplateBinding Content}"
@@ -95,7 +91,7 @@
       <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
       <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
     </Style>
-    <Style Selector="^:checked /template/ Path#CheckMark">
+    <Style Selector="^:checked /template/ TextBlock#CheckMark">
       <Setter Property="IsVisible" Value="True"/>
     </Style>
   </ControlTheme>
@@ -121,19 +117,15 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 ClipToBounds="True">
-          <Viewbox Width="10"
-                   Height="10"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center">
-            <Path x:Name="CheckMark"
-                  Data="M2.5,8 L6,11.5 L13.5,4"
-                  Stroke="{DynamicResource AccentForegroundBrush}"
-                  StrokeThickness="1.8"
-                  StrokeLineCap="Round"
-                  StrokeJoin="Round"
-                  Stretch="Uniform"
-                  IsVisible="False"/>
-          </Viewbox>
+          <TextBlock x:Name="CheckMark"
+                     Text="{StaticResource IconGlyphCheckMark}"
+                     FontFamily="{DynamicResource IconFontFamily}"
+                     FontSize="11"
+                     Foreground="{DynamicResource AccentForegroundBrush}"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     TextAlignment="Center"
+                     IsVisible="False"/>
         </Border>
       </ControlTemplate>
     </Setter>
@@ -141,12 +133,12 @@
       <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
       <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
     </Style>
-    <Style Selector="^:checked /template/ Path#CheckMark">
+    <Style Selector="^:checked /template/ TextBlock#CheckMark">
       <Setter Property="IsVisible" Value="True"/>
     </Style>
   </ControlTheme>
 
-  <!-- 紧凑开关：40×22；PART_SwitchKnob 宽度=滑块行程（框架 checked 时 Left=该宽度） -->
+  <!-- 紧凑开关：40×22。Avalonia 在 checked 时对 PART_MovingKnobs 设 Canvas.Left = PART_SwitchKnob.Width，故行程容器必须是 Canvas。 -->
   <ControlTheme x:Key="MusicVaultSwitchTheme" TargetType="ToggleSwitch">
     <Setter Property="Width" Value="40"/>
     <Setter Property="Height" Value="22"/>
@@ -156,7 +148,7 @@
     <Setter Property="OnContent" Value=""/>
     <Setter Property="OffContent" Value=""/>
     <Setter Property="Cursor" Value="Hand"/>
-    <Setter Property="ClipToBounds" Value="True"/>
+    <Setter Property="ClipToBounds" Value="False"/>
     <Setter Property="KnobTransitions">
       <Transitions>
         <DoubleTransition Property="Canvas.Left" Duration="0:0:0.15" Easing="CubicEaseOut"/>
@@ -166,7 +158,7 @@
       <ControlTemplate TargetType="ToggleSwitch">
         <Panel Width="40"
                Height="22"
-               ClipToBounds="True"
+               ClipToBounds="False"
                Background="Transparent"
                VerticalAlignment="Center">
           <ContentPresenter x:Name="PART_OnContentPresenter"
@@ -183,18 +175,21 @@
                   CornerRadius="11"
                   Background="{DynamicResource BorderSecondaryBrush}"
                   BorderThickness="0"/>
-          <Panel x:Name="PART_SwitchKnob"
-                 Width="20"
-                 Height="22"
-                 Margin="2,0,18,0"
-                 VerticalAlignment="Center"
-                 HorizontalAlignment="Left"
-                 Background="Transparent"
-                 ClipToBounds="True">
+          <!-- Width = 行程（40 - 2*2 inset - 18 knob）；MovingKnobs 滑到 Left=Width 时贴右 -->
+          <Canvas x:Name="PART_SwitchKnob"
+                  Width="18"
+                  Height="18"
+                  Margin="2,2,0,0"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  ClipToBounds="False"
+                  Background="Transparent">
             <Panel x:Name="PART_MovingKnobs"
                    Width="18"
                    Height="18"
-                   VerticalAlignment="Center">
+                   Canvas.Left="0"
+                   Canvas.Top="0"
+                   Background="Transparent">
               <Ellipse x:Name="SwitchKnobOn"
                        Width="18"
                        Height="18"
@@ -205,7 +200,7 @@
                        Height="18"
                        Fill="{DynamicResource TextPrimaryBrush}"/>
             </Panel>
-          </Panel>
+          </Canvas>
         </Panel>
       </ControlTemplate>
     </Setter>

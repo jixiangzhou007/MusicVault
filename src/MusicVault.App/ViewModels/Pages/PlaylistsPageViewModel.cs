@@ -56,6 +56,7 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
     public string ImportPlatformButton => _l10n.Get("Playlists.ImportPlatform");
     public string CreatePlaylistButton => _l10n.Get("Nav.NewPlaylist");
     public string PreviewChartPlaylistButton => _l10n.Get("Playlists.PreviewChartPlaylist");
+    public string PreviewOnlinePlaylistButton => _l10n.Get("Playlists.PreviewOnlinePlaylist");
     public string NewPlaylistWatermark => _l10n.Get("Playlists.NewPlaylist.Watermark");
     public string BrowseColPlaylist => _l10n.Get("Playlists.Browse.Col.Playlist");
     public string BrowseColKind => _l10n.Get("Playlists.Browse.Col.Kind");
@@ -67,6 +68,7 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
     public string DeletePlaylistButton => _l10n.Get("Playlists.DeletePlaylist");
     public string MergePlaylistsButton => _l10n.Get("Playlists.MergePlaylists");
     public string MergePlaylistsToolTip => _l10n.Get("Playlists.MergePlaylists.ToolTip");
+    public string MoreActionsToolTip => _l10n.Get("Library.MoreActions");
     public string BrowseColMeta => BrowseColKind;
     public string BrowseIntroText => IsPlaylistsCategory
         ? _l10n.Get("Playlists.Browse.Intro.All")
@@ -162,7 +164,12 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
     public string BatchDownloadButton => _l10n.Get("Playlists.BatchDownload");
     public string RetryFailedButton => _l10n.Get("Playlists.RetryFailed");
     public string AddToPlaylistToolTip => _l10n.Get("Discover.ToolTip.AddToPlaylist");
-    public string DownloadToolTip => _l10n.Get("Discover.ToolTip.Download");
+    public bool IsOnlineDownloadAvailable =>
+        OnlineDownloadAvailability.IsAvailable(GoMusicApiClient.IsConfigured);
+    public string DownloadToolTip => IsOnlineDownloadAvailable
+        ? _l10n.Get("Discover.ToolTip.Download")
+        : OnlineTrackRowLabels.DownloadDisabledHint;
+    public string BatchDownloadToolTip => DownloadToolTip;
     public string EmptyTracksTitle => _l10n.Get("Playlists.Empty.Tracks.Title");
     public string EmptyTracksDescription => _l10n.Get("Playlists.Empty.Tracks.Desc");
 
@@ -241,6 +248,19 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
     public bool ShowImportM3uPanel => IsLocalPlaylistDetail;
 
     public bool ShowExportM3uAction => IsLocalPlaylistDetail;
+
+    public bool ShowPlaylistDetailOverflow =>
+        CanEditSelectedPlaylist
+        || CanDeleteSelectedPlaylist
+        || ShowExportM3uAction
+        || IsChartDetail
+        || HasMoreOnlineDetailTracks
+        || HasMorePlaylistLocalTracks
+        || HasPendingOnlineTracks
+        || IsLocalPlaylistDetail;
+
+    public bool ShowListenHistoryOverflow =>
+        ShowListenHistoryBulkActions || HasMoreOnlineDetailTracks;
 
     public bool ShowPlaylistTracksList =>
         ShowingDetail && !IsChartDetail && PlaylistTracks.Count > 0;
@@ -364,6 +384,18 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
             });
         if (_onlinePlaylistTracks != null)
             _onlinePlaylistTracks.Changed += (_, args) => Dispatcher.UIThread.Post(() => _ = RefreshSelectedPlaylistOnlineTracksAsync(args.PlaylistId));
+        if (_player != null)
+            _player.OnlinePreviewStarted += (_, online) =>
+                Dispatcher.UIThread.Post(() => BindOnlinePreviewQueue(online));
+    }
+
+    private void BindOnlinePreviewQueue(OnlineTrack online)
+    {
+        var rows = _onlineDetailPager.TotalCount > 0 ? _onlineDetailPager.All : DetailOnlineTracks;
+        var models = rows.Select(t => t.Model).ToList();
+        if (OnlinePreviewQueue.IndexOf(models, online) < 0)
+            return;
+        _player?.SetOnlinePreviewQueue(models, online);
     }
 
     public void RefreshLocalizedStrings()
@@ -378,6 +410,7 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(CreatePlaylistButton));
         OnPropertyChanged(nameof(BackToBrowseLabel));
         OnPropertyChanged(nameof(PreviewChartPlaylistButton));
+        OnPropertyChanged(nameof(PreviewOnlinePlaylistButton));
         OnPropertyChanged(nameof(NewPlaylistWatermark));
         OnPropertyChanged(nameof(BrowseColPlaylist));
         OnPropertyChanged(nameof(BrowseColKind));
@@ -389,6 +422,7 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(DeletePlaylistButton));
         OnPropertyChanged(nameof(MergePlaylistsButton));
         OnPropertyChanged(nameof(MergePlaylistsToolTip));
+        OnPropertyChanged(nameof(MoreActionsToolTip));
         OnPropertyChanged(nameof(BrowseColMeta));
         OnPropertyChanged(nameof(BrowseIntroText));
         OnPropertyChanged(nameof(PlaylistsBrowsePageSubtitle));
@@ -419,7 +453,9 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(BatchDownloadButton));
         OnPropertyChanged(nameof(RetryFailedButton));
         OnPropertyChanged(nameof(AddToPlaylistToolTip));
+        OnPropertyChanged(nameof(IsOnlineDownloadAvailable));
         OnPropertyChanged(nameof(DownloadToolTip));
+        OnPropertyChanged(nameof(BatchDownloadToolTip));
         OnPropertyChanged(nameof(EmptyTracksTitle));
         OnPropertyChanged(nameof(EmptyTracksDescription));
         OnPropertyChanged(nameof(PlaylistTracksSummary));
@@ -627,6 +663,13 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(CanDeleteSelectedPlaylist));
         OnPropertyChanged(nameof(ShowImportM3uPanel));
         OnPropertyChanged(nameof(ShowExportM3uAction));
+        NotifyOverflowChrome();
+    }
+
+    private void NotifyOverflowChrome()
+    {
+        OnPropertyChanged(nameof(ShowPlaylistDetailOverflow));
+        OnPropertyChanged(nameof(ShowListenHistoryOverflow));
     }
 
     private void NotifyDetailTracksUi()
@@ -647,6 +690,7 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(ShowStandardChartTracksList));
         NotifyListenHistoryBulkUi();
         NotifyOnlineDetailPagingUi();
+        NotifyOverflowChrome();
     }
 
     private void NotifyListenHistoryBulkUi()
@@ -658,6 +702,7 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         ClearSelectedListenHistoryCacheCommand.NotifyCanExecuteChanged();
         RemoveSelectedFromListenHistoryCommand.NotifyCanExecuteChanged();
         UpdateListenHistorySelectAllState();
+        NotifyOverflowChrome();
     }
 
     private void UpdateListenHistorySelectAllState()
@@ -698,6 +743,7 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(OnlineDetailSummaryText));
         OnPropertyChanged(nameof(ShowOnlineDetailSummary));
         OnPropertyChanged(nameof(PlaylistTracksSummary));
+        NotifyOverflowChrome();
     }
 
     partial void OnIsLoadingMoreOnlineTracksChanged(bool value)
@@ -935,6 +981,7 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(HasMorePlaylistLocalTracks));
         OnPropertyChanged(nameof(ActivePlaylistLocalTracks));
         OnPropertyChanged(nameof(PlaylistTracksSummary));
+        NotifyOverflowChrome();
     }
 
     [RelayCommand]
@@ -1505,9 +1552,8 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
                 DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
             var (pid, tracks) = await _services.PlaylistService.ImportPlatformPlaylistAsync(
                 ImportLink, playlistName);
-            PendingOnlineTracks.Clear();
-            foreach (var t in tracks)
-                PendingOnlineTracks.Add(new OnlineTrackViewModel(t, _services, _player, appModal: _appModal, onlineFavorites: _onlineFavorites));
+            if (_onlinePlaylistTracks != null && tracks.Count > 0)
+                await _onlinePlaylistTracks.AddManyAsync(pid, tracks).ConfigureAwait(true);
             await InitializeAsync();
             var item = FindPlaylistById(pid);
             if (item != null)
@@ -1566,6 +1612,17 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         NotifyOnlineDetailPagingUi();
     }
 
+    public void NotifyOnlineDownloadAvailability()
+    {
+        OnPropertyChanged(nameof(IsOnlineDownloadAvailable));
+        OnPropertyChanged(nameof(DownloadToolTip));
+        OnPropertyChanged(nameof(BatchDownloadToolTip));
+        BatchDownloadPendingCommand.NotifyCanExecuteChanged();
+        BatchDownloadChartCommand.NotifyCanExecuteChanged();
+        foreach (var row in PendingOnlineTracks.Concat(ChartTracks))
+            row.NotifyOnlineDownloadAvailability();
+    }
+
     private string BuildOnlineDetailSummaryText()
     {
         var total = _onlineDetailPager.TotalCount;
@@ -1581,9 +1638,13 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         return string.Join(" · ", parts);
     }
 
-    [RelayCommand]
+    private bool CanBatchDownloadOnline() => IsOnlineDownloadAvailable;
+
+    [RelayCommand(CanExecute = nameof(CanBatchDownloadOnline))]
     private async Task BatchDownloadPendingAsync()
     {
+        if (!CanBatchDownloadOnline())
+            return;
         var models = _onlineDetailPager.TotalCount > 0
             ? _onlineDetailPager.All.Select(t => t.Model).ToList()
             : PendingOnlineTracks.Select(t => t.Model).ToList();
@@ -1593,6 +1654,21 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         MessageService.Instance.ShowSuccess(string.Format(
             _l10n.Get("Discover.Status.EnqueueSuccessWithSkip"), result.Enqueued, result.Skipped));
         await Task.CompletedTask;
+    }
+
+    [RelayCommand]
+    private async Task PreviewPendingOnlinePlaylistAsync()
+    {
+        var pool = _onlineDetailPager.TotalCount > 0 ? _onlineDetailPager.All : PendingOnlineTracks;
+        if (pool.Count == 0 || _player == null)
+            return;
+
+        var target = pool[0];
+        var platform = target.Model.Platform;
+        if (!await EnsureChartPreviewAuthAsync(platform).ConfigureAwait(true))
+            return;
+
+        await target.PreviewCommand.ExecuteAsync(null).ConfigureAwait(true);
     }
 
     [RelayCommand]
@@ -1690,9 +1766,11 @@ public partial class PlaylistsPageViewModel : PageViewModelBase
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanBatchDownloadOnline))]
     private async Task BatchDownloadChartAsync()
     {
+        if (!CanBatchDownloadOnline())
+            return;
         var pool = _onlineDetailPager.TotalCount > 0 ? _onlineDetailPager.All : ChartTracks;
         if (pool.Count == 0) return;
         var enqueued = 0;

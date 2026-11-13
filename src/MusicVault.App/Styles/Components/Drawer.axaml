@@ -48,4 +48,77 @@
     <Setter Property="IsHitTestVisible" Value="True"/>
   </Style>
 
+  <!-- 平台登录抽屉：单行紧凑 — 上圆角图标 + 下短标签 -->
+  <Style Selector="Button.login-platform-chip">
+    <Setter Property="Padding" Value="6,4"/>
+    <Setter Property="MinWidth" Value="48"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="Button.login-platform-chip:pointerover">
+    <Setter Property="Background" Value="{DynamicResource OverlayHoverSubtleBrush}"/>
+  </Style>
+  <Style Selector="Button.login-platform-chip.selected">
+    <Setter Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+  </Style>
+  <Style Selector="Button.login-platform-chip.selected Border.login-platform-icon-clip">
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="2"/>
+  </Style>
+  <Style Selector="Button.login-platform-chip.unsupported">
+    <Setter Property="Opacity" Value="0.5"/>
+  </Style>
+  <Style Selector="Button.login-platform-chip:disabled">
+    <Setter Property="Opacity" Value="0.5"/>
+  </Style>
+  <Style Selector="Button.login-platform-chip /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Border.login-platform-icon-clip">
+    <Setter Property="Width" Value="32"/>
+    <Setter Property="Height" Value="32"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Background" Value="{DynamicResource ControlFillSecondaryBrush}"/>
+  </Style>
+  <Style Selector="Image.login-platform-app-icon">
+    <Setter Property="Width" Value="32"/>
+    <Setter Property="Height" Value="32"/>
+  </Style>
+  <Style Selector="TextBlock.login-platform-chip-label">
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+  </Style>
+  <Style Selector="Button.login-platform-chip.selected TextBlock.login-platform-chip-label">
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style Selector="Border.login-platform-logged-badge">
+    <Setter Property="Width" Value="12"/>
+    <Setter Property="Height" Value="12"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+  </Style>
+  <Style Selector="Border.login-platform-logged-badge > TextBlock">
+    <Setter Property="FontSize" Value="8"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+  </Style>
+  <Style Selector="Border.login-qr-card">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusOverlay}"/>
+    <Setter Property="Padding" Value="12"/>
+  </Style>
+
 </Styles>

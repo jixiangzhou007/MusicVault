@@ -55,6 +55,10 @@ public static class MusicApiBootstrap
 
         ApplyGathererSettings(settings, registry);
         MyFreeMp3QuarkConfig.Apply(settings.MyFreeMp3QuarkCookies);
+        BundledMusicApiUpdateService.ConfiguredGithubRepo =
+            string.IsNullOrWhiteSpace(settings.BundledMusicApiUpdateGithubRepo)
+                ? null
+                : settings.BundledMusicApiUpdateGithubRepo.Trim();
         return qualityMigrationChanged || defaultsChanged;
     }
 

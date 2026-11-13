@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using MusicVault.App.Icons;
 
 namespace MusicVault.App.Controls;
 
@@ -69,8 +70,8 @@ public partial class StepItemView : UserControl
 
         IconGlyph.Text = Status switch
         {
-            StepStatus.Finish => "\uE73E",
-            StepStatus.Error => "\uE783",
+            StepStatus.Finish => IconGlyphs.CheckMark,
+            StepStatus.Error => IconGlyphs.Error,
             _ => StepNumber.ToString(),
         };
 

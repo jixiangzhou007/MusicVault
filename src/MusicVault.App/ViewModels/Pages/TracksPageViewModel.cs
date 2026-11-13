@@ -5,6 +5,7 @@ using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MusicVault.App.Icons;
 using MusicVault.App.Services;
 using MusicVault.App.Localization;
 using MusicVault.App.ViewModels;
@@ -34,7 +35,9 @@ public partial class TracksPageViewModel : PageViewModelBase
     private CancellationTokenSource? _tracksLoadCts;
     private CancellationTokenSource? _postDownloadRefreshCts;
     private CancellationTokenSource? _trackSearchDebounceCts;
-    private (long? LibraryId, bool FavoritesOnly, string? SearchQuery)? _loadedScope;
+    private (long? LibraryId, bool FavoritesOnly, string? SearchQuery, bool MissingCover, bool MissingLyrics)? _loadedScope;
+    private bool _applyingMissingFilters;
+    private CancellationTokenSource? _sourceFilterCts;
 
     public VirtualTrackCollection Tracks { get; }
 
@@ -55,6 +58,10 @@ public partial class TracksPageViewModel : PageViewModelBase
     [ObservableProperty] private LibraryListItemViewModel? _selectedLibraryItem;
     [ObservableProperty] private bool _isLibraryPaneOpen = true;
     [ObservableProperty] private bool _favoritesOnly;
+    /// <summary>会话内「缺封面」筛选，离开页面不保留。</summary>
+    [ObservableProperty] private bool _missingCoverOnly;
+    /// <summary>会话内「缺歌词」筛选，离开页面不保留。</summary>
+    [ObservableProperty] private bool _missingLyricsOnly;
     [ObservableProperty] private bool _isScanning;
     [ObservableProperty] private double _scanProgress;
     [ObservableProperty] private string _statusMessage = string.Empty;
@@ -89,6 +96,11 @@ public partial class TracksPageViewModel : PageViewModelBase
     public string OrganizeOpenToolsLabel => _l10n.Get("Library.OrganizeOpenTools");
     public string FavoritesLabel => _l10n.Get("Library.Favorites");
     public string FavoritesFilterToolTip => _l10n.Get("Library.FavoritesFilterToolTip");
+    public string MissingCoverLabel => _l10n.Get("Library.Tracks.MissingCover");
+    public string MissingLyricsLabel => _l10n.Get("Library.Tracks.MissingLyrics");
+    public string MissingCoverFilterToolTip => _l10n.Get("Library.Tracks.MissingCoverToolTip");
+    public string MissingLyricsFilterToolTip => _l10n.Get("Library.Tracks.MissingLyricsToolTip");
+    private bool HasMissingMetadataFilter => MissingCoverOnly || MissingLyricsOnly;
     public string ReconnectNasLabel => _l10n.Get("Nas.Reconnect");
     public string ReconnectNasToolTip => _l10n.Get("Nas.Reconnect.ToolTip");
     public string DownloadNasToLibraryLabel => _l10n.Get("Nas.DownloadToLibrary");
@@ -120,6 +132,7 @@ public partial class TracksPageViewModel : PageViewModelBase
     private enum TracksEmptyKind
     {
         Search,
+        MissingMetadata,
         Favorites,
         SingleLibrary,
         NoSources,
@@ -131,6 +144,8 @@ public partial class TracksPageViewModel : PageViewModelBase
         // 搜索优先于收藏过滤，避免「收藏+搜索无匹配」误显示「暂无收藏」
         if (Tracks.IsSearchMode)
             return TracksEmptyKind.Search;
+        if (HasMissingMetadataFilter)
+            return TracksEmptyKind.MissingMetadata;
         if (FavoritesOnly)
             return TracksEmptyKind.Favorites;
         if (SelectedLibraryItem is { IsAllLibraries: false })
@@ -143,6 +158,7 @@ public partial class TracksPageViewModel : PageViewModelBase
     public string TracksEmptyTitle => ResolveTracksEmptyKind() switch
     {
         TracksEmptyKind.Search => _l10n.Get("Library.Empty.SearchTitle"),
+        TracksEmptyKind.MissingMetadata => _l10n.Get("Library.Empty.MissingMetadataTitle"),
         TracksEmptyKind.Favorites => _l10n.Get("Library.Empty.FavoritesTitle"),
         TracksEmptyKind.NoSources => _l10n.Get("Library.Empty.NoSourcesTitle"),
         _ => _l10n.Get("Library.Empty.DefaultTitle")
@@ -151,6 +167,7 @@ public partial class TracksPageViewModel : PageViewModelBase
     public string TracksEmptyDescription => ResolveTracksEmptyKind() switch
     {
         TracksEmptyKind.Search => _l10n.Get("Library.Empty.SearchDesc"),
+        TracksEmptyKind.MissingMetadata => _l10n.Get("Library.Empty.MissingMetadataDesc"),
         TracksEmptyKind.Favorites => _l10n.Get("Library.Empty.FavoritesDesc"),
         TracksEmptyKind.SingleLibrary => _l10n.Get("Library.Empty.LibraryDesc"),
         TracksEmptyKind.NoSources => _l10n.Get("Library.Empty.NoSourcesDesc"),
@@ -160,6 +177,7 @@ public partial class TracksPageViewModel : PageViewModelBase
     public string TracksEmptyActionText => ResolveTracksEmptyKind() switch
     {
         TracksEmptyKind.Search => _l10n.Get("Library.Empty.Action.ClearSearch"),
+        TracksEmptyKind.MissingMetadata => _l10n.Get("Library.Empty.Action.ClearMissingFilters"),
         TracksEmptyKind.Favorites => _l10n.Get("Library.Empty.Action.ShowAll"),
         TracksEmptyKind.SingleLibrary => _l10n.Get("Library.Empty.Action.ScanLibrary"),
         TracksEmptyKind.NoSources => _l10n.Get("Library.Empty.Action.AddLibrary"),
@@ -198,7 +216,7 @@ public partial class TracksPageViewModel : PageViewModelBase
     public bool ShowRemoveTrackAlternateConfirm =>
         PendingRemoveTrack != null && RemoveTrackConfirmText.CanDeleteFile(PendingRemoveTrack);
 
-    public string LibraryPaneToggleGlyph => IsLibraryPaneOpen ? "\uE76B" : "\uE76C";
+    public string LibraryPaneToggleGlyph => IsLibraryPaneOpen ? IconGlyphs.ChevronLeft : IconGlyphs.ChevronRight;
     public string LibraryPaneToggleToolTip => IsLibraryPaneOpen
         ? _l10n.Get("Library.PaneCollapse")
         : _l10n.Get("Library.PaneExpand");
@@ -217,6 +235,49 @@ public partial class TracksPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(TrackSearchWatermark));
         InvalidateLoadedScope();
         _ = ApplySourceFilterAsync();
+        if (ShowFolderBrowser)
+            _ = RefreshFolderBrowserAsync();
+    }
+
+    partial void OnMissingCoverOnlyChanged(bool value)
+    {
+        if (_applyingMissingFilters)
+            return;
+        ApplyMissingMetadataFilters();
+    }
+
+    partial void OnMissingLyricsOnlyChanged(bool value)
+    {
+        if (_applyingMissingFilters)
+            return;
+        ApplyMissingMetadataFilters();
+    }
+
+    /// <summary>把缺封面 / 缺歌词开关写入虚拟列表，并重载歌曲列表。文件夹模式再在本地过滤。</summary>
+    private void ApplyMissingMetadataFilters()
+    {
+        Tracks.SetMissingFilters(MissingCoverOnly, MissingLyricsOnly);
+        NotifyTracksListSummary();
+        OnPropertyChanged(nameof(FolderEmptyText));
+        OnPropertyChanged(nameof(FolderEmptyActionText));
+        _ = ApplySourceFilterAsync();
+        if (ShowFolderBrowser)
+            ApplyFolderSplitFromCache();
+    }
+
+    private void ClearMissingMetadataFilters()
+    {
+        if (!MissingCoverOnly && !MissingLyricsOnly)
+        {
+            Tracks.SetMissingFilters(false, false);
+            return;
+        }
+
+        _applyingMissingFilters = true;
+        MissingCoverOnly = false;
+        MissingLyricsOnly = false;
+        _applyingMissingFilters = false;
+        ApplyMissingMetadataFilters();
     }
 
     partial void OnSelectedLibraryItemChanged(LibraryListItemViewModel? value)
@@ -228,6 +289,9 @@ public partial class TracksPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(DeleteLibraryPopconfirmDescription));
         OnPropertyChanged(nameof(CanReconnectSelectedNas));
         OnPropertyChanged(nameof(CanDownloadSelectedNasLibrary));
+        OnPropertyChanged(nameof(FolderPickActionText));
+        if (ShowFolderBrowser)
+            _ = RefreshFolderBrowserAsync();
     }
 
     partial void OnPendingRemoveTrackChanged(TrackItemViewModel? value)
@@ -283,24 +347,10 @@ public partial class TracksPageViewModel : PageViewModelBase
 
     private void ApplyNasPlaybackCacheFlags()
     {
-        var cachedLabel = _l10n.Get("Nas.PlaybackCache.Cached");
-        var cachedToolTip = _l10n.Get("Nas.PlaybackCache.CachedToolTip");
-        var emptyToolTip = string.Empty;
-
         foreach (var item in Tracks.Items)
-        {
-            if (!IsNasTrack(item.Track))
-            {
-                item.SetNasPlaybackCacheState(false, string.Empty, emptyToolTip);
-                continue;
-            }
-
-            var isCached = _services.NasTrackCache.IsCached(item.Track);
-            item.SetNasPlaybackCacheState(
-                isCached,
-                isCached ? cachedLabel : string.Empty,
-                isCached ? cachedToolTip : emptyToolTip);
-        }
+            ApplyNasPlaybackCacheFlag(item);
+        foreach (var item in FolderDirectTracks)
+            ApplyNasPlaybackCacheFlag(item);
     }
 
     private void RequestOpenTransfersPage() => OpenTransfersPageRequested?.Invoke(this, EventArgs.Empty);
@@ -335,6 +385,10 @@ public partial class TracksPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(OrganizeOpenToolsLabel));
         OnPropertyChanged(nameof(FavoritesLabel));
         OnPropertyChanged(nameof(FavoritesFilterToolTip));
+        OnPropertyChanged(nameof(MissingCoverLabel));
+        OnPropertyChanged(nameof(MissingLyricsLabel));
+        OnPropertyChanged(nameof(MissingCoverFilterToolTip));
+        OnPropertyChanged(nameof(MissingLyricsFilterToolTip));
         OnPropertyChanged(nameof(DeletePopconfirmText));
         OnPropertyChanged(nameof(RemoveTrackDeleteWithFileText));
         OnPropertyChanged(nameof(LibraryPaneToggleToolTip));
@@ -356,6 +410,9 @@ public partial class TracksPageViewModel : PageViewModelBase
         ApplyLibraryDisabledLabels();
         ApplyNasPlaybackCacheFlags();
         RefreshLibraryListItems();
+        NotifyFolderLocalizedText();
+        if (ShowFolderBrowser && !IsFolderBrowserLoading)
+            ApplyFolderSplitFromCache();
     }
 
     private void ApplyLibraryDisabledLabels()
@@ -433,7 +490,10 @@ public partial class TracksPageViewModel : PageViewModelBase
             return string.Format(_l10n.Get("Library.Summary.CountOnly"), Tracks.TotalCount, pagingHint);
 
         if (item.IsAllLibraries)
-            return string.Format(_l10n.Get("Library.Summary.AllTracks"), item.TrackCount, item.SizeGbText, pagingHint);
+        {
+            var count = HasMissingMetadataFilter ? Tracks.TotalCount : item.TrackCount;
+            return string.Format(_l10n.Get("Library.Summary.AllTracks"), count, item.SizeGbText, pagingHint);
+        }
 
         return string.Format(_l10n.Get("Library.Summary.Library"), item.DisplayName, Tracks.TotalCount, item.SizeGbText, pagingHint);
     }
@@ -452,8 +512,8 @@ public partial class TracksPageViewModel : PageViewModelBase
 
     private void InvalidateLoadedScope() => _loadedScope = null;
 
-    private (long? LibraryId, bool FavoritesOnly, string? SearchQuery) CurrentLoadScope() =>
-        (SelectedLibraryItem?.LibraryId, FavoritesOnly, Tracks.SearchQuery);
+    private (long? LibraryId, bool FavoritesOnly, string? SearchQuery, bool MissingCover, bool MissingLyrics) CurrentLoadScope() =>
+        (SelectedLibraryItem?.LibraryId, FavoritesOnly, Tracks.SearchQuery, MissingCoverOnly, MissingLyricsOnly);
 
     [RelayCommand]
     private void ApplyTrackSearch()
@@ -479,6 +539,9 @@ public partial class TracksPageViewModel : PageViewModelBase
         {
             case TracksEmptyKind.Search:
                 ClearTrackSearch();
+                break;
+            case TracksEmptyKind.MissingMetadata:
+                ClearMissingMetadataFilters();
                 break;
             case TracksEmptyKind.Favorites:
                 FavoritesOnly = false;
@@ -554,6 +617,7 @@ public partial class TracksPageViewModel : PageViewModelBase
 
     private async Task LoadTracksForSelectionAsync(CancellationToken ct)
     {
+        Tracks.SetMissingFilters(MissingCoverOnly, MissingLyricsOnly);
         if (FavoritesOnly)
         {
             var playlistId = await _services.Favorites.GetPlaylistIdAsync();
@@ -595,22 +659,37 @@ public partial class TracksPageViewModel : PageViewModelBase
 
     private async Task ApplySourceFilterAsync()
     {
+        _sourceFilterCts?.Cancel();
+        var cts = new CancellationTokenSource();
+        _sourceFilterCts = cts;
+        var ct = cts.Token;
+
         _loadedScope = null;
         Tracks.SetSearchQuery(TrackSearchText);
+        Tracks.SetMissingFilters(MissingCoverOnly, MissingLyricsOnly);
         Tracks.ClearForReload();
-        if (FavoritesOnly)
+        try
         {
-            var playlistId = await _services.Favorites.GetPlaylistIdAsync();
-            Tracks.SetPlaylistFilter(playlistId);
-        }
-        else
-            Tracks.SetLibraryFilter(SelectedLibraryItem?.LibraryId, SelectedLibraryItem?.RootPath);
+            if (FavoritesOnly)
+            {
+                var playlistId = await _services.Favorites.GetPlaylistIdAsync();
+                if (ct.IsCancellationRequested) return;
+                Tracks.SetPlaylistFilter(playlistId);
+            }
+            else
+                Tracks.SetLibraryFilter(SelectedLibraryItem?.LibraryId, SelectedLibraryItem?.RootPath);
 
-        await Tracks.ReloadAsync();
-        ApplyFavoriteFlags();
-        _loadedScope = CurrentLoadScope();
-        NotifyTracksListSummary();
-        OnPropertyChanged(nameof(Tracks));
+            await Tracks.ReloadAsync(ct);
+            if (ct.IsCancellationRequested) return;
+            ApplyFavoriteFlags();
+            ApplyNasPlaybackCacheFlags();
+            _loadedScope = CurrentLoadScope();
+            NotifyTracksListSummary();
+            OnPropertyChanged(nameof(Tracks));
+        }
+        catch (OperationCanceledException)
+        {
+        }
     }
 
     public async Task ReloadAfterMetadataSaveAsync()
@@ -816,6 +895,7 @@ public partial class TracksPageViewModel : PageViewModelBase
 
     public async Task RefreshLibraryPanelAsync(long? focusLibraryId = null)
     {
+        InvalidateFolderTracksCache();
         await RefreshFavoriteFlagsAsync();
         await ReloadPlaylistsMenuAsync();
         await RepairOrphanTracksUnderDownloadRootAsync();
@@ -830,6 +910,8 @@ public partial class TracksPageViewModel : PageViewModelBase
         _tracksLoadCts?.Cancel();
         InvalidateLoadedScope();
         await ApplySourceFilterAsync();
+        if (ShowFolderBrowser)
+            await RefreshFolderBrowserAsync();
     }
 
     private async Task<long?> EnsureDownloadedTrackLibraryAsync(DownloadItem item)
@@ -890,6 +972,8 @@ public partial class TracksPageViewModel : PageViewModelBase
     private void ApplyFavoriteFlags()
     {
         foreach (var item in Tracks.Items)
+            item.IsFavorite = _favoriteTrackIds.Contains(item.Track.Id);
+        foreach (var item in FolderDirectTracks)
             item.IsFavorite = _favoriteTrackIds.Contains(item.Track.Id);
     }
 
@@ -1291,24 +1375,32 @@ public partial class TracksPageViewModel : PageViewModelBase
             var playlistId = await _services.Favorites.GetPlaylistIdAsync().ConfigureAwait(true);
             if (Tracks.IsSearchMode)
                 return await _services.Tracks.SearchScopedAsync(
-                    Tracks.SearchQuery!, null, playlistId, 0, take).ConfigureAwait(true);
+                    Tracks.SearchQuery!, null, playlistId, 0, take,
+                    missingCover: MissingCoverOnly, missingLyrics: MissingLyricsOnly).ConfigureAwait(true);
 
-            return await _services.Tracks.GetByPlaylistAsync(playlistId, 0, take).ConfigureAwait(true);
+            return await _services.Tracks.GetByPlaylistAsync(
+                playlistId, 0, take,
+                missingCover: MissingCoverOnly, missingLyrics: MissingLyricsOnly).ConfigureAwait(true);
         }
 
         var libraryId = SelectedLibraryItem?.LibraryId;
         var root = SelectedLibraryItem?.RootPath;
         if (Tracks.IsSearchMode)
             return await _services.Tracks.SearchScopedAsync(
-                Tracks.SearchQuery!, libraryId, null, 0, take).ConfigureAwait(true);
+                Tracks.SearchQuery!, libraryId, null, 0, take,
+                missingCover: MissingCoverOnly, missingLyrics: MissingLyricsOnly).ConfigureAwait(true);
 
         if (libraryId.HasValue && !string.IsNullOrWhiteSpace(root)
             && SelectedLibraryItem is { IsAllLibraries: false })
         {
-            return await _services.Tracks.GetByLibraryScopeAsync(libraryId.Value, root, 0, take)
+            return await _services.Tracks.GetByLibraryScopeAsync(
+                    libraryId.Value, root, 0, take,
+                    missingCover: MissingCoverOnly, missingLyrics: MissingLyricsOnly)
                 .ConfigureAwait(true);
         }
 
-        return await _services.Tracks.GetByLibraryAsync(libraryId, 0, take).ConfigureAwait(true);
+        return await _services.Tracks.GetByLibraryAsync(
+            libraryId, 0, take,
+            missingCover: MissingCoverOnly, missingLyrics: MissingLyricsOnly).ConfigureAwait(true);
     }
 }

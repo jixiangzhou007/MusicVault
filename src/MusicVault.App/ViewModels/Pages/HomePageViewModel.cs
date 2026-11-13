@@ -1,10 +1,12 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MusicVault.App.Constants;
 using MusicVault.App.Controls;
 using MusicVault.App.Localization;
+using MusicVault.App.Services;
 using MusicVault.App.ViewModels;
 using MusicVault.App.ViewModels.Player;
 using MusicVault.App.ViewModels.Sidebar;
@@ -31,9 +33,11 @@ public partial class HomePageViewModel : PageViewModelBase
 
     private readonly PlayerBarViewModel _player;
     private readonly AppServices _services;
+    private readonly AppSettingsService _settings;
     private readonly ILocalizationService _l10n;
     private readonly HashSet<long> _favoriteTrackIds = [];
     private readonly ResultsListPager<QueueRowViewModel> _historyPager = new();
+    private bool _hasLibrary;
     public PlayerBarViewModel Player => _player;
     public RightSidebarViewModel Lyrics { get; }
     public ObservableCollection<QueueRowViewModel> QueueRows { get; } = [];
@@ -228,7 +232,13 @@ public partial class HomePageViewModel : PageViewModelBase
     }
 
     public string EmptyTitle => _l10n.Get("Home.Empty.Title");
-    public string EmptyHint => _l10n.Get("Home.Empty.Hint");
+    public string EmptyHint => EmptyPrimaryKind switch
+    {
+        HomeEmptyPrimaryKind.Discover => _l10n.Get("Home.Empty.Hint.Discover"),
+        HomeEmptyPrimaryKind.AddLibrary => _l10n.Get("Home.Empty.Hint.Local"),
+        HomeEmptyPrimaryKind.OpenTracks => _l10n.Get("Home.Empty.Hint.LibraryReady"),
+        _ => _l10n.Get("Home.Empty.Hint.Dual")
+    };
     public string EmptyWorkflowHint => _l10n.Get("Home.Empty.Workflow");
     public string EmptyHintShortcut => _l10n.Get("Home.Empty.Shortcut");
     public string EmptyActionDiscoverText => _l10n.Get("Home.Empty.Action.Discover");
@@ -236,8 +246,21 @@ public partial class HomePageViewModel : PageViewModelBase
     public string EmptyActionLibraryText => _l10n.Get("Home.Empty.Action.Library");
     public string EmptyActionSettingsText => _l10n.Get("Home.Empty.Action.Settings");
     public string EmptyActionAddLibraryText => _l10n.Get("Home.Empty.Action.AddLibrary");
+    public string EmptyActionAddFolderText => _l10n.Get("Home.Empty.Action.AddFolder");
     public string EmptyActionAddLibraryToolTip => _l10n.Get("Home.Empty.Action.AddLibrary.ToolTip");
     public string EmptyActionLibraryListsText => _l10n.Get("Home.Empty.Action.LibraryLists");
+    public HomeEmptyPrimaryKind EmptyPrimaryKind =>
+        HomeEmptyCta.Resolve(_settings.Current.FirstRunOnboardingPath, _hasLibrary);
+    public bool ShowEmptyPrimaryAddLibrary =>
+        EmptyPrimaryKind is HomeEmptyPrimaryKind.AddLibrary or HomeEmptyPrimaryKind.Dual;
+    public bool ShowEmptyPrimaryOpenTracks => EmptyPrimaryKind == HomeEmptyPrimaryKind.OpenTracks;
+    public bool ShowEmptyPrimaryDiscover =>
+        EmptyPrimaryKind is HomeEmptyPrimaryKind.Discover or HomeEmptyPrimaryKind.Dual;
+    public bool ShowEmptySecondaryAddLibrary => !ShowEmptyPrimaryAddLibrary;
+    public bool ShowEmptySecondaryOpenTracks => !ShowEmptyPrimaryOpenTracks;
+    public bool ShowEmptySecondaryDiscover => !ShowEmptyPrimaryDiscover;
+    public bool ShowEmptySecondaryDownloads =>
+        HomeEmptyCta.ShowDownloadsSecondary(HasManageableDownloads);
     public string HistoryEmptyTitle => _l10n.Get("Home.History.Empty.Title");
     public string HistoryEmptyDescription => _l10n.Get("Home.History.Empty.Description");
     public string HistoryLoadMoreText => _l10n.Get("Home.History.LoadMore");
@@ -265,10 +288,12 @@ public partial class HomePageViewModel : PageViewModelBase
         PlayerBarViewModel player,
         RightSidebarViewModel lyrics,
         AppServices services,
+        AppSettingsService settings,
         ILocalizationService l10n)
     {
         _player = player;
         _services = services;
+        _settings = settings;
         _l10n = l10n;
         _l10n.CultureChanged += (_, _) => RefreshLocalizedStrings();
         Lyrics = lyrics;
@@ -284,6 +309,8 @@ public partial class HomePageViewModel : PageViewModelBase
         _player.OnlinePreviewEnded += (_, _) => NotifyPlaybackProps();
         _player.PlayHistoryChanged += (_, _) => RefreshQueue();
         _services.Favorites.FavoritesChanged += (_, _) => _ = OnFavoritesChangedAsync();
+        _services.Transfers.Downloads.QueueChanged += (_, _) =>
+            Dispatcher.UIThread.Post(() => OnPropertyChanged(nameof(ShowEmptySecondaryDownloads)));
     }
 
     public void RefreshLocalizedStrings()
@@ -303,8 +330,10 @@ public partial class HomePageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(EmptyActionLibraryText));
         OnPropertyChanged(nameof(EmptyActionSettingsText));
         OnPropertyChanged(nameof(EmptyActionAddLibraryText));
+        OnPropertyChanged(nameof(EmptyActionAddFolderText));
         OnPropertyChanged(nameof(EmptyActionAddLibraryToolTip));
         OnPropertyChanged(nameof(EmptyActionLibraryListsText));
+        NotifyEmptyCta();
         OnPropertyChanged(nameof(HistoryEmptyTitle));
         OnPropertyChanged(nameof(HistoryEmptyDescription));
         OnPropertyChanged(nameof(HistoryLoadMoreText));
@@ -336,6 +365,9 @@ public partial class HomePageViewModel : PageViewModelBase
     partial void OnActiveListTabChanged(HomeListTab value) => NotifyListTabUi();
     public async Task InitializeAsync()
     {
+        var libraries = await _services.LibraryManager.GetAllAsync().ConfigureAwait(true);
+        _hasLibrary = libraries.Count > 0;
+        NotifyEmptyCta();
         await _player.EnsurePlayHistoryRestoredAsync();
         await RefreshFavoriteFlagsAsync();
         await RefreshFrequentAndRecommendationsAsync();
@@ -818,7 +850,24 @@ public partial class HomePageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(ShowOpenLibraryListsAction));
         OnPropertyChanged(nameof(HistoryPanelColumn));
         OnPropertyChanged(nameof(HistoryPanelColumnSpan));
+        NotifyEmptyCta();
     }
+
+    private void NotifyEmptyCta()
+    {
+        OnPropertyChanged(nameof(EmptyPrimaryKind));
+        OnPropertyChanged(nameof(EmptyHint));
+        OnPropertyChanged(nameof(ShowEmptyPrimaryAddLibrary));
+        OnPropertyChanged(nameof(ShowEmptyPrimaryOpenTracks));
+        OnPropertyChanged(nameof(ShowEmptyPrimaryDiscover));
+        OnPropertyChanged(nameof(ShowEmptySecondaryAddLibrary));
+        OnPropertyChanged(nameof(ShowEmptySecondaryOpenTracks));
+        OnPropertyChanged(nameof(ShowEmptySecondaryDiscover));
+        OnPropertyChanged(nameof(ShowEmptySecondaryDownloads));
+    }
+
+    private bool HasManageableDownloads =>
+        DownloadTaskBadge.Count(_services.Transfers.Downloads.Items.Select(d => d.Status)) > 0;
 
     private static HomeListTab MapSegmentIndexToTab(int index)
     {

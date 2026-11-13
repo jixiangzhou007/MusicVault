@@ -28,11 +28,7 @@ public partial class SettingsPageViewModel
 
         GathererItems.Clear();
         foreach (var def in _services.Discover.Gatherers.Definitions)
-        {
-            var item = new GathererItemViewModel(def, _l10n, MarkPendingChanges);
-            item.ApplyStatus(ServiceMessageLocalizer.Resolve(_l10n, def.LastProbeStatus ?? "—"));
-            GathererItems.Add(item);
-        }
+            GathererItems.Add(new GathererItemViewModel(def, _l10n, MarkPendingChanges));
     }
 
     private void SyncGathererUiToRegistry()
@@ -97,10 +93,12 @@ public partial class SettingsPageViewModel
         {
             var def = _services.Discover.Gatherers.Definitions.First(d => d.Id == item.Id);
             await GathererHealthProbe.ProbeAsync(def).ConfigureAwait(true);
-            item.ApplyStatus(ServiceMessageLocalizer.Resolve(_l10n, def.LastProbeStatus ?? "—"));
+            item.ApplyProbeResult(def.LastProbeStatus);
         }
 
         SetLocalizedStatus("Settings.Status.GathererTested", targets.Count);
+        if (OnlineAdvancedExpandPolicy.ExpandGatherers(GathererProbeRows()))
+            ExpandOnlineAdvancedAfterNewFailure(gatherers: true);
     }
 
     private void SyncSettingsUrlsToGathererItems()
@@ -151,13 +149,17 @@ public partial class SettingsPageViewModel
         UnifiedApiTestResultText = message;
         ShowUnifiedApiTestResult = true;
         NotifyConnectionTestNavState();
+        NotifyOnlineEndpointStatusProperties();
         StatusMessage = result.Ok
             ? string.Format(_l10n.Get("Settings.Status.UnifiedApiOk"), message)
             : string.Format(_l10n.Get("Settings.Status.UnifiedApiFailed"), message);
         if (result.Ok)
             ShellStatusService.Instance.Info(StatusMessage, ShellCategoryApi);
         else
+        {
             ShellStatusService.Instance.Warn(StatusMessage, ShellCategoryApi);
+            ExpandOnlineAdvancedAfterNewFailure(platform: true);
+        }
     }
 
     [RelayCommand]
@@ -171,13 +173,17 @@ public partial class SettingsPageViewModel
         NetEaseApiTestResultText = message;
         ShowNetEaseApiTestResult = true;
         NotifyConnectionTestNavState();
+        NotifyOnlineEndpointStatusProperties();
         StatusMessage = result.Ok
             ? string.Format(_l10n.Get("Settings.Status.NetEaseApiOk"), message)
             : string.Format(_l10n.Get("Settings.Status.NetEaseApiFailed"), message);
         if (result.Ok)
             ShellStatusService.Instance.Info(StatusMessage, ShellCategoryApi);
         else
+        {
             ShellStatusService.Instance.Warn(StatusMessage, ShellCategoryApi);
+            ExpandOnlineAdvancedAfterNewFailure(platform: true);
+        }
     }
 
     [RelayCommand]
@@ -283,6 +289,7 @@ public partial class SettingsPageViewModel
             ShowMusicRecognitionTestResult = true;
             StatusMessage = MusicRecognitionTestResultText;
             ShellStatusService.Instance.Warn(StatusMessage, ShellCategoryRecognition);
+            ExpandOnlineAdvancedAfterNewFailure(recognition: true);
             return;
         }
         else
@@ -301,7 +308,10 @@ public partial class SettingsPageViewModel
         if (result.Ok)
             ShellStatusService.Instance.Info(StatusMessage, ShellCategoryRecognition);
         else
+        {
             ShellStatusService.Instance.Warn(StatusMessage, ShellCategoryRecognition);
+            ExpandOnlineAdvancedAfterNewFailure(recognition: true);
+        }
     }
 
     [RelayCommand]
@@ -494,5 +504,163 @@ public partial class SettingsPageViewModel
                 : _l10n.Get("Settings.Update.UpToDate");
     }
 
+    private bool _suppressOnlineExpandUserFlag;
+
+    public string OnlineNeedsAttentionLabel => _l10n.Get("Settings.Online.NeedsAttention");
+
+    public string PlatformDisclosureCaption => ShowPlatformNeedsAttentionBadge
+        ? _l10n.Get("Settings.Online.DisclosureNeedsAttention")
+        : _l10n.Get("Settings.Online.PlatformApisCaption");
+
+    public string RecognitionDisclosureCaption => ShowRecognitionNeedsAttentionBadge
+        ? _l10n.Get("Settings.Online.DisclosureNeedsAttention")
+        : _l10n.Get("Settings.Online.RecognitionCaption");
+
+    public string GatherersDisclosureCaption => ShowGatherersNeedsAttentionBadge
+        ? _l10n.Get("Settings.Online.DisclosureNeedsAttention")
+        : _l10n.Get("Settings.Online.GatherersCaption");
+
+    public string UnifiedApiStatusText => FormatEndpointStatusText(
+        string.IsNullOrWhiteSpace(MusicApiBaseUrl),
+        ShowUnifiedApiTestResult,
+        UnifiedApiTestSucceeded);
+    public string NetEaseApiStatusText => FormatEndpointStatusText(
+        string.IsNullOrWhiteSpace(NetEaseApiUrl),
+        ShowNetEaseApiTestResult,
+        NetEaseApiTestSucceeded);
+
+    public bool UnifiedApiStatusIsOk =>
+        OnlineAdvancedExpandPolicy.EndpointStatusTone(
+            string.IsNullOrWhiteSpace(MusicApiBaseUrl), ShowUnifiedApiTestResult, UnifiedApiTestSucceeded) == "ok";
+    public bool UnifiedApiStatusIsError =>
+        OnlineAdvancedExpandPolicy.EndpointStatusTone(
+            string.IsNullOrWhiteSpace(MusicApiBaseUrl), ShowUnifiedApiTestResult, UnifiedApiTestSucceeded) == "error";
+    public bool NetEaseApiStatusIsOk =>
+        OnlineAdvancedExpandPolicy.EndpointStatusTone(
+            string.IsNullOrWhiteSpace(NetEaseApiUrl), ShowNetEaseApiTestResult, NetEaseApiTestSucceeded) == "ok";
+    public bool NetEaseApiStatusIsError =>
+        OnlineAdvancedExpandPolicy.EndpointStatusTone(
+            string.IsNullOrWhiteSpace(NetEaseApiUrl), ShowNetEaseApiTestResult, NetEaseApiTestSucceeded) == "error";
+
+    public bool ShowPlatformNeedsAttentionBadge =>
+        ComputeShouldExpandPlatform() && !IsPlatformApisExpanded;
+    public bool ShowRecognitionNeedsAttentionBadge =>
+        ComputeShouldExpandRecognition() && !IsRecognitionExpanded;
+    public bool ShowGatherersNeedsAttentionBadge =>
+        ComputeShouldExpandGatherers() && !IsGatherersExpanded;
+
+    private void EnterOnlineSourcesPanel()
+    {
+        _suppressOnlineExpandUserFlag = true;
+        try
+        {
+            IsPlatformApisExpanded = ComputeShouldExpandPlatform();
+            IsRecognitionExpanded = ComputeShouldExpandRecognition();
+            IsGatherersExpanded = ComputeShouldExpandGatherers();
+        }
+        finally
+        {
+            _suppressOnlineExpandUserFlag = false;
+        }
+
+        NotifyOnlineEndpointStatusProperties();
+        NotifyOnlineExpandBadgeProperties();
+        _ = RefreshOnlineLoginStatusAsync();
+    }
+
+    private void ExpandOnlineAdvancedAfterNewFailure(
+        bool platform = false,
+        bool recognition = false,
+        bool gatherers = false)
+    {
+        _suppressOnlineExpandUserFlag = true;
+        try
+        {
+            if (platform)
+                IsPlatformApisExpanded = true;
+            if (recognition)
+                IsRecognitionExpanded = true;
+            if (gatherers)
+                IsGatherersExpanded = true;
+        }
+        finally
+        {
+            _suppressOnlineExpandUserFlag = false;
+        }
+
+        NotifyOnlineExpandBadgeProperties();
+    }
+
+    private bool ComputeShouldExpandPlatform() =>
+        OnlineAdvancedExpandPolicy.ExpandPlatform(
+            string.IsNullOrWhiteSpace(MusicApiBaseUrl),
+            string.IsNullOrWhiteSpace(NetEaseApiUrl),
+            UnifiedApiTestFailed,
+            NetEaseApiTestFailed);
+
+    private bool ComputeShouldExpandRecognition() =>
+        OnlineAdvancedExpandPolicy.ExpandRecognition(MusicRecognitionTestFailed);
+
+    private bool ComputeShouldExpandGatherers() =>
+        OnlineAdvancedExpandPolicy.ExpandGatherers(GathererProbeRows());
+
+    private IEnumerable<OnlineAdvancedExpandPolicy.GathererProbeRow> GathererProbeRows() =>
+        GathererItems.Select(g => new OnlineAdvancedExpandPolicy.GathererProbeRow(g.IsEnabled, g.ProbeStatusRaw));
+
+    private string FormatEndpointStatusText(bool urlEmpty, bool showTestResult, bool testSucceeded)
+    {
+        var tone = OnlineAdvancedExpandPolicy.EndpointStatusTone(urlEmpty, showTestResult, testSucceeded);
+        return tone switch
+        {
+            "ok" => _l10n.Get("Settings.Online.EndpointOk"),
+            "error" => urlEmpty
+                ? _l10n.Get("Settings.Online.EndpointEmpty")
+                : _l10n.Get("Settings.Online.EndpointFailed"),
+            _ => _l10n.Get("Settings.Online.EndpointNotTested")
+        };
+    }
+
+    private void NotifyOnlineEndpointStatusProperties()
+    {
+        OnPropertyChanged(nameof(UnifiedApiStatusText));
+        OnPropertyChanged(nameof(NetEaseApiStatusText));
+        OnPropertyChanged(nameof(UnifiedApiStatusIsOk));
+        OnPropertyChanged(nameof(UnifiedApiStatusIsError));
+        OnPropertyChanged(nameof(NetEaseApiStatusIsOk));
+        OnPropertyChanged(nameof(NetEaseApiStatusIsError));
+        NotifyOnlineExpandBadgeProperties();
+    }
+
+    private void NotifyOnlineExpandBadgeProperties()
+    {
+        OnPropertyChanged(nameof(ShowPlatformNeedsAttentionBadge));
+        OnPropertyChanged(nameof(ShowRecognitionNeedsAttentionBadge));
+        OnPropertyChanged(nameof(ShowGatherersNeedsAttentionBadge));
+        OnPropertyChanged(nameof(OnlineNeedsAttentionLabel));
+        OnPropertyChanged(nameof(PlatformDisclosureCaption));
+        OnPropertyChanged(nameof(RecognitionDisclosureCaption));
+        OnPropertyChanged(nameof(GatherersDisclosureCaption));
+    }
+
+    partial void OnIsPlatformApisExpandedChanged(bool value)
+    {
+        if (_suppressOnlineExpandUserFlag)
+            return;
+        NotifyOnlineExpandBadgeProperties();
+    }
+
+    partial void OnIsRecognitionExpandedChanged(bool value)
+    {
+        if (_suppressOnlineExpandUserFlag)
+            return;
+        NotifyOnlineExpandBadgeProperties();
+    }
+
+    partial void OnIsGatherersExpandedChanged(bool value)
+    {
+        if (_suppressOnlineExpandUserFlag)
+            return;
+        NotifyOnlineExpandBadgeProperties();
+    }
 }
 

@@ -108,6 +108,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
     private readonly bool _processStartedWithLibVlc;
     private bool _loadedUseExperimentalLibVlcEngine;
     private bool _suppressPendingChanges;
+    private readonly SettingsAutosaveScheduler _autosave;
     private UpdateInfo? _pendingUpdate;
     private BundledMusicApiUpdateCheckResult? _pendingMusicApiUpdate;
     private int _nasPlaybackCacheEntryCount;
@@ -137,17 +138,9 @@ public partial class SettingsPageViewModel : PageViewModelBase
         _ => _l10n.Get("Nav.Settings")
     };
 
-    public bool ShowSectionPageHeader => SelectedSection is not (SettingsSectionKind.Overview
-        or SettingsSectionKind.Appearance
-        or SettingsSectionKind.PlaybackAudio);
+    public bool ShowSectionPageHeader => true;
 
-    public bool ShowSaveSettingsButton => SelectedSection is not (SettingsSectionKind.Overview
-        or SettingsSectionKind.Appearance
-        or SettingsSectionKind.UpdateDiagnostics);
-
-    public bool ShowHeaderSaveButton => ShowSaveSettingsButton && !HasPendingChanges;
-
-    public bool ShowStickySaveBar => ShowSaveSettingsButton && HasPendingChanges;
+    public bool ShowLibraryStatsHeaderActions => SelectedSection == SettingsSectionKind.DataBackup;
 
     public string AppearanceInstantHint => _l10n.Get("Settings.Appearance.InstantHint");
 
@@ -162,7 +155,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
 
     public string SelectedSectionSubtitle => SelectedSection switch
     {
-        SettingsSectionKind.Overview => string.Empty,
+        SettingsSectionKind.Overview => VersionText,
         SettingsSectionKind.Appearance => _l10n.Get("Settings.Section.Appearance.Subtitle"),
         SettingsSectionKind.PlaybackAudio => _l10n.Get("Settings.Section.Playback.Subtitle"),
         SettingsSectionKind.DownloadCache => _l10n.Get("Settings.Section.DownloadCache.Subtitle"),
@@ -173,8 +166,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
     };
 
     public bool ShowSectionPageSubtitle =>
-        SelectedSection != SettingsSectionKind.Overview
-        && !string.IsNullOrWhiteSpace(SelectedSectionSubtitle);
+        !string.IsNullOrWhiteSpace(SelectedSectionSubtitle);
 
     public string PersistSettingsFooterHint => _l10n.Get("Settings.Persist.FooterHint");
 
@@ -225,6 +217,11 @@ public partial class SettingsPageViewModel : PageViewModelBase
     public string PlaybackLyricsSectionTitle => _l10n.Get("Settings.Playback.Tab.Lyrics");
     public string PlaybackSoundEffectsSectionTitle => _l10n.Get("Settings.Playback.Tab.SoundEffects");
     public string PlaybackTabShortcutsLabel => _l10n.Get("Settings.Playback.Tab.Shortcuts");
+    public string PlaybackDefaultsGroupTitle => _l10n.Get("Settings.Playback.DefaultsGroup");
+    public string PlaybackEngineGroupTitle => _l10n.Get("Settings.Playback.EngineGroup");
+    public string PlaybackCapabilityGroupTitle => _l10n.Get("Settings.Playback.CapabilityGroup");
+    public string PlaybackShortcutsEnableLabel => _l10n.Get("Settings.Playback.ShortcutsEnableLabel");
+    public string PlaybackShortcutsManageLabel => _l10n.Get("Settings.Playback.ShortcutsManageLabel");
     public string AdvancedTabOnlineSourcesLabel => _l10n.Get("Settings.Advanced.Tab.OnlineSources");
     public string AdvancedTabUpdateDiagnosticsLabel => _l10n.Get("Settings.Advanced.Tab.UpdateDiagnostics");
     public string UpdateDiagnosticsTabAppUpdateLabel => _l10n.Get("Settings.UpdateDiagnostics.Tab.AppUpdate");
@@ -240,11 +237,17 @@ public partial class SettingsPageViewModel : PageViewModelBase
     public string OverviewGoDownloadLabel => _l10n.Get("Settings.Overview.GoDownload");
     public string OverviewGoAdvancedLabel => _l10n.Get("Settings.Overview.GoAdvanced");
     public string OverviewQuickStartTitle => _l10n.Get("Settings.Overview.QuickStart");
+    public string OverviewAboutAppTitle => _l10n.Get("Settings.Overview.AboutApp");
     public string OverviewFeaturesTitle => _l10n.Get("Settings.Overview.Features");
     public string OverviewLicenseSectionTitle => _l10n.Get("Settings.Overview.LicenseSection");
+    public string OverviewShortcutsTitle => _l10n.Get("Settings.Overview.Shortcuts");
+    public string OverviewLibraryStatsTitle => _l10n.Get("Settings.Overview.LibraryStats");
+    public string OverviewAboutDisclosureCaption => _l10n.Get("Settings.Overview.AboutCaption");
+    public string OverviewAboutSectionTitle => _l10n.Get("Settings.Overview.AboutSection");
     public string OverviewPlayCountKpiDisplay => FormatOverviewCount(OverviewTotalPlayCount);
     public bool OverviewPlayCountKpiIsPlaceholder => OverviewTotalPlayCount <= 0;
     public string DownloadCacheGroupTitle => _l10n.Get("Settings.Download.CacheGroup");
+    public string DownloadFilesGroupTitle => _l10n.Get("Settings.Download.FilesGroup");
 
     [ObservableProperty] private bool _showDownloadDiskSpaceAlert;
 
@@ -375,7 +378,8 @@ public partial class SettingsPageViewModel : PageViewModelBase
     public string DownloadConcurrencyLabel => _l10n.Get("Settings.Download.Concurrency");
     public string DownloadOpenLabel => _l10n.Get("Settings.Download.Open");
     public string DownloadCopyPathLabel => _l10n.Get("Settings.Download.CopyPath");
-    public string PickDownloadFolderLabel => _l10n.Get("Common.SelectFile");
+    public string PickDownloadFolderLabel => _l10n.Get("Settings.Download.ChangeFolder");
+    public string DownloadClearCacheLabel => _l10n.Get("Settings.Download.ClearCache");
     public string DownloadConcurrencySummary => string.Format(_l10n.Get("Settings.Download.ConcurrencyFormat"), MaxDownloads);
 
     public string DefaultVolumePercentSummary => $"{DefaultVolumePercent}%";
@@ -390,6 +394,9 @@ public partial class SettingsPageViewModel : PageViewModelBase
     public string RestoreShortcutDefaultsLabel => _l10n.Get("Settings.Shortcut.RestoreDefaults");
     public string ExportShortcutsLabel => _l10n.Get("Settings.Shortcut.Export");
     public string OnlineConnectionHealthTitle => _l10n.Get("Settings.Online.ConnectionHealth");
+    public string OnlineLoginStatusLabel => _l10n.Get("Settings.Online.LoginStatusLabel");
+    public string OnlineAdvancedSectionTitle => _l10n.Get("Settings.Online.AdvancedSection");
+    public string OnlineAdvancedSectionCaption => _l10n.Get("Settings.Online.AdvancedSectionCaption");
     public string OnlineConnectionTestLabel => _l10n.Get("Settings.Online.ConnectionTest");
     public string OnlineTestUnifiedApiLabel => _l10n.Get("Settings.Online.TestUnifiedApi");
     public string OnlineTestNetEaseLabel => _l10n.Get("Settings.Online.TestNetEase");
@@ -399,6 +406,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
     public string OnlineTroubleshootLabel => _l10n.Get("Settings.Online.Troubleshoot");
     public string OnlineUnifiedApiLabel => _l10n.Get("Settings.Online.UnifiedApi");
     public string OnlineRecognitionApiLabel => _l10n.Get("Settings.Online.RecognitionApi");
+    public string OnlineRecognitionGroupTitle => _l10n.Get("Settings.Online.RecognitionGroup");
     public string OnlineUseNetEaseRecognitionLabel => _l10n.Get("Settings.Online.UseNetEaseRecognition");
     public string OnlineConfigGuideLabel => _l10n.Get("Settings.Online.ConfigGuide");
     public string OnlineBundledServicesTitle => _l10n.Get("Settings.Online.BundledServices");
@@ -406,10 +414,20 @@ public partial class SettingsPageViewModel : PageViewModelBase
     public string OnlineAutoStartBundledApiLabel => _l10n.Get("Settings.Online.AutoStartBundledApi");
     public string OnlineAutoCheckLabel => _l10n.Get("Settings.Online.AutoCheck");
     public string OnlineWeeklyBundledApiCheckCaption => _l10n.Get("Settings.Online.WeeklyBundledApiCheck");
+    public string OnlineApiUpdateRepoLabel => _l10n.Get("Settings.Online.ApiUpdateRepo");
+    public string OnlineApiUpdateRepoCaption => _l10n.Get("Settings.Online.ApiUpdateRepo.Caption");
+    public string OnlineApiUpdateRepoPlaceholder => _l10n.Get("Settings.Online.ApiUpdateRepo.Placeholder");
     public string OnlinePlatformApisTitle => _l10n.Get("Settings.Online.PlatformApis");
     public string OnlineNetEaseLabel => _l10n.Get("Settings.Online.NetEase");
     public string OnlineBundledNetEaseLabel => _l10n.Get("Settings.Online.BundledNetEase");
     public string OnlineAutoStartNetEaseApiLabel => _l10n.Get("Settings.Online.AutoStartNetEaseApi");
+    public string OnlineHeroPromoSourceLabel => _l10n.Get("Settings.Online.HeroPromoSource");
+    public string OnlineHeroPromoSourceCaption => _l10n.Get("Settings.Online.HeroPromoSource.Caption");
+    public IReadOnlyList<string> DiscoverHeroPromoSourceLabels =>
+    [
+        _l10n.Get("Settings.Online.HeroPromoSource.NewSongs"),
+        _l10n.Get("Settings.Online.HeroPromoSource.GuessYouLike")
+    ];
     public string OnlineQQMusicLabel => _l10n.Get("Settings.Online.QQMusic");
     public string OnlineQuarkCookieLabel => _l10n.Get("Settings.Online.QuarkCookie");
     public bool HasQuarkCookieConfigured => !string.IsNullOrWhiteSpace(MyFreeMp3QuarkCookies);
@@ -439,6 +457,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
     public bool ShowAcoustIdSetupWarning => EnableAcoustIdFingerprintLookup && !IsAcoustIdReady;
     public string AcoustIdSetupWarningText => BuildAcoustIdSetupWarningText();
     public string AcoustIdTestLabel => _l10n.Get("Settings.Data.AcoustId.Test");
+    public string AcoustIdTestRowLabel => _l10n.Get("Settings.Data.AcoustId.TestRow");
     public string BackupColumnNameLabel => _l10n.Get("Settings.Backup.Column.Name");
     public string BackupColumnDateLabel => _l10n.Get("Settings.Backup.Column.Date");
     public string BackupColumnSizeLabel => _l10n.Get("Settings.Backup.Column.Size");
@@ -453,6 +472,12 @@ public partial class SettingsPageViewModel : PageViewModelBase
     public string BackupPreviousPageLabel => _l10n.Get("Settings.Backup.PreviousPage");
     public string BackupNextPageLabel => _l10n.Get("Settings.Backup.NextPage");
     public string UpdateCurrentVersionLabel => _l10n.Get("Settings.Update.CurrentVersion");
+    public string UpdateAppGroupTitle => _l10n.Get("Settings.Update.AppGroup");
+    public string UpdatePreferencesGroupTitle => _l10n.Get("Settings.Update.PreferencesGroup");
+    public string UpdateFeedDisclosureCaption => _l10n.Get("Settings.Update.FeedCaption");
+    public string UpdateBundledGroupTitle => _l10n.Get("Settings.Update.BundledGroup");
+    public string DiagnosticsToolsGroupTitle => _l10n.Get("Settings.Diagnostics.ToolsGroup");
+    public string DiagnosticsUsageDisclosureCaption => _l10n.Get("Settings.Diagnostics.UsageDisclosureCaption");
     public string UpdateCheckLabel => _l10n.Get("Settings.Update.Check");
     public string UpdateCheckingAppLabel => _l10n.Get("Settings.Update.CheckingApp");
     public string UpdateFeedUrlLabel => _l10n.Get("Settings.Update.FeedUrl");
@@ -510,11 +535,13 @@ public partial class SettingsPageViewModel : PageViewModelBase
     ];
 
     public string AppearanceSectionIntro => _l10n.Get("Settings.Appearance.Intro");
+    public string AppearanceDisplayGroupTitle => _l10n.Get("Settings.Appearance.DisplayGroup");
     public string AppearanceThemeLabel => _l10n.Get("Settings.Appearance.Theme");
     public string AppearanceFontScaleLabel => _l10n.Get("Settings.Appearance.FontScale");
     public string AppearanceAccentLabel => _l10n.Get("Settings.Appearance.Accent");
     public string AppearanceAccentHint => _l10n.Get("Settings.Appearance.Accent.Hint");
     public string AppearanceLanguageLabel => _l10n.Get("Settings.Appearance.Language");
+    public string AppearanceResetGroupTitle => _l10n.Get("Settings.Appearance.ResetGroup");
     public string DownloadPolicyAutoBatchWizardLabel => _l10n.Get("Settings.DownloadPolicy.AutoBatchWizard");
     public string DownloadPolicyAutoBatchWizardCaption => _l10n.Get("Settings.DownloadPolicy.AutoBatchWizard.Caption");
 
@@ -548,6 +575,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
     [ObservableProperty] private bool _autoStartBundledMusicApi = true;
     [ObservableProperty] private bool _autoStartBundledNetEaseApi = true;
     [ObservableProperty] private bool _checkBundledMusicApiUpdates;
+    [ObservableProperty] private string _bundledMusicApiUpdateGithubRepo = string.Empty;
     [ObservableProperty] private string _bundledMusicApiVersionText = string.Empty;
     [ObservableProperty] private string _bundledNetEaseApiVersionText = string.Empty;
     [ObservableProperty] private bool _hasPendingMusicApiUpdate;
@@ -577,6 +605,8 @@ public partial class SettingsPageViewModel : PageViewModelBase
     [ObservableProperty] private string _equalizerPresetSummary = string.Empty;
     [ObservableProperty] private bool _normalizeVolume;
     [ObservableProperty] private bool _discoverAutoOpenBatchEnqueueWizard = true;
+    /// <summary>0=新歌榜，1=猜你喜欢。</summary>
+    [ObservableProperty] private int _discoverHeroPromoSourceIndex;
     [ObservableProperty] private string _updateFeedUrl = string.Empty;
     [ObservableProperty] private string _statusMessage = string.Empty;
     [ObservableProperty] private string _versionText = "v1.0.0";
@@ -593,7 +623,6 @@ public partial class SettingsPageViewModel : PageViewModelBase
     [ObservableProperty] private bool _musicApiUpdateStatusIsError;
     [ObservableProperty] private bool _musicApiUpdateStatusIsOk;
     [ObservableProperty] private bool _isCheckingMusicApiUpdate;
-    [ObservableProperty] private bool _hasPendingChanges;
 
     [ObservableProperty] private int _overviewTotalTracks;
     [ObservableProperty] private int _overviewTotalAlbums;
@@ -615,6 +644,8 @@ public partial class SettingsPageViewModel : PageViewModelBase
             ? _l10n.Get("Settings.General.OverviewEmpty.NoSources")
             : _l10n.Get("Settings.General.OverviewEmpty.NoTracks");
 
+    public string OverviewTracksHeroDisplay => OverviewTotalTracks.ToString("N0");
+
     public string OverviewTracksDisplay => FormatOverviewCount(OverviewTotalTracks);
 
     public string OverviewAlbumsDisplay => FormatOverviewCount(OverviewTotalAlbums);
@@ -632,9 +663,11 @@ public partial class SettingsPageViewModel : PageViewModelBase
             ? string.Format(_l10n.Get("Settings.General.PlayCountFormat"), OverviewTotalPlayCount)
             : "—";
 
-    /// <summary>概览页唯一主按钮：无曲目且无库来源时突出「一键推荐配置」。</summary>
+    /// <summary>无曲目且无库来源时突出「一键推荐配置」。</summary>
     public bool ShowOverviewRecommendPrimaryCta =>
         OverviewTotalTracks <= 0 && OverviewTotalLibraries <= 0;
+
+    public string OverviewCapabilitiesSummary => _l10n.Get(SoftwareGuideCatalog.CapabilitiesSummaryKey);
 
     public const int BackupPageSize = 5;
 
@@ -748,6 +781,18 @@ public partial class SettingsPageViewModel : PageViewModelBase
     [ObservableProperty] private bool _showMusicRecognitionTestResult;
 
     [ObservableProperty] private bool _musicRecognitionTestSucceeded;
+
+    [ObservableProperty] private bool _isPlatformApisExpanded;
+
+    [ObservableProperty] private bool _isRecognitionExpanded;
+
+    [ObservableProperty] private bool _isGatherersExpanded;
+
+    [ObservableProperty] private bool _isUpdateFeedExpanded;
+
+    [ObservableProperty] private bool _isUsageInsightsExpanded;
+
+    [ObservableProperty] private bool _isOverviewAboutExpanded;
 
     [ObservableProperty] private string _acoustIdTestResultText = string.Empty;
 
@@ -957,11 +1002,12 @@ public partial class SettingsPageViewModel : PageViewModelBase
                 {
                     OnPropertyChanged(nameof(ShowEqualizerCustomActions));
                     RefreshEqualizerPresetSummary();
-                    MarkPendingChanges();
+                    ScheduleAutosave(SettingsAutosaveKind.Instant);
                 }
             };
         }
         _updates = new UpdateService(settings);
+        _autosave = new SettingsAutosaveScheduler(PersistPreferencesCoreAsync);
         VersionText = _updates.CurrentVersion != null ? $"v{_updates.CurrentVersion}" : "v1.0.10";
         foreach (var preset in AccentColorPresets.All)
             AccentColorOptions.Add(new AccentColorOptionViewModel(preset.Name, preset.Hex));
@@ -971,7 +1017,6 @@ public partial class SettingsPageViewModel : PageViewModelBase
         LoadOpenSourceProjects();
         _suppressPendingChanges = true;
         LoadFromSettings();
-        HasPendingChanges = false;
         _suppressPendingChanges = false;
         RefreshLocalizedStrings();
         _services.NasTrackCache.Changed += (_, _) =>
@@ -988,27 +1033,15 @@ public partial class SettingsPageViewModel : PageViewModelBase
         RefreshDownloadDiskSpaceAlert();
     }
 
-    partial void OnHasPendingChangesChanged(bool value)
-    {
-        RefreshNavIndicators();
-        OnPropertyChanged(nameof(ShowOnlineSourcesPersistHint));
-        OnPropertyChanged(nameof(ShowHeaderSaveButton));
-        OnPropertyChanged(nameof(ShowStickySaveBar));
-    }
-
     partial void OnHasPendingUpdateChanged(bool value) => RefreshNavIndicators();
 
     partial void OnHasPendingMusicApiUpdateChanged(bool value) => RefreshNavIndicators();
 
     private void RefreshNavIndicators()
     {
-        var showDot = HasPendingChanges;
         foreach (var item in NavItems)
         {
-            item.ShowPendingDot = showDot
-                && item.Kind == SelectedSection
-                && item.Kind is not (SettingsSectionKind.Overview
-                    or SettingsSectionKind.Appearance);
+            item.ShowPendingDot = false;
             item.ShowNavBadge = item.Kind switch
             {
                 SettingsSectionKind.PlaybackAudio => !IsEqualizerSupported,
@@ -1031,6 +1064,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
         UnifiedApiTestResultText = string.Empty;
         NetEaseApiTestResultText = string.Empty;
         NotifyConnectionTestNavState();
+        NotifyOnlineEndpointStatusProperties();
     }
 
     private void NotifyConnectionTestNavState()
@@ -1068,6 +1102,11 @@ public partial class SettingsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(PlaybackLyricsSectionTitle));
         OnPropertyChanged(nameof(PlaybackSoundEffectsSectionTitle));
         OnPropertyChanged(nameof(PlaybackTabShortcutsLabel));
+        OnPropertyChanged(nameof(PlaybackDefaultsGroupTitle));
+        OnPropertyChanged(nameof(PlaybackEngineGroupTitle));
+        OnPropertyChanged(nameof(PlaybackCapabilityGroupTitle));
+        OnPropertyChanged(nameof(PlaybackShortcutsEnableLabel));
+        OnPropertyChanged(nameof(PlaybackShortcutsManageLabel));
         OnPropertyChanged(nameof(AdvancedTabOnlineSourcesLabel));
         OnPropertyChanged(nameof(AdvancedTabUpdateDiagnosticsLabel));
         OnPropertyChanged(nameof(UpdateDiagnosticsTabAppUpdateLabel));
@@ -1084,9 +1123,15 @@ public partial class SettingsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(OverviewGoDownloadLabel));
         OnPropertyChanged(nameof(OverviewGoAdvancedLabel));
         OnPropertyChanged(nameof(OverviewQuickStartTitle));
+        OnPropertyChanged(nameof(OverviewAboutAppTitle));
         OnPropertyChanged(nameof(OverviewFeaturesTitle));
         OnPropertyChanged(nameof(OverviewLicenseSectionTitle));
+        OnPropertyChanged(nameof(OverviewShortcutsTitle));
+        OnPropertyChanged(nameof(OverviewLibraryStatsTitle));
+        OnPropertyChanged(nameof(OverviewAboutSectionTitle));
+        OnPropertyChanged(nameof(OverviewAboutDisclosureCaption));
         OnPropertyChanged(nameof(DownloadCacheGroupTitle));
+        OnPropertyChanged(nameof(DownloadFilesGroupTitle));
         OnPropertyChanged(nameof(GeneralOverviewTitle));
         OnPropertyChanged(nameof(GeneralRefreshStatsToolTip));
         OnPropertyChanged(nameof(GeneralManageSourcesLabel));
@@ -1143,6 +1188,10 @@ public partial class SettingsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(RestoreShortcutDefaultsLabel));
         OnPropertyChanged(nameof(ExportShortcutsLabel));
         OnPropertyChanged(nameof(OnlineConnectionHealthTitle));
+        OnPropertyChanged(nameof(OnlineLoginStatusLabel));
+        OnPropertyChanged(nameof(OnlineAdvancedSectionTitle));
+        OnPropertyChanged(nameof(OnlineAdvancedSectionCaption));
+        OnPropertyChanged(nameof(OnlineNeedsAttentionLabel));
         OnPropertyChanged(nameof(OnlineConnectionTestLabel));
         OnPropertyChanged(nameof(OnlineTestUnifiedApiLabel));
         OnPropertyChanged(nameof(OnlineTestNetEaseLabel));
@@ -1156,6 +1205,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(OnlineTroubleshootLabel));
         OnPropertyChanged(nameof(OnlineUnifiedApiLabel));
         OnPropertyChanged(nameof(OnlineRecognitionApiLabel));
+        OnPropertyChanged(nameof(OnlineRecognitionGroupTitle));
         OnPropertyChanged(nameof(OnlineUseNetEaseRecognitionLabel));
         OnPropertyChanged(nameof(OnlineConfigGuideLabel));
         OnPropertyChanged(nameof(OnlineBundledServicesTitle));
@@ -1163,10 +1213,16 @@ public partial class SettingsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(OnlineAutoStartBundledApiLabel));
         OnPropertyChanged(nameof(OnlineAutoCheckLabel));
         OnPropertyChanged(nameof(OnlineWeeklyBundledApiCheckCaption));
+        OnPropertyChanged(nameof(OnlineApiUpdateRepoLabel));
+        OnPropertyChanged(nameof(OnlineApiUpdateRepoCaption));
+        OnPropertyChanged(nameof(OnlineApiUpdateRepoPlaceholder));
         OnPropertyChanged(nameof(OnlinePlatformApisTitle));
         OnPropertyChanged(nameof(OnlineNetEaseLabel));
         OnPropertyChanged(nameof(OnlineBundledNetEaseLabel));
         OnPropertyChanged(nameof(OnlineAutoStartNetEaseApiLabel));
+        OnPropertyChanged(nameof(OnlineHeroPromoSourceLabel));
+        OnPropertyChanged(nameof(OnlineHeroPromoSourceCaption));
+        OnPropertyChanged(nameof(DiscoverHeroPromoSourceLabels));
         OnPropertyChanged(nameof(OnlineQQMusicLabel));
         OnPropertyChanged(nameof(OnlineQuarkCookieLabel));
         OnPropertyChanged(nameof(HasQuarkCookieConfigured));
@@ -1192,6 +1248,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(AcoustIdPrerequisiteHint));
         OnPropertyChanged(nameof(AcoustIdSetupWarningText));
         OnPropertyChanged(nameof(AcoustIdTestLabel));
+        OnPropertyChanged(nameof(AcoustIdTestRowLabel));
         NotifyAcoustIdPresentationChanged();
         OnPropertyChanged(nameof(BackupColumnNameLabel));
         OnPropertyChanged(nameof(BackupColumnDateLabel));
@@ -1208,6 +1265,12 @@ public partial class SettingsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(BackupPreviousPageLabel));
         OnPropertyChanged(nameof(BackupNextPageLabel));
         OnPropertyChanged(nameof(UpdateCurrentVersionLabel));
+        OnPropertyChanged(nameof(UpdateAppGroupTitle));
+        OnPropertyChanged(nameof(UpdatePreferencesGroupTitle));
+        OnPropertyChanged(nameof(UpdateFeedDisclosureCaption));
+        OnPropertyChanged(nameof(UpdateBundledGroupTitle));
+        OnPropertyChanged(nameof(DiagnosticsToolsGroupTitle));
+        OnPropertyChanged(nameof(DiagnosticsUsageDisclosureCaption));
         OnPropertyChanged(nameof(UpdateCheckLabel));
         OnPropertyChanged(nameof(UpdateCheckingAppLabel));
         OnPropertyChanged(nameof(UpdateFeedUrlLabel));
@@ -1241,19 +1304,20 @@ public partial class SettingsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(DownloadOpenLabel));
         OnPropertyChanged(nameof(DownloadCopyPathLabel));
         OnPropertyChanged(nameof(PickDownloadFolderLabel));
+        OnPropertyChanged(nameof(DownloadClearCacheLabel));
         OnPropertyChanged(nameof(DownloadConcurrencySummary));
         OnPropertyChanged(nameof(RepeatModeOptionLabels));
         OnPropertyChanged(nameof(DefaultQualityOptionLabels));
         OnPropertyChanged(nameof(AppearanceSectionIntro));
         OnPropertyChanged(nameof(AppearanceInstantHint));
         OnPropertyChanged(nameof(ShowAppearanceInstantHint));
-        OnPropertyChanged(nameof(AppearanceInstantHint));
-        OnPropertyChanged(nameof(ShowAppearanceInstantHint));
+        OnPropertyChanged(nameof(AppearanceDisplayGroupTitle));
         OnPropertyChanged(nameof(AppearanceThemeLabel));
         OnPropertyChanged(nameof(AppearanceFontScaleLabel));
         OnPropertyChanged(nameof(AppearanceAccentLabel));
         OnPropertyChanged(nameof(AppearanceAccentHint));
         OnPropertyChanged(nameof(AppearanceLanguageLabel));
+        OnPropertyChanged(nameof(AppearanceResetGroupTitle));
         OnPropertyChanged(nameof(DownloadPolicyAutoBatchWizardLabel));
         OnPropertyChanged(nameof(DownloadPolicyAutoBatchWizardCaption));
         OnPropertyChanged(nameof(ThemeOptionLabels));
@@ -1280,12 +1344,17 @@ public partial class SettingsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(IntroductionTagline));
         OnPropertyChanged(nameof(IntroductionAuthor));
         OnPropertyChanged(nameof(HeroDescriptionLead));
+        OnPropertyChanged(nameof(OverviewCapabilitiesSummary));
         OnPropertyChanged(nameof(HeroDescriptionDisclaimer));
         OnPropertyChanged(nameof(IntroductionCopyright));
         OnPropertyChanged(nameof(OpenSourceSectionTitle));
         OnPropertyChanged(nameof(OverviewPlayCountText));
         OnPropertyChanged(nameof(OverviewPlayCountKpiDisplay));
         OnPropertyChanged(nameof(OverviewPlayCountKpiIsPlaceholder));
+        OnPropertyChanged(nameof(OverviewTracksHeroDisplay));
+        OnPropertyChanged(nameof(OverviewTracksDisplay));
+        OnPropertyChanged(nameof(OverviewAlbumsDisplay));
+        OnPropertyChanged(nameof(OverviewArtistsDisplay));
         OnPropertyChanged(nameof(ShowOverviewLibraryEmptyGuidance));
         OnPropertyChanged(nameof(OverviewLibraryEmptyGuidance));
         OnPropertyChanged(nameof(BackupListSummary));
@@ -1305,7 +1374,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
         {
             var def = _services.Discover.Gatherers.Definitions.FirstOrDefault(d => d.Id == item.Id);
             if (def != null)
-                item.ApplyStatus(ServiceMessageLocalizer.Resolve(_l10n, def.LastProbeStatus ?? "—"));
+                item.ApplyProbeResult(def.LastProbeStatus);
             item.RefreshLocalizedStrings();
         }
 
@@ -1394,13 +1463,12 @@ public partial class SettingsPageViewModel : PageViewModelBase
 
     partial void OnSelectedSectionChanged(SettingsSectionKind value)
     {
+        _ = FlushAutosaveAsync();
         OnPropertyChanged(nameof(SelectedSectionTitle));
         OnPropertyChanged(nameof(SelectedSectionSubtitle));
         OnPropertyChanged(nameof(ShowSectionPageSubtitle));
         OnPropertyChanged(nameof(ShowSectionPageHeader));
-        OnPropertyChanged(nameof(ShowSaveSettingsButton));
-        OnPropertyChanged(nameof(ShowHeaderSaveButton));
-        OnPropertyChanged(nameof(ShowStickySaveBar));
+        OnPropertyChanged(nameof(ShowLibraryStatsHeaderActions));
         OnPropertyChanged(nameof(ShowAppearanceInstantHint));
         if (value == SettingsSectionKind.DownloadCache)
             RefreshDownloadDiskSpaceAlert();
@@ -1431,7 +1499,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
             if (SelectedAdvancedTab == AdvancedTabKind.OnlineSources)
             {
                 SyncSettingsUrlsToGathererItems();
-                _ = RefreshOnlineLoginStatusAsync();
+                EnterOnlineSourcesPanel();
             }
         }
         if (value == SettingsSectionKind.PlaybackAudio && SelectedPlaybackAudioTab == default)
@@ -1581,30 +1649,50 @@ public partial class SettingsPageViewModel : PageViewModelBase
     partial void OnUpdateFrequencyIndexChanged(int value)
     {
         OnPropertyChanged(nameof(UpdateFrequencyLabel));
-        MarkPendingChanges();
+        ScheduleAutosave(SettingsAutosaveKind.Instant);
     }
 
     partial void OnUpdateFeedUrlChanged(string value)
     {
         OnPropertyChanged(nameof(UpdateFeedUrlDisplay));
-        MarkPendingChanges();
+        ScheduleAutosave(SettingsAutosaveKind.Debounced);
     }
     partial void OnIsCheckingMusicApiUpdateChanged(bool value) => OnPropertyChanged(nameof(CanCheckBundledMusicApiUpdate));
-    partial void OnNetEaseApiUrlChanged(string value) => MarkPendingChanges();
-    partial void OnQqMusicApiUrlChanged(string value) => MarkPendingChanges();
-    partial void OnMusicApiBaseUrlChanged(string value) => MarkPendingChanges();
+    partial void OnNetEaseApiUrlChanged(string value)
+    {
+        ScheduleAutosave(SettingsAutosaveKind.Debounced);
+        NotifyOnlineEndpointStatusProperties();
+        if (ShowAdvancedOnlinePanel && string.IsNullOrWhiteSpace(value))
+            ExpandOnlineAdvancedAfterNewFailure(platform: true);
+    }
+
+    partial void OnQqMusicApiUrlChanged(string value) => ScheduleAutosave(SettingsAutosaveKind.Debounced);
+
+    partial void OnMusicApiBaseUrlChanged(string value)
+    {
+        ScheduleAutosave(SettingsAutosaveKind.Debounced);
+        NotifyOnlineEndpointStatusProperties();
+        if (ShowAdvancedOnlinePanel && string.IsNullOrWhiteSpace(value))
+            ExpandOnlineAdvancedAfterNewFailure(platform: true);
+    }
     partial void OnMusicRecognitionApiUrlChanged(string value)
     {
-        MarkPendingChanges();
+        ScheduleAutosave(SettingsAutosaveKind.Debounced);
         OnPropertyChanged(nameof(MusicRecognitionSetupHint));
         OnPropertyChanged(nameof(ShowNetEaseRecognitionSetup));
     }
-    partial void OnAutoStartBundledMusicApiChanged(bool value) => MarkPendingChanges();
-    partial void OnAutoStartBundledNetEaseApiChanged(bool value) => MarkPendingChanges();
-    partial void OnCheckBundledMusicApiUpdatesChanged(bool value) => MarkPendingChanges();
+    partial void OnAutoStartBundledMusicApiChanged(bool value) => ScheduleAutosave(SettingsAutosaveKind.Instant);
+    partial void OnAutoStartBundledNetEaseApiChanged(bool value) => ScheduleAutosave(SettingsAutosaveKind.Instant);
+    partial void OnCheckBundledMusicApiUpdatesChanged(bool value) => ScheduleAutosave(SettingsAutosaveKind.Instant);
+    partial void OnBundledMusicApiUpdateGithubRepoChanged(string value)
+    {
+        BundledMusicApiUpdateService.ConfiguredGithubRepo =
+            string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+        ScheduleAutosave(SettingsAutosaveKind.Debounced);
+    }
     partial void OnMyFreeMp3QuarkCookiesChanged(string value)
     {
-        MarkPendingChanges();
+        ScheduleAutosave(SettingsAutosaveKind.Debounced);
         OnPropertyChanged(nameof(HasQuarkCookieConfigured));
         OnPropertyChanged(nameof(QuarkCookieStatusText));
     }
@@ -1760,6 +1848,11 @@ public partial class SettingsPageViewModel : PageViewModelBase
         AutoStartBundledMusicApi = s.AutoStartBundledMusicApi;
         AutoStartBundledNetEaseApi = s.AutoStartBundledNetEaseApi;
         CheckBundledMusicApiUpdates = s.CheckBundledMusicApiUpdates;
+        BundledMusicApiUpdateGithubRepo = s.BundledMusicApiUpdateGithubRepo ?? string.Empty;
+        BundledMusicApiUpdateService.ConfiguredGithubRepo =
+            string.IsNullOrWhiteSpace(BundledMusicApiUpdateGithubRepo)
+                ? null
+                : BundledMusicApiUpdateGithubRepo.Trim();
         if (!IsBundledMusicApiFeatureAvailable)
         {
             AutoStartBundledMusicApi = false;
@@ -1792,6 +1885,7 @@ public partial class SettingsPageViewModel : PageViewModelBase
         DefaultShuffleOn = s.DefaultShuffleOn;
         DefaultDownloadQualityIndex = DownloadQualityPreference.NormalizeIndex(s.DefaultDownloadQualityIndex);
         DiscoverAutoOpenBatchEnqueueWizard = s.DiscoverAutoOpenBatchEnqueueWizard;
+        DiscoverHeroPromoSourceIndex = Math.Clamp(s.DiscoverHeroPromoSourceIndex, 0, 1);
         MyFreeMp3QuarkCookies = s.MyFreeMp3QuarkCookies ?? string.Empty;
         EnableAcoustIdFingerprintLookup = s.EnableAcoustIdFingerprintLookup;
         AcoustIdApiKey = s.AcoustIdApiKey ?? string.Empty;
@@ -1810,11 +1904,21 @@ public partial class SettingsPageViewModel : PageViewModelBase
     }
 
 
-    private void MarkPendingChanges()
+    private void ScheduleAutosave(SettingsAutosaveKind kind)
     {
         if (_suppressPendingChanges)
             return;
-        HasPendingChanges = true;
+        _ = _autosave.ScheduleAsync(kind);
+    }
+
+    public Task FlushAutosaveAsync() => _autosave.FlushAsync();
+
+    private Task PersistPreferencesCoreAsync(CancellationToken cancellationToken) =>
+        PersistPreferencesAsync(announce: false);
+
+    private void MarkPendingChanges()
+    {
+        ScheduleAutosave(SettingsAutosaveKind.Instant);
     }
 
     private void NotifyUsageInsightsChanged()
@@ -1956,76 +2060,103 @@ public partial class SettingsPageViewModel : PageViewModelBase
     }
 
     [RelayCommand]
-    private async Task SaveSettingsAsync()
+    private async Task SaveSettingsAsync() => await PersistPreferencesAsync(announce: true);
+
+    private async Task PersistPreferencesAsync(bool announce)
     {
-        var s = _settings.Current;
-        s.ThemeMode = ThemeIndex switch { 0 => AppThemeMode.Light, 1 => AppThemeMode.Dark, _ => AppThemeMode.System };
-        s.Culture = LocalizationService.IndexToCulture(CultureIndex);
-        s.AccentColor = AccentColorPresets.Normalize(AccentColor);
-        AccentColor = s.AccentColor;
-        s.UiFontScaleIndex = Math.Clamp(UiFontScaleIndex, 0, 2);
-        s.UpdateCheckFrequency = UpdateFrequencyIndex switch { 0 => "daily", 1 => "weekly", 2 => "monthly", _ => "off" };
-        s.MaxConcurrentDownloads = MaxDownloads;
-        s.DownloadDirectory = DownloadDirectory.Trim();
-        s.NetEaseApiUrl = NetEaseApiUrl.Trim();
-        s.QQMusicApiUrl = QqMusicApiUrl.Trim();
-        s.MusicApiBaseUrl = MusicApiBaseUrl.Trim();
-        s.Gatherers = GathererItems.Select(g => new MusicGathererEntry
+        try
         {
-            Id = g.Id,
-            Enabled = g.IsEnabled,
-            BaseUrl = string.IsNullOrWhiteSpace(g.BaseUrl) ? null : g.BaseUrl.Trim()
-        }).ToList();
-        s.AutoStartBundledMusicApi = IsBundledMusicApiFeatureAvailable && AutoStartBundledMusicApi;
-        s.AutoStartBundledNetEaseApi = AutoStartBundledNetEaseApi;
-        s.CheckBundledMusicApiUpdates = IsBundledMusicApiFeatureAvailable && CheckBundledMusicApiUpdates;
-        s.EnableGlobalHotkeys = EnableHotkeys;
-        s.RestorePlaybackOnStartup = RestorePlaybackOnStartup;
-        var libVlcEngineChanged = s.UseExperimentalLibVlcEngine != UseExperimentalLibVlcEngine;
-        s.UseExperimentalLibVlcEngine = UseExperimentalLibVlcEngine;
-        _loadedUseExperimentalLibVlcEngine = s.UseExperimentalLibVlcEngine;
-        s.NasCacheOnPlay = NasCacheOnPlay;
-        s.NasDownloadTargetLibraryId = ResolveNasDownloadTargetLibraryId();
-        s.DesktopLyricsEnabled = IsDesktopLyricsSupported && DesktopLyricsEnabled;
-        s.DesktopLyricsOpacity = Math.Clamp(DesktopLyricsOpacityPercent, 45, 100) / 100.0;
-        s.DesktopLyricsFontSize = Math.Clamp(DesktopLyricsFontSize, 16, 40);
-        s.DefaultVolume = DefaultVolumePercent / 100f;
-        s.DefaultRepeatModeIndex = Math.Clamp(DefaultRepeatModeIndex, 0, 2);
-        s.DefaultShuffleOn = DefaultShuffleOn;
-        s.DefaultDownloadQualityIndex = DownloadQualityPreference.NormalizeIndex(DefaultDownloadQualityIndex);
-        s.DefaultDownloadQualityExplicitlySet = true;
-        s.DiscoverAutoOpenBatchEnqueueWizard = DiscoverAutoOpenBatchEnqueueWizard;
-        s.MyFreeMp3QuarkCookies = MyFreeMp3QuarkCookies.Trim();
-        s.EnableAcoustIdFingerprintLookup = EnableAcoustIdFingerprintLookup;
-        s.AcoustIdApiKey = AcoustIdApiKey.Trim();
-        AcoustIdLookupConfiguration.Apply(s.EnableAcoustIdFingerprintLookup, s.AcoustIdApiKey);
-        s.EqualizerEnabled = IsEqualizerSupported && EqualizerEnabled;
-        if (_equalizer != null)
-            _equalizer.IsEnabled = s.EqualizerEnabled;
-        s.EqualizerPreset = _equalizer?.SelectedPreset ?? s.EqualizerPreset;
-        EqualizerPresetSummary = FormatEqualizerPresetDisplay(s.EqualizerPreset);
-        if (!string.IsNullOrWhiteSpace(s.DownloadDirectory))
-            _services.Transfers.Downloads.SetDownloadRoot(s.DownloadDirectory);
-        MusicApiBootstrap.ApplyGathererSettings(s, _services.Discover.Gatherers);
-        await MusicApiBootstrap.ApplyAsync(s, _services.Discover.Gatherers);
-        s.NormalizeVolume = NormalizeVolume;
-        s.UpdateFeedUrl = UpdateFeedUrl;
-        await _settings.SaveAsync();
-        await _l10n.SetCultureAsync(s.Culture).ConfigureAwait(true);
-        _theme.Apply(s.ThemeMode);
-        _theme.ApplyAccentColor(AccentColor);
-        TypographyScale.Apply(s.UiFontScaleIndex);
-        HasPendingChanges = false;
-        _insights.Track(UsageInsightKeys.SettingsSave);
-        StatusMessage = libVlcEngineChanged
-            ? ExperimentalLibVlcEngineRestartHint
-            : _l10n.Get("Settings.Saved");
-        ShellStatusService.Instance.Info(
-            libVlcEngineChanged ? ExperimentalLibVlcEngineRestartHint : _l10n.Get("Settings.Saved"),
-            _l10n.Get("Settings.PreferencesCenter"));
-        MessageService.Instance.ShowSuccess(
-            libVlcEngineChanged ? ExperimentalLibVlcEngineRestartHint : _l10n.Get("Settings.Saved"));
-        SettingsSaved?.Invoke(this, EventArgs.Empty);
+            var s = _settings.Current;
+            s.ThemeMode = ThemeIndex switch { 0 => AppThemeMode.Light, 1 => AppThemeMode.Dark, _ => AppThemeMode.System };
+            s.Culture = LocalizationService.IndexToCulture(CultureIndex);
+            s.AccentColor = AccentColorPresets.Normalize(AccentColor);
+            AccentColor = s.AccentColor;
+            s.UiFontScaleIndex = Math.Clamp(UiFontScaleIndex, 0, 2);
+            s.UpdateCheckFrequency = UpdateFrequencyIndex switch { 0 => "daily", 1 => "weekly", 2 => "monthly", _ => "off" };
+            s.MaxConcurrentDownloads = MaxDownloads;
+            s.DownloadDirectory = DownloadDirectory.Trim();
+            s.NetEaseApiUrl = NetEaseApiUrl.Trim();
+            s.QQMusicApiUrl = QqMusicApiUrl.Trim();
+            s.MusicApiBaseUrl = MusicApiBaseUrl.Trim();
+            s.MusicRecognitionApiUrl = MusicRecognitionApiUrl.Trim();
+            s.Gatherers = GathererItems.Select(g => new MusicGathererEntry
+            {
+                Id = g.Id,
+                Enabled = g.IsEnabled,
+                BaseUrl = string.IsNullOrWhiteSpace(g.BaseUrl) ? null : g.BaseUrl.Trim()
+            }).ToList();
+            s.AutoStartBundledMusicApi = IsBundledMusicApiFeatureAvailable && AutoStartBundledMusicApi;
+            s.AutoStartBundledNetEaseApi = AutoStartBundledNetEaseApi;
+            s.CheckBundledMusicApiUpdates = IsBundledMusicApiFeatureAvailable && CheckBundledMusicApiUpdates;
+            s.BundledMusicApiUpdateGithubRepo = BundledMusicApiUpdateGithubRepo.Trim();
+            BundledMusicApiUpdateService.ConfiguredGithubRepo =
+                string.IsNullOrWhiteSpace(s.BundledMusicApiUpdateGithubRepo)
+                    ? null
+                    : s.BundledMusicApiUpdateGithubRepo;
+            s.EnableGlobalHotkeys = EnableHotkeys;
+            s.RestorePlaybackOnStartup = RestorePlaybackOnStartup;
+            var libVlcEngineChanged = s.UseExperimentalLibVlcEngine != UseExperimentalLibVlcEngine;
+            s.UseExperimentalLibVlcEngine = UseExperimentalLibVlcEngine;
+            _loadedUseExperimentalLibVlcEngine = s.UseExperimentalLibVlcEngine;
+            s.NasCacheOnPlay = NasCacheOnPlay;
+            s.NasDownloadTargetLibraryId = ResolveNasDownloadTargetLibraryId();
+            s.DesktopLyricsEnabled = IsDesktopLyricsSupported && DesktopLyricsEnabled;
+            s.DesktopLyricsOpacity = Math.Clamp(DesktopLyricsOpacityPercent, 45, 100) / 100.0;
+            s.DesktopLyricsFontSize = Math.Clamp(DesktopLyricsFontSize, 16, 40);
+            s.DefaultVolume = DefaultVolumePercent / 100f;
+            s.DefaultRepeatModeIndex = Math.Clamp(DefaultRepeatModeIndex, 0, 2);
+            s.DefaultShuffleOn = DefaultShuffleOn;
+            s.DefaultDownloadQualityIndex = DownloadQualityPreference.NormalizeIndex(DefaultDownloadQualityIndex);
+            s.DefaultDownloadQualityExplicitlySet = true;
+            s.DiscoverAutoOpenBatchEnqueueWizard = DiscoverAutoOpenBatchEnqueueWizard;
+            s.DiscoverHeroPromoSourceIndex = Math.Clamp(DiscoverHeroPromoSourceIndex, 0, 1);
+            s.MyFreeMp3QuarkCookies = MyFreeMp3QuarkCookies.Trim();
+            s.EnableAcoustIdFingerprintLookup = EnableAcoustIdFingerprintLookup;
+            s.AcoustIdApiKey = AcoustIdApiKey.Trim();
+            AcoustIdLookupConfiguration.Apply(s.EnableAcoustIdFingerprintLookup, s.AcoustIdApiKey);
+            s.EqualizerEnabled = IsEqualizerSupported && EqualizerEnabled;
+            if (_equalizer != null)
+                _equalizer.IsEnabled = s.EqualizerEnabled;
+            s.EqualizerPreset = _equalizer?.SelectedPreset ?? s.EqualizerPreset;
+            EqualizerPresetSummary = FormatEqualizerPresetDisplay(s.EqualizerPreset);
+            if (!string.IsNullOrWhiteSpace(s.DownloadDirectory))
+                _services.Transfers.Downloads.SetDownloadRoot(s.DownloadDirectory);
+            MusicApiBootstrap.ApplyGathererSettings(s, _services.Discover.Gatherers);
+            await MusicApiBootstrap.ApplyAsync(s, _services.Discover.Gatherers).ConfigureAwait(true);
+            s.NormalizeVolume = NormalizeVolume;
+            s.UpdateFeedUrl = UpdateFeedUrl;
+            await _settings.SaveAsync().ConfigureAwait(true);
+            await _l10n.SetCultureAsync(s.Culture).ConfigureAwait(true);
+            _theme.Apply(s.ThemeMode);
+            _theme.ApplyAccentColor(AccentColor);
+            TypographyScale.Apply(s.UiFontScaleIndex);
+            _insights.Track(UsageInsightKeys.SettingsSave);
+            if (libVlcEngineChanged)
+            {
+                StatusMessage = ExperimentalLibVlcEngineRestartHint;
+                ShellStatusService.Instance.Info(
+                    ExperimentalLibVlcEngineRestartHint,
+                    _l10n.Get("Settings.PreferencesCenter"));
+                MessageService.Instance.ShowSuccess(ExperimentalLibVlcEngineRestartHint);
+            }
+            else if (announce)
+            {
+                StatusMessage = _l10n.Get("Settings.Saved");
+                ShellStatusService.Instance.Info(
+                    _l10n.Get("Settings.Saved"),
+                    _l10n.Get("Settings.PreferencesCenter"));
+                MessageService.Instance.ShowSuccess(_l10n.Get("Settings.Saved"));
+            }
+
+            SettingsSaved?.Invoke(this, EventArgs.Empty);
+        }
+        catch (Exception ex)
+        {
+            var message = string.Format(_l10n.Get("Settings.Status.SaveFailed"), ex.Message);
+            StatusMessage = message;
+            ShellStatusService.Instance.Error(message, _l10n.Get("Settings.PreferencesCenter"));
+            throw;
+        }
     }
 
     [RelayCommand]
@@ -2059,12 +2190,14 @@ public partial class SettingsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(OverviewPlayCountKpiIsPlaceholder));
         OnPropertyChanged(nameof(OverviewLibraryEmptyGuidance));
         OnPropertyChanged(nameof(OverviewTracksDisplay));
+        OnPropertyChanged(nameof(OverviewTracksHeroDisplay));
         OnPropertyChanged(nameof(OverviewAlbumsDisplay));
         OnPropertyChanged(nameof(OverviewArtistsDisplay));
         OnPropertyChanged(nameof(OverviewTracksKpiIsPlaceholder));
         OnPropertyChanged(nameof(OverviewAlbumsKpiIsPlaceholder));
         OnPropertyChanged(nameof(OverviewArtistsKpiIsPlaceholder));
         OnPropertyChanged(nameof(ShowOverviewRecommendPrimaryCta));
+        OnPropertyChanged(nameof(OverviewCapabilitiesSummary));
         await RefreshNasDownloadTargetLibrariesAsync(_settings.Current.NasDownloadTargetLibraryId).ConfigureAwait(true);
     }
 

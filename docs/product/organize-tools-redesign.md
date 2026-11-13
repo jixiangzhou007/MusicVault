@@ -1,5 +1,8 @@
 # 整理工具页 · 产品重设计（v2）
 
+> **2026-11-12：** 完整四步流水线延后。现行实现以  
+> `docs/superpowers/specs/2026-11-12-organize-scrape-first-design.md` 为准（刮削优先 + 底栏）。
+
 ## 1. 用户与场景
 
 | 用户 | 目标 |

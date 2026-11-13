@@ -1,0 +1,4 @@
+vinyl-tonearm.png — flat top-down UI tonearm (NetEase-like, slight local variation).
+Drawn to match vinyl disc orthographic view (not photoreal 3D).
+Source: Assets/vinyl-tonearm.svg rasterized; pivot (24,22) in viewBox 92x138
+→ TonearmPivotX/Y = 0.26 / 0.16. Host size must stay 92×138 (same aspect).

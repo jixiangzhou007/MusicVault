@@ -163,6 +163,26 @@
     <GradientStop Color="#90101014" Offset="0.35"/>
     <GradientStop Color="#F0101014" Offset="1"/>
   </LinearGradientBrush>
+  <!-- 发现页沉浸 Hero：底部可读叠字 -->
+  <LinearGradientBrush x:Key="DiscoverHeroScrimBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+    <GradientStop Color="#200A0A0C" Offset="0"/>
+    <GradientStop Color="#600A0A0C" Offset="0.42"/>
+    <GradientStop Color="#E60A0A0C" Offset="0.78"/>
+    <GradientStop Color="#FF0A0A0C" Offset="1"/>
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="DiscoverHeroSideScrimBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+    <GradientStop Color="#B00A0A0C" Offset="0"/>
+    <GradientStop Color="#000A0A0C" Offset="0.55"/>
+    <GradientStop Color="#000A0A0C" Offset="1"/>
+  </LinearGradientBrush>
+  <!-- Hero 方案 A：左侧透出封面纹理，右侧压暗保证文字可读 -->
+  <LinearGradientBrush x:Key="DiscoverHeroPromoFadeBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+    <GradientStop Color="#00000000" Offset="0"/>
+    <GradientStop Color="#00000000" Offset="0.22"/>
+    <GradientStop Color="#66000000" Offset="0.42"/>
+    <GradientStop Color="#B3000000" Offset="0.62"/>
+    <GradientStop Color="#CC000000" Offset="1"/>
+  </LinearGradientBrush>
   <LinearGradientBrush x:Key="PlayerChromeCoverFadeBrush" StartPoint="0%,0%" EndPoint="0%,100%">
     <GradientStop Color="#00000000" Offset="0"/>
     <GradientStop Color="#B0101014" Offset="0.45"/>

@@ -1,6 +1,7 @@
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using MusicVault.App.Icons;
 
 namespace MusicVault.App.Controls;
 
@@ -13,7 +14,7 @@ public partial class EmptyStateView : UserControl
         AvaloniaProperty.Register<EmptyStateView, string>(nameof(Description), string.Empty);
 
     public static readonly StyledProperty<string> IconGlyphProperty =
-        AvaloniaProperty.Register<EmptyStateView, string>(nameof(IconGlyph), "\uE721");
+        AvaloniaProperty.Register<EmptyStateView, string>(nameof(IconGlyph), IconGlyphs.Search);
 
     public static readonly StyledProperty<bool> ShowIconProperty =
         AvaloniaProperty.Register<EmptyStateView, bool>(nameof(ShowIcon), true);

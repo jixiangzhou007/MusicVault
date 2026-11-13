@@ -13,11 +13,9 @@ using MusicVault.Services.Api;
 
 namespace MusicVault.App.ViewModels.Dialogs;
 
-/// <summary>首次运行向导：曲库、下载目录、内置 API。</summary>
+/// <summary>首次运行向导：欢迎 → 选路 → 路径详情。</summary>
 public partial class FirstRunWizardModalViewModel : ViewModelBase
 {
-    private const int LastStepIndex = 3;
-
     private readonly AppModalHostViewModel _host;
     private readonly AppServices _services;
     private readonly AppSettingsService _settings;
@@ -26,11 +24,11 @@ public partial class FirstRunWizardModalViewModel : ViewModelBase
 
     [ObservableProperty] private int _stepIndex;
 
+    [ObservableProperty] private FirstRunOnboardingPath _selectedPath = FirstRunOnboardingPath.Unset;
+
     [ObservableProperty] private string _libraryPath = string.Empty;
     [ObservableProperty] private bool _skipLibraryStep;
     [ObservableProperty] private string _downloadDirectory = string.Empty;
-    [ObservableProperty] private bool _autoStartBundledMusicApi = true;
-    [ObservableProperty] private bool _autoStartBundledNetEaseApi = true;
     [ObservableProperty] private string _statusMessage = string.Empty;
 
     public FirstRunWizardModalViewModel(
@@ -51,9 +49,6 @@ public partial class FirstRunWizardModalViewModel : ViewModelBase
         DownloadDirectory = ResolveDefaultDownloadDirectory(services, settings);
         LibraryPath = ResolveDefaultLibraryPath();
 
-        _autoStartBundledMusicApi = settings.Current.AutoStartBundledMusicApi;
-        _autoStartBundledNetEaseApi = settings.Current.AutoStartBundledNetEaseApi;
-
         BundledMusicApiHost.Instance.Discover(AppContext.BaseDirectory);
         BundledNetEaseApiHost.Instance.Discover(AppContext.BaseDirectory);
 
@@ -65,24 +60,23 @@ public partial class FirstRunWizardModalViewModel : ViewModelBase
         OnPropertyChanged(nameof(WelcomeTitle));
         OnPropertyChanged(nameof(WelcomeDesc));
         OnPropertyChanged(nameof(WelcomeHint));
+        OnPropertyChanged(nameof(PathTitle));
+        OnPropertyChanged(nameof(PathDesc));
+        OnPropertyChanged(nameof(PathLocalTitle));
+        OnPropertyChanged(nameof(PathLocalDesc));
+        OnPropertyChanged(nameof(PathDiscoverTitle));
+        OnPropertyChanged(nameof(PathDiscoverDesc));
         OnPropertyChanged(nameof(LibraryTitle));
         OnPropertyChanged(nameof(LibraryDesc));
         OnPropertyChanged(nameof(LibraryWatermark));
         OnPropertyChanged(nameof(LibraryBrowseText));
-        OnPropertyChanged(nameof(DownloadTitle));
-        OnPropertyChanged(nameof(DownloadDesc));
-        OnPropertyChanged(nameof(DownloadWatermark));
-        OnPropertyChanged(nameof(DownloadBrowseText));
-        OnPropertyChanged(nameof(ApiTitle));
-        OnPropertyChanged(nameof(ApiDesc));
-        OnPropertyChanged(nameof(ApiAutoStartGoMusicText));
-        OnPropertyChanged(nameof(ApiAutoStartNetEaseText));
-        OnPropertyChanged(nameof(ApiNoBundledText));
+        OnPropertyChanged(nameof(DiscoverBundledText));
+        OnPropertyChanged(nameof(DiscoverDirectText));
+        OnPropertyChanged(nameof(DiscoverMacText));
         OnPropertyChanged(nameof(SkipWizardText));
         OnPropertyChanged(nameof(SkipStepText));
         OnPropertyChanged(nameof(BackText));
         OnPropertyChanged(nameof(NextButtonText));
-        OnPropertyChanged(nameof(ApiHealthStatusText));
         UpdateWizardSteps();
     }
 
@@ -91,70 +85,83 @@ public partial class FirstRunWizardModalViewModel : ViewModelBase
     public bool HasAnyBundledApi => HasBundledGoMusicApi || HasBundledNetEaseApi;
     public bool HasStatusMessage => !string.IsNullOrWhiteSpace(StatusMessage);
 
-    public bool IsWelcomeStep => StepIndex == 0;
-    public bool IsLibraryStep => StepIndex == 1;
-    public bool IsDownloadStep => StepIndex == 2;
-    public bool IsApiStep => StepIndex == 3;
-
+    public bool IsWelcomeStep => FirstRunWizardFlow.IsWelcome(StepIndex);
+    public bool IsPathStep => FirstRunWizardFlow.IsPathStep(StepIndex);
+    public bool IsLibraryDetail => FirstRunWizardFlow.IsLibraryDetail(StepIndex, SelectedPath);
+    public bool IsDiscoverDetail => FirstRunWizardFlow.IsDiscoverDetail(StepIndex, SelectedPath);
+    public DiscoverSetupCopyKind DiscoverCopyKind =>
+        FirstRunWizardFlow.ResolveDiscoverCopy(OperatingSystem.IsMacOS(), HasAnyBundledApi);
+    public bool ShowMacDiscoverCopy => IsDiscoverDetail && DiscoverCopyKind == DiscoverSetupCopyKind.Mac;
+    public bool ShowBundledDiscoverCopy => IsDiscoverDetail && DiscoverCopyKind == DiscoverSetupCopyKind.Bundled;
+    public bool ShowDirectDiscoverCopy => IsDiscoverDetail && DiscoverCopyKind == DiscoverSetupCopyKind.Direct;
+    public bool IsLocalPathSelected => SelectedPath == FirstRunOnboardingPath.LocalLibrary;
+    public bool IsDiscoverPathSelected => SelectedPath == FirstRunOnboardingPath.Discover;
+    public bool CanAdvance => FirstRunWizardFlow.CanGoNext(StepIndex, SelectedPath);
+    public bool ShowSkipStep => FirstRunWizardFlow.ShowSkipDetail(StepIndex, SelectedPath);
     public bool CanGoBack => StepIndex > 0;
-    public bool IsLastStep => StepIndex >= LastStepIndex;
+    public bool IsLastStep => StepIndex >= FirstRunWizardFlow.LastStepIndex;
 
     public string WelcomeTitle => _l10n.Get("Wizard.FirstRun.Welcome.Title");
     public string WelcomeDesc => _l10n.Get("Wizard.FirstRun.Welcome.Desc");
     public string WelcomeHint => _l10n.Get("Wizard.FirstRun.Welcome.Hint");
+    public string PathTitle => _l10n.Get("Wizard.FirstRun.Path.Title");
+    public string PathDesc => _l10n.Get("Wizard.FirstRun.Path.Desc");
+    public string PathLocalTitle => _l10n.Get("Wizard.FirstRun.Path.Local.Title");
+    public string PathLocalDesc => _l10n.Get("Wizard.FirstRun.Path.Local.Desc");
+    public string PathDiscoverTitle => _l10n.Get("Wizard.FirstRun.Path.Discover.Title");
+    public string PathDiscoverDesc => _l10n.Get("Wizard.FirstRun.Path.Discover.Desc");
     public string LibraryTitle => _l10n.Get("Wizard.FirstRun.Library.Title");
     public string LibraryDesc => _l10n.Get("Wizard.FirstRun.Library.Desc");
     public string LibraryWatermark => _l10n.Get("Wizard.FirstRun.Library.Watermark");
     public string LibraryBrowseText => _l10n.Get("Wizard.FirstRun.Library.Browse");
-    public string DownloadTitle => _l10n.Get("Wizard.FirstRun.Download.Title");
-    public string DownloadDesc => _l10n.Get("Wizard.FirstRun.Download.Desc");
-    public string DownloadWatermark => _l10n.Get("Wizard.FirstRun.Download.Watermark");
-    public string DownloadBrowseText => _l10n.Get("Wizard.FirstRun.Download.Browse");
-    public string ApiTitle => _l10n.Get("Wizard.FirstRun.Api.Title");
-    public string ApiDesc => _l10n.Get("Wizard.FirstRun.Api.Desc");
-    public string ApiAutoStartGoMusicText => _l10n.Get("Wizard.FirstRun.Api.AutoStartGoMusic");
-    public string ApiAutoStartNetEaseText => _l10n.Get("Wizard.FirstRun.Api.AutoStartNetEase");
-    public string ApiNoBundledText => _l10n.Get("Wizard.FirstRun.Api.NoBundled");
+    public string DiscoverBundledText => _l10n.Get("Wizard.FirstRun.Discover.Bundled");
+    public string DiscoverDirectText => _l10n.Get("Wizard.FirstRun.Discover.Direct");
+    public string DiscoverMacText => _l10n.Get("Wizard.FirstRun.Discover.Mac");
     public string SkipWizardText => _l10n.Get("Wizard.FirstRun.SkipWizard");
     public string SkipStepText => _l10n.Get("Wizard.FirstRun.SkipStep");
     public string BackText => _l10n.Get("Wizard.FirstRun.Back");
     public string NextButtonText => IsLastStep ? _l10n.Get("Wizard.FirstRun.Start") : _l10n.Get("Wizard.FirstRun.Next");
-
-    public string ApiHealthStatusText => OnlineApiHealthService.Instance.State switch
-    {
-        OnlineApiHealthState.Healthy => _l10n.Get("Nav.Discover.ApiHealth.Healthy"),
-        OnlineApiHealthState.Checking => _l10n.Get("Nav.Discover.ApiHealth.Checking"),
-        OnlineApiHealthState.NotConfigured => _l10n.Get("Nav.Discover.ApiHealth.NotConfigured"),
-        OnlineApiHealthState.Unhealthy => string.Format(
-            _l10n.Get("Nav.Discover.ApiHealth.Unhealthy"),
-            ServiceMessageLocalizer.ResolveDetailAggregate(_l10n, OnlineApiHealthService.Instance.DetailMessage)),
-        _ => string.Empty
-    };
-
-    public bool ShowApiHealthStatus =>
-        IsApiStep && OnlineApiHealthService.Instance.State != OnlineApiHealthState.Unknown;
 
     public ObservableCollection<StepItem> WizardSteps { get; } = [];
 
     partial void OnStepIndexChanged(int value)
     {
         StatusMessage = string.Empty;
+        NotifyStepUi();
         UpdateWizardSteps();
-        OnPropertyChanged(nameof(IsWelcomeStep));
-        OnPropertyChanged(nameof(IsLibraryStep));
-        OnPropertyChanged(nameof(IsDownloadStep));
-        OnPropertyChanged(nameof(IsApiStep));
-        OnPropertyChanged(nameof(CanGoBack));
-        OnPropertyChanged(nameof(IsLastStep));
-        OnPropertyChanged(nameof(NextButtonText));
-        OnPropertyChanged(nameof(ShowApiHealthStatus));
-        OnPropertyChanged(nameof(ApiHealthStatusText));
+    }
 
-        if (value == LastStepIndex)
-            _ = RefreshApiHealthAsync();
+    partial void OnSelectedPathChanged(FirstRunOnboardingPath value)
+    {
+        NotifyStepUi();
+        UpdateWizardSteps();
     }
 
     partial void OnStatusMessageChanged(string value) => OnPropertyChanged(nameof(HasStatusMessage));
+
+    private void NotifyStepUi()
+    {
+        OnPropertyChanged(nameof(IsWelcomeStep));
+        OnPropertyChanged(nameof(IsPathStep));
+        OnPropertyChanged(nameof(IsLibraryDetail));
+        OnPropertyChanged(nameof(IsDiscoverDetail));
+        OnPropertyChanged(nameof(ShowMacDiscoverCopy));
+        OnPropertyChanged(nameof(ShowBundledDiscoverCopy));
+        OnPropertyChanged(nameof(ShowDirectDiscoverCopy));
+        OnPropertyChanged(nameof(IsLocalPathSelected));
+        OnPropertyChanged(nameof(IsDiscoverPathSelected));
+        OnPropertyChanged(nameof(CanAdvance));
+        OnPropertyChanged(nameof(ShowSkipStep));
+        OnPropertyChanged(nameof(CanGoBack));
+        OnPropertyChanged(nameof(IsLastStep));
+        OnPropertyChanged(nameof(NextButtonText));
+    }
+
+    [RelayCommand]
+    private void SelectLocalPath() => SelectedPath = FirstRunOnboardingPath.LocalLibrary;
+
+    [RelayCommand]
+    private void SelectDiscoverPath() => SelectedPath = FirstRunOnboardingPath.Discover;
 
     [RelayCommand]
     private void Back()
@@ -167,6 +174,7 @@ public partial class FirstRunWizardModalViewModel : ViewModelBase
     private async Task SkipWizardAsync()
     {
         _settings.Current.FirstRunWizardCompleted = true;
+        _settings.Current.FirstRunOnboardingPath = FirstRunOnboardingPath.Unset;
         await _settings.SaveAsync().ConfigureAwait(true);
         _host.Complete(FirstRunWizardChoice.Skipped);
     }
@@ -174,7 +182,10 @@ public partial class FirstRunWizardModalViewModel : ViewModelBase
     [RelayCommand]
     private async Task NextAsync()
     {
-        if (StepIndex < LastStepIndex)
+        if (!CanAdvance)
+            return;
+
+        if (StepIndex < FirstRunWizardFlow.LastStepIndex)
         {
             StepIndex++;
             return;
@@ -184,14 +195,12 @@ public partial class FirstRunWizardModalViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void SkipCurrentStep()
+    private async Task SkipCurrentStepAsync()
     {
-        if (StepIndex == 1)
-            SkipLibraryStep = true;
-        if (StepIndex < LastStepIndex)
-            StepIndex++;
-        else
-            _ = FinishAsync();
+        if (!ShowSkipStep)
+            return;
+        SkipLibraryStep = true;
+        await FinishAsync().ConfigureAwait(true);
     }
 
     [RelayCommand]
@@ -205,26 +214,13 @@ public partial class FirstRunWizardModalViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
-    private async Task PickDownloadFolderAsync()
-    {
-        var path = await PickFolderAsync(_l10n.Get("Wizard.FirstRun.PickDownloadTitle")).ConfigureAwait(true);
-        if (path != null)
-            DownloadDirectory = path;
-    }
-
-    private async Task RefreshApiHealthAsync()
-    {
-        await OnlineApiHealthService.Instance.RefreshAsync().ConfigureAwait(true);
-        OnPropertyChanged(nameof(ApiHealthStatusText));
-        OnPropertyChanged(nameof(ShowApiHealthStatus));
-    }
-
     private async Task FinishAsync()
     {
         try
         {
-            if (!SkipLibraryStep && !string.IsNullOrWhiteSpace(LibraryPath))
+            if (SelectedPath == FirstRunOnboardingPath.LocalLibrary
+                && !SkipLibraryStep
+                && !string.IsNullOrWhiteSpace(LibraryPath))
             {
                 var path = LibraryRepository.NormalizeRootPath(LibraryPath.Trim());
                 if (Directory.Exists(path))
@@ -244,8 +240,15 @@ public partial class FirstRunWizardModalViewModel : ViewModelBase
             Directory.CreateDirectory(downloadDir);
 
             _settings.Current.DownloadDirectory = downloadDir;
-            _settings.Current.AutoStartBundledMusicApi = AutoStartBundledMusicApi;
-            _settings.Current.AutoStartBundledNetEaseApi = AutoStartBundledNetEaseApi;
+            if (SelectedPath == FirstRunOnboardingPath.Discover)
+            {
+                _settings.Current.AutoStartBundledMusicApi = HasBundledGoMusicApi;
+                _settings.Current.AutoStartBundledNetEaseApi = HasBundledNetEaseApi;
+            }
+
+            _settings.Current.FirstRunOnboardingPath = SelectedPath == FirstRunOnboardingPath.Unset
+                ? FirstRunOnboardingPath.Unset
+                : SelectedPath;
             _settings.Current.FirstRunWizardCompleted = true;
 
             MusicApiBootstrap.ApplyConfig(_settings.Current, _services.Gatherers);
@@ -263,10 +266,19 @@ public partial class FirstRunWizardModalViewModel : ViewModelBase
     private void UpdateWizardSteps()
     {
         WizardSteps.Clear();
-        WizardSteps.Add(new StepItem(_l10n.Get("Wizard.FirstRun.Step.Welcome"), StepIndex > 0 ? StepStatus.Finish : StepStatus.Process, 1));
-        WizardSteps.Add(new StepItem(_l10n.Get("Wizard.FirstRun.Step.Library"), StepIndex > 1 ? StepStatus.Finish : StepIndex == 1 ? StepStatus.Process : StepStatus.Wait, 2));
-        WizardSteps.Add(new StepItem(_l10n.Get("Wizard.FirstRun.Step.Download"), StepIndex > 2 ? StepStatus.Finish : StepIndex == 2 ? StepStatus.Process : StepStatus.Wait, 3));
-        WizardSteps.Add(new StepItem(_l10n.Get("Wizard.FirstRun.Step.Online"), StepIndex == 3 ? StepStatus.Process : StepStatus.Wait, 4, showConnector: false));
+        WizardSteps.Add(new StepItem(
+            _l10n.Get("Wizard.FirstRun.Step.Welcome"),
+            StepIndex > 0 ? StepStatus.Finish : StepStatus.Process,
+            1));
+        WizardSteps.Add(new StepItem(
+            _l10n.Get("Wizard.FirstRun.Step.Path"),
+            StepIndex > 1 ? StepStatus.Finish : StepIndex == 1 ? StepStatus.Process : StepStatus.Wait,
+            2));
+        WizardSteps.Add(new StepItem(
+            _l10n.Get("Wizard.FirstRun.Step.Setup"),
+            StepIndex == 2 ? StepStatus.Process : StepStatus.Wait,
+            3,
+            showConnector: false));
     }
 
     private static string ResolveDefaultDownloadDirectory(AppServices services, AppSettingsService settings)

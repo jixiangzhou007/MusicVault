@@ -1,0 +1,4 @@
+# Checkout line endings: shell scripts must stay LF for macOS CI/runners.
+*.sh text eol=lf
+# Match .editorconfig for C#. Do not bulk-convert historical LF in one commit.
+*.cs text eol=crlf

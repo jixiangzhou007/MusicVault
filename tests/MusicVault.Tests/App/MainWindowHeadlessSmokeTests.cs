@@ -1,8 +1,10 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Styling;
 using Avalonia.VisualTree;
+using MusicVault.App.Services;
 using MusicVault.App.ViewModels.Pages;
 using MusicVault.Core.Enums;
 
@@ -40,6 +42,26 @@ public sealed class MainWindowHeadlessSmokeTests
         Assert.Contains(shell.NavLibrary, labels);
         Assert.Contains(shell.NavHome, labels);
         Assert.Contains(shell.NavSettings, labels);
+
+        var navTabLabels = window.GetVisualDescendants()
+            .OfType<Button>()
+            .Where(b => b.Classes.Contains("nav-tab"))
+            .Select(b => b.Content?.ToString())
+            .Where(static s => !string.IsNullOrWhiteSpace(s))
+            .ToHashSet(StringComparer.Ordinal);
+        Assert.DoesNotContain(shell.NavTransfers, navTabLabels);
+
+        var transfersButton = window.GetVisualDescendants()
+            .OfType<Button>()
+            .FirstOrDefault(b => AutomationProperties.GetName(b) == shell.NavTransfers);
+        Assert.NotNull(transfersButton);
+        Assert.Contains("top-icon-btn", transfersButton.Classes);
+
+        var chromePanel = window.GetVisualDescendants()
+            .OfType<StackPanel>()
+            .FirstOrDefault(p => p.Name == "WindowChromePanel");
+        Assert.NotNull(chromePanel);
+        Assert.True(chromePanel.IsVisible);
 
         Assert.True(shell.ShowFullShell);
         Assert.False(shell.IsCompactPlayerMode);
@@ -86,29 +108,34 @@ public sealed class MainWindowHeadlessSmokeTests
     }
 
     /// <summary>
-    /// Discover browse hub：无会话 → hub；设会话 → compact；ClearSearchCriteria → hub 恢复。
+    /// Discover shell：细搜条常驻；无会话时 feed/hub；有会话时细条下出结果；清搜索回到 feed。
     /// 须在同一 Headless 会话内断言（勿再开第二个 MainWindow AvaloniaFact）。
     /// </summary>
     private static void AssertDiscoverBrowseHubSessionToggles(SearchPageViewModel search)
     {
-        Assert.True(search.IsSearchMode);
         Assert.False(search.HasActiveSearchSession);
         Assert.True(search.ShowBrowseHub);
-        Assert.False(search.ShowDiscoverEmpty);
-        Assert.True(search.UseHeroSearch);
-        Assert.False(search.UseCompactSearch);
+        Assert.True(search.UseCompactSearch);
+        Assert.False(search.UseHeroSearch);
+        Assert.False(search.ShowSearchResultsPane);
 
         search.HasActiveSearchSession = true;
         Assert.False(search.ShowBrowseHub);
         Assert.True(search.UseCompactSearch);
-        Assert.False(search.UseHeroSearch);
+        Assert.True(search.ShowSearchResultsPane);
 
         search.ClearSearchCriteriaCommand.Execute(null);
         Assert.False(search.HasActiveSearchSession);
         Assert.True(search.ShowBrowseHub);
-        Assert.False(search.ShowDiscoverEmpty);
-        Assert.True(search.UseHeroSearch);
-        Assert.False(search.UseCompactSearch);
+        Assert.False(search.ShowSearchResultsPane);
+
+        // 有会话但条件已空：点发现 / 恢复 idle 应回到 feed
+        search.HasActiveSearchSession = true;
+        search.SongNameQuery = string.Empty;
+        search.ArtistQuery = string.Empty;
+        search.RestoreBrowseHubIfIdle();
+        Assert.False(search.HasActiveSearchSession);
+        Assert.True(search.ShowBrowseHub);
     }
 
     private static void AssertSection<TPage>(HeadlessUiTestHost host, NavigationSection section)

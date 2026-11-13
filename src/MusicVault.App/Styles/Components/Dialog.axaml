@@ -73,4 +73,54 @@
   <Style Selector="TextBlock.app-dialog-status.success">
     <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
   </Style>
+
+  <!-- 试听加载：紧凑卡片（小于通用 app-modal-panel） -->
+  <Style Selector="Border.preview-loading-card">
+    <Setter Property="Background" Value="{DynamicResource SurfaceElevatedBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="12"/>
+    <Setter Property="BoxShadow" Value="{DynamicResource PopoverShadow}"/>
+    <Setter Property="Padding" Value="16,14"/>
+    <Setter Property="Width" Value="300"/>
+    <Setter Property="MinWidth" Value="280"/>
+    <Setter Property="MaxWidth" Value="320"/>
+  </Style>
+  <Style Selector="TextBlock.preview-loading-title">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="LineHeight" Value="18"/>
+  </Style>
+  <Style Selector="TextBlock.preview-loading-track">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="LineHeight" Value="20"/>
+  </Style>
+  <Style Selector="TextBlock.preview-loading-artist">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="LineHeight" Value="16"/>
+  </Style>
+  <Style Selector="TextBlock.preview-loading-status">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="LineHeight" Value="16"/>
+  </Style>
+  <Style Selector="ProgressBar.preview-loading-progress">
+    <Setter Property="Height" Value="4"/>
+    <Setter Property="MinHeight" Value="4"/>
+    <Setter Property="MaxHeight" Value="4"/>
+    <Setter Property="CornerRadius" Value="2"/>
+  </Style>
+  <Style Selector="Button.preview-loading-cancel">
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Height" Value="28"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="MaxHeight" Value="28"/>
+    <Setter Property="Padding" Value="10,0"/>
+    <Setter Property="Margin" Value="0,10,0,0"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+  </Style>
 </Styles>

@@ -31,7 +31,8 @@ public partial class AudioToolsPageView : UserControl, IRemoveTrackConfirmPage
         if (_batchScrapeHeaderAlignmentWired)
             return;
 
-        TrackTablePairedLayout.Wire(BatchScrapeHeaderGrid, BatchScrapeItems);
+        // 外层已有 PageHeroToolbarInsetMargin(16/16)；contentInset 再取 16 会双层缩进，表头阴影与列错位
+        TrackTablePairedLayout.Wire(BatchScrapeHeaderGrid, BatchScrapeItems, contentInsetOverride: 0);
         _batchScrapeHeaderAlignmentWired = true;
     }
 

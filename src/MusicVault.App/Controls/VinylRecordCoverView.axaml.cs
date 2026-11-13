@@ -14,7 +14,7 @@ public partial class VinylRecordCoverView : UserControl
     private const double LabelDiameterRatio = 0.75;
     private const double SpinIntervalMs = 16;
     private const double SpinDegreesPerSecond = 72;
-    // NetEase DiscView: paused -30°, playing 0°, pivot at screw (top-left of needle bitmap).
+    // NetEase-like flat overlay: paused -30°, playing 0°, pivot at screw (24,22)/(92,138).
     private const double TonearmPlayingAngle = 0;
     private const double TonearmPausedAngle = -30;
     private const double TonearmPivotX = 0.26;

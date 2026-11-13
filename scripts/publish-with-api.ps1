@@ -1,6 +1,7 @@
 param(
     [string]$GoMusicApiDir = "",
     [string]$OutputDir = "",
+    [string]$ApiVersion = "",
     [switch]$Restart,
     [switch]$NoRestart
 )
@@ -133,10 +134,24 @@ if (-not (Test-Path $neteaseEntry)) {
 }
 
 $version = "unknown"
-try {
-    $rel = Invoke-RestMethod -Uri "https://api.github.com/repos/guohuiyuan/go-music-api/releases/latest" -TimeoutSec 15
-    $version = $rel.tag_name
-} catch { $version = "v1.0.1" }
+$localVersionFile = Join-Path $GoMusicApiDir "version.txt"
+$repoApiVersion = Join-Path $root "api\version.txt"
+if ($ApiVersion) {
+    $version = $ApiVersion.Trim()
+}
+elseif (Test-Path $localVersionFile) {
+    $version = (Get-Content $localVersionFile -Raw).Trim()
+}
+elseif (Test-Path $repoApiVersion) {
+    $version = (Get-Content $repoApiVersion -Raw).Trim()
+}
+else {
+    try {
+        $rel = Invoke-RestMethod -Uri "https://api.github.com/repos/guohuiyuan/go-music-api/releases/latest" -TimeoutSec 15
+        $version = $rel.tag_name
+    } catch { $version = "v1.0.1" }
+}
+if (-not $version) { $version = "v1.0.1" }
 Set-Content -Path (Join-Path $targetApi "version.txt") -Value $version -Encoding UTF8
 
 $appVer = (Select-Xml -Path (Join-Path $root "src\MusicVault.App\MusicVault.App.csproj") -XPath "//Version" -ErrorAction SilentlyContinue).Node.InnerText

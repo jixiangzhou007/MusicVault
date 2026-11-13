@@ -4,8 +4,10 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using MusicVault.App.Icons;
 using MusicVault.App.ViewModels;
 using MusicVault.App.Views.Pages;
 using MusicVault.Core.Enums;
@@ -46,18 +48,38 @@ public partial class MainWindow : Window
         Closing += OnClosing;
     }
 
+    private const double MacTitleBarLeadingInset = 78;
+    private const double MacTitleBarHeightHint = 52; // 对齐 Token TopNavHeight
+
     private void ConfigureCustomTitleBar()
     {
-        if (!OperatingSystem.IsWindows())
+        if (OperatingSystem.IsWindows())
+        {
+            SystemDecorations = SystemDecorations.None;
+            Background = Brushes.Transparent;
+            TransparencyLevelHint = new[] { WindowTransparencyLevel.Transparent };
+            WindowChromePanel.IsVisible = true;
+            WindowChromeDivider.IsVisible = true;
+            UpdateMaximizeChrome();
+            UpdateWindowShellChrome();
+            return;
+        }
+
+        if (!OperatingSystem.IsMacOS())
             return;
 
-        SystemDecorations = SystemDecorations.None;
-        Background = Brushes.Transparent;
-        TransparencyLevelHint = new[] { WindowTransparencyLevel.Transparent };
-        WindowChromePanel.IsVisible = true;
-        WindowChromeDivider.IsVisible = true;
-        UpdateMaximizeChrome();
-        UpdateWindowShellChrome();
+        ExtendClientAreaToDecorationsHint = true;
+        ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.PreferSystemChrome;
+        ExtendClientAreaTitleBarHeightHint = MacTitleBarHeightHint;
+        WindowChromePanel.IsVisible = false;
+        WindowChromeDivider.IsVisible = false;
+        if (Application.Current is { } app)
+        {
+            app.Resources["TitleBarLeadingInset"] = new Thickness(MacTitleBarLeadingInset, 0, 0, 0);
+            app.Resources["WindowShellCornerRadius"] = new CornerRadius(0);
+            app.Resources["WindowShellInnerCornerRadius"] = new CornerRadius(0);
+            app.Resources["WindowShellStrokePadding"] = new Thickness(0);
+        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -102,7 +124,7 @@ public partial class MainWindow : Window
             return;
 
         var maximized = WindowState == WindowState.Maximized;
-        MaximizeChromeGlyph.Text = maximized ? "\uE923" : "\uE922";
+        MaximizeChromeGlyph.Text = maximized ? IconGlyphs.Restore : IconGlyphs.Maximize;
         ToolTip.SetTip(MaximizeChromeButton, maximized ? "还原" : "最大化");
     }
 

@@ -1,16 +1,25 @@
 # MusicVault 发布说明
 
-> 法律与合规：[docs/LEGAL.md](docs/LEGAL.md) · GitHub Release 正文模板：[docs/GITHUB_RELEASE.md](docs/GITHUB_RELEASE.md) · 变更日志：[CHANGELOG.md](CHANGELOG.md)
+> 法律与合规：[docs/LEGAL.md](docs/LEGAL.md) · GitHub Release 正文模板：[docs/GITHUB_RELEASE.md](docs/GITHUB_RELEASE.md) · 变更日志：[CHANGELOG.md](CHANGELOG.md) · **朋友包检查单**：[docs/FRIEND_RELEASE.md](docs/FRIEND_RELEASE.md)
 
 ## 版本策略
 
 - 应用版本：`Directory.Build.props` 中的 `Version`
 - 程序集名：`MusicVault`（输出 `MusicVault.exe` / `MusicVault`）
 
-## Windows 发布（推荐）
+## Windows 朋友包（推荐）
+
+发给朋友或上传便携 Release 附件时用这一条（含统一 API）：
 
 ```powershell
 cd <MusicVault 仓库根目录>
+.\scripts\publish-with-api.ps1 -Restart
+# 输出: publish\win-x64-vol\  （整夹打 zip，勿只拷 exe）
+```
+
+## Windows 轻量 / Velopack 基线
+
+```powershell
 .\scripts\publish-windows.ps1
 # 输出: publish\win-x64\MusicVault.exe
 ```
@@ -33,6 +42,8 @@ chmod +x scripts/publish-macos.sh
 ```
 
 脚本顺序：**先 `dotnet publish`，再编译 `libMusicVaultPlayer.dylib`**（避免 publish 清空输出目录导致 dylib 丢失）。需安装 Xcode Command Line Tools（`clang`）。
+
+**osx-arm64 朋友包必须含 `libMusicVaultPlayer.dylib`**：缺 dylib 时脚本会失败，不会打出 zip。LibVLC / VLC.app 为增强，不是合格线。成功后 zip 在 `publish/MusicVault-<Version>-osx-arm64.zip`。
 
 Windows 上可跑结构校验（不替代真机构建）：
 

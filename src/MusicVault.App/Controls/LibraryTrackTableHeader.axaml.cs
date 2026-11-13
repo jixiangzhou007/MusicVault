@@ -15,6 +15,9 @@ public partial class LibraryTrackTableHeader : UserControl
         set => SetValue(ScrollPairedProperty, value);
     }
 
+    /// <summary>供 <see cref="Views.TrackTablePairedLayout"/> 同步滚动条 gutter。</summary>
+    public Grid PairingHeaderGrid => HeaderGrid;
+
     public LibraryTrackTableHeader()
     {
         InitializeComponent();

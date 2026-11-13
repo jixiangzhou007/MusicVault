@@ -65,6 +65,15 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
     [ObservableProperty] private bool _wizardDedupDone;
     [ObservableProperty] private bool _showScrapeExtendedFieldGroup;
     [ObservableProperty] private bool _showScrapeMediaFieldGroup;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowExtendedScrapeFieldsPanel))]
+    [NotifyPropertyChangedFor(nameof(ShowScrapeFieldPickerPanel))]
+    private bool _showExtendedScrapeFields;
+
+    /// <summary>字段勾选面板默认折叠；预设仍后台改勾选，展开后可微调。</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowScrapeFieldPickerPanel))]
+    private bool _showScrapeFieldPicker;
     [ObservableProperty] private int _scrapePlatformIndex;
     [ObservableProperty] private LibraryListItemViewModel? _selectedLibraryItem;
     [ObservableProperty] private string _artistFilterText = string.Empty;
@@ -114,6 +123,13 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
 
     public string LibraryLabel => _l10n.Get("Organize.LibraryLabel");
     public string LoadButtonLabel => _l10n.Get("Organize.Load");
+    public string MoreMenuLabel => _l10n.Get("Organize.More");
+    public string MoreFieldsLabel => _l10n.Get("Organize.MoreFields");
+    public string CustomizeFieldsLabel => _l10n.Get("Organize.Fields.Customize");
+    public string CustomizeFieldsHint => _l10n.Get("Organize.Fields.CustomizeHint");
+    public string FieldsBasicGroupLabel => _l10n.Get("Organize.Fields.GroupBasic");
+    public string FieldsExtendedGroupLabel => _l10n.Get("Organize.Fields.GroupExtended");
+    public string EmptyActionLabel => _l10n.Get("Organize.Empty.Action");
     public string DedupeButtonLabel => _l10n.Get("Organize.Dedupe");
     public string FormatLabel => _l10n.Get("Organize.FormatLabel");
     public string RenameFilesButtonLabel => _l10n.Get("Organize.RenameFiles");
@@ -206,6 +222,9 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
     public string WorkSetPagingHint => BuildWorkSetPagingHint();
 
     public bool CanOperateOnWorkSet => HasWorkingSet && !IsLoadingWorkSet && !IsBatchScrapeRunning;
+
+    public bool CanEditScrapeOptions =>
+        HasWorkingSet && !IsLoadingWorkSet && !IsBatchScrapeRunning && !IsDuplicateReviewActive;
 
     public bool CanRenameFilesFromToolbar =>
         CanOperateOnWorkSet && !string.IsNullOrWhiteSpace(SelectedFileNameTemplateOption?.Template);
@@ -320,8 +339,16 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
 
     public bool ShowWorkSetTableChrome => (HasWorkingSet || IsLoadingWorkSet) && !IsDuplicateReviewActive;
 
-    /// <summary>空状态仅保留顶栏载入按钮，避免重复 CTA。</summary>
-    public bool ShowWorkSetEmptyAction => false;
+    public bool ShowWorkSetEmptyAction => true;
+
+    public bool ShowExtendedScrapeFieldsPanel =>
+        HasWorkingSet && ShowExtendedScrapeFields && !IsDuplicateReviewActive;
+
+    public bool ShowScrapeFieldPickerPanel =>
+        HasWorkingSet && ShowScrapeFieldPicker && !IsDuplicateReviewActive;
+
+    public bool ShowScrapeDock =>
+        HasWorkingSet && !IsDuplicateReviewActive;
 
     public string OrganizeModeHint => SelectedCategoryIndex switch
     {
@@ -474,6 +501,13 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(WorkSetToolbarHint));
         OnPropertyChanged(nameof(WorkSetEmptyTitle));
         OnPropertyChanged(nameof(WorkSetEmptyDescription));
+        OnPropertyChanged(nameof(MoreMenuLabel));
+        OnPropertyChanged(nameof(MoreFieldsLabel));
+        OnPropertyChanged(nameof(CustomizeFieldsLabel));
+        OnPropertyChanged(nameof(CustomizeFieldsHint));
+        OnPropertyChanged(nameof(FieldsBasicGroupLabel));
+        OnPropertyChanged(nameof(FieldsExtendedGroupLabel));
+        OnPropertyChanged(nameof(EmptyActionLabel));
         OnPropertyChanged(nameof(WorkingSetSummary));
         OnPropertyChanged(nameof(DuplicateScanSummary));
         OnPropertyChanged(nameof(RemoveTrackPopconfirmTitle));
@@ -925,6 +959,8 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(ShowWorkSetEmptyState));
         OnPropertyChanged(nameof(ShowWorkSetLoadingState));
         OnPropertyChanged(nameof(ShowWorkSetEmptyAction));
+        OnPropertyChanged(nameof(ShowScrapeDock));
+        OnPropertyChanged(nameof(ShowExtendedScrapeFieldsPanel));
         OnPropertyChanged(nameof(ShowDuplicateReviewList));
         OnPropertyChanged(nameof(ShowWorkSetQueueChrome));
         OnPropertyChanged(nameof(ShowWorkSetTableChrome));
@@ -942,7 +978,16 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
     partial void OnIsBatchScrapeRunningChanged(bool value)
     {
         OnPropertyChanged(nameof(CanStartBatchScrape));
+        OnPropertyChanged(nameof(CanOperateOnWorkSet));
+        OnPropertyChanged(nameof(CanEditScrapeOptions));
+        OnPropertyChanged(nameof(CanRenameFilesFromToolbar));
         StartBatchScrapeCommand.NotifyCanExecuteChanged();
+        RenameFilesCommand.NotifyCanExecuteChanged();
+        OpenSongDeduplicateCommand.NotifyCanExecuteChanged();
+        FindDuplicatesCommand.NotifyCanExecuteChanged();
+        FindReplaceCommand.NotifyCanExecuteChanged();
+        PreviewOrganizeCommand.NotifyCanExecuteChanged();
+        ExecuteOrganizeCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnScrapeUpdateTitleChanged(bool value) => NotifyBatchScrapeOptionsChanged();
@@ -1157,6 +1202,9 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(ShowWorkSetList));
         OnPropertyChanged(nameof(ShowWorkSetEmptyState));
         OnPropertyChanged(nameof(ShowWorkSetTableChrome));
+        OnPropertyChanged(nameof(ShowScrapeDock));
+        OnPropertyChanged(nameof(ShowExtendedScrapeFieldsPanel));
+        OnPropertyChanged(nameof(ShowScrapeFieldPickerPanel));
         OnPropertyChanged(nameof(CanRemoveDuplicates));
         RemoveDuplicatesFromLibraryCommand.NotifyCanExecuteChanged();
         RemoveDuplicatesWithFilesCommand.NotifyCanExecuteChanged();
@@ -1247,8 +1295,19 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
     }
 
     [RelayCommand]
-    private void ClearWorkingSet()
+    private async Task ClearWorkingSetAsync()
     {
+        if (!HasWorkingSet)
+            return;
+
+        var confirmed = await _appModal.ShowSimpleConfirmAsync(
+            _l10n.Get("Organize.Confirm.ClearQueueTitle"),
+            string.Format(_l10n.Get("Organize.Confirm.ClearQueueMessage"), WorkSetTotalCount),
+            _l10n.Get("Organize.Confirm.ClearQueueConfirm"),
+            _l10n.Get("Common.Cancel")).ConfigureAwait(true);
+        if (!confirmed)
+            return;
+
         _batchScrapeCts?.Cancel();
         ClearWorkSetBuffer();
         BatchScrapeProgressText = string.Empty;
@@ -1282,14 +1341,18 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
 
         batch = batch.OrderBy(i => i.LaunchNumber).ToList();
 
-        var options = BuildBatchScrapeOptions();
         var platformLabel = ScrapePlatformLabels[Math.Clamp(ScrapePlatformIndex, 0, ScrapePlatformLabels.Count - 1)];
         var scopeLabel = ScopeDialogLabel;
+        var confirmOptions = BuildBatchScrapeOptions();
 
         var choice = await _appModal.ShowBatchScrapeConfirmAsync(
-            BuildConfirmContext(batch.Count, platformLabel, options, scopeLabel)).ConfigureAwait(true);
+            BuildConfirmContext(batch.Count, platformLabel, confirmOptions, scopeLabel)).ConfigureAwait(true);
         if (choice != BatchScrapeDialogChoice.Confirm)
             return;
+
+        // 确认后再快照，避免确认弹窗期间改勾选无效
+        var options = BuildBatchScrapeOptions();
+        var platform = MusicPlatformCatalog.FromIndex(ScrapePlatformIndex);
 
         _batchScrapeCts?.Cancel();
         _batchScrapeCts?.Dispose();
@@ -1304,7 +1367,7 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
         try
         {
             runResult = await ExecuteBatchScrapeCoreAsync(
-                batch, options, MusicPlatformCatalog.FromIndex(ScrapePlatformIndex), progressVm, ct)
+                batch, options, platform, progressVm, ct)
                 .ConfigureAwait(true);
         }
         finally
@@ -1346,6 +1409,11 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
                 ct.ThrowIfCancellationRequested();
 
                 item.MarkRunning();
+                BatchScrapeProgressText = string.Format(
+                    _l10n.Get("Organize.Progress.ScrapingTrack"),
+                    processed + 1,
+                    batch.Count,
+                    item.SearchDisplayName);
                 progressVm.ReportCurrent(item.SearchDisplayName, processed, success, failed, ignored);
 
                 try
@@ -1481,6 +1549,9 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(ShowWorkSetEmptyState));
         OnPropertyChanged(nameof(ShowWorkSetLoadingState));
         OnPropertyChanged(nameof(ShowWorkSetEmptyAction));
+        OnPropertyChanged(nameof(ShowScrapeDock));
+        OnPropertyChanged(nameof(ShowExtendedScrapeFieldsPanel));
+        OnPropertyChanged(nameof(ShowScrapeFieldPickerPanel));
         OnPropertyChanged(nameof(ShowDuplicateReviewList));
         OnPropertyChanged(nameof(ShowWorkSetQueueChrome));
         OnPropertyChanged(nameof(ShowWorkSetTableChrome));
@@ -1488,6 +1559,7 @@ public partial class AudioToolsPageViewModel : PageViewModelBase
         OnPropertyChanged(nameof(WorkSetTotalCount));
         OnPropertyChanged(nameof(WorkSetSelectedCount));
         OnPropertyChanged(nameof(CanOperateOnWorkSet));
+        OnPropertyChanged(nameof(CanEditScrapeOptions));
         OnPropertyChanged(nameof(CanStartBatchScrape));
         OnPropertyChanged(nameof(WorkingSetSummary));
         OnPropertyChanged(nameof(IsLoadingWorkSet));

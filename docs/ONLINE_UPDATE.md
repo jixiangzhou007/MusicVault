@@ -68,7 +68,12 @@ git tag v1.0.11
 git push origin v1.0.11
 ```
 
-Workflow 会 `dotnet publish` → `vpk pack` → 把产物挂到该 tag 的 GitHub Release。
+Workflow 会：
+
+1. Windows：`dotnet publish` → `vpk pack` → 创建 Release 并上传 Velopack 产物。
+2. macOS：`publish-macos.sh osx-arm64` → 校验 `libMusicVaultPlayer.dylib` → 上传 `MusicVault-X.Y.Z-osx-arm64.zip`。
+
+Mac job 使用 `continue-on-error`：**失败不挡 Windows 朋友包**。没有 osx-arm64 附件时仍可只发 Windows。Mac zip 不是 Velopack 更新线。
 
 ## 用户侧
 

@@ -25,7 +25,7 @@
           <Grid Width="48" Height="48">
             <Border Classes="browse-entity-avatar browse-entity-avatar-square"
                     IsVisible="{Binding !HasCover}">
-              <TextBlock Text="&#xE8D6;"
+              <TextBlock Text="{StaticResource IconGlyphMusic}"
                          HorizontalAlignment="Center" VerticalAlignment="Center"
                          Foreground="{DynamicResource TextTertiaryBrush}"/>
             </Border>
@@ -57,9 +57,9 @@
         <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
 
-      <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding BrowsePageTitle}" Classes="page-title"
-                 HorizontalAlignment="Right" VerticalAlignment="Top" Margin="{DynamicResource MarginBottomXs}"/>
-      <StackPanel Grid.Row="0" Grid.Column="2" Spacing="4" Margin="{DynamicResource MarginTrailingLg}">
+      <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Spacing="4"
+                  Margin="{DynamicResource MarginBottomXs}">
+        <TextBlock Text="{Binding BrowsePageTitle}" Classes="page-title"/>
         <TextBlock Classes="page-intro" Text="{Binding PageHeaderText}" TextWrapping="Wrap"/>
         <TextBlock Classes="text-caption" Text="{Binding BrowseStatsLine}" TextWrapping="Wrap"
                    Foreground="{DynamicResource TextTertiaryBrush}"/>
@@ -110,7 +110,7 @@
                                  ActionText="{Binding EmptyFilterAction}"
                                  ShowAction="True"
                                  ActionCommand="{Binding ClearBrowseFiltersCommand}"
-                                 IconGlyph="&#xE721;"/>
+                                 IconGlyph="{StaticResource IconGlyphSearch}"/>
 
         <controls:EmptyStateView IsVisible="{Binding ShowLibraryEmpty}"
                                  Title="{Binding EmptyLibraryTitle}"
@@ -159,7 +159,7 @@
           <Border Width="96" Height="96" Margin="{DynamicResource MarginTrailingLg}" CornerRadius="8"
                   Background="{DynamicResource SurfaceElevatedBrush}" ClipToBounds="True">
             <Grid>
-              <TextBlock Text="&#xE8D6;" Classes="icon-2xl icon-muted"
+              <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-2xl icon-muted"
                          HorizontalAlignment="Center" VerticalAlignment="Center"
                          IsVisible="{Binding !HasAlbumCover}"/>
               <Image Source="{Binding AlbumCoverLarge, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
@@ -251,11 +251,13 @@
                       VerticalAlignment="Center"/>
             <Button Content="{Binding DownloadSelectedLabel}" Classes="browse-artist-action-btn accent"
                     Command="{Binding DownloadSelectedAlbumTracksCommand}"
-                    IsEnabled="{Binding HasSelectedDownloadable}"
+                    IsEnabled="{Binding CanDownloadSelectedOnline}"
+                    ToolTip.Tip="{Binding DownloadSelectedToolTip}"
                     automation:AutomationProperties.Name="{Binding DownloadSelectedLabel}"/>
             <Button Content="{Binding DownloadMissingLabel}" Classes="browse-artist-action-btn"
                     Command="{Binding DownloadMissingAlbumTracksCommand}"
                     IsVisible="{Binding HasAlbumMissingTracks}"
+                    ToolTip.Tip="{Binding DownloadSelectedToolTip}"
                     automation:AutomationProperties.Name="{Binding DownloadMissingLabel}"/>
             <Button Content="{Binding SelectAllDownloadableLabel}" Classes="flat-btn btn-toolbar"
                     Command="{Binding SelectAllDownloadableTracksCommand}"
@@ -286,7 +288,7 @@
             </ListBox.ItemsPanel>
           </ListBox>
 
-          <Button x:Name="AlbumDetailScrollTopBtn" Content="&#xE70E;"
+          <Button x:Name="AlbumDetailScrollTopBtn" Content="{StaticResource IconGlyphChevronUp}"
                   Classes="list-scroll-top-btn"
                   HorizontalAlignment="Right" VerticalAlignment="Bottom"
                   Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"

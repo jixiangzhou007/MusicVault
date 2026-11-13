@@ -46,7 +46,7 @@
           <Image Source="{Binding CoverImage, ElementName=Root, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
                  Stretch="UniformToFill"
                  IsVisible="{Binding HasCoverLarge, ElementName=Root, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"/>
-          <TextBlock Text="&#xE8D6;" Classes="icon-hero icon-muted"
+          <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-hero icon-muted"
                      HorizontalAlignment="Center" VerticalAlignment="Center"
                      IsVisible="{Binding !HasCover, ElementName=Root}"/>
         </Panel>
@@ -58,7 +58,7 @@
                Stroke="{DynamicResource VinylSpindleRingBrush}" StrokeThickness="1"/>
     </Grid>
 
-    <!-- 唱臂（网易云式：PNG 唱针 + 螺丝枢轴旋转，见 VinylRecordCoverView.axaml.cs） -->
+    <!-- 唱臂：网易云式俯视平面 PNG（与黑胶同视角），螺丝枢轴旋转 -->
     <Panel x:Name="TonearmHost" Canvas.Left="196" Canvas.Top="0"
            Width="92" Height="138"
            ZIndex="4">

@@ -18,6 +18,7 @@ public partial class TracksPageView : UserControl, IRemoveTrackConfirmPage
     private const double LibraryPaneWidth = 260;
     private bool _syncingLibraryFromVm;
     private bool _trackScrollTopWired;
+    private bool _trackHeaderAlignmentWired;
     private TracksPageViewModel? _tracksVm;
     private PaneSplitLayoutHost? _paneSplit;
 
@@ -55,6 +56,7 @@ public partial class TracksPageView : UserControl, IRemoveTrackConfirmPage
         PostSyncLibraryListSelection(_tracksVm.SelectedLibraryItem);
         WireTrackList(_tracksVm);
         WireTrackScrollTop();
+        WireTrackTableHeaderAlignment();
     }
 
     private void WireTrackList(TracksPageViewModel vm)
@@ -65,6 +67,57 @@ public partial class TracksPageView : UserControl, IRemoveTrackConfirmPage
             LoadMoreAsync = () => vm.LoadMoreTracksCommand.ExecuteAsync(null),
             ShowOrganizeContextMenu = true
         });
+        TrackListInteraction.Wire(this, FolderTrackList, new TrackListPageOptions
+        {
+            ShowOrganizeContextMenu = true,
+            SyncNowPlaying = false
+        });
+    }
+
+    private void WireTrackTableHeaderAlignment()
+    {
+        if (_trackHeaderAlignmentWired)
+            return;
+
+        TrackTablePairedLayout.Wire(SongsLibraryHeader, TrackList, rightEdgeCompanion: TracksToolbar);
+        if (FolderTracksHeader != null && FolderTrackList != null)
+            TrackTablePairedLayout.Wire(FolderTracksHeader, FolderTrackList);
+        _trackHeaderAlignmentWired = true;
+    }
+
+    private void OnFolderListDoubleTapped(object? sender, TappedEventArgs e)
+    {
+        if (DataContext is not TracksPageViewModel vm)
+            return;
+
+        var item = ResolveFolderItem(e.Source) ?? (sender as ListBox)?.SelectedItem as FolderBrowseItemViewModel;
+        if (item == null)
+            return;
+
+        e.Handled = true;
+        vm.EnterFolderCommand.Execute(item);
+    }
+
+    private void OnFolderListKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter || DataContext is not TracksPageViewModel vm)
+            return;
+        if ((sender as ListBox)?.SelectedItem is not FolderBrowseItemViewModel item)
+            return;
+
+        e.Handled = true;
+        vm.EnterFolderCommand.Execute(item);
+    }
+
+    private static FolderBrowseItemViewModel? ResolveFolderItem(object? source)
+    {
+        for (var current = source as StyledElement; current != null; current = current.Parent)
+        {
+            if (current.DataContext is FolderBrowseItemViewModel item)
+                return item;
+        }
+
+        return null;
     }
 
     private void WireTrackScrollTop()

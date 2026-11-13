@@ -58,22 +58,34 @@ public sealed class TrackRepository
         return Convert.ToInt64(id);
     }
 
-    public async Task<IReadOnlyList<Track>> GetByLibraryAsync(long? libraryId, int skip, int take, CancellationToken ct = default)
+    public async Task<IReadOnlyList<Track>> GetByLibraryAsync(
+        long? libraryId,
+        int skip,
+        int take,
+        CancellationToken ct = default,
+        bool missingCover = false,
+        bool missingLyrics = false)
     {
         await using var conn = new SqliteConnection(_connectionString);
         await conn.OpenAsync(ct);
 
+        var missing = MissingMetadataSql(missingCover, missingLyrics);
         await using var cmd = conn.CreateCommand();
         if (libraryId.HasValue)
         {
-            cmd.CommandText = "SELECT * FROM Tracks WHERE LibraryId=@lid ORDER BY Artist, Album, TrackNumber, Title LIMIT @take OFFSET @skip";
+            cmd.CommandText = $"""
+                SELECT * FROM Tracks
+                WHERE LibraryId=@lid{missing}
+                ORDER BY Artist, Album, TrackNumber, Title
+                LIMIT @take OFFSET @skip
+                """;
             cmd.Parameters.AddWithValue("@lid", libraryId.Value);
         }
         else
         {
-            cmd.CommandText = """
+            cmd.CommandText = $"""
                 SELECT * FROM Tracks
-                WHERE LibraryId IN (SELECT Id FROM Libraries WHERE IsEnabled=1)
+                WHERE LibraryId IN (SELECT Id FROM Libraries WHERE IsEnabled=1){missing}
                 ORDER BY Artist, Album, TrackNumber, Title
                 LIMIT @take OFFSET @skip
                 """;
@@ -84,15 +96,22 @@ public sealed class TrackRepository
         return await ReadAllAsync(cmd, ct);
     }
 
-    public async Task<IReadOnlyList<Track>> GetByPlaylistAsync(long playlistId, int skip, int take, CancellationToken ct = default)
+    public async Task<IReadOnlyList<Track>> GetByPlaylistAsync(
+        long playlistId,
+        int skip,
+        int take,
+        CancellationToken ct = default,
+        bool missingCover = false,
+        bool missingLyrics = false)
     {
         await using var conn = new SqliteConnection(_connectionString);
         await conn.OpenAsync(ct);
+        var missing = MissingMetadataSql(missingCover, missingLyrics, "t.");
         await using var cmd = conn.CreateCommand();
-        cmd.CommandText = """
+        cmd.CommandText = $"""
             SELECT t.* FROM PlaylistTracks pt
             INNER JOIN Tracks t ON t.Id = pt.TrackId
-            WHERE pt.PlaylistId=@pid
+            WHERE pt.PlaylistId=@pid{missing}
             ORDER BY pt.SortOrder, t.Artist, t.Album, t.Title
             LIMIT @take OFFSET @skip
             """;
@@ -102,45 +121,77 @@ public sealed class TrackRepository
         return await ReadAllAsync(cmd, ct);
     }
 
-    public async Task<int> CountByPlaylistAsync(long playlistId, CancellationToken ct = default)
+    public async Task<int> CountByPlaylistAsync(
+        long playlistId,
+        CancellationToken ct = default,
+        bool missingCover = false,
+        bool missingLyrics = false)
     {
         await using var conn = new SqliteConnection(_connectionString);
         await conn.OpenAsync(ct);
         await using var cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT COUNT(*) FROM PlaylistTracks WHERE PlaylistId=@pid";
+        if (missingCover || missingLyrics)
+        {
+            var missing = MissingMetadataSql(missingCover, missingLyrics, "t.");
+            cmd.CommandText = $"""
+                SELECT COUNT(*) FROM PlaylistTracks pt
+                INNER JOIN Tracks t ON t.Id = pt.TrackId
+                WHERE pt.PlaylistId=@pid{missing}
+                """;
+        }
+        else
+        {
+            cmd.CommandText = "SELECT COUNT(*) FROM PlaylistTracks WHERE PlaylistId=@pid";
+        }
         cmd.Parameters.AddWithValue("@pid", playlistId);
         return Convert.ToInt32(await cmd.ExecuteScalarAsync(ct));
     }
 
-    public async Task<int> CountAsync(long? libraryId = null, CancellationToken ct = default)
+    public async Task<int> CountAsync(
+        long? libraryId = null,
+        CancellationToken ct = default,
+        bool missingCover = false,
+        bool missingLyrics = false)
     {
         await using var conn = new SqliteConnection(_connectionString);
         await conn.OpenAsync(ct);
+        var missing = MissingMetadataSql(missingCover, missingLyrics);
         await using var cmd = conn.CreateCommand();
         if (libraryId.HasValue)
         {
-            cmd.CommandText = "SELECT COUNT(*) FROM Tracks WHERE LibraryId=@lid";
+            cmd.CommandText = $"SELECT COUNT(*) FROM Tracks WHERE LibraryId=@lid{missing}";
             cmd.Parameters.AddWithValue("@lid", libraryId.Value);
         }
         else
         {
-            cmd.CommandText = """
+            cmd.CommandText = $"""
                 SELECT COUNT(*) FROM Tracks
-                WHERE LibraryId IN (SELECT Id FROM Libraries WHERE IsEnabled=1)
+                WHERE LibraryId IN (SELECT Id FROM Libraries WHERE IsEnabled=1){missing}
                 """;
         }
         return Convert.ToInt32(await cmd.ExecuteScalarAsync(ct));
     }
 
     /// <summary>统计某音乐库文件夹范围内的曲目（按路径 + LibraryId，去重）。</summary>
-    public Task<int> CountByLibraryScopeAsync(long libraryId, string rootPath, CancellationToken ct = default) =>
-        CountScopedTracksAsync(libraryId, rootPath, ct);
+    public Task<int> CountByLibraryScopeAsync(
+        long libraryId,
+        string rootPath,
+        CancellationToken ct = default,
+        bool missingCover = false,
+        bool missingLyrics = false) =>
+        CountScopedTracksAsync(libraryId, rootPath, ct, missingCover, missingLyrics);
 
-    /// <summary>分页读取某音乐库文件夹范围内的曲目。</summary>
+    /// <summary>分页读取某音乐库文件夹范围内的曲目。缺项筛选在 Skip/Take 之前生效。</summary>
     public async Task<IReadOnlyList<Track>> GetByLibraryScopeAsync(
-        long libraryId, string rootPath, int skip, int take, CancellationToken ct = default)
+        long libraryId,
+        string rootPath,
+        int skip,
+        int take,
+        CancellationToken ct = default,
+        bool missingCover = false,
+        bool missingLyrics = false)
     {
-        var all = await QueryScopedTracksAsync(libraryId, rootPath, ct);
+        var all = await QueryScopedTracksFilteredAsync(libraryId, rootPath, ct, missingCover, missingLyrics);
         return all.Skip(skip).Take(take).ToList();
     }
 
@@ -149,10 +200,29 @@ public sealed class TrackRepository
         long libraryId, string rootPath, CancellationToken ct = default) =>
         await QueryScopedTracksAsync(libraryId, rootPath, ct);
 
-    private async Task<int> CountScopedTracksAsync(long libraryId, string rootPath, CancellationToken ct)
+    private async Task<int> CountScopedTracksAsync(
+        long libraryId,
+        string rootPath,
+        CancellationToken ct,
+        bool missingCover = false,
+        bool missingLyrics = false)
+    {
+        var all = await QueryScopedTracksFilteredAsync(libraryId, rootPath, ct, missingCover, missingLyrics);
+        return all.Count;
+    }
+
+    /// <summary>范围去重之后、分页之前套用缺封面/缺歌词条件。</summary>
+    private async Task<List<Track>> QueryScopedTracksFilteredAsync(
+        long libraryId,
+        string rootPath,
+        CancellationToken ct,
+        bool missingCover,
+        bool missingLyrics)
     {
         var all = await QueryScopedTracksAsync(libraryId, rootPath, ct);
-        return all.Count;
+        if (!missingCover && !missingLyrics)
+            return all;
+        return all.Where(t => MatchesMissingMetadata(t, missingCover, missingLyrics)).ToList();
     }
 
     private async Task<List<Track>> QueryScopedTracksAsync(long libraryId, string rootPath, CancellationToken ct)
@@ -1073,12 +1143,14 @@ public sealed class TrackRepository
         string query,
         long? libraryId = null,
         long? playlistId = null,
-        CancellationToken ct = default)
+        CancellationToken ct = default,
+        bool missingCover = false,
+        bool missingLyrics = false)
     {
         await using var conn = new SqliteConnection(_connectionString);
         await conn.OpenAsync(ct);
         await using var cmd = conn.CreateCommand();
-        cmd.CommandText = BuildScopedSearchSql(libraryId, playlistId, selectCount: true);
+        cmd.CommandText = BuildScopedSearchSql(libraryId, playlistId, selectCount: true, missingCover, missingLyrics);
         BindScopedSearchQuery(cmd, query);
         BindScopedSearchParams(cmd, libraryId, playlistId);
         return Convert.ToInt32(await cmd.ExecuteScalarAsync(ct));
@@ -1090,12 +1162,14 @@ public sealed class TrackRepository
         long? playlistId = null,
         int skip = 0,
         int take = 200,
-        CancellationToken ct = default)
+        CancellationToken ct = default,
+        bool missingCover = false,
+        bool missingLyrics = false)
     {
         await using var conn = new SqliteConnection(_connectionString);
         await conn.OpenAsync(ct);
         await using var cmd = conn.CreateCommand();
-        cmd.CommandText = BuildScopedSearchSql(libraryId, playlistId, selectCount: false);
+        cmd.CommandText = BuildScopedSearchSql(libraryId, playlistId, selectCount: false, missingCover, missingLyrics);
         BindScopedSearchQuery(cmd, query);
         BindScopedSearchParams(cmd, libraryId, playlistId);
         cmd.Parameters.AddWithValue("@skip", skip);
@@ -1189,8 +1263,14 @@ public sealed class TrackRepository
             cmd.Parameters.AddWithValue("@title", $"%{EscapeLike(titleQuery!.Trim())}%");
     }
 
-    private static string BuildScopedSearchSql(long? libraryId, long? playlistId, bool selectCount)
+    private static string BuildScopedSearchSql(
+        long? libraryId,
+        long? playlistId,
+        bool selectCount,
+        bool missingCover,
+        bool missingLyrics)
     {
+        var missing = MissingMetadataSql(missingCover, missingLyrics, "t.");
         const string match =
             "(t.Title LIKE @prefix OR t.Artist LIKE @prefix OR t.Album LIKE @prefix " +
             "OR t.Title LIKE @q OR t.Artist LIKE @q OR t.Album LIKE @q)";
@@ -1200,12 +1280,12 @@ public sealed class TrackRepository
                 ? $"""
                    SELECT COUNT(*) FROM PlaylistTracks pt
                    INNER JOIN Tracks t ON t.Id = pt.TrackId
-                   WHERE pt.PlaylistId=@pid AND {match}
+                   WHERE pt.PlaylistId=@pid AND {match}{missing}
                    """
                 : $"""
                    SELECT t.* FROM PlaylistTracks pt
                    INNER JOIN Tracks t ON t.Id = pt.TrackId
-                   WHERE pt.PlaylistId=@pid AND {match}
+                   WHERE pt.PlaylistId=@pid AND {match}{missing}
                    ORDER BY pt.SortOrder, t.Artist, t.Album, t.Title
                    LIMIT @take OFFSET @skip
                    """;
@@ -1218,13 +1298,44 @@ public sealed class TrackRepository
               """;
 
         return selectCount
-            ? $"SELECT COUNT(*) FROM Tracks t WHERE {where}"
+            ? $"SELECT COUNT(*) FROM Tracks t WHERE {where}{missing}"
             : $"""
               SELECT t.* FROM Tracks t
-              WHERE {where}
+              WHERE {where}{missing}
               ORDER BY t.Artist, t.Album, t.TrackNumber, t.Title
               LIMIT @take OFFSET @skip
               """;
+    }
+
+    /// <summary>
+    /// 缺封面 / 缺歌词 SQL。NULL、空字符串与纯空白都算缺失，与 TrackMissingMetadata 一致。
+    /// Data 层不引用 Services，谓词在此内联。两个标志都为 false 时返回空串。
+    /// </summary>
+    private static string MissingMetadataSql(bool missingCover, bool missingLyrics, string columnPrefix = "")
+    {
+        if (!missingCover && !missingLyrics)
+            return string.Empty;
+
+        // trim 字符集覆盖空格与常见空白，使 "   " / "\t" 与 IsNullOrWhiteSpace 对齐。
+        const string trimSet = "char(9) || char(10) || char(11) || char(12) || char(13) || ' '";
+        var clauses = new List<string>(2);
+        if (missingCover)
+            clauses.Add(BlankMetadataColumnSql(columnPrefix + "CoverHash", trimSet));
+        if (missingLyrics)
+            clauses.Add(BlankMetadataColumnSql(columnPrefix + "LyricsPath", trimSet));
+        return " AND " + string.Join(" AND ", clauses);
+    }
+
+    private static string BlankMetadataColumnSql(string column, string trimSet) =>
+        $"({column} IS NULL OR {column} = '' OR trim({column}, {trimSet}) = '')";
+
+    private static bool MatchesMissingMetadata(Track track, bool missingCover, bool missingLyrics)
+    {
+        if (missingCover && !string.IsNullOrWhiteSpace(track.CoverHash))
+            return false;
+        if (missingLyrics && !string.IsNullOrWhiteSpace(track.LyricsPath))
+            return false;
+        return true;
     }
 
     private static void BindScopedSearchParams(SqliteCommand cmd, long? libraryId, long? playlistId)

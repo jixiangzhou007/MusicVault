@@ -2,6 +2,7 @@ using System.ComponentModel;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MusicVault.App.Icons;
 using MusicVault.App.Localization;
 using MusicVault.App.Services;
 using MusicVault.App.ViewModels.Dialogs;
@@ -94,6 +95,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public string NavDiscoverToolTip => _l10n.Get("Nav.Discover.ToolTip");
     public string NavTransfers => _l10n.Get("Nav.Transfers");
     public string NavTransfersToolTip => _l10n.Get("Nav.Transfers.ToolTip");
+    public bool IsDownloadsNavSelected => CurrentSection == NavigationSection.Downloads;
     public string NavTools => _l10n.Get("Nav.Tools");
     public string NavSettings => _l10n.Get("Nav.Settings");
     public string NavThemeToolTip => _l10n.Get("Nav.Theme.ToolTip");
@@ -122,8 +124,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public string WindowCloseToolTip => _l10n.Get("Shell.Window.Close");
 
-    /// <summary>E923=叠放窗口（进入精简）；E922=单窗（返回完整）。</summary>
-    public string CompactPlayerToggleGlyph => IsCompactPlayerMode ? "\uE922" : "\uE923";
+    /// <summary>精简播放：MiniExpand 进入；Maximize 返回完整壳。</summary>
+    public string CompactPlayerToggleGlyph =>
+        IsCompactPlayerMode ? IconGlyphs.Maximize : IconGlyphs.CompactPlayer;
 
     /// <summary>整理页二级 Tab 选中索引（与 <see cref="AudioTools"/> 同步，供顶栏绑定）。</summary>
     public int OrganizeCategoryIndex => AudioTools.SelectedCategoryIndex;
@@ -157,14 +160,21 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void ApplyOrganizeWorkSetFilter() => AudioTools.ApplyOrganizeWorkSetFilter();
 
+    private NavigationSection _previousSection = NavigationSection.Home;
+
     partial void OnCurrentSectionChanged(NavigationSection value)
     {
+        if (_previousSection == NavigationSection.Settings && value != NavigationSection.Settings)
+            _ = Settings.FlushAutosaveAsync();
+        _previousSection = value;
+
         OnPropertyChanged(nameof(ShowPageHeader));
         OnPropertyChanged(nameof(ShowHeaderStatusBadge));
         OnPropertyChanged(nameof(ShowMusicBrowseBar));
         OnPropertyChanged(nameof(ShowOrganizeBrowseBar));
         OnPropertyChanged(nameof(OrganizeCategoryIndex));
         OnPropertyChanged(nameof(IsLibraryNavSelected));
+        OnPropertyChanged(nameof(IsDownloadsNavSelected));
         if (value is NavigationSection.Home or NavigationSection.AllTracks)
             StatusMessage = string.Empty;
 
@@ -278,6 +288,12 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             Player.ApplyDefaultsFromSettings();
             DesktopLyrics.ApplySettings();
+            Search.InvalidateDiscoverBrowseSessionCaches();
+            Search.NotifyOnlineDownloadAvailability();
+            Playlists.NotifyOnlineDownloadAvailability();
+            Downloads.NotifyOnlineDownloadAvailability();
+            Albums.NotifyOnlineDownloadAvailability();
+            Artists.NotifyOnlineDownloadAvailability();
             _ = RefreshOnlineApiHealthAfterSettingsSaveAsync();
         };
 
@@ -293,7 +309,7 @@ public partial class MainWindowViewModel : ViewModelBase
         RightSidebar.MetadataEditor.BindFormDrawerHost(FormDrawer);
         AllTracks.TrackRemoved += (_, track) => RightSidebar.MetadataEditor.ClearIfTrack(track.Id);
         AudioTools.TrackRemoved += (_, track) => RightSidebar.MetadataEditor.ClearIfTrack(track.Id);
-        Home = new HomePageViewModel(Player, RightSidebar, services, l10n);
+        Home = new HomePageViewModel(Player, RightSidebar, services, settings, l10n);
         _navigation = new ShellNavigationCoordinator(
             new Dictionary<NavigationSection, PageViewModelBase>
             {
@@ -511,6 +527,10 @@ public partial class MainWindowViewModel : ViewModelBase
         await OnlineApiHealthService.Instance.RefreshAsync(force).ConfigureAwait(true);
         NotifyOnlineApiHealthUi();
         Search.NotifyOnlineApiHealthChanged();
+        Playlists.NotifyOnlineDownloadAvailability();
+        Downloads.NotifyOnlineDownloadAvailability();
+        Albums.NotifyOnlineDownloadAvailability();
+        Artists.NotifyOnlineDownloadAvailability();
     }
 
     private static readonly TimeSpan ApiHealthStaleAfter = TimeSpan.FromSeconds(90);
@@ -765,9 +785,12 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             case NavigationSection.Home: await Home.InitializeAsync(); break;
             case NavigationSection.Search:
+                // 清空条件后再次进入「发现」：退出结果态，恢复默认浏览页
+                Search.RestoreBrowseHubIfIdle();
                 Search.RefreshDownloadDirectory();
                 Search.RefreshMusicApiDisplay();
-                await Search.RefreshPlatformCapabilitiesAsync();
+                // 平台 chip 不阻塞打开；2min 内有数据则 RefreshPlatformCapabilitiesAsync 内部短路
+                _ = Search.RefreshPlatformCapabilitiesAsync();
                 _ = RefreshOnlineApiHealthIfStaleAsync();
                 _ = Search.RefreshBrowseHubAsync();
                 break;
@@ -800,6 +823,8 @@ public partial class MainWindowViewModel : ViewModelBase
         switch (CurrentSection)
         {
             case NavigationSection.AllTracks:
+                if (AllTracks.ShowFolderBrowser)
+                    return AllTracks.TryGetFolderPlaybackTracks(out var folderTracks) ? folderTracks : null;
                 return await ResolveVirtualListQueueAsync(AllTracks.Tracks);
             case NavigationSection.Artists when Artists.ShowingTracks:
                 return Artists.ActiveArtistTracksForPlayback;
@@ -832,6 +857,8 @@ public partial class MainWindowViewModel : ViewModelBase
         switch (CurrentSection)
         {
             case NavigationSection.AllTracks:
+                if (AllTracks.TryGetFolderPlaybackSourceLabel() is { Length: > 0 } folderLabel)
+                    return folderLabel;
                 if (AllTracks.FavoritesOnly)
                     return _l10n.Get("Library.Favorites");
                 if (AllTracks.Tracks.IsSearchMode)
@@ -1033,6 +1060,6 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     private void UpdateDownloadBadge() =>
-        ActiveDownloadCount = _services.Transfers.Downloads.Items.Count(d =>
-            d.Status is DownloadStatus.Downloading or DownloadStatus.Pending);
+        ActiveDownloadCount = DownloadTaskBadge.Count(
+            _services.Transfers.Downloads.Items.Select(d => d.Status));
 }

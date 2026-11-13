@@ -5,7 +5,7 @@ internal static class GuideLocalizationResources
 {
     public static readonly IReadOnlyDictionary<string, string> ZhCn = new Dictionary<string, string>
     {
-        ["Settings.Guide.Tagline"] = "下载即整理，整理即播放",
+        ["Settings.Guide.Tagline"] = "一个播放器，听本地和多个平台",
 
         ["Settings.Guide.Author"] = "作者：野马1/2",
 
@@ -14,6 +14,9 @@ internal static class GuideLocalizationResources
 
         ["Settings.Guide.HeroDisclaimer"] =
             "仅供个人学习研究使用，请遵守当地版权法律法规；请仅下载与使用您拥有合法权利的音乐内容。",
+
+        ["Settings.Guide.CapabilitiesSummary"] =
+            "覆盖本地曲库浏览、在线发现与下载入库、播放与歌词，以及标签整理与数据备份——在同一桌面端里完成收藏、整理与听歌。",
 
         ["Settings.Guide.Copyright"] =
             "© 2026 野马1/2 · MusicVault. 保留所有权利。本项目源代码采用 MIT 许可证发布。",
@@ -271,7 +274,7 @@ internal static class GuideLocalizationResources
 
     public static readonly IReadOnlyDictionary<string, string> EnUs = new Dictionary<string, string>
     {
-        ["Settings.Guide.Tagline"] = "Download, organize, play",
+        ["Settings.Guide.Tagline"] = "One player for local files and many platforms",
 
         ["Settings.Guide.Author"] = "Author: 野马1/2",
 
@@ -280,6 +283,9 @@ internal static class GuideLocalizationResources
 
         ["Settings.Guide.HeroDisclaimer"] =
             "For personal learning and research only. Please comply with local copyright laws and download or use only music you have the legal right to access.",
+
+        ["Settings.Guide.CapabilitiesSummary"] =
+            "Covers local library browsing, online discovery and downloads, playback and lyrics, plus tagging and backups—collect, organize, and listen in one desktop app.",
 
         ["Settings.Guide.Copyright"] =
             "© 2026 野马1/2 · MusicVault. All rights reserved. Source code is released under the MIT License.",

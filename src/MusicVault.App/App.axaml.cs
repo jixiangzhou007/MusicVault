@@ -328,12 +328,16 @@ public partial class App : Application
             var shell = Shell;
             if (shell != null)
             {
+                try { shell.Settings.FlushAutosaveAsync().GetAwaiter().GetResult(); }
+                catch (Exception ex) { CoreLog.NonCriticalFailure(log, "设置自动保存冲刷", ex.Message); }
                 shell.DesktopLyrics.Dispose();
                 shell.Player.StopAndSaveSessionForExit();
             }
             else if (Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime d
                      && d.MainWindow?.DataContext is MainWindowViewModel fallbackShell)
             {
+                try { fallbackShell.Settings.FlushAutosaveAsync().GetAwaiter().GetResult(); }
+                catch (Exception ex) { CoreLog.NonCriticalFailure(log, "设置自动保存冲刷", ex.Message); }
                 fallbackShell.DesktopLyrics.Dispose();
                 fallbackShell.Player.StopAndSaveSessionForExit();
             }

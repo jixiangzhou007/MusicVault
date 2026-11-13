@@ -285,6 +285,12 @@ public partial class ArtistsPageViewModel : PageViewModelBase, IAlbumCatalogOnli
     public bool UseQualityPriorityDownload => AlbumDetailDownloadQualityIndex == 3;
     public int SelectedDownloadableCount => ActiveAlbumDetailTracks.Count(t => t.IsSelected && t.CanDownload);
     public bool HasSelectedDownloadable => SelectedDownloadableCount > 0;
+    public bool CanDownloadSelectedOnline =>
+        HasSelectedDownloadable && OnlineDownloadAvailability.IsAvailable(GoMusicApiClient.IsConfigured);
+    public string DownloadSelectedToolTip =>
+        OnlineDownloadAvailability.IsAvailable(GoMusicApiClient.IsConfigured)
+            ? DownloadSelectedLabel
+            : OnlineTrackRowLabels.DownloadDisabledHint;
 
     public string AlbumTracksSummary => BuildAlbumTracksSummary();
 
@@ -519,6 +525,7 @@ public partial class ArtistsPageViewModel : PageViewModelBase, IAlbumCatalogOnli
         OnPropertyChanged(nameof(ExpandFullLabel));
         OnPropertyChanged(nameof(CollapseLabel));
         OnPropertyChanged(nameof(DownloadSelectedLabel));
+        OnPropertyChanged(nameof(DownloadSelectedToolTip));
         OnPropertyChanged(nameof(DownloadMissingLabel));
         OnPropertyChanged(nameof(SelectAllDownloadableLabel));
         OnPropertyChanged(nameof(DeselectAllLabel));
@@ -1721,10 +1728,12 @@ public partial class ArtistsPageViewModel : PageViewModelBase, IAlbumCatalogOnli
         NotifyAlbumTrackSelectionChanged();
     }
 
-    [RelayCommand]
+    private bool CanDownloadSelectedAlbumTracks() => CanDownloadSelectedOnline;
+
+    [RelayCommand(CanExecute = nameof(CanDownloadSelectedAlbumTracks))]
     private async Task DownloadSelectedAlbumTracksAsync()
     {
-        if (!HasSelectedDownloadable)
+        if (!CanDownloadSelectedOnline)
             return;
 
         var tracks = ActiveAlbumDetailTracks
@@ -1789,12 +1798,27 @@ public partial class ArtistsPageViewModel : PageViewModelBase, IAlbumCatalogOnli
     {
         OnPropertyChanged(nameof(SelectedDownloadableCount));
         OnPropertyChanged(nameof(HasSelectedDownloadable));
+        OnPropertyChanged(nameof(CanDownloadSelectedOnline));
+        DownloadSelectedAlbumTracksCommand.NotifyCanExecuteChanged();
     }
 
-    [RelayCommand]
+    public void NotifyOnlineDownloadAvailability()
+    {
+        OnPropertyChanged(nameof(CanDownloadSelectedOnline));
+        OnPropertyChanged(nameof(DownloadSelectedToolTip));
+        DownloadSelectedAlbumTracksCommand.NotifyCanExecuteChanged();
+        DownloadMissingAlbumTracksCommand.NotifyCanExecuteChanged();
+        foreach (var track in ActiveAlbumDetailTracks)
+            track.NotifyOnlineDownloadAvailability();
+    }
+
+    private bool CanDownloadMissingAlbumTracks() =>
+        HasAlbumMissingTracks && OnlineDownloadAvailability.IsAvailable(GoMusicApiClient.IsConfigured);
+
+    [RelayCommand(CanExecute = nameof(CanDownloadMissingAlbumTracks))]
     private Task DownloadMissingAlbumTracksAsync()
     {
-        if (!HasAlbumMissingTracks)
+        if (!CanDownloadMissingAlbumTracks())
             return Task.CompletedTask;
 
         var missing = ActiveAlbumDetailTracks
@@ -1855,6 +1879,9 @@ public partial class ArtistsPageViewModel : PageViewModelBase, IAlbumCatalogOnli
         OnPropertyChanged(nameof(HasAlbumMissingTracks));
         OnPropertyChanged(nameof(SelectedDownloadableCount));
         OnPropertyChanged(nameof(HasSelectedDownloadable));
+        OnPropertyChanged(nameof(CanDownloadSelectedOnline));
+        DownloadSelectedAlbumTracksCommand.NotifyCanExecuteChanged();
+        DownloadMissingAlbumTracksCommand.NotifyCanExecuteChanged();
     }
 
     private string BuildAlbumTracksSummary()

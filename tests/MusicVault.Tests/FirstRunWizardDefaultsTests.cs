@@ -10,4 +10,21 @@ public sealed class FirstRunWizardDefaultsTests
         var settings = new AppSettings();
         Assert.False(settings.FirstRunWizardCompleted);
     }
+
+    [Fact]
+    public void AppSettings_onboarding_path_defaults_unset()
+    {
+        var settings = new AppSettings();
+        Assert.Equal(FirstRunOnboardingPath.Unset, settings.FirstRunOnboardingPath);
+    }
+
+    [Fact]
+    public void Missing_onboarding_path_json_field_deserializes_to_unset()
+    {
+        var json = """{"FirstRunWizardCompleted":true}""";
+        var settings = System.Text.Json.JsonSerializer.Deserialize<AppSettings>(json);
+        Assert.NotNull(settings);
+        Assert.True(settings.FirstRunWizardCompleted);
+        Assert.Equal(FirstRunOnboardingPath.Unset, settings.FirstRunOnboardingPath);
+    }
 }

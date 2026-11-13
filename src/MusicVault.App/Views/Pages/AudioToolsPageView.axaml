@@ -14,16 +14,139 @@
              HorizontalContentAlignment="Stretch"
              VerticalContentAlignment="Stretch">
   <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <!-- 外层满宽：底栏贴边页脚；内层再 inset，避免 16/33 不对称叠在卡片上 -->
     <DockPanel Classes="pane-play transfers-page"
-               Margin="{DynamicResource PageHeroToolbarInsetMargin}"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch"
                LastChildFill="True">
 
-      <!-- 工具带：无背景，紧凑排版 -->
-      <StackPanel DockPanel.Dock="Top" Classes="organize-toolbar" Grid.IsSharedSizeScope="True">
+      <Border DockPanel.Dock="Bottom" Classes="organize-scrape-dock"
+              IsVisible="{Binding ShowScrapeDock}">
+        <DockPanel LastChildFill="True">
+          <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="0,0,0,8"
+                      IsVisible="{Binding IsBatchScrapeRunning}">
+            <ProgressBar IsIndeterminate="True" Classes="ant-progress-line"/>
+            <TextBlock Text="{Binding BatchScrapeProgressDisplay}" Classes="ant-progress-caption"
+                       IsVisible="{Binding BatchScrapeProgressDisplay, Converter={x:Static conv:StringNotEmptyConverter.Instance}}"/>
+          </StackPanel>
 
-        <StackPanel Classes="organize-toolbar-row transfers-toolbar-flow">
+          <!-- 字段用 Flyout，避免展开时底栏变高、整行上下跳动 -->
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Grid.Column="0" Classes="organize-scrape-row" Margin="0,0,16,0"
+                        VerticalAlignment="Center"
+                        IsEnabled="{Binding CanEditScrapeOptions}">
+              <Button Content="{Binding CustomizeFieldsLabel}" Classes="browse-filter organize-scrape-more"
+                      automation:AutomationProperties.Name="{Binding CustomizeFieldsLabel}">
+                <Button.Flyout>
+                  <Flyout Placement="TopEdgeAlignedLeft" ShowMode="Transient" VerticalOffset="-8">
+                    <!-- 与音量 Flyout 同款：内层透明，外壳由 FlyoutPresenter 提供 -->
+                    <Border Classes="ant-popover ant-popover-inline" MinWidth="300" MaxWidth="380">
+                      <StackPanel Spacing="10">
+                        <StackPanel Spacing="2">
+                          <TextBlock Text="{Binding CustomizeFieldsLabel}" Classes="text-label"
+                                     FontWeight="SemiBold"/>
+                          <TextBlock Text="{Binding CustomizeFieldsHint}" Classes="text-caption"
+                                     TextWrapping="Wrap"
+                                     Foreground="{DynamicResource TextTertiaryBrush}"/>
+                        </StackPanel>
+                        <StackPanel Spacing="6">
+                          <TextBlock Text="{Binding FieldsBasicGroupLabel}" Classes="organize-scrape-flyout-group"/>
+                          <UniformGrid Columns="3" Classes="organize-scrape-fields-grid">
+                            <CheckBox Content="{Binding FieldTitleLabel}" IsChecked="{Binding ScrapeUpdateTitle}" Classes="choice-check"/>
+                            <CheckBox Content="{Binding FieldArtistLabel}" IsChecked="{Binding ScrapeUpdateArtist}" Classes="choice-check"/>
+                            <CheckBox Content="{Binding FieldAlbumLabel}" IsChecked="{Binding ScrapeUpdateAlbum}" Classes="choice-check"/>
+                            <CheckBox Content="{Binding FieldYearLabel}" IsChecked="{Binding ScrapeUpdateYear}" Classes="choice-check"/>
+                            <CheckBox Content="{Binding FieldCoverLabel}" IsChecked="{Binding ScrapeEmbedCover}" Classes="choice-check"/>
+                            <CheckBox Content="{Binding FieldLyricsLabel}" IsChecked="{Binding ScrapeEmbedLyrics}" Classes="choice-check"/>
+                          </UniformGrid>
+                        </StackPanel>
+                        <StackPanel Spacing="6">
+                          <TextBlock Text="{Binding FieldsExtendedGroupLabel}" Classes="organize-scrape-flyout-group"/>
+                          <UniformGrid Columns="2" Classes="organize-scrape-fields-grid">
+                            <CheckBox Content="{Binding FieldAlbumArtistLabel}" IsChecked="{Binding ScrapeUpdateAlbumArtist}" Classes="choice-check"/>
+                            <CheckBox Content="{Binding FieldGenreLabel}" IsChecked="{Binding ScrapeUpdateGenre}" Classes="choice-check"/>
+                            <CheckBox Content="{Binding FieldTrackNumberLabel}" IsChecked="{Binding ScrapeUpdateTrackNumber}" Classes="choice-check"/>
+                            <CheckBox Content="{Binding FieldComposerLabel}" IsChecked="{Binding ScrapeUpdateComposer}" Classes="choice-check"/>
+                          </UniformGrid>
+                        </StackPanel>
+                      </StackPanel>
+                    </Border>
+                  </Flyout>
+                </Button.Flyout>
+              </Button>
+              <TextBlock Text="{Binding DataSourceLabel}" Classes="organize-scrape-inline-label organize-scrape-inline-label-gap"/>
+              <ComboBox Width="{DynamicResource ControlWidthCompact}"
+                        ItemsSource="{Binding ScrapePlatformLabels}"
+                        SelectedIndex="{Binding ScrapePlatformIndex}"
+                        Classes="field-select batch-toolbar-field batch-toolbar-select"/>
+              <controls:IntSegmentedBar SegmentLabels="{Binding ScrapePresetSegmentLabels}"
+                                        SelectedIndex="{Binding ScrapePresetIndex}"/>
+              <TextBlock Text="{Binding ScopeLabel}" Classes="organize-scrape-inline-label organize-scrape-inline-label-gap"/>
+              <controls:IntSegmentedBar SegmentLabels="{Binding WorkSetScopeSegmentLabels}"
+                                        SelectedIndex="{Binding WorkSetScopeIndex}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center"
+                        HorizontalAlignment="Right">
+              <Button Classes="primary batch-toolbar-accent organize-scrape-start"
+                      MinWidth="{DynamicResource DialogButtonMinWidth}"
+                      Command="{Binding StartBatchScrapeCommand}"
+                      IsEnabled="{Binding CanStartBatchScrape}">
+                <TextBlock Text="{Binding StartScrapeLabel}" Classes="batch-toolbar-btn-text"/>
+              </Button>
+              <Button Classes="flat-btn batch-toolbar-flat"
+                      HorizontalAlignment="Stretch"
+                      Command="{Binding CancelBatchScrapeCommand}"
+                      IsVisible="{Binding IsBatchScrapeRunning}"
+                      Content="{Binding CancelScrapeLabel}"/>
+            </StackPanel>
+          </Grid>
+        </DockPanel>
+      </Border>
+
+      <DockPanel Margin="{DynamicResource PageHeroToolbarInsetMargin}"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 LastChildFill="True">
+
+      <!-- 顶行：曲库 + 载入 + 摘要；重命名/去重在「更多」 -->
+      <DockPanel DockPanel.Dock="Top" Classes="organize-topbar" LastChildFill="True">
+        <Button DockPanel.Dock="Right" Classes="flat-btn btn-toolbar"
+                Content="{Binding MoreMenuLabel}"
+                VerticalAlignment="Center"
+                automation:AutomationProperties.Name="{Binding MoreMenuLabel}">
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedRight">
+              <MenuItem IsEnabled="{Binding CanOperateOnWorkSet}">
+                <MenuItem.Header>
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="{Binding FormatLabel}" VerticalAlignment="Center"/>
+                    <ComboBox MinWidth="{DynamicResource ControlWidthOrganizeWide}"
+                              MaxWidth="{DynamicResource ControlWidthLibraryPicker}"
+                              ItemsSource="{Binding FileNameTemplateOptions}"
+                              SelectedItem="{Binding SelectedFileNameTemplateOption}"
+                              Classes="field-select batch-toolbar-field batch-toolbar-select organize-browse-combo">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="pvm:OrganizeTemplateOption">
+                          <TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" MaxLines="1"/>
+                        </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                  </StackPanel>
+                </MenuItem.Header>
+              </MenuItem>
+              <MenuItem Header="{Binding RenameFilesButtonLabel}"
+                        Classes="app-compact-menu-item"
+                        Command="{Binding RenameFilesCommand}"
+                        IsEnabled="{Binding CanRenameFilesFromToolbar}"/>
+              <MenuItem Header="{Binding DedupeButtonLabel}"
+                        Classes="app-compact-menu-item"
+                        Command="{Binding OpenSongDeduplicateCommand}"
+                        IsEnabled="{Binding CanOperateOnWorkSet}"/>
+            </MenuFlyout>
+          </Button.Flyout>
+        </Button>
+        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="8" Classes="transfers-toolbar-flow">
           <TextBlock Text="{Binding LibraryLabel}" Classes="organize-field-label"/>
           <ComboBox MaxWidth="{DynamicResource ControlWidthLibraryPicker}"
                     ItemsSource="{Binding Libraries}"
@@ -38,84 +161,12 @@
           <Button Content="{Binding LoadButtonLabel}" Classes="primary btn-toolbar"
                   Command="{Binding LoadWorkingSetCommand}"
                   MinWidth="{DynamicResource DialogButtonMinWidth}"/>
-          <Border Classes="transfers-toolbar-group-sep"/>
-          <TextBlock Text="{Binding FormatLabel}" Classes="organize-field-label"/>
-          <ComboBox MaxWidth="{DynamicResource ControlWidthOrganizeWide}"
-                    ItemsSource="{Binding FileNameTemplateOptions}"
-                    SelectedItem="{Binding SelectedFileNameTemplateOption}"
-                    IsEnabled="{Binding CanOperateOnWorkSet}"
-                    Classes="field-select batch-toolbar-field batch-toolbar-select organize-browse-combo">
-            <ComboBox.ItemTemplate>
-              <DataTemplate x:DataType="pvm:OrganizeTemplateOption">
-                <TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" MaxLines="1"/>
-              </DataTemplate>
-            </ComboBox.ItemTemplate>
-          </ComboBox>
-          <Button Content="{Binding RenameFilesButtonLabel}" Classes="flat-btn btn-toolbar"
-                  Command="{Binding RenameFilesCommand}"
-                  IsEnabled="{Binding CanRenameFilesFromToolbar}"
-                  MinWidth="{DynamicResource DialogButtonMinWidth}"/>
-          <Border Classes="transfers-toolbar-group-sep"/>
-          <Button Content="{Binding DedupeButtonLabel}" Classes="flat-btn btn-toolbar"
-                  Command="{Binding OpenSongDeduplicateCommand}"
-                  IsEnabled="{Binding CanOperateOnWorkSet}"
-                  MinWidth="{DynamicResource DialogButtonMinWidth}"/>
         </StackPanel>
-
-        <StackPanel Classes="organize-toolbar-row transfers-toolbar-flow">
-          <TextBlock Text="{Binding DataSourceLabel}" Classes="organize-field-label"/>
-          <ComboBox Width="{DynamicResource ControlWidthCompact}"
-                    ItemsSource="{Binding ScrapePlatformLabels}"
-                    SelectedIndex="{Binding ScrapePlatformIndex}"
-                    IsEnabled="{Binding HasWorkingSet}"
-                    Classes="field-select batch-toolbar-field batch-toolbar-select"/>
-          <controls:IntSegmentedBar SegmentLabels="{Binding ScrapePresetSegmentLabels}"
-                                    SelectedIndex="{Binding ScrapePresetIndex}"
-                                    IsEnabled="{Binding HasWorkingSet}"/>
-          <Border Classes="transfers-toolbar-group-sep"/>
-          <TextBlock Text="{Binding ScopeLabel}" Classes="organize-field-label"/>
-          <controls:IntSegmentedBar SegmentLabels="{Binding WorkSetScopeSegmentLabels}"
-                                    SelectedIndex="{Binding WorkSetScopeIndex}"
-                                    IsEnabled="{Binding HasWorkingSet}"/>
-          <Button Classes="flat-btn batch-toolbar-flat"
-                  Command="{Binding CancelBatchScrapeCommand}"
-                  IsVisible="{Binding IsBatchScrapeRunning}">
-            <TextBlock Text="{Binding CancelScrapeLabel}" Classes="text-label"/>
-          </Button>
-          <Button Classes="primary batch-toolbar-accent" MinWidth="{DynamicResource DialogButtonMinWidth}"
-                  Command="{Binding StartBatchScrapeCommand}" IsEnabled="{Binding CanStartBatchScrape}">
-            <TextBlock Text="{Binding StartScrapeLabel}" Classes="batch-toolbar-btn-text"/>
-          </Button>
-        </StackPanel>
-
-        <Grid Classes="organize-form-row">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" SharedSizeGroup="OrganizeFieldAlign"/>
-            <ColumnDefinition Width="8"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
-          <TextBlock Grid.Column="0" Text="{Binding ScrapeGroupBasicLabel}" Classes="organize-field-label"
-                     VerticalAlignment="Top"/>
-          <WrapPanel Grid.Column="2" Classes="organize-scrape-fields-wrap" IsEnabled="{Binding HasWorkingSet}">
-            <CheckBox Content="{Binding FieldTitleLabel}" IsChecked="{Binding ScrapeUpdateTitle}" Classes="choice-check"/>
-            <CheckBox Content="{Binding FieldArtistLabel}" IsChecked="{Binding ScrapeUpdateArtist}" Classes="choice-check"/>
-            <CheckBox Content="{Binding FieldAlbumLabel}" IsChecked="{Binding ScrapeUpdateAlbum}" Classes="choice-check"/>
-            <CheckBox Content="{Binding FieldAlbumArtistLabel}" IsChecked="{Binding ScrapeUpdateAlbumArtist}" Classes="choice-check"/>
-            <CheckBox Content="{Binding FieldYearLabel}" IsChecked="{Binding ScrapeUpdateYear}" Classes="choice-check"/>
-            <CheckBox Content="{Binding FieldGenreLabel}" IsChecked="{Binding ScrapeUpdateGenre}" Classes="choice-check"/>
-            <CheckBox Content="{Binding FieldTrackNumberLabel}" IsChecked="{Binding ScrapeUpdateTrackNumber}" Classes="choice-check"/>
-            <CheckBox Content="{Binding FieldComposerLabel}" IsChecked="{Binding ScrapeUpdateComposer}" Classes="choice-check"/>
-            <CheckBox Content="{Binding FieldCoverLabel}" IsChecked="{Binding ScrapeEmbedCover}" Classes="choice-check"/>
-            <CheckBox Content="{Binding FieldLyricsLabel}" IsChecked="{Binding ScrapeEmbedLyrics}" Classes="choice-check"/>
-          </WrapPanel>
-        </Grid>
-
-        <StackPanel Spacing="2" IsVisible="{Binding IsBatchScrapeRunning}">
-          <ProgressBar IsIndeterminate="True" Classes="ant-progress-line"/>
-          <TextBlock Text="{Binding BatchScrapeProgressDisplay}" Classes="ant-progress-caption"
-                     IsVisible="{Binding BatchScrapeProgressDisplay, Converter={x:Static conv:StringNotEmptyConverter.Instance}}"/>
-        </StackPanel>
-      </StackPanel>
+        <TextBlock Text="{Binding WorkingSetSummary}" Classes="discover-results-summary"
+                   VerticalAlignment="Center" Margin="12,0,8,0"
+                   TextTrimming="CharacterEllipsis"
+                   IsVisible="{Binding HasWorkingSet}"/>
+      </DockPanel>
 
       <Border DockPanel.Dock="Top" Classes="organize-section-divider"/>
 
@@ -128,15 +179,15 @@
                     HorizontalAlignment="Right" VerticalAlignment="Center">
           <Button Content="{Binding SelectAllLabel}" Classes="flat-btn btn-toolbar"
                   Command="{Binding SelectAllBatchScrapeCommand}"
-                  IsEnabled="{Binding HasWorkingSet}"
+                  IsEnabled="{Binding CanOperateOnWorkSet}"
                   automation:AutomationProperties.Name="{Binding SelectAllLabel}"/>
           <Button Content="{Binding ClearSelectionLabel}" Classes="flat-btn btn-toolbar"
                   Command="{Binding ClearBatchScrapeSelectionCommand}"
-                  IsEnabled="{Binding HasWorkingSet}"
+                  IsEnabled="{Binding CanOperateOnWorkSet}"
                   automation:AutomationProperties.Name="{Binding ClearSelectionLabel}"/>
           <Button Content="{Binding ClearQueueLabel}" Classes="flat-btn btn-toolbar"
                   Command="{Binding ClearWorkingSetCommand}"
-                  IsEnabled="{Binding HasWorkingSet}"
+                  IsEnabled="{Binding CanOperateOnWorkSet}"
                   automation:AutomationProperties.Name="{Binding ClearQueueLabel}"/>
         </StackPanel>
       </Grid>
@@ -175,10 +226,12 @@
         </StackPanel>
       </Grid>
 
+      <!-- 外层已有 PageHeroToolbarInsetMargin(16/16)；勿再叠 TrackTable*PairedMargin，否则与上方摘要行错位 -->
       <Grid x:Name="BatchScrapeHeaderGrid" DockPanel.Dock="Top"
-            Classes="ant-table-header track-table-header track-table-header-paired batch-scrape-table-header"
+            Classes="ant-table-header track-table-header batch-scrape-table-header"
             ColumnDefinitions="{x:Static layout:TrackTableLayout.BatchScrapeColumns}"
             HorizontalAlignment="Stretch"
+            Margin="0,0,0,2"
             IsVisible="{Binding ShowWorkSetTableChrome}">
         <TextBlock Grid.Column="0" Text="#" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
         <TextBlock Grid.Column="1" Text="{Binding ColumnSelectLabel}" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
@@ -195,7 +248,8 @@
         <TextBlock Grid.Column="9" Text="{Binding ColumnActionsLabel}" Classes="track-col-header track-col-header-index" HorizontalAlignment="Center"/>
       </Grid>
 
-      <Border DockPanel.Dock="Top" Classes="track-row-divider track-table-divider-paired"
+      <Border DockPanel.Dock="Top" Classes="track-row-divider"
+              Margin="0"
               IsVisible="{Binding ShowWorkSetTableChrome}"/>
 
       <Grid MinHeight="220" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -294,7 +348,7 @@
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             ToolTip.Tip="{Binding $parent[UserControl].((pvm:AudioToolsPageViewModel)DataContext).RemoveTrackButtonToolTip}"
                             automation:AutomationProperties.Name="{Binding $parent[UserControl].((pvm:AudioToolsPageViewModel)DataContext).RemoveTrackButtonToolTip}">
-                      <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+                      <TextBlock Text="{StaticResource IconGlyphDelete}" Classes="track-row-glyph"/>
                     </Button>
                   </Grid>
                   <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True"
@@ -311,7 +365,9 @@
                                  Title="{Binding WorkSetEmptyTitle}"
                                  Description="{Binding WorkSetEmptyDescription}"
                                  ShowAction="{Binding ShowWorkSetEmptyAction}"
-                                 IconGlyph="&#xE8D6;"/>
+                                 ActionText="{Binding EmptyActionLabel}"
+                                 ActionCommand="{Binding LoadWorkingSetCommand}"
+                                 IconGlyph="{StaticResource IconGlyphMusic}"/>
 
         <Border Background="{DynamicResource SurfaceBrush}" Opacity="0.55"
                 IsHitTestVisible="False"
@@ -321,13 +377,14 @@
                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
 
-        <Button x:Name="WorkSetScrollTopBtn" Content="&#xE70E;"
+        <Button x:Name="WorkSetScrollTopBtn" Content="{StaticResource IconGlyphChevronUp}"
                 Classes="list-scroll-top-btn"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
                 IsHitTestVisible="True"
                 Click="OnWorkSetScrollTopClick"/>
       </Grid>
+      </DockPanel>
     </DockPanel>
 
     <controls:PopconfirmHost x:Name="RemoveTrackPopconfirm"

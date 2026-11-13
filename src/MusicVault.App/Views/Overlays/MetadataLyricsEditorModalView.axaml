@@ -14,7 +14,7 @@
       </StackPanel>
       <Button Grid.Column="1" Classes="icon-btn" ToolTip.Tip="{Binding CloseToolTip}"
               Command="{Binding CancelCommand}">
-        <TextBlock Text="&#xE8BB;" Classes="icon-sm"/>
+        <TextBlock Text="{StaticResource IconGlyphClose}" Classes="icon-sm"/>
       </Button>
     </Grid>
 

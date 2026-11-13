@@ -30,7 +30,7 @@
 
 ### 设计系统
 
-UI 变更**必须**遵守 [DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)：
+UI 变更**必须**遵守 [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)：
 - 禁止 View 层硬编码 `#` 色值
 - 禁止 `FontSize="12"` 等魔法数字
 - 使用 Token + class 驱动样式
@@ -57,7 +57,7 @@ dotnet run --project src\MusicVault.App
 
 ## 问题反馈
 
-- 使用 [GitHub Issues](https://github.com/your-org/MusicVault/issues)
+- 使用 [GitHub Issues](https://github.com/jixiangzhou007/MusicVault/issues)
 - Bug 报告请附：版本号、操作系统、复现步骤、诊断日志（`%LOCALAPPDATA%\MusicVault\logs\`）
 - 功能建议请使用 Feature Request 模板
 

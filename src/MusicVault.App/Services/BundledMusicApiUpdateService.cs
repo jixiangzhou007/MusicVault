@@ -1,6 +1,6 @@
 using System.IO.Compression;
-using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using MusicVault.Services;
 using MusicVault.Services.Api;
 using MusicVault.Services.Http;
@@ -9,13 +9,18 @@ namespace MusicVault.App.Services;
 
 /// <summary>
 /// 内置 go-music-api 可选更新：不阻塞启动；默认不自动下载，需用户确认或设置里开启每周检查。
+/// 更新源可为上游或自有 fork（见 <see cref="ResolveGithubRepo"/>）。
 /// </summary>
 public sealed class BundledMusicApiUpdateService
 {
-    private const string Repo = "guohuiyuan/go-music-api";
+    public const string DefaultGithubRepo = "guohuiyuan/go-music-api";
     private const string WindowsAssetSuffix = "go-music-api_windows_amd64.zip";
+    private const string UpdateRepoEnv = "MUSICVAULT_MUSIC_API_UPDATE_REPO";
 
     private static readonly HttpClient Http = MusicSearchHttp.Client;
+
+    /// <summary>由启动/保存设置注入的 <c>owner/repo</c>；可空表示用默认上游。</summary>
+    public static string? ConfiguredGithubRepo { get; set; }
 
     public static bool ShouldCheckOnStartup(AppSettings settings)
     {
@@ -26,15 +31,54 @@ public sealed class BundledMusicApiUpdateService
         return DateTime.UtcNow - settings.LastBundledMusicApiCheckAt.Value > TimeSpan.FromDays(7);
     }
 
+    /// <summary>
+    /// 解析更新仓库：环境变量 → 设置/注入值 → 默认上游。
+    /// 接受 <c>owner/repo</c> 或完整 GitHub URL。
+    /// </summary>
+    public static string ResolveGithubRepo(string? configured = null, string? envValue = null)
+    {
+        var env = envValue ?? Environment.GetEnvironmentVariable(UpdateRepoEnv);
+        var raw = FirstNonEmpty(env, configured, ConfiguredGithubRepo);
+        return NormalizeGithubRepo(raw) ?? DefaultGithubRepo;
+    }
+
+    public static string? NormalizeGithubRepo(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        var s = value.Trim().TrimEnd('/');
+        if (s.StartsWith("https://github.com/", StringComparison.OrdinalIgnoreCase)
+            || s.StartsWith("http://github.com/", StringComparison.OrdinalIgnoreCase))
+        {
+            var path = s.Contains("github.com/", StringComparison.OrdinalIgnoreCase)
+                ? s[(s.IndexOf("github.com/", StringComparison.OrdinalIgnoreCase) + "github.com/".Length)..]
+                : s;
+            path = path.Split('?', '#')[0].Trim('/');
+            if (path.EndsWith(".git", StringComparison.OrdinalIgnoreCase))
+                path = path[..^4];
+            var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length >= 2)
+                return $"{parts[0]}/{parts[1]}";
+            return null;
+        }
+
+        if (Regex.IsMatch(s, @"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"))
+            return s;
+
+        return null;
+    }
+
     public async Task<BundledMusicApiUpdateCheckResult> CheckForUpdateAsync(CancellationToken ct = default)
     {
         var appDir = AppContext.BaseDirectory;
         var local = BundledMusicApiVersion.ReadLocalVersion(appDir) ?? "unknown";
+        var repo = ResolveGithubRepo();
 
         try
         {
             using var request = new HttpRequestMessage(HttpMethod.Get,
-                $"https://api.github.com/repos/{Repo}/releases/latest");
+                $"https://api.github.com/repos/{repo}/releases/latest");
             request.Headers.TryAddWithoutValidation("Accept", "application/vnd.github+json");
             request.Headers.TryAddWithoutValidation("User-Agent", "MusicVault-Desktop");
 
@@ -73,6 +117,7 @@ public sealed class BundledMusicApiUpdateService
                 LatestVersion = latest,
                 UpdateAvailable = available,
                 WindowsZipUrl = zipUrl,
+                GithubRepo = repo,
                 Message = available
                     ? ServiceMessageCodec.Format("ApiUpdate.NewVersionFound", latest, local)
                     : ServiceMessageCodec.Format("ApiUpdate.AlreadyLatest", local)
@@ -199,8 +244,20 @@ public sealed class BundledMusicApiUpdateService
     {
         Succeeded = false,
         LocalVersion = local,
-        Message = message
+        Message = message,
+        GithubRepo = ResolveGithubRepo()
     };
+
+    private static string? FirstNonEmpty(params string?[] values)
+    {
+        foreach (var v in values)
+        {
+            if (!string.IsNullOrWhiteSpace(v))
+                return v;
+        }
+
+        return null;
+    }
 }
 
 public sealed class BundledMusicApiUpdateCheckResult
@@ -210,6 +267,7 @@ public sealed class BundledMusicApiUpdateCheckResult
     public string? LatestVersion { get; init; }
     public bool UpdateAvailable { get; init; }
     public string? WindowsZipUrl { get; init; }
+    public string? GithubRepo { get; init; }
     public string Message { get; init; } = "";
 }
 

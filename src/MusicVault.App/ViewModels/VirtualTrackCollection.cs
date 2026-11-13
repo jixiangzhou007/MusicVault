@@ -19,6 +19,8 @@ public sealed class VirtualTrackCollection : ViewModelBase, INotifyCollectionCha
     private string? _libraryRootPath;
     private long? _playlistId;
     private string? _searchQuery;
+    private bool _missingCover;
+    private bool _missingLyrics;
     private int _loadedPages;
     private int _totalCount;
     private bool _isLoading;
@@ -62,6 +64,16 @@ public sealed class VirtualTrackCollection : ViewModelBase, INotifyCollectionCha
     public void SetSearchQuery(string? query) =>
         _searchQuery = string.IsNullOrWhiteSpace(query) ? null : query.Trim();
 
+    /// <summary>
+    /// 记录缺封面 / 缺歌词筛选。默认都为 false，不改变原有列表。
+    /// Reload、LoadMore 与播放范围查询会带上当前标志。
+    /// </summary>
+    public void SetMissingFilters(bool missingCover, bool missingLyrics)
+    {
+        _missingCover = missingCover;
+        _missingLyrics = missingLyrics;
+    }
+
     /// <summary>切换音乐库时立即清空列表，避免短暂显示上一个库的歌曲</summary>
     public void ClearForReload()
     {
@@ -82,32 +94,46 @@ public sealed class VirtualTrackCollection : ViewModelBase, INotifyCollectionCha
             IReadOnlyList<Track> tracks;
             if (!string.IsNullOrWhiteSpace(_searchQuery))
             {
-                var countTask = _repo.CountSearchScopedAsync(_searchQuery, _libraryId, _playlistId, ct);
-                var tracksTask = _repo.SearchScopedAsync(_searchQuery, _libraryId, _playlistId, 0, PageSize, ct);
+                var countTask = _repo.CountSearchScopedAsync(
+                    _searchQuery, _libraryId, _playlistId, ct,
+                    missingCover: _missingCover, missingLyrics: _missingLyrics);
+                var tracksTask = _repo.SearchScopedAsync(
+                    _searchQuery, _libraryId, _playlistId, 0, PageSize, ct,
+                    missingCover: _missingCover, missingLyrics: _missingLyrics);
                 await Task.WhenAll(countTask, tracksTask).ConfigureAwait(false);
                 total = await countTask.ConfigureAwait(false);
                 tracks = await tracksTask.ConfigureAwait(false);
             }
             else if (_playlistId.HasValue)
             {
-                var countTask = _repo.CountByPlaylistAsync(_playlistId.Value, ct);
-                var tracksTask = _repo.GetByPlaylistAsync(_playlistId.Value, 0, PageSize, ct);
+                var countTask = _repo.CountByPlaylistAsync(
+                    _playlistId.Value, ct, missingCover: _missingCover, missingLyrics: _missingLyrics);
+                var tracksTask = _repo.GetByPlaylistAsync(
+                    _playlistId.Value, 0, PageSize, ct,
+                    missingCover: _missingCover, missingLyrics: _missingLyrics);
                 await Task.WhenAll(countTask, tracksTask).ConfigureAwait(false);
                 total = await countTask.ConfigureAwait(false);
                 tracks = await tracksTask.ConfigureAwait(false);
             }
             else if (_libraryId.HasValue && !string.IsNullOrWhiteSpace(_libraryRootPath))
             {
-                var countTask = _repo.CountByLibraryScopeAsync(_libraryId.Value, _libraryRootPath, ct);
-                var tracksTask = _repo.GetByLibraryScopeAsync(_libraryId.Value, _libraryRootPath, 0, PageSize, ct);
+                var countTask = _repo.CountByLibraryScopeAsync(
+                    _libraryId.Value, _libraryRootPath, ct,
+                    missingCover: _missingCover, missingLyrics: _missingLyrics);
+                var tracksTask = _repo.GetByLibraryScopeAsync(
+                    _libraryId.Value, _libraryRootPath, 0, PageSize, ct,
+                    missingCover: _missingCover, missingLyrics: _missingLyrics);
                 await Task.WhenAll(countTask, tracksTask).ConfigureAwait(false);
                 total = await countTask.ConfigureAwait(false);
                 tracks = await tracksTask.ConfigureAwait(false);
             }
             else
             {
-                var countTask = _repo.CountAsync(_libraryId, ct);
-                var tracksTask = _repo.GetByLibraryAsync(_libraryId, 0, PageSize, ct);
+                var countTask = _repo.CountAsync(
+                    _libraryId, ct, missingCover: _missingCover, missingLyrics: _missingLyrics);
+                var tracksTask = _repo.GetByLibraryAsync(
+                    _libraryId, 0, PageSize, ct,
+                    missingCover: _missingCover, missingLyrics: _missingLyrics);
                 await Task.WhenAll(countTask, tracksTask).ConfigureAwait(false);
                 total = await countTask.ConfigureAwait(false);
                 tracks = await tracksTask.ConfigureAwait(false);
@@ -141,22 +167,31 @@ public sealed class VirtualTrackCollection : ViewModelBase, INotifyCollectionCha
             IReadOnlyList<Track> tracks;
             if (!string.IsNullOrWhiteSpace(_searchQuery))
             {
-                tracks = await _repo.SearchScopedAsync(_searchQuery, _libraryId, _playlistId, skip, PageSize, ct)
+                tracks = await _repo.SearchScopedAsync(
+                        _searchQuery, _libraryId, _playlistId, skip, PageSize, ct,
+                        missingCover: _missingCover, missingLyrics: _missingLyrics)
                     .ConfigureAwait(false);
             }
             else if (_playlistId.HasValue)
             {
-                tracks = await _repo.GetByPlaylistAsync(_playlistId.Value, skip, PageSize, ct)
+                tracks = await _repo.GetByPlaylistAsync(
+                        _playlistId.Value, skip, PageSize, ct,
+                        missingCover: _missingCover, missingLyrics: _missingLyrics)
                     .ConfigureAwait(false);
             }
             else if (_libraryId.HasValue && !string.IsNullOrWhiteSpace(_libraryRootPath))
             {
-                tracks = await _repo.GetByLibraryScopeAsync(_libraryId.Value, _libraryRootPath, skip, PageSize, ct)
+                tracks = await _repo.GetByLibraryScopeAsync(
+                        _libraryId.Value, _libraryRootPath, skip, PageSize, ct,
+                        missingCover: _missingCover, missingLyrics: _missingLyrics)
                     .ConfigureAwait(false);
             }
             else
             {
-                tracks = await _repo.GetByLibraryAsync(_libraryId, skip, PageSize, ct).ConfigureAwait(false);
+                tracks = await _repo.GetByLibraryAsync(
+                        _libraryId, skip, PageSize, ct,
+                        missingCover: _missingCover, missingLyrics: _missingLyrics)
+                    .ConfigureAwait(false);
             }
             if (tracks.Count == 0 || ct.IsCancellationRequested) return;
 
@@ -203,29 +238,63 @@ public sealed class VirtualTrackCollection : ViewModelBase, INotifyCollectionCha
     private async Task<int> GetTotalCountAsync(CancellationToken ct)
     {
         if (!string.IsNullOrWhiteSpace(_searchQuery))
-            return await _repo.CountSearchScopedAsync(_searchQuery, _libraryId, _playlistId, ct).ConfigureAwait(false);
+        {
+            return await _repo.CountSearchScopedAsync(
+                    _searchQuery, _libraryId, _playlistId, ct,
+                    missingCover: _missingCover, missingLyrics: _missingLyrics)
+                .ConfigureAwait(false);
+        }
 
         if (_playlistId.HasValue)
-            return await _repo.CountByPlaylistAsync(_playlistId.Value, ct).ConfigureAwait(false);
+        {
+            return await _repo.CountByPlaylistAsync(
+                    _playlistId.Value, ct, missingCover: _missingCover, missingLyrics: _missingLyrics)
+                .ConfigureAwait(false);
+        }
 
         if (_libraryId.HasValue && !string.IsNullOrWhiteSpace(_libraryRootPath))
-            return await _repo.CountByLibraryScopeAsync(_libraryId.Value, _libraryRootPath, ct).ConfigureAwait(false);
+        {
+            return await _repo.CountByLibraryScopeAsync(
+                    _libraryId.Value, _libraryRootPath, ct,
+                    missingCover: _missingCover, missingLyrics: _missingLyrics)
+                .ConfigureAwait(false);
+        }
 
-        return await _repo.CountAsync(_libraryId, ct).ConfigureAwait(false);
+        return await _repo.CountAsync(
+                _libraryId, ct, missingCover: _missingCover, missingLyrics: _missingLyrics)
+            .ConfigureAwait(false);
     }
 
     private async Task<IReadOnlyList<Track>> GetTracksPageAsync(int skip, int take, CancellationToken ct)
     {
         if (!string.IsNullOrWhiteSpace(_searchQuery))
-            return await _repo.SearchScopedAsync(_searchQuery, _libraryId, _playlistId, skip, take, ct).ConfigureAwait(false);
+        {
+            return await _repo.SearchScopedAsync(
+                    _searchQuery, _libraryId, _playlistId, skip, take, ct,
+                    missingCover: _missingCover, missingLyrics: _missingLyrics)
+                .ConfigureAwait(false);
+        }
 
         if (_playlistId.HasValue)
-            return await _repo.GetByPlaylistAsync(_playlistId.Value, skip, take, ct).ConfigureAwait(false);
+        {
+            return await _repo.GetByPlaylistAsync(
+                    _playlistId.Value, skip, take, ct,
+                    missingCover: _missingCover, missingLyrics: _missingLyrics)
+                .ConfigureAwait(false);
+        }
 
         if (_libraryId.HasValue && !string.IsNullOrWhiteSpace(_libraryRootPath))
-            return await _repo.GetByLibraryScopeAsync(_libraryId.Value, _libraryRootPath, skip, take, ct).ConfigureAwait(false);
+        {
+            return await _repo.GetByLibraryScopeAsync(
+                    _libraryId.Value, _libraryRootPath, skip, take, ct,
+                    missingCover: _missingCover, missingLyrics: _missingLyrics)
+                .ConfigureAwait(false);
+        }
 
-        return await _repo.GetByLibraryAsync(_libraryId, skip, take, ct).ConfigureAwait(false);
+        return await _repo.GetByLibraryAsync(
+                _libraryId, skip, take, ct,
+                missingCover: _missingCover, missingLyrics: _missingLyrics)
+            .ConfigureAwait(false);
     }
 
     /// <summary>分页加载直至列表包含指定索引（与播放队列顺序一致时使用）。</summary>

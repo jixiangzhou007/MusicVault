@@ -5,7 +5,6 @@
   <StyleInclude Source="avares://MusicVault/Styles/WinUiControlStyles.axaml"/>
   <StyleInclude Source="avares://MusicVault/Styles/Components/TypographyStyles.axaml"/>
   <StyleInclude Source="avares://MusicVault/Styles/Components/Navigation.axaml"/>
-  <StyleInclude Source="avares://MusicVault/Styles/Components/Organize.axaml"/>
   <StyleInclude Source="avares://MusicVault/Styles/Components/Forms.axaml"/>
   <StyleInclude Source="avares://MusicVault/Styles/Components/MetadataSearch.axaml"/>
   <StyleInclude Source="avares://MusicVault/Styles/Components/LibraryTrack.axaml"/>
@@ -36,5 +35,7 @@
   <StyleInclude Source="avares://MusicVault/Styles/Components/Steps.axaml"/>
   <StyleInclude Source="avares://MusicVault/Styles/Components/CommandPalette.axaml"/>
   <StyleInclude Source="avares://MusicVault/Styles/Components/Skeleton.axaml"/>
+  <!-- 须在 PageLayout / List 之后，才能压过 track-table paired margin -->
+  <StyleInclude Source="avares://MusicVault/Styles/Components/Organize.axaml"/>
 
 </Styles>

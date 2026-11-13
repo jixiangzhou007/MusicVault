@@ -30,7 +30,7 @@
                Stretch="UniformToFill"
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                IsVisible="{Binding Player.HasCoverLarge, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"/>
-        <TextBlock Text="&#xE8D6;" Classes="icon-hero icon-accent"
+        <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-hero icon-accent"
                    HorizontalAlignment="Center" VerticalAlignment="Center"
                    IsVisible="{Binding !Player.HasCover}"/>
 
@@ -71,19 +71,19 @@
                   Background="Transparent"
                   ToolTip.Tip="{Binding WindowMinimizeToolTip}"
                   Click="OnChromeMinimizeClick">
-            <TextBlock Text="&#xE921;" Classes="compact-cover-chrome-icon"/>
+            <TextBlock Text="{StaticResource IconGlyphMinimize}" Classes="compact-cover-chrome-icon"/>
           </Button>
           <Button Classes="compact-cover-chrome-btn"
                   Background="Transparent"
                   Command="{Binding ExitCompactCommand}"
                   ToolTip.Tip="{Binding WindowRestoreToolTip}">
-            <TextBlock Text="&#xE923;" Classes="compact-cover-chrome-icon"/>
+            <TextBlock Text="{StaticResource IconGlyphRestore}" Classes="compact-cover-chrome-icon"/>
           </Button>
           <Button Classes="compact-cover-chrome-btn compact-cover-chrome-close"
                   Background="Transparent"
                   ToolTip.Tip="{Binding WindowCloseToolTip}"
                   Click="OnChromeCloseClick">
-            <TextBlock Text="&#xE8BB;" Classes="compact-cover-chrome-icon"/>
+            <TextBlock Text="{StaticResource IconGlyphClose}" Classes="compact-cover-chrome-icon"/>
           </Button>
         </StackPanel>
       </Grid>
@@ -96,7 +96,7 @@
                 Command="{Binding Player.ToggleQueueCommand}"
                 IsEnabled="{Binding Player.CanToggleQueue}"
                 ToolTip.Tip="{Binding Player.QueueToolTip}">
-          <TextBlock Text="&#xE8FD;" Classes="compact-player-bar-icon"/>
+          <TextBlock Text="{StaticResource IconGlyphQueue}" Classes="compact-player-bar-icon"/>
         </Button>
         <Button Grid.Column="1" Classes="compact-player-bar-btn" Background="Transparent"
                 Command="{Binding Player.CycleRepeatModeCommand}"
@@ -108,22 +108,22 @@
         <Button Grid.Column="2" Classes="compact-player-bar-btn" Background="Transparent"
                 Command="{Binding Player.PreviousCommand}"
                 ToolTip.Tip="{Binding Player.PreviousToolTip}">
-          <TextBlock Text="&#xE892;" Classes="compact-player-bar-icon"/>
+          <TextBlock Text="{StaticResource IconGlyphPrevious}" Classes="compact-player-bar-icon"/>
         </Button>
         <Button Grid.Column="3" Classes="compact-player-bar-btn" Background="Transparent"
                 Command="{Binding Player.TogglePlayPauseCommand}"
                 ToolTip.Tip="{Binding Player.PlayPauseToolTip}">
           <Panel Width="18" Height="18">
-            <TextBlock Text="&#xE768;" Classes="compact-player-bar-icon compact-player-bar-icon-play"
+            <TextBlock Text="{StaticResource IconGlyphPlay}" Classes="compact-player-bar-icon compact-player-bar-icon-play"
                        IsVisible="{Binding !Player.IsPlaying}"/>
-            <TextBlock Text="&#xE769;" Classes="compact-player-bar-icon compact-player-bar-icon-play"
+            <TextBlock Text="{StaticResource IconGlyphPause}" Classes="compact-player-bar-icon compact-player-bar-icon-play"
                        IsVisible="{Binding Player.IsPlaying}"/>
           </Panel>
         </Button>
         <Button Grid.Column="4" Classes="compact-player-bar-btn" Background="Transparent"
                 Command="{Binding Player.NextCommand}"
                 ToolTip.Tip="{Binding Player.NextToolTip}">
-          <TextBlock Text="&#xE893;" Classes="compact-player-bar-icon"/>
+          <TextBlock Text="{StaticResource IconGlyphNext}" Classes="compact-player-bar-icon"/>
         </Button>
         <Button Grid.Column="5" Classes="compact-player-bar-btn" Background="Transparent"
                 Command="{Binding Player.ToggleShuffleCommand}"
@@ -135,13 +135,13 @@
         <Button x:Name="CompactVolumeFlyoutButton" Grid.Column="6"
                 Classes="compact-player-bar-btn" Background="Transparent"
                 ToolTip.Tip="{Binding Player.VolumeToolTip}">
-          <TextBlock Text="&#xE767;" Classes="compact-player-bar-icon"/>
+          <TextBlock Text="{StaticResource IconGlyphVolume}" Classes="compact-player-bar-icon"/>
           <Button.Flyout>
             <Flyout Placement="Top" ShowMode="Transient" VerticalOffset="-6">
               <Border Classes="ant-popover ant-popover-inline volume-popover-card">
                 <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
                   <Border Classes="volume-popover-icon">
-                    <TextBlock Text="&#xE767;" Classes="icon-xs"
+                    <TextBlock Text="{StaticResource IconGlyphVolume}" Classes="icon-xs"
                                Foreground="{DynamicResource IconOnAccentBrush}"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                   </Border>

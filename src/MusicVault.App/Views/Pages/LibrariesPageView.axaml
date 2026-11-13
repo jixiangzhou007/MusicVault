@@ -27,12 +27,12 @@
                           Command="{Binding ConnectWebDavLibraryCommand}"/>
               </MenuFlyout>
             </Button.Flyout>
-            <TextBlock Text="&#xE710;" Classes="icon-xs"/>
+            <TextBlock Text="{StaticResource IconGlyphAdd}" Classes="icon-xs"/>
           </Button>
           <Button Classes="icon-toolbar-btn" ToolTip.Tip="{Binding RefreshListToolTip}"
                   Command="{Binding RefreshCommand}"
                   automation:AutomationProperties.Name="{Binding RefreshListToolTip}">
-            <TextBlock Text="&#xE72C;" Classes="icon-xs"/>
+            <TextBlock Text="{StaticResource IconGlyphRefresh}" Classes="icon-xs"/>
           </Button>
           <Button Classes="icon-more-btn" ToolTip.Tip="{Binding MoreActionsToolTip}"
                   automation:AutomationProperties.Name="{Binding MoreActionsToolTip}">
@@ -109,7 +109,7 @@
         <controls:EmptyStateView IsVisible="{Binding ShowLibrariesEmpty}"
                                  Title="{Binding EmptyNoSourcesTitle}"
                                  Description="{Binding EmptyNoSourcesDescription}"
-                                 IconGlyph="&#xE8B7;"/>
+                                 IconGlyph="{StaticResource IconGlyphFolder}"/>
       </Panel>
     </DockPanel>
 
@@ -179,7 +179,7 @@
       <controls:EmptyStateView IsVisible="{Binding !HasSelectedLibrary}"
                                Title="{Binding EmptySelectSourceTitle}"
                                Description="{Binding EmptySelectSourceDescription}"
-                               IconGlyph="&#xE8B7;"/>
+                               IconGlyph="{StaticResource IconGlyphFolder}"/>
     </DockPanel>
   </Grid>
 </UserControl>

@@ -262,6 +262,7 @@ hover：`ButtonIconHoverBrush`；pressed：`ButtonIconPressedBrush`。
 | `ContentWidthPreview` | 720 | 设计系统预览、长文说明 |
 | `ControlWidthStandard` | 280 | 标准输入/搜索/连接结果 pill |
 | `ControlWidthWide` | 420 | 宽输入、更新 feed、Tooltip 上限、首页引导文案 |
+| `SettingsComboWidth` | 168 | 设置页偏好下拉（主题/循环/字号等）；路径类下拉用 `settings-field-control-wide` → Standard |
 | `SearchFieldWidth` | 280 | 工具栏搜索框（同 `ControlWidthStandard`） |
 | `ControlWidthToolbar` | 96 | 下载页重试钮、批量筛选下拉最小宽 |
 | `ControlWidthToolbarSecondary` | 72 | 下载页搜索钮等紧凑工具栏按钮 |
@@ -607,17 +608,20 @@ StackPanel / DockPanel
 
 | 场景 | 列定义 | 标签 class | 说明 |
 |------|--------|------------|------|
-| 偏好中心 / 长标签 | `108,8,Auto,*` | `settings-field-label` 右对齐 | 设置页专用 |
+| 偏好中心 | `108,12,*` | 仅 `settings-field-label`（Body 13，**右对齐**）；控件值列左齐 | 标签列收窄，避免短标题左边留空；禁止同挂 `text-label` / `metadata-field-label` |
 | 侧栏元数据 / 窄面板 | `72,8,*,…` | `metadata-field-label` | 260px 侧栏 |
 | 简单配置页（曲库编辑） | `72,8,Auto,*` | `metadata-field-label` + `settings-field-label` | 与元数据侧栏同族 |
 
 | 位置 | Token / class | 值 |
 |------|---------------|-----|
-| 字段行间距 | `settings-section-compact` 内 `settings-field-row` | 样式层统一 |
+| 组内间距 | `SettingsGroupBodySpacing` | 8 |
+| 组标题（首项） | `settings-group-title:first-child` | Margin `0,0,0,4` |
+| 组标题（后续） | `settings-group-title` | Margin `0,16,0,4` |
+| 字段行 | `settings-field-row` | MinHeight 36，Margin 0 |
 | Alert → 下一区块 | `MarginBottomSm` | 8 |
 | Hero 分割线上下 | `PageHeroDividerMargin` | 0,10,0,10 |
 | Tab 卡内容 | `SettingsAntdCardTabContentPadding` | 12 四边 |
-| 字段说明 | ToolTip 优先；区块用 `settings-field-caption` / `ant-alert` | — |
+| 字段说明 | ToolTip 优先；区块用 `settings-field-caption` / `ant-alert` | Caption 11 |
 
 ---
 
@@ -666,4 +670,53 @@ StackPanel / DockPanel
 
 ---
 
-*文档版本：S5 + U1–U5 + V1–V5 · 2026-06*
+## 16. 页模板（播放器合同 · 2026-08-17）
+
+气质对齐桌面音乐播放器（Apple Music / Spotify 桌面），不是后台表单。新页面必须套下列模板之一，**禁止第五种页头**。实现仍用既有 `page-hero-*` / `pane-library` class，不要新造一套名字。
+
+参照物：**歌曲页**（左栏源列表 + 右曲目表 + 左栏图标溢出菜单）。
+
+| 模板 | 结构 | 用于 |
+|------|------|------|
+| **T1 左栏列表** | 左约 260px 源列表 + 右曲目表；无大段 Hero | 歌曲、库来源 |
+| **T2 实体浏览** | 左对齐 `page-title` + 可选一行 `page-intro` + 一行筛选/工具 + 列表 | 艺术家、专辑、歌单 |
+| **T3 搜索听** | 搜索壳 + 结果表；默认全宽 | 发现 |
+| **T4 任务/工具** | 短标题 + 先做的那一步 + 表格 | 下载任务、整理 |
+
+设置维持左 7 段导航（产品冻结），段内按钮仍服从下方工具栏合同。
+
+### 16.1 工具栏合同
+
+- 同一可见工具栏最多 **一个** `primary`（听、搜、导入、载入、保存、该行搜索提交）。
+- 朋友高频次要动作可再留 **一个** 可见 `flat-btn`（如新建歌单）。
+- 其余进 `icon-toolbar-btn` + `MenuFlyout` + `app-compact-menu-item`（抄歌曲页左栏 `+` / 更多）。
+- 删除不进工具栏实心 `danger`；放溢出菜单。
+- `page-title` **左对齐**。禁止 `HorizontalAlignment="Right"`（那是表单标签，不是播放器）。
+- `page-intro` 最多一行，不写下载补全、台账营销。
+
+### 16.2 与 §15 Hero 的关系
+
+§15 描述 `page-hero-copy` / `page-hero-toolbar` / `page-hero-divider` 的 DOM 顺序。本节约束**信息层级**：T2/T4 可以用 Hero class，但必须满足 16.1。艺术家封面详情（§15「背景 Hero」）属于实体详情，不是第五种浏览页头。
+
+---
+
+## 17. 平台窗框（Win / Mac）
+
+**共享（两端同一套产品 UI）：** 顶栏五个文字 Tab、曲库二级条、底栏播放器、语义 Token、四种页模板、Segoe Fluent Icons。本阶段不换图标字体、不换 Accent 色盘。
+
+**仅窗口铬不同：**
+
+| | Windows | macOS |
+|--|---------|--------|
+| 系统装饰 | `SystemDecorations.None`，自绘最小/最大/关闭在**右侧** | 系统交通灯在**左侧**；禁止再画 `WindowChromePanel` |
+| 标题栏 | 导航条即标题栏（已合并） | `ExtendClientAreaToDecorationsHint` + `PreferSystemChrome`，导航条与标题栏合一 |
+| 左内边距 | `TitleBarLeadingInset` = 0 | 约 78px，避免 Logo/「首页」压在交通灯下 |
+| 窗外框 | `WindowShell` 6px 圆角 + 1px 描边可保留 | 圆角/描边跟系统；运行时把 `WindowShellCornerRadius` / `WindowShellStrokePadding` 置 0 |
+
+页面 XAML **不要**写 `OperatingSystem` 分支。能力门禁（下载、桌面歌词）仍按 PRODUCT_DESIGN，不做成另一套皮肤。
+
+Token：`TitleBarLeadingInset`（默认 `0`；仅 macOS 启动时写入）。`ExtendClientAreaTitleBarHeightHint` 对齐 `TopNavHeight`（52）。
+
+---
+
+*文档版本：S5 + U1–U5 + V1–V5 · 页模板/窗框合同 2026-08-17*

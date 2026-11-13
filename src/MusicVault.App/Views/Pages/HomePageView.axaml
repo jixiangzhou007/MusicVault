@@ -56,17 +56,21 @@
                  Classes="pane-play home-history-pane">
         <StackPanel DockPanel.Dock="Top" Classes="home-track-section" Spacing="0">
           <DockPanel Classes="home-section-header" LastChildFill="True">
-            <StackPanel DockPanel.Dock="Right" Classes="home-section-actions">
+            <!-- 右侧多留滚动条槽，与表体「收藏」列右缘对齐（表头在 ListBox 外、表体在滚动区内） -->
+            <StackPanel DockPanel.Dock="Right" Classes="home-section-actions"
+                        Margin="{DynamicResource TrackTableHeaderScrollGutterMargin}">
               <Button Content="{Binding HistoryLoadMoreText}" Classes="flat-btn btn-toolbar"
                       Command="{Binding LoadMoreHistoryRowsCommand}"
                       IsVisible="{Binding ShowLoadMoreButton}"
                       automation:AutomationProperties.Name="{Binding HistoryLoadMoreText}"/>
-              <Button Content="{Binding HistoryClearText}" Classes="flat-btn btn-toolbar"
+              <Button Classes="icon-toolbar-btn"
                       Command="{Binding ClearPlayHistoryCommand}"
                       IsVisible="{Binding ShowClearHistoryButton}"
                       IsEnabled="{Binding HasQueueRows}"
                       ToolTip.Tip="{Binding HistoryClearToolTip}"
-                      automation:AutomationProperties.Name="{Binding HistoryClearToolTip}"/>
+                      automation:AutomationProperties.Name="{Binding HistoryClearToolTip}">
+                <TextBlock Text="{StaticResource IconGlyphDelete}" Classes="icon-xs"/>
+              </Button>
               <Button Content="{Binding FrequentPlayAllLabel}" Classes="flat-btn btn-toolbar"
                       Command="{Binding PlayAllFrequentCommand}"
                       IsVisible="{Binding ShowFrequentPlayActions}"
@@ -113,7 +117,7 @@
                    DoubleTapped="OnTrackListDoubleTapped"
                    ItemTemplate="{StaticResource FrequentTrackRowTemplate}"
                    IsVisible="{Binding HasActiveListRows}"/>
-          <Button x:Name="HistoryScrollTopBtn" Content="&#xE70E;"
+          <Button x:Name="HistoryScrollTopBtn" Content="{StaticResource IconGlyphChevronUp}"
                   Classes="list-scroll-top-btn"
                   HorizontalAlignment="Right" VerticalAlignment="Bottom"
                   Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
@@ -158,7 +162,7 @@
           <Panel>
             <Border Background="{DynamicResource AccentSoftBrush}" Opacity="0.55"
                     CornerRadius="{DynamicResource RadiusLg}"/>
-            <TextBlock Text="&#xE8D6;" Classes="icon-hero icon-accent"
+            <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-hero icon-accent"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
           </Panel>
         </Border>
@@ -168,13 +172,30 @@
                    Classes="ant-empty-desc home-empty-hint"
                    HorizontalAlignment="Center" TextAlignment="Center"
                    MaxWidth="{DynamicResource ContentWidthList}"/>
-        <Button Content="{Binding EmptyActionDiscoverText}"
-                Classes="primary btn-toolbar home-empty-primary"
-                Height="{DynamicResource ToolbarButtonHeight}"
-                MinWidth="{DynamicResource ControlWidthFilterMin}"
-                HorizontalAlignment="Center"
-                Command="{Binding OpenOnlineSourcesCommand}"
-                automation:AutomationProperties.Name="{Binding EmptyActionDiscoverText}"/>
+        <WrapPanel HorizontalAlignment="Center" Classes="home-onboarding-actions">
+          <Button Content="{Binding EmptyActionAddFolderText}"
+                  Classes="primary btn-toolbar home-empty-primary"
+                  Height="{DynamicResource ToolbarButtonHeight}"
+                  MinWidth="{DynamicResource ControlWidthFilterMin}"
+                  Command="{Binding OpenLibrariesCommand}"
+                  ToolTip.Tip="{Binding EmptyActionAddLibraryToolTip}"
+                  IsVisible="{Binding ShowEmptyPrimaryAddLibrary}"
+                  automation:AutomationProperties.Name="{Binding EmptyActionAddFolderText}"/>
+          <Button Content="{Binding EmptyActionLibraryText}"
+                  Classes="primary btn-toolbar home-empty-primary"
+                  Height="{DynamicResource ToolbarButtonHeight}"
+                  MinWidth="{DynamicResource ControlWidthFilterMin}"
+                  Command="{Binding OpenAllTracksCommand}"
+                  IsVisible="{Binding ShowEmptyPrimaryOpenTracks}"
+                  automation:AutomationProperties.Name="{Binding EmptyActionLibraryText}"/>
+          <Button Content="{Binding EmptyActionDiscoverText}"
+                  Classes="primary btn-toolbar home-empty-primary"
+                  Height="{DynamicResource ToolbarButtonHeight}"
+                  MinWidth="{DynamicResource ControlWidthFilterMin}"
+                  Command="{Binding OpenOnlineSourcesCommand}"
+                  IsVisible="{Binding ShowEmptyPrimaryDiscover}"
+                  automation:AutomationProperties.Name="{Binding EmptyActionDiscoverText}"/>
+        </WrapPanel>
         <Button Content="{Binding EmptyActionLibraryListsText}"
                 Classes="flat-btn btn-toolbar"
                 Height="{DynamicResource ToolbarButtonHeight}"
@@ -184,21 +205,30 @@
                 automation:AutomationProperties.Name="{Binding EmptyActionLibraryListsText}"/>
         <WrapPanel Classes="home-onboarding-actions home-empty-secondary"
                    HorizontalAlignment="Center">
+          <Button Content="{Binding EmptyActionDiscoverText}"
+                  Classes="flat-btn btn-toolbar"
+                  Height="{DynamicResource ToolbarButtonHeight}"
+                  Command="{Binding OpenOnlineSourcesCommand}"
+                  IsVisible="{Binding ShowEmptySecondaryDiscover}"
+                  automation:AutomationProperties.Name="{Binding EmptyActionDiscoverText}"/>
           <Button Content="{Binding EmptyActionLibraryText}"
                   Classes="flat-btn btn-toolbar"
                   Height="{DynamicResource ToolbarButtonHeight}"
                   Command="{Binding OpenAllTracksCommand}"
+                  IsVisible="{Binding ShowEmptySecondaryOpenTracks}"
                   automation:AutomationProperties.Name="{Binding EmptyActionLibraryText}"/>
           <Button Content="{Binding EmptyActionAddLibraryText}"
                   Classes="flat-btn btn-toolbar"
                   Height="{DynamicResource ToolbarButtonHeight}"
                   Command="{Binding OpenLibrariesCommand}"
                   ToolTip.Tip="{Binding EmptyActionAddLibraryToolTip}"
+                  IsVisible="{Binding ShowEmptySecondaryAddLibrary}"
                   automation:AutomationProperties.Name="{Binding EmptyActionAddLibraryToolTip}"/>
           <Button Content="{Binding EmptyActionDownloadsText}"
                   Classes="flat-btn btn-toolbar"
                   Height="{DynamicResource ToolbarButtonHeight}"
                   Command="{Binding OpenDownloadsCommand}"
+                  IsVisible="{Binding ShowEmptySecondaryDownloads}"
                   automation:AutomationProperties.Name="{Binding EmptyActionDownloadsText}"/>
           <Button Content="{Binding EmptyActionSettingsText}"
                   Classes="flat-btn btn-toolbar"

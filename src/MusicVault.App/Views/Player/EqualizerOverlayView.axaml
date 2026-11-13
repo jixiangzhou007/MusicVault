@@ -12,7 +12,7 @@
       <!-- 标题 -->
       <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="{DynamicResource EqualizerSectionGap}">
         <Border Classes="eq-modal-icon">
-          <TextBlock Text="&#xE9E9;" Classes="icon-xs icon-on-accent"
+          <TextBlock Text="{StaticResource IconGlyphEqualizer}" Classes="icon-xs icon-on-accent"
                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
         <TextBlock Text="{Binding Title}" Classes="eq-modal-title" VerticalAlignment="Center"/>

@@ -26,12 +26,12 @@
                           Command="{Binding ConnectWebDavLibraryCommand}"/>
               </MenuFlyout>
             </Button.Flyout>
-            <TextBlock Text="&#xE710;" Classes="icon-xs"/>
+            <TextBlock Text="{StaticResource IconGlyphAdd}" Classes="icon-xs"/>
           </Button>
           <Button Classes="icon-toolbar-btn" ToolTip.Tip="{Binding RefreshListToolTip}"
                   Command="{Binding RefreshCommand}"
                   automation:AutomationProperties.Name="{Binding RefreshListToolTip}">
-            <TextBlock Text="&#xE72C;" Classes="icon-xs"/>
+            <TextBlock Text="{StaticResource IconGlyphRefresh}" Classes="icon-xs"/>
           </Button>
           <Button Classes="icon-more-btn" ToolTip.Tip="{Binding MoreActionsToolTip}"
                   automation:AutomationProperties.Name="{Binding MoreActionsToolTip}">
@@ -124,7 +124,7 @@
     <controls:VerticalPaneSplitter x:Name="LibrarySplitter" Grid.Column="1"/>
 
     <DockPanel Grid.Column="2" Classes="pane-play">
-      <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" Margin="{DynamicResource PageToolbarGridMargin}" MinHeight="32">
+      <Grid x:Name="TracksToolbar" DockPanel.Dock="Top" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto" Margin="{DynamicResource PageToolbarGridMargin}" MinHeight="32">
         <Button Grid.Column="0" Classes="icon-toolbar-btn library-pane-toggle-btn" Margin="{DynamicResource MarginTrailingSm}"
                 Command="{Binding ToggleLibraryPaneCommand}"
                 ToolTip.Tip="{Binding LibraryPaneToggleToolTip}"
@@ -158,17 +158,29 @@
           </Button.Flyout>
           <TextBlock Text="{Binding OrganizeLabel}" Classes="text-label"/>
         </Button>
-        <ToggleButton Grid.Column="5" Content="{Binding FavoritesLabel}" Classes="browse-filter"
-                      HorizontalAlignment="Right"
-                      IsChecked="{Binding FavoritesOnly}"
-                      IsVisible="{Binding ShowFavoritesFilter}"
-                      ToolTip.Tip="{Binding FavoritesFilterToolTip}"
-                      automation:AutomationProperties.Name="{Binding FavoritesFilterToolTip}"/>
+        <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center"
+                    Margin="{DynamicResource MarginToolbarBtnGap}">
+          <ToggleButton Content="{Binding BrowseSongsLabel}" Classes="browse-filter"
+                        IsChecked="{Binding IsSongsBrowseMode, Mode=TwoWay}"
+                        automation:AutomationProperties.Name="{Binding BrowseSongsLabel}"/>
+          <ToggleButton Content="{Binding BrowseFoldersLabel}" Classes="browse-filter"
+                        IsChecked="{Binding IsFoldersBrowseMode, Mode=TwoWay}"
+                        automation:AutomationProperties.Name="{Binding BrowseFoldersLabel}"/>
+        </StackPanel>
+        <StackPanel Grid.Column="6" Orientation="Horizontal" Spacing="4"
+                    VerticalAlignment="Center" HorizontalAlignment="Right">
+          <ToggleButton Content="{Binding FavoritesLabel}" Classes="browse-filter"
+                        IsChecked="{Binding FavoritesOnly}"
+                        IsVisible="{Binding ShowFavoritesFilter}"
+                        ToolTip.Tip="{Binding FavoritesFilterToolTip}"
+                        automation:AutomationProperties.Name="{Binding FavoritesFilterToolTip}"/>
+        </StackPanel>
       </Grid>
 
-      <controls:LibraryTrackTableHeader DockPanel.Dock="Top"/>
-
       <Panel>
+        <DockPanel IsVisible="{Binding ShowSongsList}">
+        <controls:LibraryTrackTableHeader x:Name="SongsLibraryHeader" DockPanel.Dock="Top"/>
+        <Panel>
         <ListBox x:Name="TrackList" ItemsSource="{Binding TrackListItems}" Classes="virtual-list track-table-scroll-list"
                  ItemTemplate="{StaticResource LibraryTrackRowTemplate}"
                  IsVisible="{Binding ShowTracksList}">
@@ -191,7 +203,7 @@
             <controls:SkeletonLine Grid.Column="5" LineWidth="36" LineHorizontalAlignment="Center"/>
           </Grid>
         </Border>
-        <Button x:Name="TrackScrollTopBtn" Content="&#xE70E;"
+        <Button x:Name="TrackScrollTopBtn" Content="{StaticResource IconGlyphChevronUp}"
                 Classes="list-scroll-top-btn"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
@@ -203,7 +215,96 @@
                                  ShowAction="{Binding ShowTracksEmptyAction}"
                                  ActionText="{Binding TracksEmptyActionText}"
                                  ActionCommand="{Binding TracksEmptyPrimaryActionCommand}"
-                                 IconGlyph="&#xE8D6;"/>
+                                 IconGlyph="{StaticResource IconGlyphMusic}"/>
+        </Panel>
+        </DockPanel>
+
+        <DockPanel IsVisible="{Binding ShowFolderBrowser}">
+          <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*" MinHeight="32"
+                Margin="{DynamicResource TrackTableHeaderPairedMargin}"
+                IsVisible="{Binding ShowFolderChrome}">
+            <Button Grid.Column="0" Content="{Binding FolderUpLabel}" Classes="flat-btn btn-toolbar"
+                    Margin="{DynamicResource MarginToolbarBtnGap}"
+                    VerticalAlignment="Center"
+                    Command="{Binding FolderUpCommand}"
+                    IsVisible="{Binding ShowFolderUp}"
+                    automation:AutomationProperties.Name="{Binding FolderUpLabel}"/>
+            <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+              <ItemsControl ItemsSource="{Binding FolderBreadcrumbs}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="2"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="pvm:FolderBreadcrumbItemViewModel">
+                    <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                      <TextBlock Text="/" Classes="text-caption" VerticalAlignment="Center" Margin="2,0"
+                                 IsVisible="{Binding ShowSeparator}"
+                                 Foreground="{DynamicResource TextTertiaryBrush}"/>
+                      <Button Content="{Binding Label}" Classes="flat-btn btn-toolbar"
+                              Command="{Binding NavigateCommand}"
+                              IsVisible="{Binding !IsCurrent}"
+                              automation:AutomationProperties.Name="{Binding Label}"/>
+                      <TextBlock Text="{Binding Label}" Classes="text-label" VerticalAlignment="Center"
+                                 Margin="6,0" IsVisible="{Binding IsCurrent}"/>
+                    </StackPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Grid>
+
+          <Panel>
+            <DockPanel IsVisible="{Binding ShowFolderContent}">
+              <ListBox x:Name="FolderList" DockPanel.Dock="Top"
+                       ItemsSource="{Binding FolderChildren}"
+                       Classes="music-library-list"
+                       MaxHeight="240"
+                       IsVisible="{Binding ShowFolderChildren}"
+                       DoubleTapped="OnFolderListDoubleTapped"
+                       KeyDown="OnFolderListKeyDown">
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="pvm:FolderBrowseItemViewModel">
+                    <Border Classes="library-list-row" ToolTip.Tip="{Binding AbsolutePath}">
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{StaticResource IconGlyphFolder}" Classes="icon-xs" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Name}" Classes="text-label" VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"/>
+                      </StackPanel>
+                    </Border>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+              <controls:LibraryTrackTableHeader x:Name="FolderTracksHeader" DockPanel.Dock="Top" IsVisible="{Binding ShowFolderDirectTracks}"/>
+              <ListBox x:Name="FolderTrackList" ItemsSource="{Binding FolderDirectTracks}"
+                       Classes="virtual-list track-table-scroll-list"
+                       ItemTemplate="{StaticResource LibraryTrackRowTemplate}"
+                       IsVisible="{Binding ShowFolderDirectTracks}">
+                <ListBox.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <VirtualizingStackPanel/>
+                  </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+              </ListBox>
+            </DockPanel>
+
+            <controls:SkeletonAlbumTrackListView Margin="{DynamicResource SettingsOverviewCardMargin}"
+                                                 IsVisible="{Binding ShowFolderLoading}"/>
+            <controls:EmptyStateView IsVisible="{Binding ShowFolderPickLibrary}"
+                                     Description="{Binding FolderPickLibraryText}"
+                                     ShowAction="True"
+                                     ActionText="{Binding FolderPickActionText}"
+                                     ActionCommand="{Binding ResolveFolderLibraryCommand}"
+                                     IconGlyph="{StaticResource IconGlyphFolder}"/>
+            <controls:EmptyStateView IsVisible="{Binding ShowFolderEmpty}"
+                                     Description="{Binding FolderEmptyText}"
+                                     ShowAction="True"
+                                     ActionText="{Binding FolderEmptyActionText}"
+                                     ActionCommand="{Binding FolderEmptyPrimaryCommand}"
+                                     IconGlyph="{StaticResource IconGlyphFolder}"/>
+          </Panel>
+        </DockPanel>
       </Panel>
     </DockPanel>
 

@@ -217,15 +217,16 @@
   </Style>
   <Style Selector="ComboBox.discover-combo-platform,
                    controls|PlatformComboBox.discover-combo-platform ComboBox">
-    <Setter Property="MinWidth" Value="128"/>
-    <Setter Property="Width" Value="128"/>
+    <Setter Property="MinWidth" Value="148"/>
+    <Setter Property="Width" Value="148"/>
   </Style>
   <Style Selector="ComboBox.discover-combo-platform.discover-search-platform">
-    <Setter Property="MinWidth" Value="120"/>
-    <Setter Property="Width" Value="120"/>
-    <Setter Property="Height" Value="{DynamicResource ControlHeightLg}"/>
-    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLg}"/>
-    <Setter Property="MaxHeight" Value="{DynamicResource ControlHeightLg}"/>
+    <Setter Property="MinWidth" Value="148"/>
+    <Setter Property="Width" Value="148"/>
+    <Setter Property="Height" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
   </Style>
   <Style Selector="ComboBox.discover-combo-quality">
     <Setter Property="MinWidth" Value="136"/>
@@ -352,6 +353,65 @@
   <Style Selector="Button.browse-filter.selected:pointerover">
     <Setter Property="Background" Value="{DynamicResource NavHoverBrush}"/>
     <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+
+  <!-- 登录点图标：高度对齐平台下拉；间距由外层 StackPanel Spacing=8 与 shell Padding=8 统一 -->
+  <Style Selector="Button.discover-login-icon">
+    <Setter Property="Width" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="Height" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="MinWidth" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Opacity" Value="1"/>
+    <Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style Selector="Button.discover-login-icon:pointerover">
+    <Setter Property="Opacity" Value="0.88"/>
+  </Style>
+  <Style Selector="Button.discover-login-icon:pressed">
+    <Setter Property="Opacity" Value="0.78"/>
+  </Style>
+  <Style Selector="Button.discover-login-icon /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Button.discover-login-icon:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+  <Style Selector="Button.discover-login-icon:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+
+  <Style Selector="Border.discover-platform-icon-clip">
+    <Setter Property="Width" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="Height" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+
+  <Style Selector="Image.discover-platform-app-icon">
+    <Setter Property="Width" Value="{DynamicResource ControlHeightStandard}"/>
+    <Setter Property="Height" Value="{DynamicResource ControlHeightStandard}"/>
+  </Style>
+
+  <!-- 下拉内小图标：同样 RadiusControl 圆角裁切 -->
+  <Style Selector="Border.discover-platform-icon-clip-sm">
+    <Setter Property="Width" Value="18"/>
+    <Setter Property="Height" Value="18"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+  </Style>
+  <Style Selector="Image.discover-platform-app-icon-sm">
+    <Setter Property="Width" Value="18"/>
+    <Setter Property="Height" Value="18"/>
   </Style>
 
   <Style Selector="Button.discover-login-capsule">

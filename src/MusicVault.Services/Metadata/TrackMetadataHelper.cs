@@ -136,6 +136,8 @@ public static class TrackMetadataHelper
         if (size <= 0 && System.IO.File.Exists(filePath))
             size = new FileInfo(filePath).Length;
 
+        var hasEmbeddedCover = tag.Pictures is { Length: > 0 };
+
         var track = new Track
         {
             FilePath = filePath,
@@ -149,6 +151,7 @@ public static class TrackMetadataHelper
             DurationMs = durationMs,
             FileSizeBytes = size,
             AcoustId = AcoustIdTagReader.Read(file),
+            CoverHash = hasEmbeddedCover ? "embedded" : null,
             LyricsPath = !WebDavPathHelper.IsWebDavPath(filePath)
                          && System.IO.File.Exists(Path.ChangeExtension(filePath, ".lrc"))
                 ? Path.ChangeExtension(filePath, ".lrc")

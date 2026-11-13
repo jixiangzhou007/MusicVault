@@ -35,11 +35,16 @@ ViewModel 应调用上述服务，而非重复实现专辑合并或完整保存�
 2. **元数据侧栏保存**：`MetadataEditorViewModel` → `TrackMetadataSave.SaveFullAsync`
 3. **曲库列表**：`TrackRepository` + `LibraryScanService` 后台扫描
 
+产品意图与向导目标态见 [PRODUCT_DESIGN.md](PRODUCT_DESIGN.md) 第 7 节。
+
 ## 首次运行向导
 
 - 触发：版权声明已接受且 `settings.json` 中 `FirstRunWizardCompleted == false`，且曲库为空
-- UI：`FirstRunWizardModalView` + `StepsIndicator`（欢迎 → 音乐库 → 下载 → 在线 API）
-- 完成：写入下载目录、可选添加音乐库、保存 API 自动启动偏好，并标记 `FirstRunWizardCompleted`
+- UI：`FirstRunWizardModalView` + `StepsIndicator`（欢迎 → 选路 → 路径详情）
+- 选路：`FirstRunOnboardingPath` = `LocalLibrary`（选文件夹，可跳过）或 `Discover`（说明即可搜索试听；有捆绑 API 时静默自启）
+- 跳过整段向导：完成标记写入，路径保持 `Unset`
+- 已有曲库：跳过向导，不改路径（保持 `Unset`）
+- 完成：静默创建默认下载目录；可选添加音乐库；Discover 路径写入 API 自动启动；标记 `FirstRunWizardCompleted`
 
 ## 启动迁移
 

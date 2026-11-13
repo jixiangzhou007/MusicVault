@@ -86,6 +86,36 @@ public sealed class TrackItemDisplaySyncTests
     }
 
     [Fact]
+    public void SyncDisplay_marks_missing_cover_and_lyrics_from_track_signals()
+    {
+        var missing = new TrackItemViewModel(new Track
+        {
+            Id = 3,
+            FilePath = @"D:\music\bare.flac",
+            Title = "Bare",
+            CoverHash = "  ",
+            LyricsPath = null
+        });
+        Assert.True(missing.ShowMissingCover);
+        Assert.True(missing.ShowMissingLyrics);
+
+        var complete = new Track
+        {
+            Id = 3,
+            FilePath = @"D:\music\bare.flac",
+            Title = "Bare",
+            CoverHash = "embedded",
+            LyricsPath = @"D:\music\bare.lrc"
+        };
+        missing.ApplyMetadataFrom(complete);
+
+        Assert.False(missing.ShowMissingCover);
+        Assert.False(missing.ShowMissingLyrics);
+        Assert.Equal("embedded", missing.Track.CoverHash);
+        Assert.Equal(@"D:\music\bare.lrc", missing.Track.LyricsPath);
+    }
+
+    [Fact]
     public void IsSameTrack_matches_by_id_and_path()
     {
         var a = new Track { Id = 5, FilePath = @"D:\x.mp3", Artist = "One" };

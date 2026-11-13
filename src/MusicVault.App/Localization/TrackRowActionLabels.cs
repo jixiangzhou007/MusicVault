@@ -22,6 +22,10 @@ public static class TrackRowActionLabels
     public static string DeleteFromLibrary => G("Library.Tracks.DeleteFromLibrary.ToolTip");
     public static string AddToOtherPlaylist => G("Playlists.Tracks.AddToOtherPlaylist.ToolTip");
     public static string RemoveFromPlaylist => G("Playlists.Tracks.RemoveFromPlaylist.ToolTip");
+    public static string MissingCover => G("Library.Tracks.MissingCover");
+    public static string MissingLyrics => G("Library.Tracks.MissingLyrics");
+    public static string MissingCoverTagToolTip => G("Library.Tracks.MissingCoverTagToolTip");
+    public static string MissingLyricsTagToolTip => G("Library.Tracks.MissingLyricsTagToolTip");
     public static string PauseDownload => G("Transfers.Row.Pause");
     public static string ResumeDownload => G("Transfers.Row.Resume");
     public static string CancelDownload => G("Transfers.Row.Cancel");

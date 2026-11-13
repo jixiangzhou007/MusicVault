@@ -37,6 +37,14 @@ public partial class TrackItemViewModel : ViewModelBase
     [ObservableProperty] private string _nasPlaybackCacheStatusText = string.Empty;
     [ObservableProperty] private string _nasPlaybackCacheToolTip = string.Empty;
 
+    [ObservableProperty] private bool _showMissingCover;
+    [ObservableProperty] private bool _showMissingLyrics;
+
+    public string MissingCoverTagText => TrackRowActionLabels.MissingCover;
+    public string MissingLyricsTagText => TrackRowActionLabels.MissingLyrics;
+    public string MissingCoverTagToolTip => TrackRowActionLabels.MissingCoverTagToolTip;
+    public string MissingLyricsTagToolTip => TrackRowActionLabels.MissingLyricsTagToolTip;
+
     public string FavoriteToolTip => TrackRowActionLabels.Favorite;
     public string AddToPlaylistToolTip => TrackRowActionLabels.AddToPlaylist;
     public string DeleteFromLibraryToolTip => TrackRowActionLabels.DeleteFromLibrary;
@@ -64,6 +72,10 @@ public partial class TrackItemViewModel : ViewModelBase
         OnPropertyChanged(nameof(DeleteFromLibraryToolTip));
         OnPropertyChanged(nameof(AddToOtherPlaylistToolTip));
         OnPropertyChanged(nameof(RemoveFromPlaylistToolTip));
+        OnPropertyChanged(nameof(MissingCoverTagText));
+        OnPropertyChanged(nameof(MissingLyricsTagText));
+        OnPropertyChanged(nameof(MissingCoverTagToolTip));
+        OnPropertyChanged(nameof(MissingLyricsTagToolTip));
     }
 
     public void SyncDisplayFromTrack()
@@ -74,6 +86,8 @@ public partial class TrackItemViewModel : ViewModelBase
         Genre = string.IsNullOrWhiteSpace(Track.Genre) ? string.Empty : Track.Genre;
         YearText = Track.Year is > 0 ? Track.Year.ToString()! : string.Empty;
         DurationText = TimeSpan.FromMilliseconds(Track.DurationMs).ToString(@"m\:ss");
+        ShowMissingCover = TrackMissingMetadata.IsMissingCover(Track);
+        ShowMissingLyrics = TrackMissingMetadata.IsMissingLyrics(Track);
     }
 
     public void RefreshDisplayFromTrack() => SyncDisplayFromTrack();

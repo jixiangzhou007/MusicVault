@@ -13,6 +13,7 @@ using MusicVault.Core.Enums;
 using MusicVault.Core.Models;
 using MusicVault.Core.Platforms;
 using MusicVault.Services;
+using MusicVault.Services.Api;
 using MusicVault.Services.Download;
 
 namespace MusicVault.App.ViewModels.Pages;
@@ -228,7 +229,10 @@ public partial class DownloadsPageViewModel : PageViewModelBase
     public string EmptyListTitle => _l10n.Get("Transfers.Empty.List.Title");
     public string EmptyListDescription => _l10n.Get("Transfers.Empty.List.Description");
     public string EmptyGoDiscoverText => _l10n.Get("Transfers.OpenDiscover");
-    public string WorkflowHintText => _l10n.Get("Transfers.Workflow.Hint");
+    public string WorkflowHintText =>
+        _l10n.Get(OnlineDownloadAvailability.WorkflowHintKey(
+            GoMusicApiClient.IsConfigured,
+            OperatingSystem.IsMacOS()));
     public string OpenDiscoverQuickText => _l10n.Get("Transfers.OpenDiscover");
     public string OpenOnlineSettingsQuickText => _l10n.Get("Transfers.OpenOnlineSettings");
     public string CopyFailedErrorToolTip => _l10n.Get("Transfers.Failed.CopyError");
@@ -295,6 +299,8 @@ public partial class DownloadsPageViewModel : PageViewModelBase
             _ = ReconcileAndRefreshAsync();
         ApplyFilter();
     }
+
+    public void NotifyOnlineDownloadAvailability() => OnPropertyChanged(nameof(WorkflowHintText));
 
     public void RefreshLocalizedStrings()
     {

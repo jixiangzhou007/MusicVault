@@ -11,6 +11,8 @@
     <RootNamespace>MusicVault.App</RootNamespace>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- 嵌入 exe，任务栏 / 资源管理器显示品牌图标 -->
+    <ApplicationIcon>Assets\app-icon.ico</ApplicationIcon>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <Description>下载即整理，整理即播放 - 跨平台个人音乐管理工具</Description>
   </PropertyGroup>

@@ -15,44 +15,88 @@
       </StackPanel>
       <Button Grid.Column="1" Classes="icon-btn" ToolTip.Tip="{Binding CloseToolTip}"
               Command="{Binding CloseCommand}">
-        <TextBlock Text="&#xE8BB;" Classes="icon-sm"/>
+        <TextBlock Text="{StaticResource IconGlyphClose}" Classes="icon-sm"/>
       </Button>
     </Grid>
 
-    <ScrollViewer Grid.Row="1" Margin="{DynamicResource PageContentHorizontalMarginSm}" VerticalScrollBarVisibility="Auto">
-      <StackPanel Spacing="12">
-        <TextBlock Text="{Binding CookieSummary}" Classes="text-caption"
-                   Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
-        <ItemsControl ItemsSource="{Binding Sources}">
+    <ScrollViewer Grid.Row="1" Margin="{DynamicResource PageContentHorizontalMarginSm}"
+                  VerticalScrollBarVisibility="Auto">
+      <StackPanel Spacing="16">
+        <ItemsControl ItemsSource="{Binding Sources}" HorizontalAlignment="Left">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <WrapPanel Orientation="Horizontal"/>
+              <StackPanel Orientation="Horizontal" Spacing="4"/>
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:MusicApiLoginSourceOption">
-              <Button Content="{Binding Label}" Classes="format-chip" Margin="{DynamicResource ChipGridItemMargin}"
-                      Command="{Binding LoginCommand}"/>
+              <Button Classes="login-platform-chip"
+                      Classes.selected="{Binding IsSelected}"
+                      Classes.logged-in="{Binding IsLoggedIn}"
+                      Classes.unsupported="{Binding !SupportsQr}"
+                      Command="{Binding SelectCommand}"
+                      ToolTip.Tip="{Binding ToolTip}">
+                <StackPanel Spacing="4" HorizontalAlignment="Center">
+                  <Panel Width="32" Height="32" HorizontalAlignment="Center">
+                    <Border Classes="login-platform-icon-clip">
+                      <Image Source="{Binding Icon}" Classes="login-platform-app-icon"
+                             Stretch="UniformToFill"/>
+                    </Border>
+                    <Border Classes="login-platform-logged-badge"
+                            IsVisible="{Binding IsLoggedIn}"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                      <TextBlock Text="{StaticResource IconGlyphCheckMark}" Classes="icon-xs"/>
+                    </Border>
+                  </Panel>
+                  <TextBlock Text="{Binding ShortLabel}"
+                             Classes="text-caption login-platform-chip-label"
+                             HorizontalAlignment="Center" TextAlignment="Center"
+                             TextTrimming="CharacterEllipsis" MaxWidth="40"/>
+                </StackPanel>
+              </Button>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Border HorizontalAlignment="Center" Padding="8" CornerRadius="8"
-                Background="{DynamicResource SurfaceElevatedBrush}"
-                IsVisible="{Binding HasQrImage}">
-          <Image Width="220" Height="220"
-                 Source="{Binding QrImageBytes, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"/>
+
+        <Border Classes="login-qr-card" HorizontalAlignment="Center">
+          <Panel Width="240" Height="240">
+            <TextBlock Text="{Binding QrPlaceholderText}"
+                       Classes="text-caption"
+                       Foreground="{DynamicResource TextTertiaryBrush}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       TextAlignment="Center" TextWrapping="Wrap" Margin="16"
+                       IsVisible="{Binding !HasQrImage}"/>
+            <Image Width="220" Height="220"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Source="{Binding QrImageBytes, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                   IsVisible="{Binding HasQrImage}"/>
+            <ProgressBar Classes="ant-progress-line" IsIndeterminate="True"
+                         VerticalAlignment="Bottom" Margin="12"
+                         IsVisible="{Binding IsBusy}"/>
+          </Panel>
         </Border>
-        <ProgressBar IsIndeterminate="True" Classes="ant-progress-line"
-                     IsVisible="{Binding IsBusy}"/>
-        <TextBlock Text="{Binding StatusText}" Classes="text-body app-dialog-status"
-                   TextWrapping="Wrap" LineHeight="22"/>
+
+        <TextBlock Text="{Binding StatusText}" Classes="text-body"
+                   TextWrapping="Wrap" LineHeight="22"
+                   HorizontalAlignment="Center" TextAlignment="Center"/>
       </StackPanel>
     </ScrollViewer>
 
     <Border Grid.Row="2" Padding="12,8,12,12" Classes="app-dialog-footer"
             BorderBrush="{DynamicResource SeparatorBrush}" BorderThickness="0,1,0,0">
-      <Button Content="{Binding CloseButtonText}" Classes="flat-btn app-dialog-btn"
-              HorizontalAlignment="Right" Command="{Binding CloseCommand}"/>
+      <Grid ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto">
+        <TextBlock Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0"
+                   Text="{Binding CookieSummary}" Classes="text-caption"
+                   Foreground="{DynamicResource TextSecondaryBrush}"
+                   TextWrapping="Wrap" Margin="0,0,0,8"/>
+        <Button Grid.Column="1" Grid.Row="1" Content="{Binding RescanButtonText}"
+                Classes="flat-btn app-dialog-btn" Margin="0,0,8,0"
+                Command="{Binding RescanCommand}"
+                IsVisible="{Binding CanRescan}"/>
+        <Button Grid.Column="2" Grid.Row="1" Content="{Binding CloseButtonText}"
+                Classes="flat-btn app-dialog-btn"
+                Command="{Binding CloseCommand}"/>
+      </Grid>
     </Border>
   </Grid>
 </UserControl>

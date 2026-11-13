@@ -17,7 +17,7 @@
       </StackPanel>
       <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Top">
         <Button Classes="icon-btn" ToolTip.Tip="{Binding CloseToolTip}" Command="{Binding CancelCommand}">
-          <TextBlock Text="&#xE8BB;" Classes="icon-sm"/>
+          <TextBlock Text="{StaticResource IconGlyphClose}" Classes="icon-sm"/>
         </Button>
         <TextBlock Text="{Binding MatchSummaryText}"
                    Classes="text-caption combined-labels-text-muted"
@@ -149,7 +149,7 @@
 
           <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10"
                       Margin="{DynamicResource PageContentMargin}" IsVisible="{Binding ShowEmptyState}">
-            <TextBlock Text="&#xE721;"
+            <TextBlock Text="{StaticResource IconGlyphSearch}"
                        Classes="icon-2xl icon-muted" HorizontalAlignment="Center"/>
             <TextBlock Text="{Binding EmptyStateTitle}" Classes="text-subtitle combined-labels-text"
                        HorizontalAlignment="Center"/>

@@ -65,7 +65,7 @@
                   Command="{Binding OpenOnlineSourcesSettingsCommand}"
                   ToolTip.Tip="{Binding OpenOnlineSettingsQuickText}"
                   automation:AutomationProperties.Name="{Binding OpenOnlineSettingsQuickText}">
-            <TextBlock Text="&#xE713;" Classes="icon-xs"/>
+            <TextBlock Text="{StaticResource IconGlyphSettings}" Classes="icon-xs"/>
           </Button>
         </StackPanel>
 
@@ -235,20 +235,20 @@
         <controls:EmptyStateView IsVisible="{Binding ShowFilterEmpty}"
                                  Title="{Binding EmptyFilterTitle}"
                                  Description="{Binding EmptyFilterDescription}"
-                                 IconGlyph="&#xE721;"
+                                 IconGlyph="{StaticResource IconGlyphSearch}"
                                  ShowIcon="True"
                                  ShowAction="False"/>
 
         <controls:EmptyStateView IsVisible="{Binding ShowStatusFilterEmpty}"
                                  Title="{Binding EmptyStatusTitle}"
                                  Description="{Binding EmptyStatusDescription}"
-                                 IconGlyph="&#xE721;"
+                                 IconGlyph="{StaticResource IconGlyphSearch}"
                                  ShowIcon="True"
                                  ShowAction="True"
                                  ActionText="{Binding EmptyStatusActionText}"
                                  ActionCommand="{Binding RunEmptyStatusActionCommand}"/>
 
-        <Button x:Name="DownloadScrollTopBtn" Content="&#xE70E;"
+        <Button x:Name="DownloadScrollTopBtn" Content="{StaticResource IconGlyphChevronUp}"
                 Classes="list-scroll-top-btn"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
@@ -257,7 +257,7 @@
         <controls:EmptyStateView IsVisible="{Binding IsEmpty}"
                                  Title="{Binding EmptyListTitle}"
                                  Description="{Binding EmptyListDescription}"
-                                 IconGlyph="&#xE896;"
+                                 IconGlyph="{StaticResource IconGlyphDownload}"
                                  ShowIcon="True"
                                  ShowAction="True"
                                  ActionText="{Binding EmptyGoDiscoverText}"

@@ -34,6 +34,26 @@ public sealed class OnlineFavoritesService
         return added;
     }
 
+    /// <summary>补全收藏条目缺失的时长（不触发列表重排）。</summary>
+    public async Task TryUpdateDurationAsync(OnlineTrack track, int durationMs, CancellationToken ct = default)
+    {
+        if (durationMs <= 0)
+            return;
+
+        var list = _settings.Current.OnlineFavoriteTracks;
+        var existing = list.FindIndex(x => SameTrack(x, track));
+        if (existing < 0)
+            return;
+
+        var stored = list[existing];
+        if (stored.DurationMs > 0)
+            return;
+
+        stored.DurationMs = durationMs;
+        track.DurationMs = durationMs;
+        await _settings.SaveAsync(ct).ConfigureAwait(false);
+    }
+
     private static bool SameTrack(OnlineTrack left, OnlineTrack right) =>
         left.Platform == right.Platform
         && string.Equals(left.Id, right.Id, StringComparison.Ordinal);

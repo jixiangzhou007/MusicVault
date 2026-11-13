@@ -108,7 +108,7 @@
 
                            Stretch="UniformToFill" IsVisible="{Binding HasCover}"/>
 
-                    <TextBlock Text="&#xE8D6;" Classes="icon-sm icon-accent"
+                    <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-sm icon-accent"
 
                                HorizontalAlignment="Center" VerticalAlignment="Center"
 
@@ -146,7 +146,7 @@
 
                         ToolTip.Tip="{Binding PreviousToolTip}">
 
-                  <TextBlock Text="&#xE892;" Classes="desktop-lyrics-transport-icon"/>
+                  <TextBlock Text="{StaticResource IconGlyphPrevious}" Classes="desktop-lyrics-transport-icon"/>
 
                 </Button>
 
@@ -156,11 +156,11 @@
 
                   <Panel Width="16" Height="16">
 
-                    <TextBlock Text="&#xE768;" Classes="desktop-lyrics-transport-icon"
+                    <TextBlock Text="{StaticResource IconGlyphPlay}" Classes="desktop-lyrics-transport-icon"
 
                                IsVisible="{Binding !IsPlaying}"/>
 
-                    <TextBlock Text="&#xE769;" Classes="desktop-lyrics-transport-icon"
+                    <TextBlock Text="{StaticResource IconGlyphPause}" Classes="desktop-lyrics-transport-icon"
 
                                IsVisible="{Binding IsPlaying}"/>
 
@@ -172,7 +172,7 @@
 
                         ToolTip.Tip="{Binding NextToolTip}">
 
-                  <TextBlock Text="&#xE893;" Classes="desktop-lyrics-transport-icon"/>
+                  <TextBlock Text="{StaticResource IconGlyphNext}" Classes="desktop-lyrics-transport-icon"/>
 
                 </Button>
 
@@ -200,7 +200,7 @@
 
                         ToolTip.Tip="{Binding SettingsToolTip}">
 
-                  <TextBlock Text="&#xE713;" Classes="desktop-lyrics-tool-icon"/>
+                  <TextBlock Text="{StaticResource IconGlyphSettings}" Classes="desktop-lyrics-tool-icon"/>
 
                 </Button>
 
@@ -208,7 +208,7 @@
 
                         ToolTip.Tip="{Binding CloseToolTip}">
 
-                  <TextBlock Text="&#xE711;" Classes="desktop-lyrics-tool-icon"/>
+                  <TextBlock Text="{StaticResource IconGlyphCancel}" Classes="desktop-lyrics-tool-icon"/>
 
                 </Button>
 

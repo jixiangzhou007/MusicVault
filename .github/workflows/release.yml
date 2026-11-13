@@ -1,4 +1,5 @@
-# 打 tag 时：发布 Windows 自包含包 → Velopack → 上传 GitHub Release
+# 打 tag 时：发布 Windows 自包含包 → Velopack → 上传 GitHub Release；
+# 另尝试打 osx-arm64 zip。Mac job 失败不挡 Windows 朋友包。
 name: Release
 
 on:
@@ -54,15 +55,58 @@ jobs:
           $notes = @"
           ## MusicVault $ver
 
-          Velopack 自动更新产物已挂到本 Release。
-          用户更新源填写仓库地址即可：https://github.com/${{ github.repository }}
+          两个安装包：Windows x64、macOS Apple Silicon（若本 Release 含 osx-arm64 zip）。不做 iOS、不做 32 位。
 
-          详见 docs/ONLINE_UPDATE.md
+          ### Windows
+          Velopack 自动更新请用 **Setup / nupkg**。便携 zip 解压即用，但不走应用内更新。
+          更新源：https://github.com/${{ github.repository }}
+
+          ### macOS Apple Silicon
+          1. 下载 ``MusicVault-$ver-osx-arm64.zip``，不要下 Windows 包。
+          2. 若提示「无法打开」：访达中右键 → 打开。
+          3. Intel Mac（2019 及更早）第一版不支持。
+
+          Mac 合格线是启动 + 本地出声 + 在线听。下载尽力而为，不作保证。未签名，第一版不做 Apple 公证。
+
+          详见 docs/GITHUB_RELEASE.md 与 docs/ONLINE_UPDATE.md
           "@
           $notesFile = Join-Path $env:RUNNER_TEMP "notes.md"
           Set-Content -Path $notesFile -Value $notes -Encoding UTF8
 
-          gh release create $tag --title "MusicVault $ver (Windows x64)" --notes-file $notesFile --verify-tag
+          gh release create $tag --title "MusicVault $ver" --notes-file $notesFile --verify-tag
           Get-ChildItem .\releases -File | ForEach-Object {
             gh release upload $tag $_.FullName --clobber
           }
+
+  release-macos:
+    runs-on: macos-latest
+    needs: release-windows
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish osx-arm64
+        run: |
+          chmod +x scripts/publish-macos.sh
+          ./scripts/publish-macos.sh osx-arm64
+
+      - name: Verify dylib in publish folder
+        run: |
+          test -f publish/osx-arm64/libMusicVaultPlayer.dylib
+          test -f publish/osx-arm64/MusicVault
+
+      - name: Upload osx-arm64 zip
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG='${{ github.ref_name }}'
+          VER="${TAG#v}"
+          ZIP="publish/MusicVault-${VER}-osx-arm64.zip"
+          test -f "$ZIP"
+          unzip -l "$ZIP" | grep -q 'libMusicVaultPlayer.dylib'
+          gh release upload "$TAG" "$ZIP" --clobber

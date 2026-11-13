@@ -1,10 +1,12 @@
 # MusicVault 产品路线图
 
+产品意图与已决议边界以 **[PRODUCT_DESIGN.md](PRODUCT_DESIGN.md)** 为准。施工顺序服从该文档第 14 节（公开产品批次 1–3；90 天冻结项）。
+
 ## 已完成
 
 | 阶段 | 主题 | 要点 |
 |------|------|------|
-| **架构 阶段 3（首次运行向导）** | **首次配置** | 版权同意后 `FirstRunWizardModal`（曲库 / 下载目录 / 内置 API）；`FirstRunWizardCompleted`；已有曲库用户自动跳过 |
+| **架构 阶段 3（首次运行向导）** | **首次配置** | 版权同意后 3 步向导（欢迎 / 选路 / 路径详情）；`FirstRunOnboardingPath`；已有曲库用户自动跳过 |
 | **架构 阶段 2（缓存/迁移）** | **统一启动迁移** | `StartupMigrationService`、`AppSchemaVersion`；`PlayHistory` 表 + `PlayHistoryRepository`；播放历史迁入 DB；`download-history.json` 由迁移统一调度 |
 | **架构 阶段 1（还债）** | **DI + Features** | `ServiceCollectionExtensions`、`AppServices` DI、`ArtistDetailRefreshService` / `ArtistAlbumCatalogBuilder` / `TrackMetadataPersistenceService`；艺术家页与元数据侧栏接线；`docs/ARCHITECTURE.md`、`docs/DATA_MODEL.md` |
 | 设计系统 P0–P4 | UI 规范 | Token、强调色、样式拆分、预览页 |
@@ -55,16 +57,16 @@
 - 左侧 Nav 7 项：概览 / 外观 / 播放与音频 / 下载与缓存 / 数据 / 高级 / 关于与合规
 - 播放与音频页内 Tab：播放 · 歌词 · 音效 · 快捷键
 - 高级页内 Tab：在线源 · 更新与诊断（后者保留 4 子 Tab）
-- 概览：快捷入口 + 曲库 KPI（移除功能卡片轮播）
+- 概览：关于书（身份 → 说明/开源 → 轻量快捷入口）；曲库 KPI 迁「数据」；已移除功能卡片轮播
 - NAS/WebDAV 播放缓存并入「下载与缓存」
 
 ## 下一阶段建议
 
-优化顺序（紧急 × 体验）见 **`docs/execution/optimization-backlog-2026-07-27.md`**（P0 发现搜索反馈 + Search VM 拆分 → P1 播放栏/曲库/传输 → P2 LibVLC 实机 → P3 可维护性）。识曲交互重写挂起。
+产品意图与冻结项以 [PRODUCT_DESIGN.md](PRODUCT_DESIGN.md) 为准。
 
-1. 生产级多源搜索 **Phase A+B 已落地** → `docs/superpowers/specs/2026-07-17-production-search-phase-*-design.md`
-2. LibVLC：Windows 人工冒烟；macOS 实机（清单 P2）
-3. 产品体验按 backlog P0→P1 推进
+**当前施工：** [桌面播放器 UI 统一](superpowers/plans/2026-08-17-page-ui-hardening.md)（4 种页模板 + Win/Mac 窗口铬，再套曲库/发现/整理/下载）。双核体验对齐已落地。不要按下方旧 backlog 再扩平台或重做识曲。
+
+历史体验清单（多数已落地）见 `docs/execution/optimization-backlog-2026-07-27.md`。LibVLC Windows 人工冒烟 / macOS 实机仍可作播放稳定性旁路，不挡批次 1。
 
 ## UI 冒烟测试
 

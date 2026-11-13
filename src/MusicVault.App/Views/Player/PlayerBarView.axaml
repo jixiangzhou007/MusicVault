@@ -25,9 +25,10 @@
         </StackPanel>
       </Border>
 
-      <!-- 主体（为顶部进度条留出 12px，避免与封面重叠） -->
-      <Grid ColumnDefinitions="Auto,*" Margin="{DynamicResource PlayerBarInnerMargin}">
+      <!-- *,Auto,*：传输键相对整栏居中，避免左侧标题变宽时整组按钮漂移 -->
+      <Grid ColumnDefinitions="*,Auto,*" Margin="{DynamicResource PlayerBarInnerMargin}">
         <Button Grid.Column="0" Classes="player-nowplaying-hit" VerticalAlignment="Center"
+                HorizontalAlignment="Left"
                 Margin="{DynamicResource PlayerBarCoverMargin}"
                 MaxWidth="{DynamicResource PlayerBarTitleMaxWidth}"
                 automation:AutomationProperties.Name="{Binding TitleAreaToolTip}"
@@ -43,7 +44,7 @@
               <Panel>
                 <Image Source="{Binding CoverImage, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
                        Stretch="UniformToFill" IsVisible="{Binding HasCover}"/>
-                <TextBlock Text="&#xE8D6;" Classes="icon-2xl icon-accent"
+                <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-2xl icon-accent"
                            HorizontalAlignment="Center" VerticalAlignment="Center"
                            IsVisible="{Binding HasCover, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"/>
               </Panel>
@@ -64,129 +65,130 @@
           </Grid>
         </Button>
 
-        <Grid Grid.Column="1" ColumnDefinitions="*,Auto,*" VerticalAlignment="Center">
-          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6"
-                      VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Button Classes="player-transport player-transport-mode" ToolTip.Tip="{Binding RepeatToolTip}"
-                    automation:AutomationProperties.Name="{Binding RepeatToolTip}"
-                    Command="{Binding CycleRepeatModeCommand}">
-              <TextBlock Text="{Binding RepeatIconGlyph}"
-                         Classes="player-transport-mode-icon"
-                         Classes.active="{Binding IsRepeatActive}"/>
-            </Button>
-            <Button Classes="player-transport" ToolTip.Tip="{Binding PreviousToolTip}"
-                    automation:AutomationProperties.Name="{Binding PreviousToolTip}"
-                    Command="{Binding PreviousCommand}"
-                    IsEnabled="{Binding CanGoPrevious}">
-              <TextBlock Text="&#xE892;" Classes="player-transport-icon"/>
-            </Button>
-            <Button Classes="player-transport" ToolTip.Tip="{Binding PlayPauseToolTip}"
-                    automation:AutomationProperties.Name="{Binding PlayPauseToolTip}"
-                    Command="{Binding TogglePlayPauseCommand}"
-                    IsEnabled="{Binding CanTogglePlayPause}"
-                    Classes.busy="{Binding IsPlaybackBusy}">
-              <Panel Width="16" Height="16">
-                <TextBlock Text="&#xE768;" Classes="player-transport-icon"
-                           IsVisible="{Binding IsPlaying, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"/>
-                <TextBlock Text="&#xE769;" Classes="player-transport-icon"
-                           IsVisible="{Binding IsPlaying}"/>
-              </Panel>
-            </Button>
-            <Button Classes="player-transport" ToolTip.Tip="{Binding NextToolTip}"
-                    automation:AutomationProperties.Name="{Binding NextToolTip}"
-                    Command="{Binding NextCommand}"
-                    IsEnabled="{Binding CanGoNext}">
-              <TextBlock Text="&#xE893;" Classes="player-transport-icon"/>
-            </Button>
-            <Button Classes="player-transport player-transport-mode" ToolTip.Tip="{Binding ShuffleToolTip}"
-                    automation:AutomationProperties.Name="{Binding ShuffleToolTip}"
-                    Command="{Binding ToggleShuffleCommand}">
-              <TextBlock Text="{Binding ShuffleIconGlyph}"
-                         Classes="player-transport-mode-icon"
-                         Classes.active="{Binding IsShuffleOn}"/>
-            </Button>
-          </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6"
+                    VerticalAlignment="Center" HorizontalAlignment="Center">
+          <Button Classes="player-transport player-transport-mode" ToolTip.Tip="{Binding RepeatToolTip}"
+                  automation:AutomationProperties.Name="{Binding RepeatToolTip}"
+                  Command="{Binding CycleRepeatModeCommand}">
+            <TextBlock Text="{Binding RepeatIconGlyph}"
+                       Classes="player-transport-mode-icon"
+                       Classes.active="{Binding IsRepeatActive}"/>
+          </Button>
+          <Button Classes="player-transport" ToolTip.Tip="{Binding PreviousToolTip}"
+                  automation:AutomationProperties.Name="{Binding PreviousToolTip}"
+                  Command="{Binding PreviousCommand}"
+                  IsEnabled="{Binding CanGoPrevious}">
+            <TextBlock Text="{StaticResource IconGlyphPrevious}" Classes="player-transport-icon"/>
+          </Button>
+          <Button Classes="player-transport" ToolTip.Tip="{Binding PlayPauseToolTip}"
+                  automation:AutomationProperties.Name="{Binding PlayPauseToolTip}"
+                  Command="{Binding TogglePlayPauseCommand}"
+                  IsEnabled="{Binding CanTogglePlayPause}"
+                  Classes.busy="{Binding IsPlaybackBusy}">
+            <Panel Width="16" Height="16">
+              <TextBlock Text="{StaticResource IconGlyphPlay}" Classes="player-transport-icon"
+                         IsVisible="{Binding IsPlaying, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"/>
+              <TextBlock Text="{StaticResource IconGlyphPause}" Classes="player-transport-icon"
+                         IsVisible="{Binding IsPlaying}"/>
+            </Panel>
+          </Button>
+          <Button Classes="player-transport" ToolTip.Tip="{Binding NextToolTip}"
+                  automation:AutomationProperties.Name="{Binding NextToolTip}"
+                  Command="{Binding NextCommand}"
+                  IsEnabled="{Binding CanGoNext}">
+            <TextBlock Text="{StaticResource IconGlyphNext}" Classes="player-transport-icon"/>
+          </Button>
+          <Button Classes="player-transport player-transport-mode" ToolTip.Tip="{Binding ShuffleToolTip}"
+                  automation:AutomationProperties.Name="{Binding ShuffleToolTip}"
+                  Command="{Binding ToggleShuffleCommand}">
+            <TextBlock Text="{Binding ShuffleIconGlyph}"
+                       Classes="player-transport-mode-icon"
+                       Classes.active="{Binding IsShuffleOn}"/>
+          </Button>
+        </StackPanel>
 
-          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8"
-                      VerticalAlignment="Center" HorizontalAlignment="Right">
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8"
+                    VerticalAlignment="Center" HorizontalAlignment="Right">
+          <!-- 固定占位，避免时间显隐/字宽变化挤压右侧按钮 -->
+          <Border Width="92" Margin="0,0,4,0" VerticalAlignment="Center">
             <TextBlock Text="{Binding PlaybackTimeText}" Classes="player-time player-time-combined"
-                       VerticalAlignment="Center"
+                       VerticalAlignment="Center" HorizontalAlignment="Right"
                        IsVisible="{Binding ShowPlaybackTime}"/>
-            <Button Classes="player-bar-side" ToolTip.Tip="{Binding QueueToolTip}"
-                    automation:AutomationProperties.Name="{Binding QueueToolTip}"
-                    Command="{Binding ToggleQueueCommand}"
-                    IsEnabled="{Binding CanToggleQueue}">
-              <TextBlock Text="&#xE8FD;" Classes="player-bar-side-icon"/>
-            </Button>
-            <Button Classes="player-bar-side" ToolTip.Tip="{Binding LyricsToolTip}"
-                    automation:AutomationProperties.Name="{Binding LyricsToolTip}"
-                    Command="{Binding ToggleLyricsCommand}"
-                    IsEnabled="{Binding CanToggleLyrics}">
-              <TextBlock Text="&#xE8F2;" Classes="player-bar-side-icon"/>
-            </Button>
-            <Button Classes="player-bar-side"
-                    Classes.active="{Binding IsDesktopLyricsOpen}"
-                    ToolTip.Tip="{Binding DesktopLyricsToolTip}"
-                    automation:AutomationProperties.Name="{Binding DesktopLyricsToolTip}"
-                    Command="{Binding ToggleDesktopLyricsCommand}"
-                    IsVisible="{Binding IsDesktopLyricsSupported}"
-                    IsEnabled="{Binding CanToggleDesktopLyrics}">
-              <TextBlock Text="&#xE8A9;" Classes="player-bar-side-icon"/>
-            </Button>
-            <Button Classes="player-bar-side" ToolTip.Tip="{Binding EqualizerToolTip}"
-                    automation:AutomationProperties.Name="{Binding EqualizerToolTip}"
-                    Command="{Binding OpenEqualizerCommand}"
-                    IsEnabled="{Binding IsEqualizerSupported}">
-              <TextBlock Text="&#xE9E9;" Classes="player-bar-side-icon"/>
-            </Button>
-            <Button x:Name="VolumeFlyoutButton" Classes="player-bar-side" ToolTip.Tip="{Binding VolumeToolTip}"
-                    automation:AutomationProperties.Name="{Binding VolumeToolTip}">
-              <TextBlock Text="{Binding VolumeIconGlyph}" Classes="player-bar-side-icon"/>
-              <Button.Flyout>
-                <Flyout Placement="Top" ShowMode="Transient" VerticalOffset="-6">
-                  <Border Classes="ant-popover ant-popover-inline volume-popover-card">
-                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                      <Button Classes="player-bar-side volume-mute-btn"
-                              Command="{Binding ToggleMuteCommand}"
-                              ToolTip.Tip="{Binding VolumeMuteToolTip}"
-                              automation:AutomationProperties.Name="{Binding VolumeMuteToolTip}">
-                        <Border Classes="volume-popover-icon">
-                          <TextBlock Text="{Binding VolumeIconGlyph}" Classes="icon-xs"
-                                     Foreground="{DynamicResource IconOnAccentBrush}"
-                                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                      </Button>
-                      <TextBlock Text="{Binding VolumeLabel}" Classes="volume-popover-label" VerticalAlignment="Center"/>
-                      <Border x:Name="VolumeTrackHost" Width="{DynamicResource VolumeSliderWidth}" Height="20"
-                              Classes="volume-slider-host"
-                              Background="Transparent" Cursor="Hand"
-                              PointerPressed="OnVolumeSliderPointerPressed"
-                              PointerMoved="OnVolumeSliderPointerMoved"
-                              PointerReleased="OnVolumeSliderPointerReleased"
-                              PointerCaptureLost="OnVolumeSliderCaptureLost">
-                        <Panel>
-                          <Border Classes="volume-slider-track"
-                                  VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                                  IsHitTestVisible="False"/>
-                          <Border Classes="volume-slider-fill"
-                                  VerticalAlignment="Center" HorizontalAlignment="Left"
-                                  IsHitTestVisible="False"
-                                  Width="{Binding Volume, Converter={x:Static conv:VolumeToSliderWidthConverter.Instance}, ConverterParameter=108}"/>
-                          <Ellipse Classes="volume-slider-thumb"
-                                   VerticalAlignment="Center" HorizontalAlignment="Left"
-                                   IsHitTestVisible="False"
-                                   Margin="{Binding Volume, Converter={x:Static conv:VolumeToThumbMarginConverter.Instance}, ConverterParameter=108}"/>
-                        </Panel>
+          </Border>
+          <Button Classes="player-bar-side" ToolTip.Tip="{Binding QueueToolTip}"
+                  automation:AutomationProperties.Name="{Binding QueueToolTip}"
+                  Command="{Binding ToggleQueueCommand}"
+                  IsEnabled="{Binding CanToggleQueue}">
+            <TextBlock Text="{StaticResource IconGlyphQueue}" Classes="player-bar-side-icon"/>
+          </Button>
+          <Button Classes="player-bar-side" ToolTip.Tip="{Binding LyricsToolTip}"
+                  automation:AutomationProperties.Name="{Binding LyricsToolTip}"
+                  Command="{Binding ToggleLyricsCommand}"
+                  IsEnabled="{Binding CanToggleLyrics}">
+            <TextBlock Text="{StaticResource IconGlyphLyrics}" Classes="player-bar-side-icon"/>
+          </Button>
+          <Button Classes="player-bar-side"
+                  Classes.active="{Binding IsDesktopLyricsOpen}"
+                  ToolTip.Tip="{Binding DesktopLyricsToolTip}"
+                  automation:AutomationProperties.Name="{Binding DesktopLyricsToolTip}"
+                  Command="{Binding ToggleDesktopLyricsCommand}"
+                  IsVisible="{Binding IsDesktopLyricsSupported}"
+                  IsEnabled="{Binding CanToggleDesktopLyrics}">
+            <TextBlock Text="{StaticResource IconGlyphDesktopLyrics}" Classes="player-bar-side-icon"/>
+          </Button>
+          <Button Classes="player-bar-side" ToolTip.Tip="{Binding EqualizerToolTip}"
+                  automation:AutomationProperties.Name="{Binding EqualizerToolTip}"
+                  Command="{Binding OpenEqualizerCommand}"
+                  IsEnabled="{Binding IsEqualizerSupported}">
+            <TextBlock Text="{StaticResource IconGlyphEqualizer}" Classes="player-bar-side-icon"/>
+          </Button>
+          <Button x:Name="VolumeFlyoutButton" Classes="player-bar-side" ToolTip.Tip="{Binding VolumeToolTip}"
+                  automation:AutomationProperties.Name="{Binding VolumeToolTip}">
+            <TextBlock Text="{Binding VolumeIconGlyph}" Classes="player-bar-side-icon"/>
+            <Button.Flyout>
+              <Flyout Placement="Top" ShowMode="Transient" VerticalOffset="-6">
+                <Border Classes="ant-popover ant-popover-inline volume-popover-card">
+                  <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Button Classes="player-bar-side volume-mute-btn"
+                            Command="{Binding ToggleMuteCommand}"
+                            ToolTip.Tip="{Binding VolumeMuteToolTip}"
+                            automation:AutomationProperties.Name="{Binding VolumeMuteToolTip}">
+                      <Border Classes="volume-popover-icon">
+                        <TextBlock Text="{Binding VolumeIconGlyph}" Classes="icon-xs"
+                                   Foreground="{DynamicResource IconOnAccentBrush}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
                       </Border>
-                      <TextBlock Text="{Binding VolumePercent, StringFormat={}{0}%}"
-                                 Classes="volume-popover-value" VerticalAlignment="Center"/>
-                    </StackPanel>
-                  </Border>
-                </Flyout>
-              </Button.Flyout>
-            </Button>
-          </StackPanel>
-        </Grid>
+                    </Button>
+                    <TextBlock Text="{Binding VolumeLabel}" Classes="volume-popover-label" VerticalAlignment="Center"/>
+                    <Border x:Name="VolumeTrackHost" Width="{DynamicResource VolumeSliderWidth}" Height="20"
+                            Classes="volume-slider-host"
+                            Background="Transparent" Cursor="Hand"
+                            PointerPressed="OnVolumeSliderPointerPressed"
+                            PointerMoved="OnVolumeSliderPointerMoved"
+                            PointerReleased="OnVolumeSliderPointerReleased"
+                            PointerCaptureLost="OnVolumeSliderCaptureLost">
+                      <Panel>
+                        <Border Classes="volume-slider-track"
+                                VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                IsHitTestVisible="False"/>
+                        <Border Classes="volume-slider-fill"
+                                VerticalAlignment="Center" HorizontalAlignment="Left"
+                                IsHitTestVisible="False"
+                                Width="{Binding Volume, Converter={x:Static conv:VolumeToSliderWidthConverter.Instance}, ConverterParameter=108}"/>
+                        <Ellipse Classes="volume-slider-thumb"
+                                 VerticalAlignment="Center" HorizontalAlignment="Left"
+                                 IsHitTestVisible="False"
+                                 Margin="{Binding Volume, Converter={x:Static conv:VolumeToThumbMarginConverter.Instance}, ConverterParameter=108}"/>
+                      </Panel>
+                    </Border>
+                    <TextBlock Text="{Binding VolumePercent, StringFormat={}{0}%}"
+                               Classes="volume-popover-value" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+              </Flyout>
+            </Button.Flyout>
+          </Button>
+        </StackPanel>
       </Grid>
 
       <!-- 顶缘进度条叠层：ZIndex 最高，圆点可压在封面等元素之上 -->

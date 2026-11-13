@@ -1,3 +1,5 @@
+using MusicVault.App.Services;
+
 namespace MusicVault.App.Localization;
 
 /// <summary>发现在线曲目行文案。</summary>
@@ -78,6 +80,9 @@ public static class OnlineTrackRowLabels
 
     public static string NoDownloadQuality(string title) =>
         string.Format(G("Discover.Online.NoDownloadQuality"), title);
+
+    public static string DownloadDisabledHint =>
+        G(OnlineDownloadAvailability.DisabledHintKey(OperatingSystem.IsMacOS()));
 
     public static string ActionFailed(string title, string label, string detail) =>
         string.Format(

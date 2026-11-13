@@ -14,7 +14,7 @@
              VerticalAlignment="Stretch">
 
   <!-- 左右分栏：左 = 搜索工具 + 结果；右 = 传输速览（通栏高度） -->
-  <Grid x:Name="RootGrid" ColumnDefinitions="*,6,280"
+  <Grid x:Name="RootGrid" ColumnDefinitions="*,0,0"
         HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
     <Grid Grid.Column="0" RowDefinitions="Auto,Auto,*"
@@ -22,29 +22,55 @@
           HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
           Grid.IsSharedSizeScope="True">
 
+      <!-- 常驻细搜条：Compact + 高级区 + 失败告警 -->
       <Border Grid.Row="0" Classes="discover-search-band">
         <StackPanel Spacing="0">
-      <!-- Hero 搜索壳（浏览态居中） -->
+      <!-- Hero 搜索壳（已停用；保留树以免绑名断裂） -->
       <Border Classes="discover-search-shell discover-search-hero"
               IsVisible="{Binding UseHeroSearch}">
         <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" MinHeight="{DynamicResource ControlHeightLg}">
           <TextBlock Grid.Column="0" Text="{StaticResource IconGlyphSearch}"
                      Classes="icon-sm icon-muted discover-search-leading-icon"
                      VerticalAlignment="Center" Margin="{DynamicResource FieldCaptionLeadingMargin}"/>
-          <TextBox Grid.Column="1" Classes="discover-search-input"
-                   Watermark="{Binding SongWatermark}" Text="{Binding SongNameQuery}"
+          <TextBox x:Name="HeroSongQueryBox" Grid.Column="1" Classes="discover-search-input"
+                   Watermark="{Binding SongWatermark}"
+                   Text="{Binding SongNameQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                    KeyDown="OnSearchFieldKeyDown"/>
           <ComboBox Grid.Column="2" Classes="discover-combo discover-combo-platform discover-search-platform"
-                    ItemsSource="{Binding PlatformComboLabels}"
+                    ItemsSource="{Binding PlatformComboItems}"
                     SelectedIndex="{Binding PlatformIndex}"
                     VerticalAlignment="Center"
                     ToolTip.Tip="{Binding PlatformToolTip}"
-                    automation:AutomationProperties.Name="{Binding PlatformToolTip}"/>
+                    automation:AutomationProperties.Name="{Binding PlatformToolTip}">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="pvm:SearchPageViewModel+PlatformComboItemViewModel">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <Border Classes="discover-platform-icon-clip-sm">
+                    <Image Source="{Binding Icon}" Stretch="UniformToFill"
+                           Classes="discover-platform-app-icon-sm"/>
+                  </Border>
+                  <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+                </StackPanel>
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+            <ComboBox.SelectionBoxItemTemplate>
+              <DataTemplate x:DataType="pvm:SearchPageViewModel+PlatformComboItemViewModel">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <Border Classes="discover-platform-icon-clip-sm">
+                    <Image Source="{Binding Icon}" Stretch="UniformToFill"
+                           Classes="discover-platform-app-icon-sm"/>
+                  </Border>
+                  <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+                </StackPanel>
+              </DataTemplate>
+            </ComboBox.SelectionBoxItemTemplate>
+          </ComboBox>
           <Button Grid.Column="3" Classes="primary discover-search-go"
-                  Command="{Binding SearchCommand}" IsEnabled="{Binding CanSearch}"
+                  Command="{Binding SearchCommand}" IsEnabled="{Binding CanSearchAlwaysLit}"
                   ToolTip.Tip="{Binding SearchButtonToolTip}"
                   automation:AutomationProperties.Name="{Binding SearchButtonToolTip}">
-            <TextBlock Text="{Binding SearchButtonText}" Classes="text-label" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding SearchButtonText}" Classes="text-label" VerticalAlignment="Center"
+                       Foreground="{DynamicResource AccentForegroundBrush}"/>
           </Button>
           <Button Grid.Column="4" Classes="icon-toolbar-btn discover-search-icon-btn"
                   Command="{Binding ClearSearchCriteriaCommand}"
@@ -61,40 +87,89 @@
         </Grid>
       </Border>
 
-      <!-- Compact 搜索壳（搜索态吸顶） -->
+      <!-- Compact 搜索壳：与页面底色统一；识曲 + 平台登录点 -->
       <Border Classes="discover-search-shell discover-search-compact"
               IsVisible="{Binding UseCompactSearch}">
-        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" MinHeight="{DynamicResource ControlHeightLg}">
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto"
+              MinHeight="{DynamicResource ControlHeightMd}">
           <TextBlock Grid.Column="0" Text="{StaticResource IconGlyphSearch}"
                      Classes="icon-sm icon-muted discover-search-leading-icon"
-                     VerticalAlignment="Center" Margin="{DynamicResource FieldCaptionLeadingMargin}"/>
+                     VerticalAlignment="Center"/>
           <TextBox x:Name="SongNameQueryBox" Grid.Column="1" Classes="discover-search-input"
-                   Watermark="{Binding SongWatermark}" Text="{Binding SongNameQuery}"
+                   Watermark="{Binding SongWatermark}"
+                   Text="{Binding SongNameQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                    KeyDown="OnSearchFieldKeyDown"/>
           <ComboBox Grid.Column="2" Classes="discover-combo discover-combo-platform discover-search-platform"
-                    ItemsSource="{Binding PlatformComboLabels}"
+                    ItemsSource="{Binding PlatformComboItems}"
                     SelectedIndex="{Binding PlatformIndex}"
                     VerticalAlignment="Center"
                     ToolTip.Tip="{Binding PlatformToolTip}"
-                    automation:AutomationProperties.Name="{Binding PlatformToolTip}"/>
+                    automation:AutomationProperties.Name="{Binding PlatformToolTip}">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="pvm:SearchPageViewModel+PlatformComboItemViewModel">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <Border Classes="discover-platform-icon-clip-sm">
+                    <Image Source="{Binding Icon}" Stretch="UniformToFill"
+                           Classes="discover-platform-app-icon-sm"/>
+                  </Border>
+                  <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+                </StackPanel>
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+            <ComboBox.SelectionBoxItemTemplate>
+              <DataTemplate x:DataType="pvm:SearchPageViewModel+PlatformComboItemViewModel">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <Border Classes="discover-platform-icon-clip-sm">
+                    <Image Source="{Binding Icon}" Stretch="UniformToFill"
+                           Classes="discover-platform-app-icon-sm"/>
+                  </Border>
+                  <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+                </StackPanel>
+              </DataTemplate>
+            </ComboBox.SelectionBoxItemTemplate>
+          </ComboBox>
           <Button Grid.Column="3" Classes="primary discover-search-go"
-                  Command="{Binding SearchCommand}" IsEnabled="{Binding CanSearch}"
+                  Command="{Binding SearchCommand}" IsEnabled="{Binding CanSearchAlwaysLit}"
                   ToolTip.Tip="{Binding SearchButtonToolTip}"
                   automation:AutomationProperties.Name="{Binding SearchButtonToolTip}">
-            <TextBlock Text="{Binding SearchButtonText}" Classes="text-label" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding SearchButtonText}"
+                       VerticalAlignment="Center"
+                       Foreground="{DynamicResource AccentForegroundBrush}"/>
           </Button>
-          <Button Grid.Column="4" Classes="icon-toolbar-btn discover-search-icon-btn"
-                  Command="{Binding ClearSearchCriteriaCommand}"
-                  ToolTip.Tip="{Binding ClearSearchToolTip}"
-                  automation:AutomationProperties.Name="{Binding ClearSearchToolTip}">
-            <TextBlock Text="{StaticResource IconGlyphClose}" Classes="icon-xs"/>
+          <Button Grid.Column="4" Classes="icon-toolbar-btn discover-search-icon-btn discover-search-recognize-btn"
+                  Command="{Binding QuickRecognizeCommand}"
+                  ToolTip.Tip="{Binding RecognizeInBarToolTip}"
+                  automation:AutomationProperties.Name="{Binding RecognizeInBarToolTip}">
+            <TextBlock Text="{StaticResource IconGlyphMicrophone}" Classes="icon-sm"/>
           </Button>
-          <Button Grid.Column="5" Classes="icon-toolbar-btn discover-search-icon-btn"
-                  Command="{Binding ToggleDiscoverAdvancedCommand}"
-                  ToolTip.Tip="{Binding DiscoverAdvancedToggleToolTip}"
-                  automation:AutomationProperties.Name="{Binding DiscoverAdvancedToggleToolTip}">
-            <TextBlock Text="{StaticResource IconGlyphMore}" Classes="icon-xs"/>
-          </Button>
+          <ItemsControl Grid.Column="5"
+                        Classes="discover-search-login-strip"
+                        ItemsSource="{Binding SearchBarLoginCapsules}"
+                        VerticalAlignment="Center"
+                        Margin="8,0,0,0">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="8"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="pvm:SearchPageViewModel+SearchLoginCapsuleViewModel">
+                <Button Classes="discover-login-icon"
+                        Classes.active="{Binding IsSuccess}"
+                        Classes.muted="{Binding IsMuted}"
+                        Command="{Binding #DiscoverRoot.DataContext.OpenPlatformLoginCommand}"
+                        CommandParameter="{Binding Platform}"
+                        ToolTip.Tip="{Binding ToolTip}"
+                        automation:AutomationProperties.Name="{Binding ToolTip}">
+                  <Border Classes="discover-platform-icon-clip">
+                    <Image Source="{Binding DisplayIcon}"
+                           Stretch="UniformToFill"
+                           Classes="discover-platform-app-icon"/>
+                  </Border>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
         </Grid>
       </Border>
 
@@ -122,7 +197,8 @@
         <Grid Grid.Row="2" Grid.Column="2" ColumnDefinitions="*"
               IsVisible="{Binding IsSearchMode}">
           <TextBox x:Name="ArtistQueryBox" Classes="discover-field"
-                   Watermark="{Binding ArtistWatermark}" Text="{Binding ArtistQuery}"
+                   Watermark="{Binding ArtistWatermark}"
+                   Text="{Binding ArtistQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                    KeyDown="OnSearchFieldKeyDown"/>
         </Grid>
 
@@ -146,24 +222,32 @@
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding FieldRecognizeLabel}" Classes="discover-field-label"
                    IsVisible="{Binding IsRecognizeMode}"/>
-        <Grid Grid.Row="2" Grid.Column="2" ColumnDefinitions="*,Auto,Auto,Auto,Auto,72"
+        <Grid Grid.Row="2" Grid.Column="2" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto"
               IsVisible="{Binding IsRecognizeMode}">
-          <TextBox Grid.Column="0" Classes="discover-field"
+          <controls:IntSegmentedBar Grid.Column="0"
+                                    MinWidth="148"
+                                    VerticalAlignment="Center"
+                                    SegmentLabels="{Binding RecognizeCaptureSegmentLabels}"
+                                    SelectedIndex="{Binding RecognizeCaptureSourceIndex}"
+                                    IsEnabled="{Binding CanChangeRecognizeCaptureSource}"
+                                    ToolTip.Tip="{Binding RecognizeCaptureSourceToolTip}"
+                                    automation:AutomationProperties.Name="{Binding RecognizeCaptureSourceToolTip}"/>
+          <TextBox Grid.Column="1" Classes="discover-field" Margin="{DynamicResource FieldCaptionLeadingMargin}"
                    Text="{Binding RecognizeFilePath}" IsReadOnly="True"
                    Watermark="{Binding RecognizeWatermark}"/>
-          <Button Grid.Column="1" Content="{Binding RecognizeRecordButtonText}"
+          <Button Grid.Column="2" Content="{Binding RecognizeRecordButtonText}"
                   Classes="primary discover-action" Margin="{DynamicResource FieldCaptionLeadingMargin}"
                   Command="{Binding ToggleRecognizeRecordingCommand}"
                   IsEnabled="{Binding CanToggleRecognizeRecording}"
                   ToolTip.Tip="{Binding RecognizeRecordButtonToolTip}"
                   automation:AutomationProperties.Name="{Binding RecognizeRecordButtonToolTip}"/>
-          <Button Grid.Column="2" Content="{Binding SelectButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
+          <Button Grid.Column="3" Content="{Binding SelectButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
                   Command="{Binding PickRecognizeAudioCommand}"
                   automation:AutomationProperties.Name="{Binding SelectButtonText}"/>
-          <Button Grid.Column="3" Content="{Binding ClearButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
+          <Button Grid.Column="4" Content="{Binding ClearButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
                   Command="{Binding ClearRecognizeAudioCommand}"
                   automation:AutomationProperties.Name="{Binding ClearButtonText}"/>
-          <Button Grid.Column="4" Content="{Binding RerecognizeButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
+          <Button Grid.Column="5" Content="{Binding RerecognizeButtonText}" Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
                   Command="{Binding RecognizeAudioCommand}"
                   IsEnabled="{Binding CanRecognize}"
                   ToolTip.Tip="{Binding RecognizeButtonToolTip}"
@@ -197,8 +281,7 @@
           </ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="pvm:SearchPageViewModel+SearchLoginCapsuleViewModel">
-              <Button Content="{Binding DisplayText}"
-                      Classes="discover-login-capsule"
+              <Button Classes="discover-login-capsule"
                       Classes.active="{Binding IsSuccess}"
                       Classes.proxy="{Binding IsProxy}"
                       Margin="{DynamicResource MarginTrailingSm}"
@@ -206,7 +289,15 @@
                       Command="{Binding #DiscoverRoot.DataContext.OpenPlatformLoginCommand}"
                       CommandParameter="{Binding Platform}"
                       ToolTip.Tip="{Binding ToolTip}"
-                      automation:AutomationProperties.Name="{Binding ToolTip}"/>
+                      automation:AutomationProperties.Name="{Binding ToolTip}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <Border Classes="discover-platform-icon-clip-sm">
+                    <Image Source="{Binding DisplayIcon}" Stretch="UniformToFill"
+                           Classes="discover-platform-app-icon-sm"/>
+                  </Border>
+                  <TextBlock Text="{Binding DisplayText}" VerticalAlignment="Center"/>
+                </StackPanel>
+              </Button>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
@@ -215,14 +306,23 @@
 
       <Border Margin="{DynamicResource PageHeaderBlockMargin}"
               Classes="ant-alert ant-alert-warning"
-              IsVisible="{Binding ShowApiHealthBanner}">
+              IsVisible="{Binding ShowUnifiedSourceFailureBanner}">
         <Grid ColumnDefinitions="*,Auto">
           <TextBlock Grid.Column="0" Classes="ant-alert-message"
-                     Text="{Binding ApiHealthBannerText}" TextWrapping="Wrap"/>
-          <Button Grid.Column="1" Content="{Binding ApiHealthBannerActionText}"
-                  Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
-                  Command="{Binding OpenOnlineSourcesSettingsCommand}"
-                  automation:AutomationProperties.Name="{Binding ApiHealthBannerActionText}"/>
+                     Text="{Binding UnifiedSourceFailureMessage}" TextWrapping="Wrap"/>
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8"
+                      Margin="{DynamicResource FieldCaptionLeadingMargin}">
+            <Button Content="{Binding UnifiedSourceFailureRetryText}"
+                    Classes="flat-btn btn-toolbar"
+                    Command="{Binding RetryUnifiedSourceFailureCommand}"
+                    IsVisible="{Binding ShowUnifiedSourceFailureRetry}"
+                    automation:AutomationProperties.Name="{Binding UnifiedSourceFailureRetryText}"/>
+            <Button Content="{Binding UnifiedSourceFailureSettingsText}"
+                    Classes="flat-btn btn-toolbar"
+                    Command="{Binding OpenOnlineSourcesSettingsCommand}"
+                    IsVisible="{Binding ShowUnifiedSourceFailureSettings}"
+                    automation:AutomationProperties.Name="{Binding UnifiedSourceFailureSettingsText}"/>
+          </StackPanel>
         </Grid>
       </Border>
 
@@ -248,152 +348,271 @@
       <Border Grid.Row="1" Classes="page-hero-divider" Margin="{DynamicResource MarginTopXsBottomSm}"
               IsVisible="{Binding ShowSearchResultsPane}"/>
 
-      <!-- 浏览中枢：热门榜单 + 推荐歌单 -->
-      <ScrollViewer Grid.Row="2"
-                    Classes="scroll-clear-player-progress discover-browse-hub"
-                    IsVisible="{Binding ShowBrowseHub}">
-        <StackPanel Spacing="20" Margin="{DynamicResource MarginTopSm}">
-          <!-- ChartsRail -->
-          <StackPanel Classes="discover-browse-section" Spacing="8">
-            <DockPanel LastChildFill="True">
-              <Button DockPanel.Dock="Right" Classes="flat-btn btn-toolbar"
-                      Content="{Binding BrowseChartsAllText}"
-                      Command="{Binding OpenBrowseChartsAllCommand}"
-                      automation:AutomationProperties.Name="{Binding BrowseChartsAllText}"/>
-              <TextBlock Text="{Binding BrowseChartsSectionTitle}"
-                         Classes="discover-browse-section-title"
-                         VerticalAlignment="Center"/>
-            </DockPanel>
-            <ItemsControl x:Name="BrowseChartsGrid"
-                          ItemsSource="{Binding BrowseChartCards}"
-                          Classes="playlist-charts-grid"
-                          HorizontalAlignment="Stretch"
-                          IsVisible="{Binding HasBrowseChartCards}"
-                          SizeChanged="OnBrowseChartsGridSizeChanged">
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <UniformGrid Columns="{Binding #DiscoverRoot.DataContext.BrowseChartsColumns}"/>
-                </ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-              <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="pvm:PlaylistBrowseCardViewModel">
-                  <Button Classes="flat-btn playlist-browse-card-btn" Margin="{DynamicResource CardGridItemMargin}"
-                          Command="{Binding #DiscoverRoot.DataContext.OpenBrowseChartCommand}"
-                          CommandParameter="{Binding}"
-                          HorizontalAlignment="Stretch"
-                          HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch">
-                    <StackPanel Width="{DynamicResource BrowseCoverTileSize}" Spacing="8" HorizontalAlignment="Center">
-                      <Border Classes="playlist-browse-cover discover-browse-card"
-                              Width="{DynamicResource BrowseCoverTileSize}"
-                              Height="{DynamicResource BrowseCoverTileSize}"
-                              HorizontalAlignment="Center">
-                        <Panel>
-                          <Image Source="{Binding CoverThumb, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
-                                 Stretch="UniformToFill" IsVisible="{Binding HasCover}"/>
-                          <Border IsVisible="{Binding !HasCover}" Background="{DynamicResource SurfaceElevatedBrush}">
-                            <TextBlock Text="&#xE8DD;" Classes="icon-sm"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       Foreground="{DynamicResource TextTertiaryBrush}"/>
-                          </Border>
-                        </Panel>
-                      </Border>
-                      <controls:MarqueeTextBlock Text="{Binding Name}"
-                                                 Width="{DynamicResource BrowseCoverTileSize}"
-                                                 Classes="playlist-browse-card-marquee"
-                                                 HorizontalAlignment="Center"
-                                                 LabelAlignment="Center"
-                                                 ToolTip.Tip="{Binding Name}"/>
-                    </StackPanel>
-                  </Button>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <controls:SkeletonBrowseCoverGridView IsVisible="{Binding ShowBrowseChartsSkeleton}"/>
-            <StackPanel Spacing="8" HorizontalAlignment="Center"
-                        IsVisible="{Binding ShowBrowseChartsError}">
-              <TextBlock Text="{Binding BrowseChartsErrorText}" Classes="text-caption"
-                         TextWrapping="Wrap" TextAlignment="Center"
-                         Foreground="{DynamicResource TextSecondaryBrush}"/>
-              <Button Content="{Binding BrowseChartsRetryText}" Classes="primary btn-toolbar"
-                      MinWidth="{DynamicResource ControlWidthFilterMin}"
-                      HorizontalAlignment="Center"
-                      Command="{Binding RetryBrowseChartsCommand}"
-                      automation:AutomationProperties.Name="{Binding BrowseChartsRetryText}"/>
-            </StackPanel>
-          </StackPanel>
+      <!-- 浏览中枢：广告 Hero + 为你精选多列（无页面滚动、无列内滚动） -->
+      <Grid x:Name="BrowseHubRoot" Grid.Row="2"
+            RowDefinitions="Auto,*"
+            Classes="discover-browse-hub"
+            IsVisible="{Binding ShowBrowseHub}"
+            Margin="{DynamicResource MarginTopSm}">
+          <!-- 全幅氛围取色 + 文案；左上角换一换；底栏圆点 -->
+          <Border Grid.Row="0"
+                  Classes="discover-hero-immersive discover-hero-promo"
+                  IsVisible="{Binding ShowDiscoverBanner}"
+                  Margin="{DynamicResource PageContentHorizontalMargin}"
+                  Cursor="Hand"
+                  Background="{Binding HeroPromoAccentBrush}"
+                  PointerReleased="OnHeroPromoPointerReleased">
+            <Panel>
+              <!-- 氛围层：封面铺满取色，不再单独放左侧方封 -->
+              <Image Source="{Binding CurrentHeroPromo.CoverBitmap}"
+                     Stretch="UniformToFill"
+                     Opacity="0.38"
+                     IsVisible="{Binding CurrentHeroPromo.HasCoverThumb}"
+                     IsHitTestVisible="False"/>
+              <Border Background="{Binding HeroPromoAccentBrush}" Opacity="0.58" IsHitTestVisible="False"/>
+              <Border Background="{DynamicResource DiscoverHeroPromoFadeBrush}" IsHitTestVisible="False"/>
 
-          <!-- PlaylistWall -->
-          <StackPanel Classes="discover-browse-section" Spacing="8">
-            <DockPanel LastChildFill="True">
-              <Button DockPanel.Dock="Right" Classes="flat-btn btn-toolbar"
-                      Content="{Binding BrowsePlaylistsMoreText}"
-                      Command="{Binding OpenBrowsePlaylistsMoreCommand}"
-                      automation:AutomationProperties.Name="{Binding BrowsePlaylistsMoreText}"/>
-              <TextBlock Text="{Binding BrowsePlaylistsSectionTitle}"
-                         Classes="discover-browse-section-title"
-                         VerticalAlignment="Center"/>
-            </DockPanel>
-            <ItemsControl ItemsSource="{Binding BrowsePlaylistCards}"
-                          Classes="playlist-charts-grid"
-                          IsVisible="{Binding HasBrowsePlaylistCards}">
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <WrapPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-              <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="pvm:PlaylistBrowseCardViewModel">
-                  <Button Classes="flat-btn playlist-browse-card-btn" Margin="{DynamicResource CardGridItemMargin}"
-                          Command="{Binding #DiscoverRoot.DataContext.OpenBrowsePlaylistCommand}"
-                          CommandParameter="{Binding}"
-                          HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch">
-                    <StackPanel Width="{DynamicResource BrowseCoverTileSize}" Spacing="8" HorizontalAlignment="Center">
-                      <Border Classes="playlist-browse-cover discover-browse-card"
-                              Width="{DynamicResource BrowseCoverTileSize}"
-                              Height="{DynamicResource BrowseCoverTileSize}"
-                              HorizontalAlignment="Center">
-                        <Panel>
-                          <Image Source="{Binding CoverThumb, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
-                                 Stretch="UniformToFill" IsVisible="{Binding HasCover}"/>
-                          <Border IsVisible="{Binding !HasCover}" Background="{DynamicResource SurfaceElevatedBrush}">
-                            <TextBlock Text="&#xE8DD;" Classes="icon-sm"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       Foreground="{DynamicResource TextTertiaryBrush}"/>
-                          </Border>
-                        </Panel>
+              <Border Padding="28,20,28,36">
+                <StackPanel Spacing="6"
+                            MaxWidth="520"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+                  <TextBlock Text="{Binding HeroPromoEyebrow}"
+                             Classes="discover-hero-eyebrow"
+                             TextAlignment="Right"
+                             HorizontalAlignment="Right"/>
+                  <TextBlock Text="{Binding BannerFeatureTitle}"
+                             Classes="discover-hero-title"
+                             TextAlignment="Right"
+                             HorizontalAlignment="Right"
+                             TextTrimming="CharacterEllipsis" MaxLines="2"/>
+                  <TextBlock Text="{Binding BannerFeatureSubtitle}"
+                             Classes="discover-hero-sub"
+                             TextAlignment="Right"
+                             HorizontalAlignment="Right"
+                             TextTrimming="CharacterEllipsis" MaxLines="2"/>
+                  <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,6,0,0"
+                              HorizontalAlignment="Right">
+                    <Button Classes="primary btn-toolbar"
+                            Content="{Binding HeroPromoPreviewText}"
+                            Command="{Binding PreviewHeroPromoCommand}"
+                            IsEnabled="{Binding CurrentHeroPromo.CanPreviewExecute}"
+                            automation:AutomationProperties.Name="{Binding HeroPromoPreviewText}"/>
+                    <Button Classes="flat-btn btn-toolbar"
+                            Content="{Binding PrimaryCtaText}"
+                            Command="{Binding RunPrimaryCtaCommand}"
+                            automation:AutomationProperties.Name="{Binding PrimaryCtaText}"/>
+                  </StackPanel>
+                </StackPanel>
+              </Border>
+
+              <!-- 左上角：换一换 → 换下一批 10 首 -->
+              <Button Classes="flat-btn discover-hero-refresh"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
+                      Margin="14,12,0,0"
+                      ZIndex="40"
+                      Command="{Binding RefreshHeroPromoCommand}"
+                      ToolTip.Tip="{Binding HeroPromoRefreshText}"
+                      automation:AutomationProperties.Name="{Binding HeroPromoRefreshText}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <TextBlock Text="{StaticResource IconGlyphRefresh}" Classes="icon-xs"
+                             VerticalAlignment="Center"/>
+                  <TextBlock Text="{Binding HeroPromoRefreshText}"
+                             Classes="discover-hero-refresh-label"
+                             VerticalAlignment="Center"/>
+                </StackPanel>
+              </Button>
+
+              <!-- 底部居中圆点 -->
+              <ItemsControl Classes="discover-hero-dots"
+                            ItemsSource="{Binding HeroPromoDots}"
+                            IsVisible="{Binding ShowHeroPromoDots}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Margin="0,0,0,12"
+                            ZIndex="30"
+                            IsHitTestVisible="True">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="6"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="pvm:HeroPromoDotViewModel">
+                    <Button Classes="discover-hero-dot"
+                            Classes.active="{Binding IsSelected}"
+                            Command="{Binding #DiscoverRoot.DataContext.SelectHeroPromoCommand}"
+                            CommandParameter="{Binding Index}"
+                            automation:AutomationProperties.Name="{Binding Index}">
+                      <Panel Width="18" Height="10">
+                        <Border Classes="discover-hero-dot-idle"
+                                IsVisible="{Binding !IsSelected}"
+                                Width="8" Height="8"
+                                CornerRadius="4"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+                        <Border Classes="discover-hero-dot-active"
+                                IsVisible="{Binding IsSelected}"
+                                Width="18" Height="8"
+                                CornerRadius="4"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+                      </Panel>
+                    </Button>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </Panel>
+          </Border>
+
+          <Panel x:Name="ForYouHost"
+                 Grid.Row="1"
+                 Classes="discover-foryou-host"
+                 Margin="{DynamicResource PageContentHorizontalMargin}"
+                 PointerEntered="OnForYouHostPointerEntered"
+                 PointerExited="OnForYouHostPointerExited"
+                 SizeChanged="OnForYouHostSizeChanged">
+            <DockPanel LastChildFill="True" Margin="0,12,0,12">
+              <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="0,0,48,8">
+                <TextBlock Text="{Binding ForYouTitle}"
+                           Classes="discover-browse-section-title"/>
+                <TextBlock Text="{Binding ForYouSubtitle}"
+                           Classes="text-caption"
+                           Foreground="{DynamicResource TextSecondaryBrush}"
+                           TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="{Binding ForYouMixedHotHintText}"
+                           Classes="text-caption"
+                           Foreground="{DynamicResource TextSecondaryBrush}"
+                           Opacity="0.75"
+                           TextTrimming="CharacterEllipsis"
+                           IsVisible="{Binding ShowForYouMixedHotHint}"/>
+              </StackPanel>
+
+              <Panel ClipToBounds="True">
+                <ItemsControl x:Name="ForYouList"
+                              ItemsSource="{Binding ForYouTracks}"
+                              Classes="discover-foryou-list"
+                              IsVisible="{Binding HasForYouTracks}"
+                              Margin="0,0,48,0"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <!-- 列/行由 code-behind SyncForYouUniformGrid 写入；避免 ItemsPanel 内 #DiscoverRoot 转型绑定崩溃 -->
+                      <UniformGrid Columns="3" Rows="4"/>
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:OnlineTrackViewModel">
+                      <Border Classes="discover-foryou-cell">
+                        <Grid ColumnDefinitions="Auto,*" Margin="8,4">
+                          <Panel Width="48" Height="48" Margin="0,0,10,0" VerticalAlignment="Center">
+                            <Border Classes="discover-foryou-cover">
+                              <Panel>
+                                <Image Source="{Binding CoverBitmap}" Stretch="UniformToFill"
+                                       IsVisible="{Binding HasCoverThumb}"/>
+                                <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-xs icon-muted"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           IsVisible="{Binding !HasCoverThumb}"/>
+                              </Panel>
+                            </Border>
+                            <Button Classes="discover-foryou-play"
+                                    Command="{Binding PreviewCommand}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    automation:AutomationProperties.Name="{Binding Title}">
+                              <TextBlock Text="{StaticResource IconGlyphPlay}" Classes="icon-sm"/>
+                            </Button>
+                          </Panel>
+                          <DockPanel Grid.Column="1" LastChildFill="True" VerticalAlignment="Center">
+                            <Panel DockPanel.Dock="Right" Width="32" Margin="6,0,0,0"
+                                   VerticalAlignment="Center">
+                              <Button Classes="discover-foryou-fav"
+                                      Classes.favorited="{Binding IsOnlineFavorite}"
+                                      Command="{Binding ToggleOnlineFavoriteCommand}"
+                                      ToolTip.Tip="{Binding OnlineFavoriteToolTip}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      automation:AutomationProperties.Name="{Binding OnlineFavoriteToolTip}">
+                                <Panel>
+                                  <TextBlock Text="{StaticResource IconGlyphHeart}"
+                                             Classes="track-row-glyph online-favorite-heart-off"
+                                             IsVisible="{Binding !IsOnlineFavorite}"/>
+                                  <TextBlock Text="{StaticResource IconGlyphHeartFill}"
+                                             Classes="track-row-glyph online-favorite-heart-on"
+                                             IsVisible="{Binding IsOnlineFavorite}"/>
+                                </Panel>
+                              </Button>
+                            </Panel>
+                            <Button Classes="discover-foryou-rowhit"
+                                    Command="{Binding PreviewCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="Left"
+                                    automation:AutomationProperties.Name="{Binding Title}">
+                              <StackPanel Spacing="2" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Title}" Classes="text-body"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding Artist}" Classes="text-caption"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"
+                                           TextTrimming="CharacterEllipsis"/>
+                              </StackPanel>
+                            </Button>
+                          </DockPanel>
+                        </Grid>
                       </Border>
-                      <controls:MarqueeTextBlock Text="{Binding Name}"
-                                                 Width="{DynamicResource BrowseCoverTileSize}"
-                                                 Classes="playlist-browse-card-marquee"
-                                                 HorizontalAlignment="Center"
-                                                 LabelAlignment="Center"
-                                                 ToolTip.Tip="{Binding Name}"/>
-                      <TextBlock Text="{Binding Subtitle}" Width="{DynamicResource BrowseCoverTileSize}" MaxLines="1"
-                                 Classes="text-caption"
-                                 HorizontalAlignment="Center" TextAlignment="Center"
-                                 Foreground="{DynamicResource TextSecondaryBrush}"
-                                 TextTrimming="CharacterEllipsis"
-                                 ToolTip.Tip="{Binding Subtitle}"/>
-                    </StackPanel>
-                  </Button>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <controls:SkeletonBrowseCoverGridView IsVisible="{Binding ShowBrowsePlaylistsSkeleton}"/>
-            <StackPanel Spacing="8" HorizontalAlignment="Center"
-                        IsVisible="{Binding ShowBrowsePlaylistsError}">
-              <TextBlock Text="{Binding BrowsePlaylistsErrorText}" Classes="text-caption"
-                         TextWrapping="Wrap" TextAlignment="Center"
-                         Foreground="{DynamicResource TextSecondaryBrush}"/>
-              <Button Content="{Binding BrowsePlaylistsRetryText}" Classes="primary btn-toolbar"
-                      MinWidth="{DynamicResource ControlWidthFilterMin}"
-                      HorizontalAlignment="Center"
-                      Command="{Binding RetryBrowsePlaylistsCommand}"
-                      automation:AutomationProperties.Name="{Binding BrowsePlaylistsRetryText}"/>
-            </StackPanel>
-          </StackPanel>
-        </StackPanel>
-      </ScrollViewer>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Border Background="{DynamicResource PlayPaneBrush}"
+                        Margin="0,0,48,0"
+                        IsVisible="{Binding ShowForYouSkeleton}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+                  <controls:SkeletonBrowseListView VerticalAlignment="Top"/>
+                </Border>
+                <StackPanel Spacing="8"
+                            Margin="0,0,48,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            IsVisible="{Binding ShowForYouError}">
+                  <TextBlock Text="{Binding ForYouErrorText}" Classes="text-caption"
+                             TextWrapping="Wrap" TextAlignment="Center"
+                             Foreground="{DynamicResource TextSecondaryBrush}"/>
+                  <Button Content="{Binding ForYouRetryText}" Classes="primary btn-toolbar"
+                          HorizontalAlignment="Center"
+                          Command="{Binding RetryForYouCommand}"
+                          automation:AutomationProperties.Name="{Binding ForYouRetryText}"/>
+                </StackPanel>
+
+                <StackPanel Classes="discover-foryou-pager"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            IsVisible="{Binding ForYouPagerVisible}"
+                            ZIndex="4"
+                            Spacing="8"
+                            Margin="0,0,4,0">
+                  <Border Classes="discover-foryou-page-btn-well">
+                    <Button Classes="discover-foryou-page-btn"
+                            Command="{Binding ForYouPrevPageCommand}"
+                            ToolTip.Tip="{Binding ForYouPrevPageText}"
+                            Content="{StaticResource IconGlyphChevronUp}"
+                            automation:AutomationProperties.Name="{Binding ForYouPrevPageText}"/>
+                  </Border>
+                  <Border Classes="discover-foryou-page-btn-well">
+                    <Button Classes="discover-foryou-page-btn"
+                            Command="{Binding ForYouNextPageCommand}"
+                            ToolTip.Tip="{Binding ForYouNextPageText}"
+                            Content="{StaticResource IconGlyphChevronDown}"
+                            automation:AutomationProperties.Name="{Binding ForYouNextPageText}"/>
+                  </Border>
+                </StackPanel>
+              </Panel>
+            </DockPanel>
+          </Panel>
+      </Grid>
 
       <!-- 搜索结果（占满左侧剩余高度） -->
       <DockPanel Grid.Row="2" Classes="pane-play discover-results-pane"
@@ -402,7 +621,8 @@
         <StackPanel DockPanel.Dock="Top" Spacing="0">
           <Border Classes="page-toolbar-divider"
                   IsVisible="{Binding ShowResultsSummary}"/>
-          <Grid ColumnDefinitions="Auto,*,Auto" Margin="{DynamicResource PageToolbarGridMargin}"
+          <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto"
+                Margin="{DynamicResource PageToolbarGridMargin}"
                 IsVisible="{Binding ShowResultsSummary}">
             <Button Grid.Column="0" Classes="icon-toolbar-btn library-pane-toggle-btn" Margin="{DynamicResource MarginTrailingSm}"
                     Command="{Binding ToggleTransfersPaneCommand}"
@@ -414,7 +634,7 @@
             <TextBlock Grid.Column="1" Text="{Binding ResultsSummaryText}"
                        Classes="discover-results-summary" VerticalAlignment="Center"/>
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
-              <Button Content="{Binding BatchEnqueueButtonLabel}" Classes="primary btn-toolbar"
+              <Button Content="{Binding BatchEnqueueButtonLabel}" Classes="flat-btn btn-toolbar"
                       Command="{Binding BatchEnqueueAllCommand}"
                       IsVisible="{Binding ShowBatchEnqueueButton}"
                       ToolTip.Tip="{Binding BatchEnqueueToolTip}"
@@ -427,6 +647,28 @@
                       Command="{Binding LoadMoreResultsCommand}"
                       IsVisible="{Binding HasMoreResults}"
                       automation:AutomationProperties.Name="{Binding LoadMoreButtonText}"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                        Orientation="Horizontal" Spacing="8"
+                        Margin="{DynamicResource MarginTopSm}"
+                        IsVisible="{Binding ShowRecognizePlayActions}">
+              <Button Content="{Binding RecognizePlayButtonText}"
+                      Classes="primary btn-toolbar"
+                      Command="{Binding RecognizePlayCommand}"
+                      IsEnabled="{Binding CanRecognizePlay}"
+                      ToolTip.Tip="{Binding RecognizePlayButtonToolTip}"
+                      automation:AutomationProperties.Name="{Binding RecognizePlayButtonText}"/>
+              <Button Content="{Binding RecognizePlayNextButtonText}"
+                      Classes="flat-btn btn-toolbar"
+                      Command="{Binding RecognizePlayNextCommand}"
+                      IsEnabled="{Binding CanRecognizePlay}"
+                      ToolTip.Tip="{Binding RecognizePlayNextButtonToolTip}"
+                      automation:AutomationProperties.Name="{Binding RecognizePlayNextButtonText}"/>
+              <TextBlock Text="{Binding RecognizePlayNoSourceCaption}"
+                         Classes="text-caption"
+                         VerticalAlignment="Center"
+                         TextWrapping="Wrap"
+                         IsVisible="{Binding ShowRecognizePlayNoSource}"/>
             </StackPanel>
           </Grid>
           <Grid ColumnDefinitions="Auto,*" Margin="{DynamicResource PageContentHorizontalMargin}"
@@ -445,20 +687,6 @@
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Stretch">
           <controls:DiscoverOnlineTrackTableHeader x:Name="DiscoverHeader" DockPanel.Dock="Top"/>
-
-          <Border DockPanel.Dock="Top"
-                  Margin="{DynamicResource PageHeaderBlockMargin}"
-                  Classes="ant-alert ant-alert-warning"
-                  IsVisible="{Binding ShowSearchPartialFailureBanner}">
-            <Grid ColumnDefinitions="*,Auto">
-              <TextBlock Grid.Column="0" Classes="ant-alert-message"
-                         Text="{Binding SearchPartialFailureBannerText}" TextWrapping="Wrap"/>
-              <Button Grid.Column="1" Content="{Binding SearchPartialFailureDismissLabel}"
-                      Classes="flat-btn btn-toolbar" Margin="{DynamicResource FieldCaptionLeadingMargin}"
-                      Command="{Binding DismissSearchPartialFailureBannerCommand}"
-                      automation:AutomationProperties.Name="{Binding SearchPartialFailureDismissLabel}"/>
-            </Grid>
-          </Border>
 
         <Panel>
           <controls:SkeletonDiscoverResultsView Margin="{DynamicResource SettingsOverviewCardMargin}"
@@ -527,8 +755,9 @@
                       <Border Grid.Column="5" Classes="discover-cache-chip"
                               HorizontalAlignment="Center" VerticalAlignment="Center"
                               ToolTip.Tip="{Binding PreviewCacheToolTip}"
+                              automation:AutomationProperties.Name="{Binding PreviewCacheStatusText}"
                               IsVisible="{Binding IsPreviewCached}">
-                        <TextBlock Text="{Binding PreviewCacheStatusText}" Classes="discover-cache-chip-text"/>
+                        <TextBlock Text="{StaticResource IconGlyphCheckMark}" Classes="track-row-glyph discover-cache-glyph"/>
                       </Border>
                       <Button Grid.Column="6"
                               Classes="row-action-btn track-favorite-btn"
@@ -549,7 +778,7 @@
                               ToolTip.Tip="{Binding AddToPlaylistToolTip}"
                               automation:AutomationProperties.Name="{Binding AddToPlaylistToolTip}"
                               Click="OnAddToPlaylistClick">
-                        <TextBlock Text="+" Classes="track-row-glyph"/>
+                        <TextBlock Text="{StaticResource IconGlyphAdd}" Classes="track-row-glyph"/>
                       </Button>
                       <Button Grid.Column="8"
                               Classes="row-action-btn"
@@ -558,8 +787,8 @@
                               automation:AutomationProperties.Name="{Binding DownloadToolTip}"
                               Command="{Binding OpenDownloadPickerCommand}"
                               IsVisible="{Binding HasDownloadOptions}"
-                              IsEnabled="{Binding HasDownloadOptions}">
-                        <TextBlock Text="&#xE896;" Classes="track-row-glyph"/>
+                              IsEnabled="{Binding CanUseOnlineDownload}">
+                        <TextBlock Text="{StaticResource IconGlyphDownload}" Classes="track-row-glyph"/>
                       </Button>
                     </Grid>
                     <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
@@ -569,7 +798,7 @@
             </ListBox.ItemTemplate>
           </ListBox>
 
-          <Button x:Name="ResultsScrollTopBtn" Content="&#xE70E;"
+          <Button x:Name="ResultsScrollTopBtn" Content="{StaticResource IconGlyphChevronUp}"
                   Classes="list-scroll-top-btn"
                   HorizontalAlignment="Right" VerticalAlignment="Bottom"
                   Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
@@ -578,7 +807,7 @@
           <controls:EmptyStateView IsVisible="{Binding ShowDiscoverEmpty}"
                                    Title="{Binding DiscoverEmptyTitle}"
                                    Description="{Binding DiscoverEmptyDescription}"
-                                   IconGlyph="&#xE721;"
+                                   IconGlyph="{StaticResource IconGlyphSearch}"
                                    ShowAction="{Binding ShowDiscoverEmptyAction}"
                                    ActionText="{Binding DiscoverEmptyActionText}"
                                    ActionCommand="{Binding RunDiscoverAlertActionCommand}"/>
@@ -635,7 +864,7 @@
         <controls:EmptyStateView IsVisible="{Binding Transfers.QuickIsEmpty}"
                                  Title="{Binding TransfersQuickEmptyTitle}"
                                  Description="{Binding TransfersQuickEmptyDescription}"
-                                 IconGlyph="&#xE896;"/>
+                                 IconGlyph="{StaticResource IconGlyphDownload}"/>
       </Panel>
     </DockPanel>
   </Grid>

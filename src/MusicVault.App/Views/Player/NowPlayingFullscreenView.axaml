@@ -40,7 +40,7 @@
         <Button Grid.Column="0" Classes="fullscreen-back-btn" Command="{Binding CloseCommand}"
                 ToolTip.Tip="{Binding BackToolTip}"
                 Opacity="0.72">
-          <TextBlock Text="&#xE72B;" Classes="icon-lg"
+          <TextBlock Text="{StaticResource IconGlyphBack}" Classes="icon-lg"
                      Foreground="{DynamicResource TextSecondaryBrush}"
                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Button>
@@ -86,7 +86,7 @@
                          Stretch="UniformToFill"
                          IsVisible="{Binding Player.HasCoverLarge, Converter={x:Static conv:BoolToVisibilityConverter.Inverse}}"
                          IsHitTestVisible="False"/>
-                  <TextBlock Text="&#xE8D6;" Classes="icon-hero icon-accent"
+                  <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-hero icon-accent"
                              HorizontalAlignment="Center" VerticalAlignment="Center"
                              IsHitTestVisible="False"
                              IsVisible="{Binding !Player.HasCover}"/>

@@ -22,6 +22,7 @@ public partial class PlaylistsPageView : UserControl
     private bool _playlistTracksScrollWired;
     private bool _chartHeaderAlignmentWired;
     private bool _listenHistoryHeaderAlignmentWired;
+    private bool _playlistTracksHeaderAlignmentWired;
 
     public PlaylistsPageView()
     {
@@ -91,6 +92,12 @@ public partial class PlaylistsPageView : UserControl
         {
             TrackTablePairedLayout.Wire(ListenHistoryHeaderGrid, ListenHistoryTrackList);
             _listenHistoryHeaderAlignmentWired = true;
+        }
+
+        if (!_playlistTracksHeaderAlignmentWired && PlaylistTracksHeader != null && PlaylistTrackList != null)
+        {
+            TrackTablePairedLayout.Wire(PlaylistTracksHeader, PlaylistTrackList);
+            _playlistTracksHeaderAlignmentWired = true;
         }
     }
 

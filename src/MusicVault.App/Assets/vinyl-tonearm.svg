@@ -1,43 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- NetEase-style tonearm layout (original art). Pivot at screw (~24,22) for rotation. -->
+<!-- Flat top-down tonearm (NetEase-like UI overlay, slight local variation). Pivot at (24,22). -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92 138" width="92" height="138">
   <defs>
-    <linearGradient id="screwGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#D8D8E2"/>
-      <stop offset="45%" stop-color="#A8A8B4"/>
-      <stop offset="100%" stop-color="#686870"/>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#C8C8D2"/>
+      <stop offset="45%" stop-color="#E4E4EC"/>
+      <stop offset="100%" stop-color="#9A9AA6"/>
     </linearGradient>
-    <linearGradient id="armGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ECECF2"/>
-      <stop offset="35%" stop-color="#B8B8C4"/>
-      <stop offset="100%" stop-color="#787880"/>
+    <linearGradient id="screw" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E8E8F0"/>
+      <stop offset="100%" stop-color="#8A8A96"/>
     </linearGradient>
-    <linearGradient id="shellGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#F4F4FA"/>
-      <stop offset="100%" stop-color="#9898A4"/>
-    </linearGradient>
-    <filter id="armShadow" x="-15%" y="-10%" width="130%" height="130%">
-      <feDropShadow dx="0" dy="1.2" stdDeviation="1.4" flood-color="#000000" flood-opacity="0.35"/>
-    </filter>
   </defs>
 
-  <!-- pivot screw (rotation origin) -->
-  <circle cx="24" cy="22" r="11" fill="#2A2A32"/>
-  <circle cx="24" cy="22" r="9.5" fill="url(#screwGrad)" stroke="#585860" stroke-width="0.6"/>
-  <circle cx="21.5" cy="19.5" r="2.2" fill="#FFFFFF" opacity="0.45"/>
+  <!-- pivot base (rotation origin) -->
+  <circle cx="24" cy="22" r="12" fill="#2E2E36" opacity="0.55"/>
+  <circle cx="24" cy="22" r="10" fill="url(#screw)" stroke="#5A5A64" stroke-width="0.7"/>
+  <circle cx="24" cy="22" r="4.2" fill="#6E6E78"/>
+  <line x1="20.2" y1="22" x2="27.8" y2="22" stroke="#D8D8E2" stroke-width="1.1" stroke-linecap="round"/>
 
-  <!-- arm tube -->
-  <path filter="url(#armShadow)"
-        fill="url(#armGrad)" stroke="#585860" stroke-width="0.55" stroke-linejoin="round"
-        d="M 22 30 C 26 52, 34 78, 44 98 C 52 114, 58 122, 62 126
-           L 58 130 C 54 126, 48 118, 40 102 C 30 80, 24 56, 20 34 Z"/>
+  <!-- arm tube: flatter top-down silhouette -->
+  <path fill="url(#metal)" stroke="#5A5A64" stroke-width="0.6" stroke-linejoin="round"
+        d="M 23 31
+           C 25 48, 28 68, 34 88
+           C 38 102, 44 114, 52 122
+           L 48 126
+           C 40 118, 34 106, 30 92
+           C 24 72, 21 52, 19 33 Z"/>
 
-  <!-- headshell -->
-  <g transform="translate(52 118) rotate(32)">
-    <path fill="url(#shellGrad)" stroke="#585860" stroke-width="0.55" stroke-linejoin="round"
-          d="M 0 4 L 22 7 L 20 18 L 3 15 Z"/>
-    <rect x="17" y="8" width="4.5" height="7" rx="1" fill="#707078" stroke="#484850" stroke-width="0.4"/>
-    <circle cx="19" cy="16.5" r="1.2" fill="#D0D0DA" stroke="#686870" stroke-width="0.35"/>
-    <path d="M 19 17.6 L 19.2 21" stroke="#B0B0BA" stroke-width="0.85" stroke-linecap="round"/>
+  <!-- headshell (flat plate, slight angle) -->
+  <g transform="translate(46 116) rotate(28)">
+    <rect x="0" y="2" width="24" height="12" rx="2.2" fill="#D0D0DA" stroke="#5A5A64" stroke-width="0.55"/>
+    <rect x="2" y="4" width="14" height="8" rx="1.2" fill="#B8B8C2"/>
+    <circle cx="5" cy="8" r="1.1" fill="#7A7A84"/>
+    <circle cx="10" cy="8" r="1.1" fill="#7A7A84"/>
+    <rect x="18" y="5" width="4" height="6" rx="0.8" fill="#6A6A74"/>
+    <line x1="20" y1="11" x2="20.4" y2="16" stroke="#A0A0AA" stroke-width="1" stroke-linecap="round"/>
   </g>
 </svg>

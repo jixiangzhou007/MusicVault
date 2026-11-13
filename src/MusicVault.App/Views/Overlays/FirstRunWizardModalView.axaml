@@ -14,15 +14,15 @@
                     IsVisible="{Binding !IsLastStep}"/>
             <Button Content="{Binding SkipStepText}" Classes="flat-btn app-dialog-btn"
                     Command="{Binding SkipCurrentStepCommand}"
-                    IsVisible="{Binding !IsWelcomeStep}"
-                    IsEnabled="{Binding !IsLastStep}"/>
+                    IsVisible="{Binding ShowSkipStep}"/>
           </StackPanel>
           <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
             <Button Content="{Binding BackText}" Classes="flat-btn app-dialog-btn"
                     Command="{Binding BackCommand}"
                     IsVisible="{Binding CanGoBack}"/>
             <Button Content="{Binding NextButtonText}" Classes="primary app-dialog-btn"
-                    Command="{Binding NextCommand}"/>
+                    Command="{Binding NextCommand}"
+                    IsEnabled="{Binding CanAdvance}"/>
           </StackPanel>
         </Grid>
       </Border>
@@ -38,7 +38,37 @@
                      Text="{Binding WelcomeHint}"/>
         </StackPanel>
 
-        <StackPanel IsVisible="{Binding IsLibraryStep}" Spacing="10">
+        <StackPanel IsVisible="{Binding IsPathStep}" Spacing="10">
+          <TextBlock Text="{Binding PathTitle}" Classes="text-subtitle"/>
+          <TextBlock Classes="text-caption" TextWrapping="Wrap" LineHeight="20"
+                     Text="{Binding PathDesc}"/>
+          <Button HorizontalAlignment="Stretch" Classes="flat-btn"
+                  Command="{Binding SelectLocalPathCommand}">
+            <Grid>
+              <Border CornerRadius="{DynamicResource RadiusControl}"
+                      Background="{DynamicResource AccentSoftBrush}"
+                      IsVisible="{Binding IsLocalPathSelected}" Opacity="0.45"/>
+              <StackPanel Margin="{DynamicResource SpaceMd}" Spacing="4">
+                <TextBlock Classes="text-subtitle" Text="{Binding PathLocalTitle}"/>
+                <TextBlock Classes="text-caption" TextWrapping="Wrap" Text="{Binding PathLocalDesc}"/>
+              </StackPanel>
+            </Grid>
+          </Button>
+          <Button HorizontalAlignment="Stretch" Classes="flat-btn"
+                  Command="{Binding SelectDiscoverPathCommand}">
+            <Grid>
+              <Border CornerRadius="{DynamicResource RadiusControl}"
+                      Background="{DynamicResource AccentSoftBrush}"
+                      IsVisible="{Binding IsDiscoverPathSelected}" Opacity="0.45"/>
+              <StackPanel Margin="{DynamicResource SpaceMd}" Spacing="4">
+                <TextBlock Classes="text-subtitle" Text="{Binding PathDiscoverTitle}"/>
+                <TextBlock Classes="text-caption" TextWrapping="Wrap" Text="{Binding PathDiscoverDesc}"/>
+              </StackPanel>
+            </Grid>
+          </Button>
+        </StackPanel>
+
+        <StackPanel IsVisible="{Binding IsLibraryDetail}" Spacing="10">
           <TextBlock Text="{Binding LibraryTitle}" Classes="text-subtitle"/>
           <TextBlock Classes="text-caption" TextWrapping="Wrap" LineHeight="20"
                      Text="{Binding LibraryDesc}"/>
@@ -48,26 +78,16 @@
                   Command="{Binding PickLibraryFolderCommand}"/>
         </StackPanel>
 
-        <StackPanel IsVisible="{Binding IsDownloadStep}" Spacing="10">
-          <TextBlock Text="{Binding DownloadTitle}" Classes="text-subtitle"/>
-          <TextBlock Classes="text-caption" TextWrapping="Wrap" LineHeight="20"
-                     Text="{Binding DownloadDesc}"/>
-          <TextBox Text="{Binding DownloadDirectory}" Watermark="{Binding DownloadWatermark}"
-                   Classes="app-dialog-field" IsReadOnly="True"/>
-          <Button Content="{Binding DownloadBrowseText}" Classes="flat-btn" HorizontalAlignment="Left"
-                  Command="{Binding PickDownloadFolderCommand}"/>
-        </StackPanel>
-
-        <StackPanel IsVisible="{Binding IsApiStep}" Spacing="10">
-          <TextBlock Text="{Binding ApiTitle}" Classes="text-subtitle"/>
-          <TextBlock Classes="text-caption" TextWrapping="Wrap" LineHeight="20"
-                     Text="{Binding ApiDesc}"/>
-          <Border Classes="ant-alert ant-alert-info" IsVisible="{Binding ShowApiHealthStatus}">
-            <TextBlock Classes="ant-alert-message" Text="{Binding ApiHealthStatusText}" TextWrapping="Wrap"/>
-          </Border>
-          <TextBlock Classes="text-caption" TextWrapping="Wrap"
-                     IsVisible="{Binding !HasAnyBundledApi}"
-                     Text="{Binding ApiNoBundledText}"/>
+        <StackPanel IsVisible="{Binding IsDiscoverDetail}" Spacing="10">
+          <TextBlock Classes="text-body" TextWrapping="Wrap" LineHeight="22"
+                     IsVisible="{Binding ShowMacDiscoverCopy}"
+                     Text="{Binding DiscoverMacText}"/>
+          <TextBlock Classes="text-body" TextWrapping="Wrap" LineHeight="22"
+                     IsVisible="{Binding ShowBundledDiscoverCopy}"
+                     Text="{Binding DiscoverBundledText}"/>
+          <TextBlock Classes="text-body" TextWrapping="Wrap" LineHeight="22"
+                     IsVisible="{Binding ShowDirectDiscoverCopy}"
+                     Text="{Binding DiscoverDirectText}"/>
         </StackPanel>
 
         <TextBlock Text="{Binding StatusMessage}" Classes="app-dialog-status" TextWrapping="Wrap"

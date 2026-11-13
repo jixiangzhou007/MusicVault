@@ -85,12 +85,20 @@ flowchart TD
 
 启动时：**先用当前目录里的 API 跑起来**，更新检查在后台且可关闭。
 
-## 自行构建 go-music-api
+## 自行构建 / Fork go-music-api
 
 源码：<https://github.com/guohuiyuan/go-music-api>
 
-```bash
-go build -o go-music-api.exe .
+**推荐扩展路径**（加平台、扫码、自建更新源）见 [GO_MUSIC_API_EXTENSION.md](GO_MUSIC_API_EXTENSION.md)。
+
+```powershell
+# 克隆并编译到 tools\go-music-api，写入仓库 api/
+.\scripts\setup-go-music-api-fork.ps1
+
+# 或手动：
+# go build -o go-music-api.exe .
+# .\scripts\install-custom-music-api.ps1 -ExePath .\go-music-api.exe -Version v1.0.1
 ```
 
-将生成的 exe 复制到发布目录的 `api/` 下即可。
+将生成的 exe 放到发布目录的 `api/`（`publish-with-api.ps1` 会优先使用 `tools\go-music-api`）。  
+应用内「检查 API 更新」默认盯上游 Release；若用 fork，在设置里填写 **API 更新仓库** `owner/repo`。

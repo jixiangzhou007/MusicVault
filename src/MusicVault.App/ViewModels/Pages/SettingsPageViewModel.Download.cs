@@ -61,13 +61,13 @@ public partial class SettingsPageViewModel
     partial void OnMaxDownloadsChanged(int value)
     {
         OnPropertyChanged(nameof(DownloadConcurrencySummary));
-        MarkPendingChanges();
+        ScheduleAutosave(SettingsAutosaveKind.Instant);
     }
 
 
     partial void OnDownloadDirectoryChanged(string value)
     {
-        MarkPendingChanges();
+        ScheduleAutosave(SettingsAutosaveKind.Debounced);
         OnPropertyChanged(nameof(CanOpenDownloadDirectory));
         OnPropertyChanged(nameof(DownloadDirectoryToolTip));
         RefreshDownloadDiskSpaceAlert();
@@ -75,20 +75,20 @@ public partial class SettingsPageViewModel
 
     partial void OnDefaultDownloadQualityIndexChanged(int value)
     {
-        MarkPendingChanges();
+        ScheduleAutosave(SettingsAutosaveKind.Instant);
         OnPropertyChanged(nameof(DefaultDownloadQualitySummary));
     }
 
     partial void OnEnableAcoustIdFingerprintLookupChanged(bool value)
     {
-        MarkPendingChanges();
+        ScheduleAutosave(SettingsAutosaveKind.Instant);
         NotifyAcoustIdPresentationChanged();
     }
 
 
     partial void OnAcoustIdApiKeyChanged(string value)
     {
-        MarkPendingChanges();
+        ScheduleAutosave(SettingsAutosaveKind.Debounced);
         NotifyAcoustIdPresentationChanged();
     }
 
@@ -258,6 +258,10 @@ public partial class SettingsPageViewModel
     }
 
 
-    partial void OnDiscoverAutoOpenBatchEnqueueWizardChanged(bool value) => MarkPendingChanges();
+    partial void OnDiscoverAutoOpenBatchEnqueueWizardChanged(bool value) =>
+        ScheduleAutosave(SettingsAutosaveKind.Instant);
+
+    partial void OnDiscoverHeroPromoSourceIndexChanged(int value) =>
+        ScheduleAutosave(SettingsAutosaveKind.Instant);
 
 }

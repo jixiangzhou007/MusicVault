@@ -49,6 +49,12 @@
     <Setter Property="BorderBrush" Value="{DynamicResource FocusRingBrush}"/>
     <Setter Property="BorderThickness" Value="2"/>
   </Style>
+  <Style Selector="ComboBox /template/ Path#DropDownGlyph">
+    <Setter Property="Fill" Value="{DynamicResource IconSecondaryBrush}"/>
+  </Style>
+  <Style Selector="ComboBox:pointerover /template/ Path#DropDownGlyph">
+    <Setter Property="Fill" Value="{DynamicResource IconPrimaryBrush}"/>
+  </Style>
   <Style Selector="ComboBoxItem">
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeightStandard}"/>
     <Setter Property="Padding" Value="10,6"/>
@@ -70,6 +76,7 @@
   </Style>
 
   <Style Selector="RadioButton">
+    <Setter Property="Theme" Value="{DynamicResource MetadataRadioTheme}"/>
     <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
     <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
     <Setter Property="MinHeight" Value="24"/>

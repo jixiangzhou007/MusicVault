@@ -130,8 +130,8 @@
   </Style>
 
   <Style Selector="TextBlock.metadata-field-tool-wrench-glyph">
-    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets"/>
-    <Setter Property="Text" Value="&#xE90F;"/>
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="Text" Value="{StaticResource IconGlyphRepair}"/>
     <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
     <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
     <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -161,9 +161,9 @@
   </Style>
 
   <Style Selector="TextBlock.metadata-field-encoding-glyph">
-    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets"/>
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
     <!-- LocaleLanguage：表示字符集/编码，避免 E992 在部分字体下显示为扬声器 -->
-    <Setter Property="Text" Value="&#xE9D5;"/>
+    <Setter Property="Text" Value="{StaticResource IconGlyphCheckList}"/>
     <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
     <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
     <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -190,8 +190,8 @@
   </Style>
 
   <Style Selector="TextBlock.metadata-field-search-glyph">
-    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets"/>
-    <Setter Property="Text" Value="&#xE721;"/>
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="Text" Value="{StaticResource IconGlyphSearch}"/>
     <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
     <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
     <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -223,8 +223,8 @@
   </Style>
 
   <Style Selector="TextBlock.metadata-field-write-glyph">
-    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets"/>
-    <Setter Property="Text" Value="&#xE74E;"/>
+    <Setter Property="FontFamily" Value="{DynamicResource IconFontFamily}"/>
+    <Setter Property="Text" Value="{StaticResource IconGlyphSave}"/>
     <Setter Property="FontSize" Value="{DynamicResource IconSizeSm}"/>
     <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
     <Setter Property="HorizontalAlignment" Value="Center"/>

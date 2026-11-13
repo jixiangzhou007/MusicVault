@@ -94,6 +94,17 @@
   <Style Selector="ListBox.discover-table-body.track-table-scroll-list Border.track-row-divider">
     <Setter Property="Margin" Value="0"/>
   </Style>
+  <!-- 整理页外层已有 PageHeroToolbarInsetMargin；须压过上方 paired 规则，否则表头底栏满宽而悬停/行分隔线缩进 -->
+  <Style Selector="Grid.batch-scrape-table-header.track-table-header">
+    <Setter Property="Margin" Value="0,0,0,2"/>
+  </Style>
+  <Style Selector="ListBox.batch-scrape-list.track-table-scroll-list Grid.track-row-content,
+                   ListBox.batch-scrape-list.track-table-scroll-list Grid.track-row-content.batch-scrape-row">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.batch-scrape-list.track-table-scroll-list Border.track-row-divider">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
   <Style Selector="Grid.track-table-header.album-catalog-track-header">
     <Setter Property="Margin" Value="{DynamicResource AlbumCatalogTrackTableHeaderMargin}"/>
     <Setter Property="Height" Value="{DynamicResource TrackTableHeaderHeight}"/>

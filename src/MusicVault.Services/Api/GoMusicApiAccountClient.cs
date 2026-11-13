@@ -242,16 +242,45 @@ public static class GoMusicApiAccountClient
         }
     }
 
+    /// <summary>
+    /// 与发现页登录胶囊对齐的默认展示源（含 QQ 微信扫码变体）。
+    /// fork 新增扫码源须加入此列表，并补 MusicPlatform / 图标 / PreferredLoginSource 映射（见 docs/GO_MUSIC_API_EXTENSION.md）。
+    /// </summary>
+    public static readonly string[] DisplaySourceOrder =
+    [
+        "qq",
+        "qq_wx",
+        "netease",
+        "kugou",
+        "kuwo",
+        "migu",
+        "soda"
+    ];
+
+    /// <summary>是否已在客户端登记（抽屉会展示）；远端可扫状态仍以 qr_login/sources 为准。</summary>
+    public static bool IsRegisteredLoginSource(string? source) =>
+        !string.IsNullOrWhiteSpace(source)
+        && DisplaySourceOrder.Contains(source.Trim(), StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>已知默认可扫码源；远端另返回的源也会标为可扫。</summary>
+    public static readonly string[] KnownQrCapableSources =
+    [
+        "netease",
+        "qq",
+        "qq_wx",
+        "kugou"
+    ];
+
     private static IReadOnlyList<string> DefaultQrSources() =>
         DefaultQrSourceDescriptors().Select(d => d.Source).ToList();
 
-    private static IReadOnlyList<QrLoginSourceDescriptor> DefaultQrSourceDescriptors() =>
-    [
-        new("netease", ServiceMessageCodec.Key("Login.Source.NetEase")),
-        new("qq", ServiceMessageCodec.Key("Login.Source.Qq")),
-        new("qq_wx", ServiceMessageCodec.Key("Login.Source.QqWx")),
-        new("kugou", ServiceMessageCodec.Key("Login.Source.Kugou"))
-    ];
+    /// <summary>API 不可达时的扫码源回退（仅已知可创建会话的源）。</summary>
+    public static IReadOnlyList<QrLoginSourceDescriptor> DefaultQrSourceDescriptors() =>
+        KnownQrCapableSources.Select(s => new QrLoginSourceDescriptor(s, DefaultLabelForSource(s))).ToList();
+
+    public static bool IsKnownQrCapableSource(string? source) =>
+        !string.IsNullOrWhiteSpace(source)
+        && KnownQrCapableSources.Contains(source.Trim(), StringComparer.OrdinalIgnoreCase);
 
     private static IReadOnlyList<QrLoginSourceDescriptor> ParseSourceArray(JsonElement array)
     {
@@ -289,6 +318,7 @@ public static class GoMusicApiAccountClient
         "kugou" => ServiceMessageCodec.Key("Login.Source.Kugou"),
         "kuwo" => ServiceMessageCodec.Key("Login.Source.Kuwo"),
         "migu" => ServiceMessageCodec.Key("Login.Source.Migu"),
+        "soda" => ServiceMessageCodec.Key("Login.Source.Soda"),
         "bilibili" => ServiceMessageCodec.Key("Login.Source.Bilibili"),
         _ => source
     };

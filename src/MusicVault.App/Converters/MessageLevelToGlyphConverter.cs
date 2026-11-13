@@ -1,5 +1,6 @@
 using System.Globalization;
 using Avalonia.Data.Converters;
+using MusicVault.App.Icons;
 using MusicVault.App.Services;
 
 namespace MusicVault.App.Converters;
@@ -10,13 +11,13 @@ public sealed class MessageLevelToGlyphConverter : IValueConverter
 
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is not MessageLevel level) return "\uE946";
+        if (value is not MessageLevel level) return IconGlyphs.Info;
         return level switch
         {
-            MessageLevel.Success => "\uE73E",
-            MessageLevel.Error => "\uE783",
-            MessageLevel.Warning => "\uE7BA",
-            _ => "\uE946"
+            MessageLevel.Success => IconGlyphs.CheckMark,
+            MessageLevel.Error => IconGlyphs.Error,
+            MessageLevel.Warning => IconGlyphs.Warning,
+            _ => IconGlyphs.Info
         };
     }
 

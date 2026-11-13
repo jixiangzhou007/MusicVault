@@ -1,13 +1,15 @@
+using MusicVault.App.Icons;
+
 namespace MusicVault.App.Controls;
 
 internal static class ResultStatusGlyphs
 {
     public static string GetGlyph(ResultStatus status) => status switch
     {
-        ResultStatus.Success => "\uE73E",
-        ResultStatus.Error => "\uE783",
-        ResultStatus.Warning => "\uE7BA",
-        _ => "\uE946",
+        ResultStatus.Success => IconGlyphs.CheckMark,
+        ResultStatus.Error => IconGlyphs.Error,
+        ResultStatus.Warning => IconGlyphs.Warning,
+        _ => IconGlyphs.Info,
     };
 
     public static string GetStatusClass(ResultStatus status) => status switch

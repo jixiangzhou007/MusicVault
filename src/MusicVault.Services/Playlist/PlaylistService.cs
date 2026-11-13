@@ -153,7 +153,7 @@ public sealed class PlaylistService
         return added;
     }
 
-    /// <summary>从平台链接解析歌单曲目（创建空歌单，曲目通过批量下载入库后再添加）</summary>
+    /// <summary>从平台链接解析歌单曲目并创建平台歌单；在线曲目由调用方写入 OnlinePlaylistTracks 后即可播放。</summary>
     public async Task<(long PlaylistId, IReadOnlyList<OnlineTrack> Tracks)> ImportPlatformPlaylistAsync(
         string url, string playlistName, CancellationToken ct = default)
     {

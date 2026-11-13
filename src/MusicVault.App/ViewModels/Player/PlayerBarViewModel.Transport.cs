@@ -1,6 +1,7 @@
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MusicVault.App.Icons;
 using MusicVault.App.Services;
 using MusicVault.Core.Enums;
 using MusicVault.Core.Models;
@@ -46,7 +47,10 @@ public partial class PlayerBarViewModel
         }
 
         if (_isOnlinePreview)
+        {
+            await TryPlayOnlinePreviewNeighborAsync(forward: true, restartCurrentIfNearStart: false);
             return;
+        }
 
         if (_queue.Count == 0) return;
         await SaveCurrentPositionAsync();
@@ -81,7 +85,10 @@ public partial class PlayerBarViewModel
         }
 
         if (_isOnlinePreview)
+        {
+            await TryPlayOnlinePreviewNeighborAsync(forward: false, restartCurrentIfNearStart: true);
             return;
+        }
 
         if (_queue.Count == 0) return;
         await SaveCurrentPositionAsync();
@@ -106,8 +113,8 @@ public partial class PlayerBarViewModel
         };
     }
 
-    /// <summary>未循环：E8EE 白；列表循环：E8EE 蓝；单曲循环：E8ED 蓝。</summary>
-    public string RepeatIconGlyph => RepeatMode == RepeatMode.One ? "\uE8ED" : "\uE8EE";
+    /// <summary>未循环 / 列表循环：RepeatAll；单曲循环：RepeatOne。</summary>
+    public string RepeatIconGlyph => RepeatMode == RepeatMode.One ? IconGlyphs.RepeatOne : IconGlyphs.RepeatAll;
 
     public bool IsRepeatActive => RepeatMode != RepeatMode.Off;
 
@@ -121,8 +128,8 @@ public partial class PlayerBarViewModel
     [RelayCommand]
     private void ToggleShuffle() => IsShuffleOn = !IsShuffleOn;
 
-    /// <summary>随机：E8B1 蓝；顺序：E8CB 白。</summary>
-    public string ShuffleIconGlyph => IsShuffleOn ? "\uE8B1" : "\uE8CB";
+    /// <summary>随机：Shuffle；顺序：Sort（与播放队列 Queue 图标区分）。</summary>
+    public string ShuffleIconGlyph => IsShuffleOn ? IconGlyphs.Shuffle : IconGlyphs.Sort;
 
     public string ShuffleToolTip => IsShuffleOn ? _l10n.Get("Player.ShuffleOn") : _l10n.Get("Player.ShuffleOff");
 

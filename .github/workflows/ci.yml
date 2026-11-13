@@ -41,3 +41,14 @@ jobs:
           dotnet-version: '8.0.x'
       - run: dotnet format MusicVault.sln --verify-no-changes --verbosity minimal
       - run: dotnet build MusicVault.sln -c Release
+      - name: Compile AVFoundation dylib
+        run: |
+          clang -dynamiclib \
+            -framework Foundation \
+            -framework AVFoundation \
+            -o /tmp/libMusicVaultPlayer.dylib \
+            -install_name @executable_path/libMusicVaultPlayer.dylib \
+            src/MusicVault.App/native/macOS/MusicVaultPlayer.m \
+            -O2
+          test -f /tmp/libMusicVaultPlayer.dylib
+          ls -l /tmp/libMusicVaultPlayer.dylib

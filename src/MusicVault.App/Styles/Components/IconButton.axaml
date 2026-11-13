@@ -122,6 +122,18 @@
     <Setter Property="TextAlignment" Value="Center"/>
   </Style>
 
+  <Style Selector="Button.top-icon-btn.selected">
+    <Setter Property="Background" Value="{DynamicResource NavSelectedBgBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+  </Style>
+  <Style Selector="Button.top-icon-btn.selected TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+  </Style>
+  <Style Selector="Button.top-icon-btn:pointerover.selected">
+    <Setter Property="Background" Value="{DynamicResource NavSelectedBgBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource OnAccentSoftForegroundBrush}"/>
+  </Style>
+
   <!-- 侧栏折叠：28×28 点击区 -->
   <Style Selector="Button.library-pane-toggle-btn">
     <Setter Property="Width" Value="{DynamicResource RowActionButtonSize}"/>

@@ -54,6 +54,12 @@ public partial class ArtistAlbumTrackItemViewModel : ObservableObject
             OnPropertyChanged(nameof(IsOnlineFavorite));
         if (propertyName is nameof(OnlineTrackViewModel.OnlineFavoriteToolTip))
             OnPropertyChanged(nameof(OnlineFavoriteToolTip));
+        if (propertyName is nameof(OnlineTrackViewModel.DownloadToolTip)
+            or nameof(OnlineTrackViewModel.CanUseOnlineDownload))
+        {
+            OnPropertyChanged(nameof(DownloadToolTip));
+            OpenDownloadPickerCommand.NotifyCanExecuteChanged();
+        }
     }
 
     [ObservableProperty] private bool _isSelected;
@@ -75,7 +81,7 @@ public partial class ArtistAlbumTrackItemViewModel : ObservableObject
     public bool IsOnlineFavorite => OnlineVm?.IsOnlineFavorite ?? false;
     public string OnlineFavoriteToolTip => OnlineVm?.OnlineFavoriteToolTip ?? OnlineTrackRowLabels.FavoriteAdd;
     public string AddToPlaylistToolTip => TrackRowActionLabels.AddToPlaylist;
-    public string DownloadToolTip => TrackRowActionLabels.Download;
+    public string DownloadToolTip => OnlineVm?.DownloadToolTip ?? TrackRowActionLabels.Download;
     public string PlayButtonLabel => TrackRowActionLabels.Play;
     public bool ShowPlayButton => IsInLibrary && LibraryTrack != null && _player != null;
 
@@ -96,6 +102,13 @@ public partial class ArtistAlbumTrackItemViewModel : ObservableObject
 
     public bool ShowFormatChip => IsInLibrary && AlbumTrackFormatLabels.ShowFormatChip(FormatChipText);
 
+    public void NotifyOnlineDownloadAvailability()
+    {
+        OnlineVm?.NotifyOnlineDownloadAvailability();
+        OnPropertyChanged(nameof(DownloadToolTip));
+        OpenDownloadPickerCommand.NotifyCanExecuteChanged();
+    }
+
     [RelayCommand]
     private async Task PlayTrackAsync()
     {
@@ -112,7 +125,10 @@ public partial class ArtistAlbumTrackItemViewModel : ObservableObject
             await cmd.ExecuteAsync(null);
     }
 
-    [RelayCommand]
+    private bool CanOpenDownloadPicker() =>
+        OnlineVm?.OpenDownloadPickerCommand.CanExecute(null) == true;
+
+    [RelayCommand(CanExecute = nameof(CanOpenDownloadPicker))]
     private async Task OpenDownloadPickerAsync()
     {
         if (OnlineVm?.OpenDownloadPickerCommand is IAsyncRelayCommand cmd && cmd.CanExecute(null))

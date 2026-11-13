@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MusicVault.App.Icons;
 using MusicVault.App.Localization;
 using MusicVault.App.ViewModels.Sidebar;
 using System.Windows.Input;
@@ -53,7 +54,7 @@ public partial class DesktopLyricsViewModel : ViewModelBase
     public string LockToolTip => IsLocked
         ? _l10n.Get("Player.DesktopLyrics.UnlockToolTip")
         : _l10n.Get("Player.DesktopLyrics.LockToolTip");
-    public string LockIconGlyph => IsLocked ? "\uE72E" : "\uE785";
+    public string LockIconGlyph => IsLocked ? IconGlyphs.Lock : IconGlyphs.Unlock;
 
     public DesktopLyricsViewModel(
         PlayerBarViewModel player,

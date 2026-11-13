@@ -231,12 +231,12 @@
           <TextBlock Classes="text-caption"
                      Text="{Binding IconsIntro}"/>
           <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
-            <TextBlock Text="&#xE8D6;" Classes="icon-xs icon-muted"/>
-            <TextBlock Text="&#xE8D6;" Classes="icon-sm icon-muted"/>
-            <TextBlock Text="&#xE768;" Classes="icon-md icon-accent"/>
-            <TextBlock Text="&#xE721;" Classes="icon-lg icon-accent"/>
-            <TextBlock Text="&#xE896;" Classes="icon-2xl icon-accent"/>
-            <TextBlock Text="&#xE8D6;" Classes="icon-hero icon-muted"/>
+            <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-xs icon-muted"/>
+            <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-sm icon-muted"/>
+            <TextBlock Text="{StaticResource IconGlyphPlay}" Classes="icon-md icon-accent"/>
+            <TextBlock Text="{StaticResource IconGlyphSearch}" Classes="icon-lg icon-accent"/>
+            <TextBlock Text="{StaticResource IconGlyphDownload}" Classes="icon-2xl icon-accent"/>
+            <TextBlock Text="{StaticResource IconGlyphMusic}" Classes="icon-hero icon-muted"/>
           </StackPanel>
           <TextBlock Classes="text-caption" Text="{Binding IconsSizes}"/>
         </StackPanel>
@@ -311,10 +311,10 @@
               <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph icon-sm"/>
             </Button>
             <Button Classes="icon-btn" ToolTip.Tip="icon-btn / btn-icon-toolbar">
-              <TextBlock Text="&#xE711;" Classes="icon-sm icon-muted"/>
+              <TextBlock Text="{StaticResource IconGlyphCancel}" Classes="icon-sm icon-muted"/>
             </Button>
             <Button Classes="top-icon-btn" ToolTip.Tip="top-icon-btn">
-              <TextBlock Text="&#xE793;" Classes="icon-sm"/>
+              <TextBlock Text="{StaticResource IconGlyphTheme}" Classes="icon-sm"/>
             </Button>
           </StackPanel>
         </StackPanel>
@@ -426,7 +426,7 @@
                   <TextBlock Text="{StaticResource IconGlyphHeart}" Classes="track-row-glyph icon-sm icon-muted"/>
                 </Button>
                 <Button Grid.Column="2" Classes="row-action-btn">
-                  <TextBlock Text="&#xE8F1;" Classes="track-row-glyph icon-sm icon-muted"/>
+                  <TextBlock Text="{StaticResource IconGlyphLibrary}" Classes="track-row-glyph icon-sm icon-muted"/>
                 </Button>
               </Grid>
               <Grid Classes="track-row-content" ColumnDefinitions="*,Auto,Auto" Height="40" Margin="{DynamicResource MarginBottomXs}"
@@ -438,7 +438,7 @@
                   <TextBlock Text="{StaticResource IconGlyphHeartFill}" Classes="track-row-glyph icon-sm icon-accent"/>
                 </Button>
                 <Button Grid.Column="2" Classes="row-action-btn">
-                  <TextBlock Text="&#xE8F1;" Classes="track-row-glyph icon-sm icon-accent"/>
+                  <TextBlock Text="{StaticResource IconGlyphLibrary}" Classes="track-row-glyph icon-sm icon-accent"/>
                 </Button>
               </Grid>
             </StackPanel>
@@ -601,7 +601,7 @@
                   <TextBlock Text="✕" Classes="ant-badge-status-glyph"/>
                 </Border>
                 <Border Classes="ant-badge ant-badge-status ant-badge-status-processing">
-                  <TextBlock Text="&#xE895;" Classes="ant-badge-status-glyph ant-badge-status-glyph-processing"/>
+                  <TextBlock Text="{StaticResource IconGlyphSync}" Classes="ant-badge-status-glyph ant-badge-status-glyph-processing"/>
                 </Border>
               </StackPanel>
             </StackPanel>
@@ -696,7 +696,7 @@
           </Border>
           <controls:EmptyStateView Title="{Binding EmptyStateTitle}"
                                    Description="{Binding EmptyStateDescription}"
-                                   IconGlyph="&#xE721;"/>
+                                   IconGlyph="{StaticResource IconGlyphSearch}"/>
           <TextBlock Classes="text-caption" Text="{Binding SegmentedNote}"/>
         </StackPanel>
       </Border>

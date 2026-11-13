@@ -68,14 +68,22 @@
               <Button Content="{Binding ImportPlatformButton}" Classes="primary btn-toolbar"
                       Command="{Binding ImportPlatformPlaylistCommand}"
                       automation:AutomationProperties.Name="{Binding ImportPlatformButton}"/>
-              <Button Content="{Binding CreatePlaylistButton}" Classes="primary btn-toolbar"
+              <Button Content="{Binding CreatePlaylistButton}" Classes="flat-btn btn-toolbar"
                       Command="{Binding CreatePlaylistCommand}"
                       automation:AutomationProperties.Name="{Binding CreatePlaylistButton}"/>
-              <Button Content="{Binding MergePlaylistsButton}" Classes="primary btn-toolbar"
-                      Command="{Binding MergeSelectedPlaylistsCommand}"
-                      IsEnabled="{Binding CanMergeSelectedPlaylists}"
-                      ToolTip.Tip="{Binding MergePlaylistsToolTip}"
-                      automation:AutomationProperties.Name="{Binding MergePlaylistsToolTip}"/>
+              <Button Classes="icon-more-btn"
+                      ToolTip.Tip="{Binding MoreActionsToolTip}"
+                      automation:AutomationProperties.Name="{Binding MoreActionsToolTip}">
+                <Button.Flyout>
+                  <MenuFlyout>
+                    <MenuItem Header="{Binding MergePlaylistsButton}" Classes="app-compact-menu-item"
+                              Command="{Binding MergeSelectedPlaylistsCommand}"
+                              IsEnabled="{Binding CanMergeSelectedPlaylists}"
+                              ToolTip.Tip="{Binding MergePlaylistsToolTip}"/>
+                  </MenuFlyout>
+                </Button.Flyout>
+                <TextBlock Text="{StaticResource IconGlyphMore}" Classes="icon-xs"/>
+              </Button>
             </StackPanel>
           </StackPanel>
           <Border DockPanel.Dock="Top" Classes="page-hero-divider"/>
@@ -136,7 +144,7 @@
                               <Image Source="{Binding CoverThumb, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
                                      Stretch="UniformToFill" IsVisible="{Binding HasCover}"/>
                               <Border IsVisible="{Binding !HasCover}" Background="{DynamicResource SurfaceElevatedBrush}">
-                                <TextBlock Text="&#xE8DD;" Classes="icon-sm"
+                                <TextBlock Text="{StaticResource IconGlyphPlaylist}" Classes="icon-sm"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"
                                            Foreground="{DynamicResource TextTertiaryBrush}"/>
                               </Border>
@@ -168,14 +176,14 @@
                                     CommandParameter="{Binding}"
                                     IsVisible="{Binding CanEdit}"
                                     ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).EditPlaylistButton}">
-                              <TextBlock Text="&#xE70F;" Classes="track-row-glyph"/>
+                              <TextBlock Text="{StaticResource IconGlyphEdit}" Classes="track-row-glyph"/>
                             </Button>
                             <Button Classes="row-action-btn track-delete-btn"
                                     Command="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DeletePlaylistCommand}"
                                     CommandParameter="{Binding}"
                                     IsVisible="{Binding CanDelete}"
                                     ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DeletePlaylistButton}">
-                              <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+                              <TextBlock Text="{StaticResource IconGlyphDelete}" Classes="track-row-glyph"/>
                             </Button>
                           </StackPanel>
                         </Grid>
@@ -213,7 +221,7 @@
                           <Image Source="{Binding CoverThumb, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
                                  Stretch="UniformToFill" IsVisible="{Binding HasCover}"/>
                           <Border IsVisible="{Binding !HasCover}" Background="{DynamicResource SurfaceElevatedBrush}">
-                            <TextBlock Text="&#xE8DD;" Classes="icon-sm"
+                            <TextBlock Text="{StaticResource IconGlyphPlaylist}" Classes="icon-sm"
                                        HorizontalAlignment="Center" VerticalAlignment="Center"
                                        Foreground="{DynamicResource TextTertiaryBrush}"/>
                           </Border>
@@ -241,7 +249,7 @@
             <controls:EmptyStateView IsVisible="{Binding ShowBrowseEmpty}"
                                      Title="{Binding BrowseEmptyTitle}"
                                      Description="{Binding BrowseEmptyDescription}"
-                                     IconGlyph="&#xE8DD;"/>
+                                     IconGlyph="{StaticResource IconGlyphPlaylist}"/>
             <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center"
                         Margin="{DynamicResource MarginTopSm}"
                         IsVisible="{Binding ShowChartsEmptyActions}">
@@ -279,22 +287,27 @@
                          IsVisible="{Binding ShowOnlineDetailSummary}"/>
               <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6"
                           HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Content="{Binding RemoveFromListenHistoryButton}" Classes="primary btn-toolbar"
-                        Command="{Binding RemoveSelectedFromListenHistoryCommand}"
-                        IsEnabled="{Binding CanRemoveSelectedFromListenHistory}"
-                        IsVisible="{Binding ShowListenHistoryBulkActions}"
-                        ToolTip.Tip="{Binding RemoveFromListenHistoryToolTip}"
-                        automation:AutomationProperties.Name="{Binding RemoveFromListenHistoryToolTip}"/>
-                <Button Content="{Binding ClearListenHistoryCacheButton}" Classes="primary btn-toolbar"
-                        Command="{Binding ClearSelectedListenHistoryCacheCommand}"
-                        IsEnabled="{Binding CanClearSelectedListenHistoryCache}"
-                        IsVisible="{Binding ShowListenHistoryBulkActions}"
-                        ToolTip.Tip="{Binding ClearListenHistoryCacheToolTip}"
-                        automation:AutomationProperties.Name="{Binding ClearListenHistoryCacheToolTip}"/>
-                <Button Content="{Binding LoadMoreButtonText}" Classes="primary btn-toolbar"
-                        Command="{Binding LoadMoreOnlineDetailTracksCommand}"
-                        IsVisible="{Binding HasMoreOnlineDetailTracks}"
-                        automation:AutomationProperties.Name="{Binding LoadMoreButtonText}"/>
+                <Button Classes="icon-more-btn"
+                        IsVisible="{Binding ShowListenHistoryOverflow}"
+                        ToolTip.Tip="{Binding MoreActionsToolTip}"
+                        automation:AutomationProperties.Name="{Binding MoreActionsToolTip}">
+                  <Button.Flyout>
+                    <MenuFlyout>
+                      <MenuItem Header="{Binding RemoveFromListenHistoryButton}" Classes="app-compact-menu-item"
+                                Command="{Binding RemoveSelectedFromListenHistoryCommand}"
+                                IsEnabled="{Binding CanRemoveSelectedFromListenHistory}"
+                                IsVisible="{Binding ShowListenHistoryBulkActions}"/>
+                      <MenuItem Header="{Binding ClearListenHistoryCacheButton}" Classes="app-compact-menu-item"
+                                Command="{Binding ClearSelectedListenHistoryCacheCommand}"
+                                IsEnabled="{Binding CanClearSelectedListenHistoryCache}"
+                                IsVisible="{Binding ShowListenHistoryBulkActions}"/>
+                      <MenuItem Header="{Binding LoadMoreButtonText}" Classes="app-compact-menu-item"
+                                Command="{Binding LoadMoreOnlineDetailTracksCommand}"
+                                IsVisible="{Binding HasMoreOnlineDetailTracks}"/>
+                    </MenuFlyout>
+                  </Button.Flyout>
+                  <TextBlock Text="{StaticResource IconGlyphMore}" Classes="icon-xs"/>
+                </Button>
               </StackPanel>
             </Grid>
 
@@ -327,7 +340,7 @@
                         Padding="8,4" VerticalAlignment="Center"
                         automation:AutomationProperties.Name="{Binding BackToBrowseLabel}">
                   <StackPanel Orientation="Horizontal" Spacing="6">
-                    <TextBlock Text="&#xE72B;" Classes="icon-sm"/>
+                    <TextBlock Text="{StaticResource IconGlyphBack}" Classes="icon-sm"/>
                     <TextBlock Text="{Binding BackToBrowseLabel}" Classes="text-label"/>
                   </StackPanel>
                 </Button>
@@ -341,42 +354,48 @@
                            IsVisible="{Binding IsChartDetail}"/>
                 <Border Classes="transfers-toolbar-group-sep"
                         IsVisible="{Binding ShowPlaylistTracksList}"/>
-                <Button Content="{Binding EditPlaylistButton}" Classes="primary btn-toolbar"
-                        Command="{Binding EditPlaylistCommand}"
-                        IsVisible="{Binding CanEditSelectedPlaylist}"
-                        automation:AutomationProperties.Name="{Binding EditPlaylistButton}"/>
-                <Button Content="{Binding DeletePlaylistButton}" Classes="primary btn-toolbar"
-                        Command="{Binding DeletePlaylistCommand}"
-                        IsVisible="{Binding CanDeleteSelectedPlaylist}"
-                        automation:AutomationProperties.Name="{Binding DeletePlaylistButton}"/>
-                <Button Content="{Binding ExportM3uButton}" Classes="primary btn-toolbar"
-                        Command="{Binding ExportM3uCommand}"
-                        IsVisible="{Binding ShowExportM3uAction}"
-                        automation:AutomationProperties.Name="{Binding ExportM3uButton}"/>
                 <Button Content="{Binding PreviewChartPlaylistButton}" Classes="primary btn-toolbar"
                         Command="{Binding PreviewChartPlaylistCommand}"
                         IsVisible="{Binding IsChartDetail}"
                         automation:AutomationProperties.Name="{Binding PreviewChartPlaylistButton}"/>
-                <Button Content="{Binding BatchDownloadButton}" Classes="primary btn-toolbar"
-                        Command="{Binding BatchDownloadChartCommand}"
-                        IsVisible="{Binding IsChartDetail}"
-                        automation:AutomationProperties.Name="{Binding BatchDownloadButton}"/>
-                <Button Content="{Binding LoadMoreButtonText}" Classes="primary btn-toolbar"
-                        Command="{Binding LoadMoreOnlineDetailTracksCommand}"
-                        IsVisible="{Binding HasMoreOnlineDetailTracks}"
-                        automation:AutomationProperties.Name="{Binding LoadMoreButtonText}"/>
-                <Button Content="{Binding LoadMoreButtonText}" Classes="primary btn-toolbar"
-                        Command="{Binding LoadMorePlaylistTracksCommand}"
-                        IsVisible="{Binding HasMorePlaylistLocalTracks}"
-                        automation:AutomationProperties.Name="{Binding LoadMoreButtonText}"/>
-                <Button Content="{Binding BatchDownloadButton}" Classes="primary btn-toolbar"
-                        Command="{Binding BatchDownloadPendingCommand}"
+                <Button Content="{Binding PreviewOnlinePlaylistButton}" Classes="primary btn-toolbar"
+                        Command="{Binding PreviewPendingOnlinePlaylistCommand}"
                         IsVisible="{Binding HasPendingOnlineTracks}"
-                        automation:AutomationProperties.Name="{Binding BatchDownloadButton}"/>
-                <Button Content="{Binding RetryFailedButton}" Classes="primary btn-toolbar"
-                        Command="{Binding RetryFailedDownloadsCommand}"
-                        IsVisible="{Binding IsLocalPlaylistDetail}"
-                        automation:AutomationProperties.Name="{Binding RetryFailedButton}"/>
+                        automation:AutomationProperties.Name="{Binding PreviewOnlinePlaylistButton}"/>
+                <Button Classes="icon-more-btn"
+                        IsVisible="{Binding ShowPlaylistDetailOverflow}"
+                        ToolTip.Tip="{Binding MoreActionsToolTip}"
+                        automation:AutomationProperties.Name="{Binding MoreActionsToolTip}">
+                  <Button.Flyout>
+                    <MenuFlyout>
+                      <MenuItem Header="{Binding EditPlaylistButton}" Classes="app-compact-menu-item"
+                                Command="{Binding EditPlaylistCommand}"
+                                IsVisible="{Binding CanEditSelectedPlaylist}"/>
+                      <MenuItem Header="{Binding DeletePlaylistButton}" Classes="app-compact-menu-item"
+                                Command="{Binding DeletePlaylistCommand}"
+                                IsVisible="{Binding CanDeleteSelectedPlaylist}"/>
+                      <MenuItem Header="{Binding ExportM3uButton}" Classes="app-compact-menu-item"
+                                Command="{Binding ExportM3uCommand}"
+                                IsVisible="{Binding ShowExportM3uAction}"/>
+                      <MenuItem Header="{Binding BatchDownloadButton}" Classes="app-compact-menu-item"
+                                Command="{Binding BatchDownloadChartCommand}"
+                                IsVisible="{Binding IsChartDetail}"/>
+                      <MenuItem Header="{Binding LoadMoreButtonText}" Classes="app-compact-menu-item"
+                                Command="{Binding LoadMoreOnlineDetailTracksCommand}"
+                                IsVisible="{Binding HasMoreOnlineDetailTracks}"/>
+                      <MenuItem Header="{Binding LoadMoreButtonText}" Classes="app-compact-menu-item"
+                                Command="{Binding LoadMorePlaylistTracksCommand}"
+                                IsVisible="{Binding HasMorePlaylistLocalTracks}"/>
+                      <MenuItem Header="{Binding BatchDownloadButton}" Classes="app-compact-menu-item"
+                                Command="{Binding BatchDownloadPendingCommand}"
+                                IsVisible="{Binding HasPendingOnlineTracks}"/>
+                      <MenuItem Header="{Binding RetryFailedButton}" Classes="app-compact-menu-item"
+                                Command="{Binding RetryFailedDownloadsCommand}"
+                                IsVisible="{Binding IsLocalPlaylistDetail}"/>
+                    </MenuFlyout>
+                  </Button.Flyout>
+                  <TextBlock Text="{StaticResource IconGlyphMore}" Classes="icon-xs"/>
+                </Button>
               </StackPanel>
             </StackPanel>
 
@@ -384,7 +403,7 @@
                     IsVisible="{Binding ShowStandardDetailHeader}"/>
           </DockPanel>
 
-          <controls:LibraryTrackTableHeader DockPanel.Dock="Top"
+          <controls:LibraryTrackTableHeader x:Name="PlaylistTracksHeader" DockPanel.Dock="Top"
                                             IsVisible="{Binding ShowPlaylistTracksList}"/>
 
           <!-- 试听记录表头（含勾选列） -->
@@ -438,6 +457,8 @@
                     <DockPanel>
                       <Grid DockPanel.Dock="Top" Classes="track-row-content discover-track-row"
                             VerticalAlignment="Center"
+                            HorizontalAlignment="Stretch"
+                            MinWidth="0"
                             MinHeight="{x:Static layout:TrackTableLayout.DiscoverRowHeight}"
                             ColumnDefinitions="{x:Static layout:TrackTableLayout.DiscoverBatchColumns}">
                         <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" Classes="choice-check-icon"
@@ -474,8 +495,9 @@
                         <Border Grid.Column="6" Classes="discover-cache-chip"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
                                 ToolTip.Tip="{Binding PreviewCacheToolTip}"
+                                automation:AutomationProperties.Name="{Binding PreviewCacheStatusText}"
                                 IsVisible="{Binding IsPreviewCached}">
-                          <TextBlock Text="{Binding PreviewCacheStatusText}" Classes="discover-cache-chip-text"/>
+                          <TextBlock Text="{StaticResource IconGlyphCheckMark}" Classes="track-row-glyph discover-cache-glyph"/>
                         </Border>
                         <Button Grid.Column="7"
                                 Classes="row-action-btn track-favorite-btn"
@@ -496,15 +518,16 @@
                                 ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).AddToPlaylistToolTip}"
                                 automation:AutomationProperties.Name="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).AddToPlaylistToolTip}"
                                 Click="OnAddOnlineTrackToPlaylistClick">
-                          <TextBlock Text="+" Classes="track-row-glyph"/>
+                          <TextBlock Text="{StaticResource IconGlyphAdd}" Classes="track-row-glyph"/>
                         </Button>
                         <Button Grid.Column="9" Classes="row-action-btn"
                                 HorizontalAlignment="Left"
                                 Margin="{DynamicResource FieldCaptionLeadingMargin}"
-                                ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DownloadToolTip}"
-                                automation:AutomationProperties.Name="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DownloadToolTip}"
-                                Command="{Binding OpenDownloadPickerCommand}">
-                          <TextBlock Text="&#xE896;" Classes="track-row-glyph"/>
+                                ToolTip.Tip="{Binding DownloadToolTip}"
+                                automation:AutomationProperties.Name="{Binding DownloadToolTip}"
+                                Command="{Binding OpenDownloadPickerCommand}"
+                                IsEnabled="{Binding CanUseOnlineDownload}">
+                          <TextBlock Text="{StaticResource IconGlyphDownload}" Classes="track-row-glyph"/>
                         </Button>
                       </Grid>
                       <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
@@ -524,6 +547,8 @@
                     <DockPanel>
                       <Grid DockPanel.Dock="Top" Classes="track-row-content discover-track-row"
                             VerticalAlignment="Center"
+                            HorizontalAlignment="Stretch"
+                            MinWidth="0"
                             MinHeight="{x:Static layout:TrackTableLayout.DiscoverRowHeight}"
                             ColumnDefinitions="{x:Static layout:TrackTableLayout.DiscoverColumns}">
                         <TextBlock Grid.Column="0" Text="{Binding RowIndexText}"
@@ -556,8 +581,9 @@
                         <Border Grid.Column="5" Classes="discover-cache-chip"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
                                 ToolTip.Tip="{Binding PreviewCacheToolTip}"
+                                automation:AutomationProperties.Name="{Binding PreviewCacheStatusText}"
                                 IsVisible="{Binding IsPreviewCached}">
-                          <TextBlock Text="{Binding PreviewCacheStatusText}" Classes="discover-cache-chip-text"/>
+                          <TextBlock Text="{StaticResource IconGlyphCheckMark}" Classes="track-row-glyph discover-cache-glyph"/>
                         </Border>
                         <Button Grid.Column="6"
                                 Classes="row-action-btn track-favorite-btn"
@@ -578,14 +604,15 @@
                                 ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).AddToPlaylistToolTip}"
                                 automation:AutomationProperties.Name="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).AddToPlaylistToolTip}"
                                 Click="OnAddOnlineTrackToPlaylistClick">
-                          <TextBlock Text="+" Classes="track-row-glyph"/>
+                          <TextBlock Text="{StaticResource IconGlyphAdd}" Classes="track-row-glyph"/>
                         </Button>
                         <Button Grid.Column="8" Classes="row-action-btn"
                                 HorizontalAlignment="Center"
-                                ToolTip.Tip="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DownloadToolTip}"
-                                automation:AutomationProperties.Name="{Binding $parent[UserControl].((pvm:PlaylistsPageViewModel)DataContext).DownloadToolTip}"
-                                Command="{Binding OpenDownloadPickerCommand}">
-                          <TextBlock Text="&#xE896;" Classes="track-row-glyph"/>
+                                ToolTip.Tip="{Binding DownloadToolTip}"
+                                automation:AutomationProperties.Name="{Binding DownloadToolTip}"
+                                Command="{Binding OpenDownloadPickerCommand}"
+                                IsEnabled="{Binding CanUseOnlineDownload}">
+                          <TextBlock Text="{StaticResource IconGlyphDownload}" Classes="track-row-glyph"/>
                         </Button>
                       </Grid>
                       <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
@@ -610,7 +637,7 @@
               <controls:SkeletonLine Grid.Column="8" LineWidth="24" LineHorizontalAlignment="Center"/>
             </Grid>
 
-            <Button x:Name="ChartScrollTopBtn" Content="&#xE70E;"
+            <Button x:Name="ChartScrollTopBtn" Content="{StaticResource IconGlyphChevronUp}"
                     Classes="list-scroll-top-btn"
                     HorizontalAlignment="Right" VerticalAlignment="Bottom"
                     Margin="{DynamicResource ListScrollBottomMargin}" IsVisible="False"
@@ -621,7 +648,7 @@
             <controls:EmptyStateView IsVisible="{Binding ShowDetailTracksEmpty}"
                                      Title="{Binding EmptyTracksTitle}"
                                      Description="{Binding EmptyTracksDescription}"
-                                     IconGlyph="&#xE8DD;"/>
+                                     IconGlyph="{StaticResource IconGlyphPlaylist}"/>
           </Panel>
         </DockPanel>
       </Grid>

@@ -17,10 +17,15 @@ tmp-probe/
 tmp-*/
 tmp-*.txt
 tmp-*.bin
+.tmp/
+.planning/
 agent-tools/
 .superpowers/
 .cursor/
 agent-transcripts/
+
+# Generated design-system audit dumps (keep at most one curated file under docs/execution if needed)
+docs/execution/design-system-audit-*.md
 
 # Test dumps / results
 **/TestResults/
@@ -29,12 +34,19 @@ agent-transcripts/
 
 # Local tool caches / scratch assets (do not ship)
 tools/ffmpeg-cache/
+tools/go-music-api/
 tools/_tmp*
 tools/_freesvg*
 tools/_oc-*
 tools/_svgrepo*
 tools/_tabler*
 tools/_test*
+
+# Local API binary used by publish / fork workflow (optional)
+/api/go-music-api.exe
+/api/go-music-api.exe.bak
+/api/version.txt
+/api/shipped-with-app.txt
 
 # User secrets (never commit)
 *.pfx

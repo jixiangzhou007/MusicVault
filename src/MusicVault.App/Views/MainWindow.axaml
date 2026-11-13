@@ -15,6 +15,7 @@
         x:Name="RootWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="MusicVault"
+        Icon="/Assets/app-icon.ico"
         Width="1320" Height="860"
         MinWidth="1024" MinHeight="700"
         Background="{DynamicResource BackgroundBrush}">
@@ -35,7 +36,9 @@
             IsVisible="{Binding ShowFullShell}"
             PointerPressed="OnTitleBarPointerPressed">
       <Grid ColumnDefinitions="Auto,*,Auto" Height="{DynamicResource TopNavHeight}">
-        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center"
+        <Border Grid.Column="0" Padding="{DynamicResource TitleBarLeadingInset}"
+                VerticalAlignment="Stretch">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
                     Margin="{DynamicResource WindowLogoMargin}" IsVisible="{Binding ShowFullShell}">
           <Button Classes="top-logo-btn" ToolTip.Tip="{Binding NavHomeToolTip}"
                   automation:AutomationProperties.Name="{Binding NavHomeToolTip}"
@@ -52,6 +55,7 @@
                   ToolTip.Tip="{Binding NavHomeToolTip}"
                   automation:AutomationProperties.Name="{Binding NavHome}"/>
         </StackPanel>
+        </Border>
         <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center"
                       IsVisible="{Binding ShowFullShell}">
@@ -76,20 +80,6 @@
                         IsVisible="{Binding ShowApiHealthIndicator}"/>
               </StackPanel>
             </Button>
-            <Button Classes="nav-tab"
-                    Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=Downloads}"
-                    Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Downloads}"
-                    ToolTip.Tip="{Binding NavTransfersToolTip}"
-                    automation:AutomationProperties.Name="{Binding NavTransfers}">
-              <StackPanel Orientation="Horizontal" Spacing="6">
-                <TextBlock Text="{Binding NavTransfers}" VerticalAlignment="Center"/>
-                <Border Classes="ant-badge ant-badge-count"
-                        VerticalAlignment="Center"
-                        IsVisible="{Binding ActiveDownloadCount, Converter={x:Static conv:IntToVisibilityConverter.Instance}}">
-                  <TextBlock Text="{Binding ActiveDownloadCount}" Classes="text-caption"/>
-                </Border>
-              </StackPanel>
-            </Button>
             <Button Content="{Binding NavTools}" Classes="nav-tab"
                     Classes.selected="{Binding CurrentSection, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter=AudioTools}"
                     Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.AudioTools}"
@@ -103,6 +93,24 @@
 
         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4"
                     VerticalAlignment="Center" Margin="{DynamicResource WindowNavLeadingMargin}">
+          <Button Classes="top-icon-btn"
+                  Classes.selected="{Binding IsDownloadsNavSelected}"
+                  Command="{Binding NavigateCommand}" CommandParameter="{x:Static core:NavigationSection.Downloads}"
+                  ToolTip.Tip="{Binding NavTransfersToolTip}"
+                  automation:AutomationProperties.Name="{Binding NavTransfers}"
+                  ClipToBounds="False"
+                  VerticalAlignment="Center">
+            <Grid ClipToBounds="False">
+              <TextBlock Text="{StaticResource IconGlyphDownload}" Classes="icon-sm"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Border Classes="ant-badge ant-badge-count"
+                      HorizontalAlignment="Right" VerticalAlignment="Top"
+                      Margin="10,-6,-8,-8"
+                      IsVisible="{Binding ActiveDownloadCount, Converter={x:Static conv:IntToVisibilityConverter.Instance}}">
+                <TextBlock Text="{Binding ActiveDownloadCount}" Classes="text-caption"/>
+              </Border>
+            </Grid>
+          </Button>
           <Button Classes="top-icon-btn"
                   Command="{Binding OpenOnlineApiSettingsCommand}"
                   ToolTip.Tip="{Binding ApiHealthToolTip}"
@@ -196,7 +204,7 @@
                     IsVisible="{Binding CurrentPage.ShowPageBackButton}"
                     Command="{Binding CurrentPage.PageBackCommand}">
               <StackPanel Orientation="Horizontal" Spacing="6">
-                <TextBlock Text="&#xE72B;" Classes="icon-sm"/>
+                <TextBlock Text="{StaticResource IconGlyphBack}" Classes="icon-sm"/>
                 <TextBlock Text="{Binding CurrentPage.PageBackButtonLabel}" Classes="text-label"/>
               </StackPanel>
             </Button>

@@ -13,6 +13,7 @@ using MusicVault.Core.Enums;
 using MusicVault.Core.Models;
 using MusicVault.Services;
 using MusicVault.Services.Api;
+using MusicVault.Services.Audio;
 using MusicVault.Services.Contracts;
 using MusicVault.Services.Download;
 using MusicVault.Services.Search;
@@ -147,6 +148,10 @@ public partial class OnlineTrackViewModel : ViewModelBase
 
     public ObservableCollection<OnlineTrackFormatViewModel> DownloadOptions { get; } = [];
     public bool HasDownloadOptions => DownloadOptions.Count > 0;
+    public bool CanUseOnlineDownload => IsOnlineDownloadPipelineAvailable() && HasDownloadOptions;
+    public string DownloadToolTip => IsOnlineDownloadPipelineAvailable()
+        ? TrackRowActionLabels.Download
+        : OnlineTrackRowLabels.DownloadDisabledHint;
     public Action? OnOpenDownloadsRequested { get; set; }
     public string OnlineFavoriteToolTip => IsOnlineFavorite
         ? OnlineTrackRowLabels.FavoriteRemove
@@ -227,10 +232,34 @@ public partial class OnlineTrackViewModel : ViewModelBase
         OnPropertyChanged(nameof(OnlineFavoriteToolTip));
         OnPropertyChanged(nameof(RowCheckboxAccessibilityName));
         OnPropertyChanged(nameof(RowCheckboxAccessibilityHelp));
+        OnPropertyChanged(nameof(DownloadToolTip));
     }
 
-    public void RefreshPreviewCacheState() =>
+    public void RefreshPreviewCacheState()
+    {
         IsPreviewCached = _services.OnlinePreviewCache.IsCached(Model);
+        TryFillMissingDurationFromCache();
+    }
+
+    /// <summary>收藏/试听记录里常缺 DurationMs；若本地已有预览缓存则探测补全。</summary>
+    private void TryFillMissingDurationFromCache()
+    {
+        if (Model.DurationMs > 0)
+            return;
+
+        var path = _services.OnlinePreviewCache.TryGetBestCachedPath(Model);
+        if (string.IsNullOrWhiteSpace(path))
+            return;
+
+        var ms = TrackDurationProbe.ProbeMilliseconds(path);
+        if (ms <= 0)
+            return;
+
+        Model.DurationMs = ms;
+        OnPropertyChanged(nameof(DurationText));
+        if (_onlineFavorites?.IsFavorite(Model) == true)
+            _ = _onlineFavorites.TryUpdateDurationAsync(Model, ms);
+    }
 
     private bool ComputeInitialCanPreview(OnlineTrack track)
     {
@@ -380,7 +409,7 @@ public partial class OnlineTrackViewModel : ViewModelBase
         var available = _allFormats.Where(f => f.IsAvailable).ToList();
         if (available.Count == 0)
         {
-            OnPropertyChanged(nameof(HasDownloadOptions));
+            NotifyDownloadUi();
             return;
         }
 
@@ -388,15 +417,29 @@ public partial class OnlineTrackViewModel : ViewModelBase
         {
             foreach (var format in available.OrderByDescending(f => (int)f.Quality).ThenBy(f => f.Label))
                 DownloadOptions.Add(format);
-            OnPropertyChanged(nameof(HasDownloadOptions));
+            NotifyDownloadUi();
             return;
         }
 
         var primary = available.FirstOrDefault(f => f.Quality == preferred) ?? available[0];
         foreach (var format in available.OrderByDescending(f => f == primary).ThenByDescending(f => (int)f.Quality))
             DownloadOptions.Add(format);
-        OnPropertyChanged(nameof(HasDownloadOptions));
+        NotifyDownloadUi();
     }
+
+    public void NotifyOnlineDownloadAvailability() => NotifyDownloadUi();
+
+    private void NotifyDownloadUi()
+    {
+        OnPropertyChanged(nameof(HasDownloadOptions));
+        OnPropertyChanged(nameof(CanUseOnlineDownload));
+        OnPropertyChanged(nameof(DownloadToolTip));
+        DownloadPreferredCommand.NotifyCanExecuteChanged();
+        OpenDownloadPickerCommand.NotifyCanExecuteChanged();
+    }
+
+    private static bool IsOnlineDownloadPipelineAvailable() =>
+        OnlineDownloadAvailability.IsAvailable(GoMusicApiClient.IsConfigured);
 
     public void NotifyPreferredDownloadChanged()
     {
@@ -688,7 +731,8 @@ public partial class OnlineTrackViewModel : ViewModelBase
     }
 
     private bool CanDownloadPreferred() =>
-        OnlineTrackDownloadQualityResolver.HasAnyDownloadFormat(Model);
+        IsOnlineDownloadPipelineAvailable()
+        && OnlineTrackDownloadQualityResolver.HasAnyDownloadFormat(Model);
 
     [RelayCommand]
     private async Task ToggleOnlineFavoriteAsync()
@@ -724,9 +768,17 @@ public partial class OnlineTrackViewModel : ViewModelBase
     private string FormatQualityLabel(AudioQuality quality) =>
         DownloadQualityLabelLocalizer.Chip(App.Localization, quality);
 
-    [RelayCommand]
+    private bool CanOpenDownloadPicker() => CanUseOnlineDownload;
+
+    [RelayCommand(CanExecute = nameof(CanOpenDownloadPicker))]
     private async Task OpenDownloadPickerAsync()
     {
+        if (!IsOnlineDownloadPipelineAvailable())
+        {
+            Report(OnlineTrackRowLabels.DownloadDisabledHint, DiscoverTrackFeedbackKind.Warning);
+            return;
+        }
+
         if (!HasDownloadOptions)
         {
             Report(OnlineTrackRowLabels.NoDownloadQuality(Title), DiscoverTrackFeedbackKind.Warning);

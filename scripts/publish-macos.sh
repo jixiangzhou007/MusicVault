@@ -152,14 +152,45 @@ else
   echo "    VLC_APP=/Applications/VLC.app ./scripts/publish-macos.sh ${RUNTIME}"
 fi
 
-# ── 4. 验收 ──
+# ── 4. 法务文件（朋友包根目录） ──
+for legal in LICENSE NOTICE THIRD_PARTY_LICENSES.md; do
+  if [[ -f "${ROOT}/${legal}" ]]; then
+    cp "${ROOT}/${legal}" "${OUT}/"
+  fi
+done
+if [[ -f "${ROOT}/docs/LEGAL.md" ]]; then
+  mkdir -p "${OUT}/docs"
+  cp "${ROOT}/docs/LEGAL.md" "${OUT}/docs/"
+fi
+
+# ── 5. 验收 ──
+# osx-arm64 朋友包必须含 AVFoundation dylib；LibVLC / VLC.app 不是硬门槛。
 if [[ -f "${DYLIB}" ]]; then
   echo "✓ 原生播放器已就绪: ${DYLIB}"
 else
-  echo "⚠ 原生播放器 dylib 未找到。macOS 本地播放功能将不可用。"
-  echo "  请确保 clang 可用后重新运行: ./scripts/publish-macos.sh ${RUNTIME}"
+  echo "错误: 未找到 ${DYLIB}"
+  echo "  请安装 Xcode Command Line Tools 后重跑: xcode-select --install"
+  echo "  ./scripts/publish-macos.sh ${RUNTIME}"
+  if [[ "$RUNTIME" == "osx-arm64" ]]; then
+    exit 1
+  fi
+fi
+
+VERSION="$(sed -n 's/.*<Version>\([^<]*\)<\/Version>.*/\1/p' "${ROOT}/Directory.Build.props" | head -n 1 | tr -d '[:space:]')"
+if [[ -z "$VERSION" ]]; then
+  VERSION="0.0.0"
+fi
+
+PACK_ZIP="${PACK_ZIP:-true}"
+ZIP_PATH="${ROOT}/publish/MusicVault-${VERSION}-${RUNTIME}.zip"
+if [[ "$PACK_ZIP" == "true" ]]; then
+  mkdir -p "${ROOT}/publish"
+  rm -f "${ZIP_PATH}"
+  ( cd "$OUT" && zip -r "${ZIP_PATH}" . -x '*.pdb' )
+  echo "✓ Zip: ${ZIP_PATH}"
 fi
 
 echo "✓ 应用已发布: ${APP}"
 echo "  运行: ${APP}"
 echo "  数据目录: ~/Library/Application Support/MusicVault"
+echo "  发给朋友: ${ZIP_PATH}（须含 libMusicVaultPlayer.dylib；不保证下载）"

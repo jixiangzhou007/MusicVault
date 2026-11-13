@@ -121,7 +121,29 @@ public static class GoMusicApiClient
     }
 
     /// <summary>
-    /// 解析下载链接并在多平台间轮换：已登录平台优先 → 当前源 → switch 换源 → 再解析。
+    /// 候选排序：原曲目始终第一。跨源匹配只作后备，避免试听先卡在已登录平台搜索上。
+    /// </summary>
+    internal static IReadOnlyList<OnlineTrack> PrioritizeOriginalTrack(
+        OnlineTrack track,
+        IEnumerable<OnlineTrack> alternates)
+    {
+        var list = new List<OnlineTrack>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        void Add(OnlineTrack candidate)
+        {
+            if (seen.Add(TrackSourceKey(candidate)))
+                list.Add(candidate);
+        }
+
+        Add(track);
+        foreach (var alternate in alternates)
+            Add(alternate);
+        return list;
+    }
+
+    /// <summary>
+    /// 解析下载链接并在多平台间轮换：原曲目先解析 → switch 换源 → 再尝试已登录平台匹配。
     /// </summary>
     public static async Task<(string Url, OnlineTrack Track)?> TryResolveDownloadWithSourceRotationAsync(
         OnlineTrack track,
@@ -132,37 +154,62 @@ public static class GoMusicApiClient
         if (string.IsNullOrWhiteSpace(track.Title))
             return null;
 
-        var loggedIn = await MusicApiLoggedInSources.GetLoggedInSourceKeysAsync(ct).ConfigureAwait(false);
-        var candidates = await BuildLoginAwareCandidateTracksAsync(track, loggedIn, ct).ConfigureAwait(false);
         var tried = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var seed in candidates)
+        // 快路径：先解析原平台 ID，不阻塞于跨源搜索（网易广告区 + 仅 QQ 登录时尤其关键）。
+        var quick = await TryResolveSeedWithSwitchesAsync(track, quality, tried, ct, trace)
+            .ConfigureAwait(false);
+        if (quick != null)
+            return quick;
+
+        var loggedIn = await MusicApiLoggedInSources.GetLoggedInSourceKeysAsync(ct).ConfigureAwait(false);
+        if (loggedIn.Count == 0)
+            return null;
+
+        var alternates = await FindLoginAwareAlternateTracksAsync(track, loggedIn, ct).ConfigureAwait(false);
+        foreach (var seed in PrioritizeOriginalTrack(track, alternates).Skip(1))
         {
-            var current = seed;
-            for (var attempt = 0; attempt < 6; attempt++)
-            {
-                var key = TrackSourceKey(current);
-                if (!tried.Add(key) && attempt > 0)
-                    break;
+            var hit = await TryResolveSeedWithSwitchesAsync(seed, quality, tried, ct, trace)
+                .ConfigureAwait(false);
+            if (hit != null)
+                return hit;
+        }
 
-                trace?.Invoke($"try track={current.Platform}:{current.Id} quality={quality}");
-                var resolved = await TryResolveDownloadForTrackAsync(current, quality, ct, trace).ConfigureAwait(false);
-                if (!string.IsNullOrWhiteSpace(resolved))
-                    return (resolved, current);
+        return null;
+    }
 
-                if (!IsConfigured)
-                    break;
+    private static async Task<(string Url, OnlineTrack Track)?> TryResolveSeedWithSwitchesAsync(
+        OnlineTrack seed,
+        AudioQuality quality,
+        HashSet<string> tried,
+        CancellationToken ct,
+        Action<string>? trace)
+    {
+        var current = seed;
+        for (var attempt = 0; attempt < 6; attempt++)
+        {
+            var key = TrackSourceKey(current);
+            if (!tried.Add(key) && attempt > 0)
+                break;
 
-                var switched = await TrySwitchSourceAsync(current, ct).ConfigureAwait(false);
-                if (switched == null)
-                    break;
+            trace?.Invoke($"try track={current.Platform}:{current.Id} quality={quality}");
+            var resolved = await TryResolveDownloadForTrackAsync(current, quality, ct, trace)
+                .ConfigureAwait(false);
+            if (!string.IsNullOrWhiteSpace(resolved))
+                return (resolved, current);
 
-                if (tried.Contains(TrackSourceKey(switched)))
-                    break;
+            if (!IsConfigured)
+                break;
 
-                trace?.Invoke($"switch {current.Platform}:{current.Id} -> {switched.Platform}:{switched.Id}");
-                current = switched;
-            }
+            var switched = await TrySwitchSourceAsync(current, ct).ConfigureAwait(false);
+            if (switched == null)
+                break;
+
+            if (tried.Contains(TrackSourceKey(switched)))
+                break;
+
+            trace?.Invoke($"switch {current.Platform}:{current.Id} -> {switched.Platform}:{switched.Id}");
+            current = switched;
         }
 
         return null;
@@ -195,30 +242,15 @@ public static class GoMusicApiClient
         return null;
     }
 
-    private static async Task<List<OnlineTrack>> BuildLoginAwareCandidateTracksAsync(
+    /// <summary>在已登录的其他平台上搜索同曲匹配；不含原曲目（原曲目由调用方优先解析）。</summary>
+    private static async Task<List<OnlineTrack>> FindLoginAwareAlternateTracksAsync(
         OnlineTrack track,
         IReadOnlyList<string> loggedIn,
         CancellationToken ct)
     {
-        var candidates = new List<OnlineTrack>();
-        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        void AddCandidate(OnlineTrack candidate)
-        {
-            var key = TrackSourceKey(candidate);
-            if (seen.Add(key))
-                candidates.Add(candidate);
-        }
-
-        if (loggedIn.Count == 0)
-        {
-            AddCandidate(track);
-            return candidates;
-        }
-
+        var alternates = new List<OnlineTrack>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { TrackSourceKey(track) };
         var trackSource = MapPlatformToSource(track.Platform);
-        if (MusicApiLoggedInSources.IsSourceLoggedIn(trackSource, loggedIn))
-            AddCandidate(track);
 
         foreach (var source in loggedIn)
         {
@@ -226,14 +258,14 @@ public static class GoMusicApiClient
                 continue;
 
             var matched = await TryFindTrackOnSourceAsync(track, source, ct).ConfigureAwait(false);
-            if (matched != null)
-                AddCandidate(matched);
+            if (matched == null)
+                continue;
+
+            if (seen.Add(TrackSourceKey(matched)))
+                alternates.Add(matched);
         }
 
-        if (seen.Count == 0 || !MusicApiLoggedInSources.IsSourceLoggedIn(trackSource, loggedIn))
-            AddCandidate(track);
-
-        return candidates;
+        return alternates;
     }
 
     /// <summary>在指定平台搜索与参考曲目匹配的在线曲目（用于已登录平台优先解析）。</summary>
@@ -757,13 +789,7 @@ public static class GoMusicApiClient
         if (platform == MusicPlatform.All && s.TryGetProperty("Source", out var src2))
             platform = MapSourceToPlatform(src2.GetString());
 
-        var durationSec = 0;
-        if (s.TryGetProperty("duration", out var dur))
-        {
-            durationSec = dur.ValueKind == JsonValueKind.Number
-                ? dur.GetInt32()
-                : int.TryParse(dur.GetString(), out var d) ? d : 0;
-        }
+        var durationSec = ReadDurationSeconds(s);
 
         var ext = s.TryGetProperty("ext", out var extEl) ? extEl.GetString() : null;
         var hasFlac = string.Equals(ext, "flac", StringComparison.OrdinalIgnoreCase);
@@ -870,6 +896,32 @@ public static class GoMusicApiClient
                 return n;
             if (el.ValueKind == JsonValueKind.String && int.TryParse(el.GetString(), out var parsed) && parsed > 0)
                 return parsed;
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// 统一读时长：常见字段为秒；网易云 <c>dt</c> 等大数值按毫秒处理。
+    /// </summary>
+    private static int ReadDurationSeconds(JsonElement s)
+    {
+        foreach (var name in new[] { "duration", "interval", "time", "songTime", "dt" })
+        {
+            if (!s.TryGetProperty(name, out var el))
+                continue;
+
+            var raw = 0;
+            if (el.ValueKind == JsonValueKind.Number)
+                raw = el.TryGetInt32(out var n) ? n : 0;
+            else if (el.ValueKind == JsonValueKind.String)
+                _ = int.TryParse(el.GetString(), out raw);
+
+            if (raw <= 0)
+                continue;
+
+            // >10000 更像毫秒（约 >2.7 小时的「秒」极少见）
+            return raw > 10_000 ? raw / 1000 : raw;
         }
 
         return 0;

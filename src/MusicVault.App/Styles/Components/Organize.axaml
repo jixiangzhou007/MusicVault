@@ -3,7 +3,7 @@
 
   <Style Selector="StackPanel.organize-toolbar">
     <Setter Property="Spacing" Value="6"/>
-    <Setter Property="Margin" Value="16,0,33,6"/>
+    <Setter Property="Margin" Value="16,0,16,6"/>
   </Style>
 
   <Style Selector="StackPanel.organize-toolbar-row">
@@ -22,19 +22,99 @@
     <Setter Property="Margin" Value="0,0,2,0"/>
   </Style>
 
-  <Style Selector="WrapPanel.organize-scrape-fields-wrap">
-    <Setter Property="Orientation" Value="Horizontal"/>
+  <Style Selector="TextBlock.organize-scrape-flyout-group">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+    <Setter Property="LineHeight" Value="16"/>
   </Style>
 
-  <Style Selector="WrapPanel.organize-scrape-fields-wrap > CheckBox">
-    <Setter Property="Margin" Value="0,0,12,2"/>
+  <Style Selector="UniformGrid.organize-scrape-fields-grid">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="UniformGrid.organize-scrape-fields-grid > CheckBox.choice-check">
+    <Setter Property="Margin" Value="0,0,8,8"/>
     <Setter Property="Padding" Value="0"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
   </Style>
 
   <Style Selector="Border.organize-section-divider">
     <Setter Property="Height" Value="1"/>
     <Setter Property="Background" Value="{DynamicResource SeparatorBrush}"/>
     <Setter Property="Margin" Value="0,4,0,8"/>
+  </Style>
+
+  <Style Selector="DockPanel.organize-topbar">
+    <Setter Property="MinHeight" Value="32"/>
+    <Setter Property="Margin" Value="0,0,0,2"/>
+  </Style>
+
+  <!-- 满宽页脚：顶部分隔线 + 对称内边距，不做悬浮卡片 -->
+  <Style Selector="Border.organize-scrape-dock">
+    <Setter Property="Padding" Value="16,12"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Background" Value="{DynamicResource PlayPaneBrush}"/>
+    <Setter Property="CornerRadius" Value="0"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}"/>
+    <Setter Property="BorderThickness" Value="0,1,0,0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <Style Selector="StackPanel.organize-scrape-row">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Spacing" Value="12"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="StackPanel.organize-scrape-row > CheckBox.choice-check">
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="TextBlock.organize-scrape-inline-label">
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLabel}"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="HorizontalAlignment" Value="Left"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="TextBlock.organize-scrape-inline-label.organize-scrape-inline-label-gap">
+    <Setter Property="Margin" Value="8,0,0,0"/>
+  </Style>
+  <Style Selector="Button.browse-filter.organize-scrape-more,
+                   ToggleButton.browse-filter.organize-scrape-more">
+    <Setter Property="Height" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MinHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="MaxHeight" Value="{DynamicResource ToolbarButtonHeight}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="Button.organize-scrape-start">
+    <Setter Property="MinWidth" Value="104"/>
+    <Setter Property="Height" Value="36"/>
+    <Setter Property="MinHeight" Value="36"/>
+    <Setter Property="MaxHeight" Value="36"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <!-- 表头/行/分隔线零水平缩进：与 PageLayout 中 batch-scrape 覆盖一致（本文件须在 PageLayout 之后加载） -->
+  <Style Selector="Grid.batch-scrape-table-header.track-table-header">
+    <Setter Property="Margin" Value="0,0,0,2"/>
+  </Style>
+  <Style Selector="ListBox.batch-scrape-list.track-table-scroll-list Grid.track-row-content,
+                   ListBox.batch-scrape-list.track-table-scroll-list Grid.track-row-content.batch-scrape-row">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="ListBox.batch-scrape-list.track-table-scroll-list Border.track-row-divider">
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <!-- 表头下分隔线：压过 LibraryTrack 的 TrackRowHorizontalMargin -->
+  <Style Selector="DockPanel.transfers-page > Border.track-row-divider">
+    <Setter Property="Margin" Value="0"/>
   </Style>
 
 </Styles>

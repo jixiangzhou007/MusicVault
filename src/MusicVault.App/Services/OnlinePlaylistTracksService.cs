@@ -42,6 +42,38 @@ public sealed class OnlinePlaylistTracksService
         return true;
     }
 
+    /// <summary>按传入顺序追加在线曲目（去重，一次保存）。</summary>
+    public async Task<int> AddManyAsync(
+        long playlistId,
+        IReadOnlyList<OnlineTrack> tracks,
+        CancellationToken ct = default)
+    {
+        if (tracks.Count == 0)
+            return 0;
+
+        if (!_settings.Current.PlaylistOnlineTracks.TryGetValue(playlistId, out var list))
+        {
+            list = [];
+            _settings.Current.PlaylistOnlineTracks[playlistId] = list;
+        }
+
+        var added = 0;
+        foreach (var track in tracks)
+        {
+            if (list.Any(x => SameTrack(x, track)))
+                continue;
+            list.Add(CloneTrack(track));
+            added++;
+        }
+
+        if (added == 0)
+            return 0;
+
+        await _settings.SaveAsync(ct).ConfigureAwait(false);
+        Changed?.Invoke(this, new OnlinePlaylistTracksChangedEventArgs(playlistId));
+        return added;
+    }
+
     private static bool SameTrack(OnlineTrack left, OnlineTrack right) =>
         left.Platform == right.Platform
         && string.Equals(left.Id, right.Id, StringComparison.Ordinal);

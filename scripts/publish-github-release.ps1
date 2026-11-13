@@ -72,14 +72,16 @@ $releaseArgs = @("release", "view", $tag)
 & gh @releaseArgs 2>$null | Out-Null
 $exists = ($LASTEXITCODE -eq 0)
 
-$title = "MusicVault $Version (Windows x64)"
+$title = "MusicVault $Version"
 $notesFile = Join-Path $env:TEMP "musicvault-release-notes-$Version.md"
 @"
 ## MusicVault $Version
 
-自动更新（Velopack）请使用本 Release 中的 **Setup / nupkg** 产物。
+两个安装包：Windows x64、macOS Apple Silicon（若本 Release 含 osx-arm64 zip）。不做 iOS、不做 32 位。
 
-便携包（若有 zip）解压即用，但不走应用内更新。
+自动更新（Velopack）请使用本 Release 中的 **Setup / nupkg** 产物。便携 zip 解压即用，但不走应用内更新。
+
+macOS：下载 ``MusicVault-$Version-osx-arm64.zip``，不要下 Windows 包。若提示无法打开：访达中右键 → 打开。Intel Mac 第一版不支持。Mac 合格线是启动 + 本地出声 + 在线听；下载不作保证。
 
 详见 docs/ONLINE_UPDATE.md 与 docs/GITHUB_RELEASE.md。
 "@ | Set-Content -Path $notesFile -Encoding UTF8

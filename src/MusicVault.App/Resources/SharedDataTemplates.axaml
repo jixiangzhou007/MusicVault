@@ -19,11 +19,21 @@
           <Grid Grid.Column="1" Classes="track-col-title-host" ColumnDefinitions="*,Auto" MinWidth="0">
             <TextBlock Grid.Column="0" Text="{Binding Title}" Classes="track-col-cell track-title"
                        TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0" MinWidth="0"/>
-            <TextBlock Grid.Column="1" Text="{Binding NasPlaybackCacheStatusText}"
-                       Classes="discover-preview-cache-tag"
-                       VerticalAlignment="Center" Margin="4,0,0,0"
-                       ToolTip.Tip="{Binding NasPlaybackCacheToolTip}"
-                       IsVisible="{Binding ShowNasPlaybackCached}"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6"
+                        VerticalAlignment="Center" Margin="4,0,0,0">
+              <TextBlock Text="{Binding MissingCoverTagText}"
+                         Classes="track-missing-meta-tag"
+                         ToolTip.Tip="{Binding MissingCoverTagToolTip}"
+                         IsVisible="{Binding ShowMissingCover}"/>
+              <TextBlock Text="{Binding MissingLyricsTagText}"
+                         Classes="track-missing-meta-tag"
+                         ToolTip.Tip="{Binding MissingLyricsTagToolTip}"
+                         IsVisible="{Binding ShowMissingLyrics}"/>
+              <TextBlock Text="{Binding NasPlaybackCacheStatusText}"
+                         Classes="discover-preview-cache-tag"
+                         ToolTip.Tip="{Binding NasPlaybackCacheToolTip}"
+                         IsVisible="{Binding ShowNasPlaybackCached}"/>
+            </StackPanel>
           </Grid>
           <TextBlock Grid.Column="2" Text="{Binding Artist}" Classes="track-col-cell track-artist"
                      MinWidth="0" TextTrimming="CharacterEllipsis"/>
@@ -32,6 +42,7 @@
           <TextBlock Grid.Column="4" Text="{Binding YearText}" Classes="track-col-cell track-col-cell-meta"/>
           <TextBlock Grid.Column="5" Text="{Binding DurationText}" Classes="track-col-cell track-col-cell-meta"/>
           <Button Grid.Column="6" Classes="row-action-btn track-favorite-btn" Tag="{Binding}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
                   ToolTip.Tip="{Binding FavoriteToolTip}"
                   automation:AutomationProperties.Name="{Binding FavoriteToolTip}">
             <Panel>
@@ -45,14 +56,14 @@
                   HorizontalAlignment="Center" VerticalAlignment="Center"
                   ToolTip.Tip="{Binding AddToPlaylistToolTip}"
                   automation:AutomationProperties.Name="{Binding AddToPlaylistToolTip}">
-            <TextBlock Text="+" Classes="track-row-glyph"
+            <TextBlock Text="{StaticResource IconGlyphAdd}" Classes="track-row-glyph"
                        Foreground="{DynamicResource TextSecondaryBrush}"/>
           </Button>
           <Button Grid.Column="8" Classes="row-action-btn track-delete-btn" Tag="{Binding}"
                   HorizontalAlignment="Center" VerticalAlignment="Center"
                   ToolTip.Tip="{Binding DeleteFromLibraryToolTip}"
                   automation:AutomationProperties.Name="{Binding DeleteFromLibraryToolTip}">
-            <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+            <TextBlock Text="{StaticResource IconGlyphDelete}" Classes="track-row-glyph"/>
           </Button>
         </Grid>
         <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
@@ -79,6 +90,7 @@
           <TextBlock Grid.Column="4" Text="{Binding YearText}" Classes="track-col-cell track-col-cell-meta"/>
           <TextBlock Grid.Column="5" Text="{Binding DurationText}" Classes="track-col-cell track-col-cell-meta"/>
           <Button Grid.Column="6" Classes="row-action-btn track-favorite-btn" Tag="{Binding}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
                   ToolTip.Tip="{Binding FavoriteToolTip}"
                   automation:AutomationProperties.Name="{Binding FavoriteToolTip}">
             <Panel>
@@ -92,14 +104,14 @@
                   HorizontalAlignment="Center" VerticalAlignment="Center"
                   ToolTip.Tip="{Binding AddToOtherPlaylistToolTip}"
                   automation:AutomationProperties.Name="{Binding AddToOtherPlaylistToolTip}">
-            <TextBlock Text="+" Classes="track-row-glyph"
+            <TextBlock Text="{StaticResource IconGlyphAdd}" Classes="track-row-glyph"
                        Foreground="{DynamicResource TextSecondaryBrush}"/>
           </Button>
           <Button Grid.Column="8" Classes="row-action-btn track-delete-btn" Tag="{Binding}"
                   HorizontalAlignment="Center" VerticalAlignment="Center"
                   ToolTip.Tip="{Binding RemoveFromPlaylistToolTip}"
                   automation:AutomationProperties.Name="{Binding RemoveFromPlaylistToolTip}">
-            <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+            <TextBlock Text="{StaticResource IconGlyphDelete}" Classes="track-row-glyph"/>
           </Button>
         </Grid>
         <Border DockPanel.Dock="Bottom" Classes="track-row-divider"/>
@@ -326,7 +338,7 @@
                   ToolTip.Tip="{Binding AddToPlaylistToolTip}"
                   automation:AutomationProperties.Name="{Binding AddToPlaylistToolTip}"
                   IsVisible="{Binding ShowOnlinePlaylist}">
-            <TextBlock Text="+" Classes="track-row-glyph"/>
+            <TextBlock Text="{StaticResource IconGlyphAdd}" Classes="track-row-glyph"/>
           </Button>
           <Button Grid.Column="9"
                   Classes="row-action-btn"
@@ -336,7 +348,7 @@
                   automation:AutomationProperties.Name="{Binding DownloadToolTip}"
                   Command="{Binding OpenDownloadPickerCommand}"
                   IsVisible="{Binding ShowOnlineDownload}">
-            <TextBlock Text="&#xE896;" Classes="track-row-glyph"/>
+            <TextBlock Text="{StaticResource IconGlyphDownload}" Classes="track-row-glyph"/>
           </Button>
           <Button Grid.Column="9" Content="{Binding PlayButtonLabel}" Classes="format-chip"
                   HorizontalAlignment="Left"
@@ -397,14 +409,14 @@
                     Command="{Binding PauseDownloadCommand}"
                     CommandParameter="{Binding}"
                     IsVisible="{Binding CanPause}">
-              <TextBlock Text="&#xE769;" Classes="track-row-glyph"/>
+              <TextBlock Text="{StaticResource IconGlyphPause}" Classes="track-row-glyph"/>
             </Button>
             <Button Classes="row-action-btn" ToolTip.Tip="{Binding ResumeDownloadToolTip}"
                     automation:AutomationProperties.Name="{Binding ResumeDownloadToolTip}"
                     Command="{Binding ResumeDownloadCommand}"
                     CommandParameter="{Binding}"
                     IsVisible="{Binding CanResume}">
-              <TextBlock Text="&#xE768;" Classes="track-row-glyph"/>
+              <TextBlock Text="{StaticResource IconGlyphPlay}" Classes="track-row-glyph"/>
             </Button>
             <controls:PopconfirmHost Title="{Binding CancelDownloadPopconfirmTitle}"
                                      Description="{Binding CancelDownloadPopconfirmDescription}"
@@ -415,7 +427,7 @@
                                      IsVisible="{Binding CanCancel}">
               <Button Classes="row-action-btn" ToolTip.Tip="{Binding CancelDownloadToolTip}"
                       automation:AutomationProperties.Name="{Binding CancelDownloadToolTip}">
-                <TextBlock Text="&#xE711;" Classes="track-row-glyph"/>
+                <TextBlock Text="{StaticResource IconGlyphCancel}" Classes="track-row-glyph"/>
               </Button>
             </controls:PopconfirmHost>
             <Button Classes="row-action-btn" ToolTip.Tip="{Binding RetryDownloadToolTip}"
@@ -423,21 +435,21 @@
                     Command="{Binding RetryDownloadCommand}"
                     CommandParameter="{Binding}"
                     IsVisible="{Binding CanRetry}">
-              <TextBlock Text="&#xE72C;" Classes="track-row-glyph"/>
+              <TextBlock Text="{StaticResource IconGlyphRefresh}" Classes="track-row-glyph"/>
             </Button>
             <Button Classes="row-action-btn" ToolTip.Tip="{Binding CopyFailedErrorToolTip}"
                     automation:AutomationProperties.Name="{Binding CopyFailedErrorToolTip}"
                     Command="{Binding CopyFailedErrorCommand}"
                     CommandParameter="{Binding}"
                     IsVisible="{Binding ShowFailedRecoveryActions}">
-              <TextBlock Text="&#xE8C8;" Classes="track-row-glyph"/>
+              <TextBlock Text="{StaticResource IconGlyphCopy}" Classes="track-row-glyph"/>
             </Button>
             <Button Classes="row-action-btn" ToolTip.Tip="{Binding SearchFailedInDiscoverToolTip}"
                     automation:AutomationProperties.Name="{Binding SearchFailedInDiscoverToolTip}"
                     Command="{Binding SearchFailedInDiscoverCommand}"
                     CommandParameter="{Binding}"
                     IsVisible="{Binding ShowFailedRecoveryActions}">
-              <TextBlock Text="&#xE721;" Classes="track-row-glyph"/>
+              <TextBlock Text="{StaticResource IconGlyphSearch}" Classes="track-row-glyph"/>
             </Button>
             <Button Classes="row-action-btn"
                     ToolTip.Tip="{Binding RevealInFolderToolTip}"
@@ -445,7 +457,7 @@
                     Command="{Binding RevealInFolderCommand}"
                     IsVisible="{Binding CanRevealInFolder}"
                     IsEnabled="{Binding CanRevealInFolder}">
-              <TextBlock Text="&#xE838;" Classes="track-row-glyph"/>
+              <TextBlock Text="{StaticResource IconGlyphFolderOpen}" Classes="track-row-glyph"/>
             </Button>
             <controls:PopconfirmHost Title="{Binding RemovePopconfirmTitle}"
                                      Description="{Binding RemovePopconfirmDescription}"
@@ -457,7 +469,7 @@
                                      CommandParameter="{Binding}">
               <Button Classes="row-action-btn" ToolTip.Tip="{Binding DeleteRecordToolTip}"
                       automation:AutomationProperties.Name="{Binding DeleteRecordToolTip}">
-                <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+                <TextBlock Text="{StaticResource IconGlyphDelete}" Classes="track-row-glyph"/>
               </Button>
             </controls:PopconfirmHost>
           </StackPanel>
@@ -496,7 +508,7 @@
           </Border>
           <Border Grid.Column="0" Classes="download-status-badge download-status-badge-active"
                   IsVisible="{Binding ShowStatusActive}" ToolTip.Tip="{Binding StatusBadgeToolTip}">
-            <TextBlock Text="&#xE895;"
+            <TextBlock Text="{StaticResource IconGlyphSync}"
                        Classes="download-status-badge-glyph download-status-badge-glyph-active"/>
           </Border>
           <TextBlock Grid.Column="1" Text="{Binding Title}" Classes="download-row-title"
@@ -515,7 +527,7 @@
                   Command="{Binding RevealInFolderCommand}"
                   IsVisible="{Binding CanRevealInFolder}"
                   IsEnabled="{Binding CanRevealInFolder}">
-            <TextBlock Text="&#xE838;" Classes="track-row-glyph"/>
+            <TextBlock Text="{StaticResource IconGlyphFolderOpen}" Classes="track-row-glyph"/>
           </Button>
           <controls:PopconfirmHost Grid.Column="5"
                                    Title="{Binding RemovePopconfirmTitle}"
@@ -528,7 +540,7 @@
                                    CommandParameter="{Binding}">
             <Button Classes="row-action-btn" ToolTip.Tip="{Binding DeleteRecordToolTip}"
                     automation:AutomationProperties.Name="{Binding DeleteRecordToolTip}">
-              <TextBlock Text="&#xE74D;" Classes="track-row-glyph"/>
+              <TextBlock Text="{StaticResource IconGlyphDelete}" Classes="track-row-glyph"/>
             </Button>
           </controls:PopconfirmHost>
         </Grid>

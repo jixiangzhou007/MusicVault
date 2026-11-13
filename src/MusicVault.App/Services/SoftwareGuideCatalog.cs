@@ -9,6 +9,7 @@ public static class SoftwareGuideCatalog
     public const string AuthorKey = "Settings.Guide.Author";
     public const string HeroLeadKey = "Settings.Guide.HeroLead";
     public const string HeroDisclaimerKey = "Settings.Guide.HeroDisclaimer";
+    public const string CapabilitiesSummaryKey = "Settings.Guide.CapabilitiesSummary";
     public const string CopyrightKey = "Settings.Guide.Copyright";
     public const string OpenSourceSectionTitleKey = "Settings.Guide.OpenSourceTitle";
 
